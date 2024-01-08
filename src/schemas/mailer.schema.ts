@@ -1,4 +1,4 @@
-import { object, string, ZodObject } from 'zod';
+import {object, string, z, ZodObject} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const postSchema = object({
@@ -9,6 +9,8 @@ const postSchema = object({
         replyMessage: string()
     })
 });
+
+export type MailerSchemaPostDocument = z.infer<typeof postSchema>;
 
 export default {
     post: postSchema

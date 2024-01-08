@@ -1,152 +1,170 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import {FastifyRequest, FastifyReply} from 'fastify';
 import {Result} from "../library/api";
-import zod from "zod";
-import postSchema from "../schemas/post.schema";
 import postService from "../services/post.service";
 import logMiddleware from "../middlewares/log.middleware";
+import {
+    PostSchemaDeleteManyDocument,
+    PostSchemaGetCountDocument,
+    PostSchemaGetDocument,
+    PostSchemaGetManyDocument,
+    PostSchemaPostDocument,
+    PostSchemaPutDocument,
+    PostSchemaPutManyStatusDocument,
+    PostSchemaPutRankDocument,
+    PostSchemaPutViewDocument
+} from "../schemas/post.schema";
+
+const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaGetDocument;
+
+        serviceResult.data = await postService.getOne({
+            ...reqData.params,
+            ...reqData.query
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    })
+}
+
+const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaGetManyDocument;
+
+        serviceResult.data = await postService.getMany({
+            ...reqData.query
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    })
+}
+
+const getCount = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaGetCountDocument;
+
+        serviceResult.data = await postService.getCount({
+            ...reqData.params,
+            ...reqData.query
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const add = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaPostDocument;
+
+        let insertData = await postService.add({
+            ...reqData.params,
+            ...reqData.body,
+            authorId: req.sessionAuth.user?._id.toString(),
+            lastAuthorId: req.sessionAuth.user?._id.toString(),
+            dateStart: new Date(reqData.body.dateStart)
+        });
+
+        serviceResult.data = {_id: insertData._id};
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaPutDocument;
+
+        serviceResult.data = await postService.updateOne({
+            ...reqData.params,
+            ...reqData.body,
+            lastAuthorId: req.sessionAuth.user?._id.toString(),
+            dateStart: new Date(reqData.body.dateStart)
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaPutRankDocument;
+
+        serviceResult.data = await postService.updateOneRank({
+            ...reqData.body,
+            ...reqData.params,
+            lastAuthorId: req.sessionAuth.user?._id.toString(),
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateOneView = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaPutViewDocument;
+
+        serviceResult.data = await postService.updateOneView({
+            ...reqData.params,
+            ...reqData.body
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaPutManyStatusDocument;
+
+        serviceResult.data = await postService.updateManyStatus({
+            ...reqData.body,
+            ...reqData.params,
+            lastAuthorId: req.sessionAuth.user?._id.toString(),
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostSchemaDeleteManyDocument;
+
+        serviceResult.data = await postService.deleteMany({
+            ...reqData.params,
+            ...reqData.body
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
 
 export default {
-    getOne: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof postSchema.get>["params"]), Querystring: (zod.infer<typeof postSchema.get>["query"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await postService.getOne({
-                ...req.params,
-                ...req.query
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        })
-    },
-    getMany: async (
-        req: FastifyRequest<{Querystring: (zod.infer<typeof postSchema.getMany>["query"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await postService.getMany({
-                ...req.query
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        })
-    },
-    getCount: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof postSchema.getCount>["params"]), Querystring: (zod.infer<typeof postSchema.getCount>["query"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await postService.getCount({
-                ...req.params,
-                ...req.query
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    add: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof postSchema.post>["params"]), Body: (zod.infer<typeof postSchema.post>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            let insertData = await postService.add({
-                ...req.params,
-                ...req.body,
-                authorId: req.sessionAuth.user?._id.toString(),
-                lastAuthorId: req.sessionAuth.user?._id.toString(),
-                dateStart: new Date(req.body.dateStart)
-            });
-
-            serviceResult.data = {_id: insertData._id};
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateOne: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof postSchema.put>["params"]), Body: (zod.infer<typeof postSchema.put>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await postService.updateOne({
-                ...req.params,
-                ...req.body,
-                lastAuthorId: req.sessionAuth.user?._id.toString(),
-                dateStart: new Date(req.body.dateStart)
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateOneRank: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof postSchema.putOneRank>["params"]), Body: (zod.infer<typeof postSchema.putOneRank>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await postService.updateOneRank({
-                ...req.body,
-                ...req.params,
-                lastAuthorId: req.sessionAuth.user?._id.toString(),
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateOneView: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof postSchema.putOneView>["params"]), Body: (zod.infer<typeof postSchema.putOneView>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await postService.updateOneView({
-                ...req.params,
-                ...req.body
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateManyStatus: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof postSchema.putManyStatus>["params"]), Body: (zod.infer<typeof postSchema.putManyStatus>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await postService.updateManyStatus({
-                ...req.body,
-                ...req.params,
-                lastAuthorId: req.sessionAuth.user?._id.toString(),
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    deleteMany: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof postSchema.deleteMany>["params"]), Body: (zod.infer<typeof postSchema.deleteMany>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await postService.deleteMany({
-                ...req.params,
-                ...req.body
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    }
+    getOne: getOne,
+    getMany: getMany,
+    getCount: getCount,
+    add: add,
+    updateOne: updateOne,
+    updateOneRank: updateOneRank,
+    updateOneView: updateOneView,
+    updateManyStatus: updateManyStatus,
+    deleteMany: deleteMany
 };

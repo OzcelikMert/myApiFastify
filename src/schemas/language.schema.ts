@@ -1,4 +1,4 @@
-import { object, string, array, boolean, number, ZodObject } from 'zod';
+import {object, string, array, boolean, number, ZodObject, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const postBody = object({
@@ -46,6 +46,12 @@ const putRankSchema = object({
         rank: number().min(1, { message: ErrorCodes.emptyValue.toString() })
     })
 });
+
+export type LanguageSchemaGetDocument = z.infer<typeof getSchema>;
+export type LanguageSchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type LanguageSchemaPostDocument = z.infer<typeof postSchema>;
+export type LanguageSchemaPutDocument = z.infer<typeof putSchema>;
+export type LanguageSchemaPutRankDocument = z.infer<typeof putRankSchema>;
 
 export default {
     get: getSchema,

@@ -1,117 +1,131 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import {FastifyRequest, FastifyReply} from 'fastify';
 import {Result} from "../library/api";
-import zod from "zod";
 import logMiddleware from "../middlewares/log.middleware";
-import navigationSchema from "../schemas/navigation.schema";
 import navigationService from "../services/navigation.service";
+import {
+    NavigationSchemaDeleteManyDocument,
+    NavigationSchemaGetDocument,
+    NavigationSchemaGetManyDocument,
+    NavigationSchemaPostDocument,
+    NavigationSchemaPutDocument,
+    NavigationSchemaPutManyStatusDocument,
+    NavigationSchemaPutRankDocument
+} from "../schemas/navigation.schema";
+
+const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as NavigationSchemaGetDocument;
+
+        serviceResult.data = await navigationService.getOne({
+            ...reqData.params,
+            ...reqData.query
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    })
+}
+
+const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as NavigationSchemaGetManyDocument;
+
+        serviceResult.data = await navigationService.getMany({
+            ...reqData.query
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    })
+}
+
+const add = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as NavigationSchemaPostDocument;
+
+        let insertData = await navigationService.add({
+            ...reqData.body,
+            authorId: req.sessionAuth.user?._id.toString(),
+            lastAuthorId: req.sessionAuth.user?._id.toString(),
+        });
+
+        serviceResult.data = {_id: insertData._id};
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as NavigationSchemaPutDocument;
+
+        serviceResult.data = await navigationService.updateOne({
+            ...reqData.params,
+            ...reqData.body,
+            lastAuthorId: req.sessionAuth.user?._id.toString(),
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as NavigationSchemaPutRankDocument;
+
+        serviceResult.data = await navigationService.updateOneRank({
+            ...reqData.params,
+            ...reqData.body,
+            lastAuthorId: req.sessionAuth.user?._id.toString(),
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as NavigationSchemaPutManyStatusDocument;
+
+        serviceResult.data = await navigationService.updateManyStatus({
+            ...reqData.body,
+            lastAuthorId: req.sessionAuth.user?._id.toString()
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as NavigationSchemaDeleteManyDocument;
+
+        serviceResult.data = await navigationService.deleteMany({
+            ...reqData.body
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
 
 export default {
-    getOne: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof navigationSchema.get>["params"]), Querystring: (zod.infer<typeof navigationSchema.get>["query"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await navigationService.getOne({
-                ...req.params,
-                ...req.query
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        })
-    },
-    getMany: async (
-        req: FastifyRequest<{Querystring: (zod.infer<typeof navigationSchema.getMany>["query"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await navigationService.getMany({
-                ...req.query
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        })
-    },
-    add: async (
-        req: FastifyRequest<{Body: (zod.infer<typeof navigationSchema.post>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            let insertData = await navigationService.add({
-                ...req.body,
-                authorId: req.sessionAuth.user?._id.toString(),
-                lastAuthorId: req.sessionAuth.user?._id.toString(),
-            });
-
-            serviceResult.data = {_id: insertData._id};
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateOne: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof navigationSchema.put>["params"]), Body: (zod.infer<typeof navigationSchema.put>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await navigationService.updateOne({
-                ...req.params,
-                ...req.body,
-                lastAuthorId: req.sessionAuth.user?._id.toString(),
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateOneRank: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof navigationSchema.putRank>["params"]), Body: (zod.infer<typeof navigationSchema.putRank>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await navigationService.updateOneRank({
-                ...req.params,
-                ...req.body,
-                lastAuthorId: req.sessionAuth.user?._id.toString(),
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateManyStatus: async (
-        req: FastifyRequest<{Body: (zod.infer<typeof navigationSchema.putManyStatus>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await navigationService.updateManyStatus({
-                ...req.body,
-                lastAuthorId: req.sessionAuth.user?._id.toString()
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    deleteMany: async (
-        req: FastifyRequest<{Body: (zod.infer<typeof navigationSchema.deleteMany>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await navigationService.deleteMany({
-                ...req.body
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    }
+    getOne: getOne,
+    getMany: getMany,
+    add: add,
+    updateOne: updateOne,
+    updateOneRank: updateOneRank,
+    updateManyStatus: updateManyStatus,
+    deleteMany: deleteMany
 };

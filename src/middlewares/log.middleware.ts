@@ -20,7 +20,7 @@ export default {
                 params: req.params,
                 query: req.query,
                 body: req.body,
-                ...(req.session.data && req.sessionAuth.user?._id ? {userId: req.sessionAuth.user?._id} : {})
+                ...(req.sessionAuth.data() && req.sessionAuth.user?._id ? {userId: req.sessionAuth.user?._id} : {})
             });
             let serviceResult = new Result();
             serviceResult.statusCode = StatusCodes.badRequest;

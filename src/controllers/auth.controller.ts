@@ -1,13 +1,12 @@
 import {ErrorCodes, Result, StatusCodes} from "../library/api";
-import zod from "zod";
-import authSchema from "../schemas/auth.schema";
+import { AuthSchemaPostDocument } from "../schemas/auth.schema";
 import userService from "../services/user.service";
 import {StatusId} from "../constants/status";
 import logMiddleware from "../middlewares/log.middleware";
 import userUtil from "../utils/user.util";
-import {RouteHandlerMethodCustom} from "../types/fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 
-const getSession: RouteHandlerMethodCustom = async (req, reply) => {
+const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
@@ -15,12 +14,15 @@ const getSession: RouteHandlerMethodCustom = async (req, reply) => {
         reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
-const login: RouteHandlerMethodCustom = async (req, reply) => {
+
+const login = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
+        let reqData = req as AuthSchemaPostDocument;
+
         let resData = await userService.getOne({
-            ...req.body
+            ...reqData.body
         });
 
         if(resData){
@@ -51,7 +53,7 @@ const login: RouteHandlerMethodCustom = async (req, reply) => {
         reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
-const logOut: RouteHandlerMethodCustom = async (req, reply) => {
+const logOut = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 

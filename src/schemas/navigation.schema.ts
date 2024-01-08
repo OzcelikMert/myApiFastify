@@ -1,4 +1,4 @@
-import { object, string, number, array, boolean, ZodObject } from 'zod';
+import {object, string, number, array, boolean, ZodObject, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const postBody = object({
@@ -63,6 +63,14 @@ const deleteManySchema = object({
         _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
     })
 });
+
+export type NavigationSchemaGetDocument = z.infer<typeof getSchema>;
+export type NavigationSchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type NavigationSchemaPostDocument = z.infer<typeof postSchema>;
+export type NavigationSchemaPutDocument = z.infer<typeof putSchema>;
+export type NavigationSchemaPutManyStatusDocument = z.infer<typeof putManyStatusSchema>;
+export type NavigationSchemaPutRankDocument = z.infer<typeof putRankSchema>;
+export type NavigationSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
 export default {
     get: getSchema,

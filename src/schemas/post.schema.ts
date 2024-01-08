@@ -1,4 +1,4 @@
-import { object, string, number, array, boolean, ZodObject } from 'zod';
+import {object, string, number, array, boolean, ZodObject, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 import {ProductTypeId} from "../constants/productTypes";
 
@@ -159,7 +159,7 @@ const putManyStatusSchema = object({
     }),
 });
 
-const putOneRankSchema = object({
+const putRankSchema = object({
     params: object({
         typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
@@ -169,7 +169,7 @@ const putOneRankSchema = object({
     }),
 });
 
-const putOneViewSchema = object({
+const putViewSchema = object({
     params: object({
         typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
@@ -188,6 +188,16 @@ const deleteManySchema = object({
     })
 });
 
+export type PostSchemaGetDocument = z.infer<typeof getSchema>;
+export type PostSchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type PostSchemaGetCountDocument = z.infer<typeof getCountSchema>;
+export type PostSchemaPostDocument = z.infer<typeof postSchema>;
+export type PostSchemaPutDocument = z.infer<typeof putSchema>;
+export type PostSchemaPutManyStatusDocument = z.infer<typeof putManyStatusSchema>;
+export type PostSchemaPutRankDocument = z.infer<typeof putRankSchema>;
+export type PostSchemaPutViewDocument = z.infer<typeof putViewSchema>;
+export type PostSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
+
 export default {
     get: getSchema,
     getMany: getManySchema,
@@ -195,7 +205,7 @@ export default {
     post: postSchema,
     put: putSchema,
     putManyStatus: putManyStatusSchema,
-    putOneRank: putOneRankSchema,
-    putOneView: putOneViewSchema,
+    putRank: putRankSchema,
+    putView: putViewSchema,
     deleteMany: deleteManySchema
 };

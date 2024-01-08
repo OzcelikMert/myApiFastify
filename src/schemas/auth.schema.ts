@@ -8,8 +8,8 @@ const postSchema = object({
     }),
 });
 
+export type AuthSchemaPostDocument = z.infer<typeof postSchema>;
+
 export default {
   post: postSchema
 };
-
-export type AuthSchemaPostDocument = z.infer<typeof postSchema>;

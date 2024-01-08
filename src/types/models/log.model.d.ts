@@ -5,7 +5,7 @@ export interface LogDocument {
     ip: string
     message?: string
     userId?: string
-    params?: object
-    body?: object
-    query?: object
+    params?: any
+    body?: any
+    query?: any
 }
