@@ -1,4 +1,4 @@
-import {object, string, array, boolean, number, ZodObject, z} from 'zod';
+import {object, string, array, boolean, number, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const postBody = object({

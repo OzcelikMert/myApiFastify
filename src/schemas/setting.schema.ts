@@ -1,4 +1,4 @@
-import {object, string, array, number, ZodType} from 'zod';
+import {object, string, array, number, ZodType, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 import {SettingGetParamDocument} from "../types/services/setting.service";
 
@@ -91,6 +91,14 @@ const putECommerceSchema = object({
         }),
     })
 });
+
+export type SettingSchemaGetDocument = z.infer<typeof getSchema>;
+export type SettingSchemaPutGeneralDocument = z.infer<typeof putGeneralSchema>;
+export type SettingSchemaPutSEODocument = z.infer<typeof putSeoSchema>;
+export type SettingSchemaPutContactFormDocument = z.infer<typeof putContactFormSchema>;
+export type SettingSchemaPutSocialMediaDocument = z.infer<typeof putSocialMediaSchema>;
+export type SettingSchemaPutStaticLanguageDocument = z.infer<typeof putStaticLanguageSchema>;
+export type SettingSchemaPutECommerceDocument = z.infer<typeof putECommerceSchema>;
 
 export default {
     get: getSchema,

@@ -1,4 +1,4 @@
-import {object, string, number, array, boolean, ZodObject, z} from 'zod';
+import {object, string, number, array, boolean, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 import {ProductTypeId} from "../constants/productTypes";
 

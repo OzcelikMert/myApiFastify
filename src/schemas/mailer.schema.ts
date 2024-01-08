@@ -1,4 +1,4 @@
-import {object, string, z, ZodObject} from 'zod';
+import {object, string, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const postSchema = object({
