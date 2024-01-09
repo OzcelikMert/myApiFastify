@@ -1,4 +1,4 @@
-import { object, string, ZodObject } from 'zod';
+import {object, string, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const postSchema = object({
@@ -7,6 +7,8 @@ const postSchema = object({
         url: string().default(""),
     })
 });
+
+export type ViewSchemaPostDocument = z.infer<typeof postSchema>;
 
 export default {
     post: postSchema

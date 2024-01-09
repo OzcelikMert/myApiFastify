@@ -1,4 +1,4 @@
-import { object, string, array, number, ZodObject } from 'zod';
+import {object, string, array, number, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const postBody = {
@@ -68,6 +68,14 @@ const deleteSchema = object({
         _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
     })
 });
+
+export type UserSchemaGetDocument = z.infer<typeof getSchema>;
+export type UserSchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type UserSchemaPostDocument = z.infer<typeof postSchema>;
+export type UserSchemaPutDocument = z.infer<typeof putSchema>;
+export type UserSchemaPutProfileDocument = z.infer<typeof putProfileSchema>;
+export type UserSchemaPutPasswordDocument = z.infer<typeof putPasswordSchema>;
+export type UserSchemaDeleteDocument = z.infer<typeof deleteSchema>;
 
 export default {
     get: getSchema,

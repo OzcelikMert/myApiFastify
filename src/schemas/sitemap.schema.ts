@@ -1,4 +1,4 @@
-import { object, number, ZodObject } from 'zod';
+import {object, number, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const getPostTermSchema = object({
@@ -15,6 +15,9 @@ const getPostSchema = object({
         page: number(),
     })
 });
+
+export type SitemapSchemaGetPostTermDocument = z.infer<typeof getPostTermSchema>;
+export type SitemapSchemaGetPostDocument = z.infer<typeof getPostSchema>;
 
 export default {
     getPostTerm: getPostTermSchema,

@@ -1,4 +1,4 @@
-import { object, string, array, ZodObject } from 'zod';
+import {object, string, array, z} from 'zod';
 import {ErrorCodes} from "../library/api";
 
 const getSchema = object({
@@ -33,6 +33,12 @@ const deleteManySchema = object({
         _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
     })
 });
+
+export type SubscriberSchemaGetDocument = z.infer<typeof getSchema>;
+export type SubscriberSchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type SubscriberSchemaPostDocument = z.infer<typeof postSchema>;
+export type SubscriberSchemaDeleteDocument = z.infer<typeof deleteSchema>;
+export type SubscriberSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
 export default {
     get: getSchema,

@@ -17,3 +17,4 @@ Things to do:
     - get lerde id leri paramtereden cekecceksen eger controller ve middlewarede zodda ayarladigin degisiklilkleri guncelle
     - sessionu kullandigin yerleri tekrar duzenle user ekledin sessiona datadan degil userdan cek verileri
     - permission kontrolunu routlara gonderdigin fonskyonun icine atadigin parametreler ile yap ve permisison middlewareyi ona gore tekrar ayarla
+    - schemalar ile kontrol yaptiktan sonra schemalarda berlitilen datalar disinda bir data geliyormu kontrol et eger geliyorsa temizle

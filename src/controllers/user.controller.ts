@@ -1,112 +1,123 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import {FastifyRequest, FastifyReply} from 'fastify';
 import {Result} from "../library/api";
-import zod from "zod";
-import userSchema from "../schemas/user.schema";
+import {
+    UserSchemaDeleteDocument,
+    UserSchemaGetDocument,
+    UserSchemaGetManyDocument,
+    UserSchemaPostDocument, UserSchemaPutDocument, UserSchemaPutPasswordDocument, UserSchemaPutProfileDocument
+} from "../schemas/user.schema";
 import userService from "../services/user.service";
 import logMiddleware from "../middlewares/log.middleware";
 
+const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        const reqData = req as UserSchemaGetDocument;
+
+        serviceResult.data = await userService.getOne({
+            ...reqData.query
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        const reqData = req as UserSchemaGetManyDocument;
+
+        serviceResult.data = await userService.getMany({
+            ...reqData.query
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const add = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        const reqData = req as UserSchemaPostDocument;
+
+        let insertData = await userService.add({
+            ...reqData.body,
+            ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
+        });
+
+        serviceResult.data = {_id: insertData._id};
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        const reqData = req as UserSchemaPutDocument
+
+        serviceResult.data = await userService.updateOne({
+            ...reqData.params,
+            ...reqData.body,
+            ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        const reqData = req as UserSchemaPutProfileDocument;
+
+        serviceResult.data = await userService.updateOne({
+            ...reqData.body,
+            _id: req.sessionAuth.user?._id.toString(),
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        const reqData = req as UserSchemaPutPasswordDocument;
+
+        serviceResult.data = await userService.updateOne({
+            _id: req.sessionAuth.user?._id.toString(),
+            password: reqData.body.newPassword
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        const reqData = req as UserSchemaDeleteDocument;
+
+        serviceResult.data = await userService.deleteOne(reqData.params);
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
 export default {
-    getOne: async (
-        req: FastifyRequest<{Querystring: (zod.infer<typeof userSchema.get>["query"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await userService.getOne({
-                ...req.query
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    getMany: async (
-        req: FastifyRequest<{Querystring: (zod.infer<typeof userSchema.getMany>["query"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await userService.getMany({
-                ...req.query
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    add: async (
-        req: FastifyRequest<{Body: (zod.infer<typeof userSchema.post>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            let insertData = await userService.add({
-                ...req.body,
-                ...(req.body.banDateEnd ? {banDateEnd: new Date(req.body.banDateEnd)} : {banDateEnd: undefined})
-            });
-
-            serviceResult.data = {_id: insertData._id};
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateOne: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof userSchema.put>["params"]), Body: (zod.infer<typeof userSchema.put>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await userService.updateOne({
-                ...req.params,
-                ...req.body,
-                ...(req.body.banDateEnd ? {banDateEnd: new Date(req.body.banDateEnd)} : {banDateEnd: undefined})
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updateProfile: async (
-        req: FastifyRequest<{Body: (zod.infer<typeof userSchema.putProfile>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await userService.updateOne({
-                ...req.body,
-                _id: req.sessionAuth.user?._id.toString(),
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    updatePassword: async (
-        req: FastifyRequest<{Body: (zod.infer<typeof userSchema.putPassword>["body"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await userService.updateOne({
-                _id: req.sessionAuth.user?._id.toString(),
-                password: req.body.newPassword
-            });
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    },
-    deleteOne: async (
-        req: FastifyRequest<{Params: (zod.infer<typeof userSchema.delete>["params"])}>,
-        reply: FastifyReply
-    ) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            serviceResult.data = await userService.deleteOne(req.params);
-
-            reply.status(serviceResult.statusCode).send(serviceResult)
-        });
-    }
+    getOne: getOne,
+    getMany: getMany,
+    add: add,
+    updateOne: updateOne,
+    updateProfile: updateProfile,
+    updatePassword: updatePassword,
+    deleteOne: deleteOne
 };
