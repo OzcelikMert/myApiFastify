@@ -7,12 +7,12 @@ import sessionMiddleware from "../../middlewares/validates/sessionAuth.middlewar
 import requestMiddleware from "../../middlewares/validates/request.middleware";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get('/get', { preHandler: [requestMiddleware.check(navigationSchema.getMany)] }, navigationController.getMany);
-    fastify.get('/get/:_id', { preHandler: [requestMiddleware.check(navigationSchema.get)] }, navigationController.getOne);
-    fastify.post('/add', { preHandler: [requestMiddleware.check(navigationSchema.post), sessionMiddleware.check, permissionMiddleware.check] }, navigationController.add);
-    fastify.put('/update/rank/:_id', { preHandler: [requestMiddleware.check(navigationSchema.putRank), sessionMiddleware.check, permissionMiddleware.check, navigationMiddleware.checkOne] }, navigationController.updateOneRank);
-    fastify.put('/update/status', { preHandler: [requestMiddleware.check(navigationSchema.putManyStatus), sessionMiddleware.check, permissionMiddleware.check, navigationMiddleware.checkMany] }, navigationController.updateManyStatus);
-    fastify.put('/update/:_id', { preHandler: [requestMiddleware.check(navigationSchema.put), sessionMiddleware.check, permissionMiddleware.check, navigationMiddleware.checkOne] }, navigationController.updateOne);
-    fastify.delete('/delete', { preHandler: [requestMiddleware.check(navigationSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check, navigationMiddleware.checkMany] }, navigationController.deleteMany);
+    fastify.get(NavigationEndPoint.GET, { preHandler: [requestMiddleware.check(navigationSchema.getMany)] }, navigationController.getMany);
+    fastify.get(NavigationEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(navigationSchema.get)] }, navigationController.getOne);
+    fastify.post(NavigationEndPoint.ADD, { preHandler: [requestMiddleware.check(navigationSchema.post), sessionMiddleware.check, permissionMiddleware.check] }, navigationController.add);
+    fastify.put(NavigationEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [requestMiddleware.check(navigationSchema.putRank), sessionMiddleware.check, permissionMiddleware.check, navigationMiddleware.checkOne] }, navigationController.updateOneRank);
+    fastify.put(NavigationEndPoint.UPDATE_STATUS, { preHandler: [requestMiddleware.check(navigationSchema.putManyStatus), sessionMiddleware.check, permissionMiddleware.check, navigationMiddleware.checkMany] }, navigationController.updateManyStatus);
+    fastify.put(NavigationEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(navigationSchema.put), sessionMiddleware.check, permissionMiddleware.check, navigationMiddleware.checkOne] }, navigationController.updateOne);
+    fastify.delete(NavigationEndPoint.DELETE, { preHandler: [requestMiddleware.check(navigationSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check, navigationMiddleware.checkMany] }, navigationController.deleteMany);
     done();
 }

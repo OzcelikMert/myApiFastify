@@ -6,8 +6,8 @@ import permissionMiddleware from "../../middlewares/validates/permission.middlew
 import requestMiddleware from "../../middlewares/validates/request.middleware";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get('/get', { preHandler: [sessionMiddleware.check] }, galleryController.get);
-    fastify.post('/add', { preHandler: [sessionMiddleware.check, permissionMiddleware.check] }, galleryController.add);
-    fastify.delete('/delete', { preHandler: [requestMiddleware.check(gallerySchema.delete), sessionMiddleware.check, permissionMiddleware.check] }, galleryController.delete);
+    fastify.get(GalleryEndPoint.GET, { preHandler: [sessionMiddleware.check] }, galleryController.get);
+    fastify.post(GalleryEndPoint.ADD, { preHandler: [sessionMiddleware.check, permissionMiddleware.check] }, galleryController.add);
+    fastify.delete(GalleryEndPoint.DELETE, { preHandler: [requestMiddleware.check(gallerySchema.delete), sessionMiddleware.check, permissionMiddleware.check] }, galleryController.delete);
     done();
 }

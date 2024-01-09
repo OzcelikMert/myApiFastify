@@ -6,12 +6,12 @@ import sessionMiddleware from "../../middlewares/validates/sessionAuth.middlewar
 import permissionMiddleware from "../../middlewares/validates/permission.middleware";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get('/get', { preHandler: [requestMiddleware.check(settingSchema.get)] }, settingController.get);
-    fastify.put('/update/general', { preHandler: [requestMiddleware.check(settingSchema.putGeneral), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateGeneral);
-    fastify.put('/update/seo', { preHandler: [requestMiddleware.check(settingSchema.putSeo), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateSEO);
-    fastify.put('/update/contact-form', { preHandler: [requestMiddleware.check(settingSchema.putContactForm), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateContactForm);
-    fastify.put('/update/static-language', { preHandler: [requestMiddleware.check(settingSchema.putStaticLanguage), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateStaticLanguage);
-    fastify.put('/update/social-media', { preHandler: [requestMiddleware.check(settingSchema.putSocialMedia), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateSocialMedia);
-    fastify.put('/update/e-commerce', { preHandler: [requestMiddleware.check(settingSchema.putECommerce), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateECommerce);
+    fastify.get(SettingEndPoint.GET, { preHandler: [requestMiddleware.check(settingSchema.get)] }, settingController.get);
+    fastify.put(SettingEndPoint.UPDATE_GENERAL, { preHandler: [requestMiddleware.check(settingSchema.putGeneral), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateGeneral);
+    fastify.put(SettingEndPoint.UPDATE_SEO, { preHandler: [requestMiddleware.check(settingSchema.putSeo), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateSEO);
+    fastify.put(SettingEndPoint.UPDATE_CONTACT_FORM, { preHandler: [requestMiddleware.check(settingSchema.putContactForm), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateContactForm);
+    fastify.put(SettingEndPoint.UPDATE_STATIC_LANGUAGE, { preHandler: [requestMiddleware.check(settingSchema.putStaticLanguage), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateStaticLanguage);
+    fastify.put(SettingEndPoint.UPDATE_SOCIAL_MEDIA, { preHandler: [requestMiddleware.check(settingSchema.putSocialMedia), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateSocialMedia);
+    fastify.put(SettingEndPoint.UPDATE_ECOMMERCE, { preHandler: [requestMiddleware.check(settingSchema.putECommerce), sessionMiddleware.check, permissionMiddleware.check] }, settingController.updateECommerce);
     done();
 }

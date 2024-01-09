@@ -16,19 +16,19 @@ import sitemapRoute from "./routes/sitemap.route";
 import navigationRoute from "./routes/navigation.route";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.register(userRoute, { prefix: "/user" });
-    fastify.register(authRoute, { prefix: "/auth" });
-    fastify.register(postRoute, { prefix: "/post" });
-    fastify.register(postTermRoute, { prefix: "/post-term" });
-    fastify.register(galleryRoute, { prefix: "/gallery" });
-    fastify.register(settingRoute, { prefix: "/setting" });
-    fastify.register(languageRoute, { prefix: "/language" });
-    fastify.register(serverInfoRoute, { prefix: "/server-info" });
-    fastify.register(viewRoute, { prefix: "/view" });
-    fastify.register(mailerRoute, { prefix: "/mailer" });
-    fastify.register(subscriberRoute, { prefix: "/subscriber" });
-    fastify.register(componentRoute, { prefix: "/component" });
-    fastify.register(sitemapRoute, { prefix: "/sitemap" });
-    fastify.register(navigationRoute, { prefix: "/navigation" });
+    fastify.register(userRoute, { prefix: EndPoint.USER });
+    fastify.register(authRoute, { prefix: EndPoint.AUTH });
+    fastify.register(postRoute, { prefix: EndPoint.POST  });
+    fastify.register(postTermRoute, { prefix: EndPoint.POST_TERM });
+    fastify.register(galleryRoute, { prefix: EndPoint.GALLERY });
+    fastify.register(settingRoute, { prefix: EndPoint.SETTING });
+    fastify.register(languageRoute, { prefix: EndPoint.LANGUAGE });
+    fastify.register(serverInfoRoute, { prefix: EndPoint.SERVER_INFO });
+    fastify.register(viewRoute, { prefix: EndPoint.VIEW });
+    fastify.register(mailerRoute, { prefix: EndPoint.MAILER });
+    fastify.register(subscriberRoute, { prefix: EndPoint.SUBSCRIBER });
+    fastify.register(componentRoute, { prefix: EndPoint.COMPONENT });
+    fastify.register(sitemapRoute, { prefix: EndPoint.SITEMAP });
+    fastify.register(navigationRoute, { prefix: EndPoint.NAVIGATION });
     done();
 }

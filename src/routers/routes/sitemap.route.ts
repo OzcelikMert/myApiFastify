@@ -4,8 +4,8 @@ import sitemapSchema from "../../schemas/sitemap.schema";
 import requestMiddleware from "../../middlewares/validates/request.middleware";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get('/get/maps', sitemapController.getMaps);
-    fastify.get('/get/post', { preHandler: [requestMiddleware.check(sitemapSchema.getPost)] }, sitemapController.getPost);
-    fastify.get('/get/post-term', { preHandler: [requestMiddleware.check(sitemapSchema.getPostTerm)] }, sitemapController.getPostTerm);
+    fastify.get(SitemapEndPoint.GET_MAPS, sitemapController.getMaps);
+    fastify.get(SitemapEndPoint.GET_POST, { preHandler: [requestMiddleware.check(sitemapSchema.getPost)] }, sitemapController.getPost);
+    fastify.get(SitemapEndPoint.GET_POST_TERM, { preHandler: [requestMiddleware.check(sitemapSchema.getPostTerm)] }, sitemapController.getPostTerm);
     done();
 }

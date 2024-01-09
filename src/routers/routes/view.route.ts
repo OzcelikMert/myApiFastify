@@ -6,8 +6,8 @@ import requestMiddleware from "../../middlewares/validates/request.middleware";
 import sessionMiddleware from "../../middlewares/validates/sessionAuth.middleware";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get('/get/number', { preHandler: [sessionMiddleware.check] }, viewController.getNumber);
-    fastify.get('/get/statistics', { preHandler: [sessionMiddleware.check] }, viewController.getStatistics);
-    fastify.post('/add', { preHandler: [requestMiddleware.check(viewSchema.post), viewMiddleware.checkOne, viewMiddleware.checkAndDeleteMany] }, viewController.add);
+    fastify.get(ViewEndPoint.GET_NUMBER, { preHandler: [sessionMiddleware.check] }, viewController.getNumber);
+    fastify.get(ViewEndPoint.GET_STATISTICS, { preHandler: [sessionMiddleware.check] }, viewController.getStatistics);
+    fastify.post(ViewEndPoint.ADD, { preHandler: [requestMiddleware.check(viewSchema.post), viewMiddleware.checkOne, viewMiddleware.checkAndDeleteMany] }, viewController.add);
     done();
 }

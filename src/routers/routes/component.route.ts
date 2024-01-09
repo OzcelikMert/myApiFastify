@@ -7,10 +7,10 @@ import sessionMiddleware from "../../middlewares/validates/sessionAuth.middlewar
 import permissionMiddleware from "../../middlewares/validates/permission.middleware";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get('/get', { preHandler: [requestMiddleware.check(componentSchema.getMany)] }, componentController.getMany);
-    fastify.get('/get/:_id', { preHandler: [requestMiddleware.check(componentSchema.get)] }, componentController.getOne);
-    fastify.post('/add', { preHandler: [requestMiddleware.check(componentSchema.post), sessionMiddleware.check, permissionMiddleware.check] }, componentController.add);
-    fastify.put('/update/:_id', { preHandler: [requestMiddleware.check(componentSchema.put), sessionMiddleware.check, permissionMiddleware.check, componentMiddleware.check] }, componentController.updateOne);
-    fastify.delete('/delete', { preHandler: [requestMiddleware.check(componentSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check, componentMiddleware.checkMany] }, componentController.deleteMany);
+    fastify.get(ComponentEndPoint.GET, { preHandler: [requestMiddleware.check(componentSchema.getMany)] }, componentController.getMany);
+    fastify.get(ComponentEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(componentSchema.get)] }, componentController.getOne);
+    fastify.post(ComponentEndPoint.ADD, { preHandler: [requestMiddleware.check(componentSchema.post), sessionMiddleware.check, permissionMiddleware.check] }, componentController.add);
+    fastify.put(ComponentEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(componentSchema.put), sessionMiddleware.check, permissionMiddleware.check, componentMiddleware.check] }, componentController.updateOne);
+    fastify.delete(ComponentEndPoint.DELETE, { preHandler: [requestMiddleware.check(componentSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check, componentMiddleware.checkMany] }, componentController.deleteMany);
     done();
 }

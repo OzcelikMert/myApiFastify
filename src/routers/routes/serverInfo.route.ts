@@ -5,6 +5,6 @@ import permissionMiddleware from "../../middlewares/validates/permission.middlew
 import {PermissionId} from "../../constants/permissions";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get('/get', { preHandler: [sessionMiddleware.check, permissionMiddleware.check([PermissionId.SettingEdit])] }, serverInfoController.get);
+    fastify.get(ServerInfoEndPoint.GET, { preHandler: [sessionMiddleware.check, permissionMiddleware.check([PermissionId.SettingEdit])] }, serverInfoController.get);
     done();
 }

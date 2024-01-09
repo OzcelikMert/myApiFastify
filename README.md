@@ -2,10 +2,7 @@
 Api for My Admin Panel
 
 Things to do:
-    - Yup'u Zod'a cevir
-    - Express.js'i Fastify'a cevir
-    - Apiyi blog temalari icin uyarla
-    - bloggerlarda sadece bloggerlar kendi yazdiklarini duzenleyebilsin ve gorebilsin
+    + Yup'u Zod'a cevir
     - route nun sonunda One varsa ve id cekiyorsa update get delete vs. route'a :_id paramtersi ekle
     - route dan manyleri sil
     - updateOne deleteOne gibi sonlarinda One olanlari normale cevir One lari sil
@@ -18,3 +15,6 @@ Things to do:
     - sessionu kullandigin yerleri tekrar duzenle user ekledin sessiona datadan degil userdan cek verileri
     - permission kontrolunu routlara gonderdigin fonskyonun icine atadigin parametreler ile yap ve permisison middlewareyi ona gore tekrar ayarla
     - schemalar ile kontrol yaptiktan sonra schemalarda berlitilen datalar disinda bir data geliyormu kontrol et eger geliyorsa temizle
+    - Express.js'i Fastify'a cevir
+    - bloggerlarda sadece bloggerlar kendi yazdiklarini duzenleyebilsin ve gorebilsin
+    - Apiyi blog temalari icin uyarla

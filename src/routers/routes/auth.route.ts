@@ -5,8 +5,8 @@ import requestMiddleware from "../../middlewares/validates/request.middleware";
 import sessionMiddleware from "../../middlewares/validates/sessionAuth.middleware";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get('/get', { preHandler: [sessionMiddleware.check] }, authController.getSession);
-    fastify.post('/login', { preHandler: [requestMiddleware.check(authSchema.post)]}, authController.login);
-    fastify.delete('/logout', { preHandler: [sessionMiddleware.check] }, authController.logOut);
+    fastify.get(AuthEndPoint.GET, { preHandler: [sessionMiddleware.check] }, authController.getSession);
+    fastify.post(AuthEndPoint.LOGIN, { preHandler: [requestMiddleware.check(authSchema.post)]}, authController.login);
+    fastify.delete(AuthEndPoint.LOGOUT, { preHandler: [sessionMiddleware.check] }, authController.logOut);
     done();
 }

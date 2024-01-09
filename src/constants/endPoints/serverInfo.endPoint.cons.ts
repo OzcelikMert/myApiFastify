@@ -1,0 +1,3 @@
+const ServerInfoEndPoint = {
+    GET: "/get",
+}

@@ -6,7 +6,7 @@ import settingService from "../services/setting.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import logMiddleware from "../middlewares/log.middleware";
 
-const set = async (req: FastifyRequest, reply: FastifyReply) => {
+const send = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
@@ -82,5 +82,5 @@ const set = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export default {
-    set: set,
+    send: send,
 };
