@@ -1,5 +1,5 @@
 import UserRoles, {UserRoleId} from "../constants/userRoles";
-import PermissionPaths from "../constants/permissionsPaths";
+import PermissionPaths from "../constants/permissions";
 
 export default {
     checkPermissionPath(path: string, method: string, userRoleId: UserRoleId, userPermissions: number[]){

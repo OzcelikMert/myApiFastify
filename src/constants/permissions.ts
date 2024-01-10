@@ -21,7 +21,7 @@ export enum PermissionId {
     NavigateAdd,
     NavigateEdit,
     NavigateDelete,
-    SeoEdit,
+    SEOEdit,
     SettingEdit,
     ServiceAdd,
     ServiceEdit,

@@ -18,3 +18,5 @@ Things to do:
     - Express.js'i Fastify'a cevir
     - bloggerlarda sadece bloggerlar kendi yazdiklarini duzenleyebilsin ve gorebilsin
     - Apiyi blog temalari icin uyarla
+    - resimlseri kimin eklediginin datasini tut ve sadece kendi resimlerini silsinler
+    - aythorlar sadece kendi blgolarini yazip duzenleyebilsinler editorlerede yetki verilirse yapabilsinler
