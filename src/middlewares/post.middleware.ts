@@ -2,21 +2,22 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import postService from "../services/post.service";
 import logMiddleware from "./log.middleware";
+import {
+    PostSchemaDeleteManyDocument,
+    PostSchemaPutDocument,
+    PostSchemaPutManyStatusDocument
+} from "../schemas/post.schema";
 
 export default {
-    check: async (
-        req: FastifyRequest<{Params: any}>,
-        reply: FastifyReply
-    ) => {
+    check: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 
-            let _id = req.params._id as string;
-            let typeId = req.params.typeId as number;
+            let reqData = req as PostSchemaPutDocument;
 
             let resData = await postService.getOne({
-                _id: _id,
-                typeId: typeId
+                _id: reqData.params._id,
+                typeId: reqData.body.typeId
             });
 
             if (!resData) {
@@ -30,24 +31,20 @@ export default {
             }
         });
     },
-    checkMany: async (
-        req: FastifyRequest<{Body: any }>,
-        reply: FastifyReply
-    ) => {
+    checkMany: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 
-            let _id = req.body._id as string[];
-            let typeId = req.params.typeId as number;
+            let reqData = req as PostSchemaDeleteManyDocument;
 
             let resData = await postService.getMany({
-                _id: _id,
-                typeId: [typeId]
+                _id: reqData.body._id,
+                typeId: [reqData.body.typeId]
             });
 
             if (
                 resData.length == 0 ||
-                (resData.length != _id.length)
+                (resData.length != reqData.body._id.length)
             ) {
                 serviceResult.status = false;
                 serviceResult.errorCode = ErrorCodes.notFound;
@@ -59,31 +56,27 @@ export default {
             }
         });
     },
-    checkUrl: async (
-        req: FastifyRequest<{Params: any}>,
-        reply: FastifyReply
-    ) => {
+    checkUrl: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
-            let _id = req.params._id as string | undefined;
-            let typeId = req.params.typeId as number;
+            let reqData = req as PostSchemaPutDocument;
 
-            if(req.body.contents){
-                let title: string = req.body.contents.title || "";
+            if(reqData.body.contents){
+                let title: string = reqData.body.contents.title || "";
 
                 let urlAlreadyCount = 2;
                 let url = title.convertSEOUrl();
 
                 let oldUrl = url;
                 while((await postService.getOne({
-                    ignorePostId: _id ? [_id] : undefined,
-                    typeId: typeId,
+                    ignorePostId: reqData.params._id ? [reqData.params._id] : undefined,
+                    typeId: reqData.body.typeId,
                     url: url
                 }))) {
                     url = `${oldUrl}-${urlAlreadyCount}`;
                     urlAlreadyCount++;
                 }
 
-                req.body.contents.url = url;
+                reqData.body.contents.url = url;
             }
         });
     }

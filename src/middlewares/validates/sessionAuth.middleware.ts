@@ -5,7 +5,7 @@ import {StatusId} from "../../constants/status";
 import {sessionAuthTTL} from "../../config/session/session.auth";
 import logMiddleware from "../log.middleware";
 
-const check: RouteHandlerMethod = async (
+const check = async (
     req: FastifyRequest,
     res: FastifyReply
 ) => {
@@ -38,7 +38,7 @@ const check: RouteHandlerMethod = async (
     });
 };
 
-const reload: RouteHandlerMethod = async (
+const reload = async (
     req: FastifyRequest,
     res: FastifyReply
 ) => {

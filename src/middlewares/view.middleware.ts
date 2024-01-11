@@ -3,17 +3,16 @@ import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import viewService from "../services/view.service";
 import Variable, {DateMask} from "../library/variable";
 import logMiddleware from "./log.middleware";
+import {ViewSchemaPostDocument} from "../schemas/view.schema";
 
 export default {
-    check: async (
-        req: FastifyRequest<{Params: any}>,
-        reply: FastifyReply
-    ) => {
+    check: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 
-            req.body.url = Variable.isEmpty(req.body.url) ? "/" : req.body.url;
-            let url = req.body.url;
+            let reqData = req as ViewSchemaPostDocument;
+
+            let url = Variable.isEmpty(reqData.body.url) ? "/" : reqData.body.url;
 
             let dateStart = new Date(new Date().getStringWithMask(DateMask.DATE)),
                 dateEnd = new Date(new Date().getStringWithMask(DateMask.DATE));
@@ -37,10 +36,7 @@ export default {
             }
         });
     },
-    checkAndDeleteMany: async (
-        req: FastifyRequest<{Body: any }>,
-        reply: FastifyReply
-    ) => {
+    checkAndDeleteMany: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let dateEnd = new Date();
             dateEnd.addDays(-7);

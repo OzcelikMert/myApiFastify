@@ -20,3 +20,4 @@ Things to do:
     - Apiyi blog temalari icin uyarla
     - resimlseri kimin eklediginin datasini tut ve sadece kendi resimlerini silsinler
     - aythorlar sadece kendi blgolarini yazip duzenleyebilsinler editorlerede yetki verilirse yapabilsinler
+    - postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu

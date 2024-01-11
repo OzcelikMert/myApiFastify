@@ -1,21 +1,19 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../library/api";
-import mailerSchema from "../schemas/mailer.schema";
 import settingService from "../services/setting.service";
 import logMiddleware from "./log.middleware";
-import zod from "zod";
+import {MailerSchemaPostDocument} from "../schemas/mailer.schema";
 
 export default {
-    checkContactForm: async (
-        req: FastifyRequest<{Params: any, Body: (zod.infer<typeof mailerSchema.post>["body"])}>,
-        reply: FastifyReply
-    ) => {
+    checkContactForm: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 
+            let reqData = req as MailerSchemaPostDocument;
+
             let setting = (await settingService.get({}));
 
-            if((typeof setting.contactForms === "undefined") || (setting.contactForms && setting.contactForms?.indexOfKey("_id", req.body.contactFormId) < 0)){
+            if((typeof setting.contactForms === "undefined") || (setting.contactForms && setting.contactForms?.indexOfKey("_id", reqData.body.contactFormId) < 0)){
                 serviceResult.status = false;
                 serviceResult.errorCode = ErrorCodes.notFound;
                 serviceResult.statusCode = StatusCodes.notFound;

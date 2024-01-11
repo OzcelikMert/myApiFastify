@@ -1,27 +1,37 @@
-import {FastifyReply, FastifyRequest, RouteHandlerMethod} from 'fastify';
+import {FastifyReply, FastifyRequest} from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../../library/api";
-import permissionUtil from "../../utils/permission.util";
 import logMiddleware from "../log.middleware";
+import {PermissionDocument} from "../../types/constants/permissions";
+import UserRoles from "../../constants/userRoles";
+import userService from "../../services/user.service";
 
-const check = (permissions: number []): RouteHandlerMethod => async (
+const check = (permission: PermissionDocument) => async (
     req: FastifyRequest,
     reply: FastifyReply
 ) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let path = req.originalUrl.replace(`/api`, "");
+        let user = await userService.getOne({_id: req.sessionAuth.user?.userId});
 
-        if (!permissionUtil.checkPermissionPath(
-            path,
-            req.method,
-            req.sessionAuth.user?.roleId ?? 0,
-            req.sessionAuth.user?.permissions ?? []
-        )) {
+        if(user){
+            let permissionMinUserRole = UserRoles.findSingle("id", permission.minUserRoleId);
+            let userRole = UserRoles.findSingle("id", user.roleId);
+
+            if (
+                (permissionMinUserRole?.rank > userRole?.rank) ||
+                !(permission.permissionId.every(permissionId => user?.permissions.some(userPermissionId => permissionId == userPermissionId)))
+            ) {
+                serviceResult.status = false;
+                serviceResult.errorCode = ErrorCodes.noPerm;
+                serviceResult.statusCode = StatusCodes.notFound;
+            }
+        }else {
             serviceResult.status = false;
-            serviceResult.errorCode = ErrorCodes.noPerm;
-            serviceResult.statusCode = StatusCodes.notFound;
+            serviceResult.errorCode = ErrorCodes.notLoggedIn;
+            serviceResult.statusCode = StatusCodes.unauthorized;
         }
+
 
         if (!serviceResult.status) {
             reply.status(serviceResult.statusCode).send(serviceResult)

@@ -3,10 +3,7 @@ import {Result} from "../library/api";
 import logMiddleware from "./log.middleware";
 
 export default {
-    check: async (
-        req: FastifyRequest<{Params: any}>,
-        reply: FastifyReply
-    ) => {
+    check: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 

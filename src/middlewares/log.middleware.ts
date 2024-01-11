@@ -3,11 +3,7 @@ import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import logService from "../services/log.service";
 
 export default {
-    error: async (
-        req: FastifyRequest,
-        reply: FastifyReply,
-        func: () => Promise<void>
-    ) => {
+    error: async (req: FastifyRequest, reply: FastifyReply, func: () => Promise<void>) => {
         try {
             await func();
         }catch (e: any) {
@@ -20,7 +16,7 @@ export default {
                 params: req.params,
                 query: req.query,
                 body: req.body,
-                ...(req.sessionAuth.data() && req.sessionAuth.user?._id ? {userId: req.sessionAuth.user?._id} : {})
+                ...(req.sessionAuth.data() && req.sessionAuth.user?.userId ? {userId: req.sessionAuth.user?.userId} : {})
             });
             let serviceResult = new Result();
             serviceResult.statusCode = StatusCodes.badRequest;

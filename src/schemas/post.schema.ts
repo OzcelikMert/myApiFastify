@@ -3,6 +3,7 @@ import {ErrorCodes} from "../library/api";
 import {ProductTypeId} from "../constants/productTypes";
 
 const postBody = object({
+    typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
     statusId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
     pageTypeId: number(),
     categories: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
@@ -96,10 +97,10 @@ const postBody = object({
 
 const getSchema = object({
     params: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
     }),
     query: object({
-        _id: string(),
+        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         langId: string(),
         url: string(),
         pageTypeId: number(),
@@ -124,10 +125,8 @@ const getManySchema = object({
 });
 
 const getCountSchema = object({
-    params: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    }),
     query: object({
+        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         statusId: number(),
         categories: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
         title: string(),
@@ -135,25 +134,19 @@ const getCountSchema = object({
 });
 
 const postSchema = object({
-    params: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    }),
     body: postBody
 });
 
 const putSchema = object({
     params: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
     }),
     body: postBody
 });
 
 const putManyStatusSchema = object({
-    params: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() })
-    }),
     body: object({
+        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
         statusId: number().min(1, { message: ErrorCodes.emptyValue.toString() })
     }),
@@ -161,29 +154,27 @@ const putManyStatusSchema = object({
 
 const putRankSchema = object({
     params: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
     }),
     body: object({
+        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         rank: number().min(1, { message: ErrorCodes.emptyValue.toString() })
     }),
 });
 
 const putViewSchema = object({
     params: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
     }),
     body: object({
+        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         langId: string().min(1, { message: ErrorCodes.emptyValue.toString() })
     }),
 });
 
 const deleteManySchema = object({
-    params: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    }),
     body: object({
+        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
         _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
     })
 });

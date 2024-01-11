@@ -5,6 +5,7 @@ import viewService from "../services/view.service";
 import {Config} from "../config";
 import logMiddleware from "../middlewares/log.middleware";
 import {ViewSchemaPostDocument} from "../schemas/view.schema";
+import Variable from "../library/variable";
 
 const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
@@ -64,6 +65,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
         let insertData = await viewService.add({
             ...reqData.body,
             ip: ip,
+            url: Variable.isEmpty(reqData.body.url) ? "/" : reqData.body.url,
             ...ipDetail
         })
 

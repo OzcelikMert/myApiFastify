@@ -11,7 +11,7 @@ export default function (fastify: FastifyInstance, opts: any, done: () => void) 
     fastify.get(LanguageEndPoint.GET_FLAGS, { preHandler: [sessionMiddleware.check, permissionMiddleware.check] }, languageController.getFlags);
     fastify.get(LanguageEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(languageSchema.get)] }, languageController.getOne);
     fastify.post(LanguageEndPoint.ADD, { preHandler: [requestMiddleware.check(languageSchema.post), sessionMiddleware.check, permissionMiddleware.check] }, languageController.add);
-    fastify.put(LanguageEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [requestMiddleware.check(languageSchema.putRank), sessionMiddleware.check, permissionMiddleware.check, languageMiddleware.checkOne] }, languageController.updateOneRank);
-    fastify.put(LanguageEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(languageSchema.put), sessionMiddleware.check, permissionMiddleware.check, languageMiddleware.checkOne] }, languageController.updateOne);
+    fastify.put(LanguageEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [requestMiddleware.check(languageSchema.putRank), sessionMiddleware.check, permissionMiddleware.check, languageMiddleware.check] }, languageController.updateOneRank);
+    fastify.put(LanguageEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(languageSchema.put), sessionMiddleware.check, permissionMiddleware.check, languageMiddleware.check] }, languageController.updateOne);
     done();
 }

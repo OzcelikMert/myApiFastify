@@ -24,7 +24,7 @@ class Variable{
         }
         return data;
     }
-    static isSet(...variable: any) : boolean{
+    static isSet(...variable: any[]) : boolean{
         let result;
         try{
             for (let i = 0; i < variable.length; i++){
@@ -36,10 +36,10 @@ class Variable{
             return result !== undefined;
         }
     }
-    static isEmpty(...variable: any) : boolean{
+    static isEmpty(...variable: any[]) : boolean{
         for (let i = 0; i < variable.length; i++){
             if(
-                !this.isSet(() => variable[i]) ||
+                typeof variable[i] == "undefined" ||
                 variable[i] === null ||
                 variable[i].length === 0 ||
                 (typeof variable[i] === string && !variable[i].toString().trim())
@@ -47,13 +47,13 @@ class Variable{
         }
         return false;
     }
-    static isNull(...variable: any){
+    static isNull(...variable: any[]){
         for (let i = 0; i < variable.length; i++){
             if(variable[i] !== null) return false;
         }
         return true;
     }
-    static isNotNull(...variable: any){
+    static isNotNull(...variable: any[]){
         return !Variable.isNull(variable);
     }
     static setDefault(variable: any, default_value: any) : any{

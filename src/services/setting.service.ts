@@ -18,7 +18,7 @@ import settingObjectIdKeys from "../constants/objectIdKeys/setting.objectIdKeys"
 import {SettingDocument} from "../types/models/setting.model";
 
 export default {
-    async get(params: SettingGetParamDocument, withPassword: boolean) {
+    async get(params: SettingGetParamDocument, withPassword: boolean = false) {
         let filters: mongoose.FilterQuery<SettingDocument> = {}
         let projection: mongoose.ProjectionType<SettingDocument> = {};
 
