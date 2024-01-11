@@ -14,6 +14,23 @@ import {
     PostSchemaPutViewDocument
 } from "../schemas/post.schema";
 
+const createUrl = async (_id: string | null | undefined, name: string, typeId: number) => {
+    let urlAlreadyCount = 2;
+    let url = name.convertSEOUrl();
+
+    let oldUrl = url;
+    while ((await postService.getOne({
+        ignorePostId: _id ? [_id] : undefined,
+        url: url,
+        typeId: typeId
+    }))) {
+        url = `${oldUrl}-${urlAlreadyCount}`;
+        urlAlreadyCount++;
+    }
+
+    return url;
+}
+
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
@@ -50,7 +67,6 @@ const getCount = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as PostSchemaGetCountDocument;
 
         serviceResult.data = await postService.getCount({
-            ...reqData.params,
             ...reqData.query
         });
 
@@ -63,12 +79,13 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         let reqData = req as PostSchemaPostDocument;
+        let url = await createUrl(null, reqData.body.contents.title, reqData.body.typeId);
+        reqData.body.contents.url = url;
 
         let insertData = await postService.add({
-            ...reqData.params,
             ...reqData.body,
-            authorId: req.sessionAuth.user?._id.toString(),
-            lastAuthorId: req.sessionAuth.user?._id.toString(),
+            authorId: req.sessionAuth.user!.userId.toString(),
+            lastAuthorId: req.sessionAuth.user!.userId.toString(),
             dateStart: new Date(reqData.body.dateStart)
         });
 
@@ -83,11 +100,13 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         let reqData = req as PostSchemaPutDocument;
+        let url = await createUrl(null, reqData.body.contents.title, reqData.body.typeId);
+        reqData.body.contents.url = url;
 
         serviceResult.data = await postService.updateOne({
             ...reqData.params,
             ...reqData.body,
-            lastAuthorId: req.sessionAuth.user?._id.toString(),
+            lastAuthorId: req.sessionAuth.user!.userId.toString(),
             dateStart: new Date(reqData.body.dateStart)
         });
 
@@ -104,7 +123,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await postService.updateOneRank({
             ...reqData.body,
             ...reqData.params,
-            lastAuthorId: req.sessionAuth.user?._id.toString(),
+            lastAuthorId: req.sessionAuth.user!.userId.toString(),
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -134,8 +153,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await postService.updateManyStatus({
             ...reqData.body,
-            ...reqData.params,
-            lastAuthorId: req.sessionAuth.user?._id.toString(),
+            lastAuthorId: req.sessionAuth.user!.userId.toString(),
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -149,7 +167,6 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as PostSchemaDeleteManyDocument;
 
         serviceResult.data = await postService.deleteMany({
-            ...reqData.params,
             ...reqData.body
         });
 

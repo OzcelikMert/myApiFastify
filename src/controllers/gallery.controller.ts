@@ -8,6 +8,7 @@ import sharp from "sharp";
 import multer from "fastify-multer";
 import {GallerySchemaDeleteDocument} from "../schemas/gallery.schema";
 import logMiddleware from "../middlewares/log.middleware";
+import { FastifyInstance } from 'fastify/types/instance';
 
 function getImageResult(name: string, stats: Stats) {
     return {
@@ -43,7 +44,7 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const add = async (req: FastifyRequest, reply: FastifyReply) => {
+const add = (fastify: FastifyInstance) => async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
         function newName() {
@@ -51,7 +52,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
             return `${timestamp}-${Math.randomCustom(1, 999999)}.webp`;
         }
 
-        const upload = multer({
+        const upload: any = multer({
             storage: multer.memoryStorage(),
             fileFilter: (req, file, cb: any)=> {
                 let ext = path.extname(file.originalname)?.replace(".", "");
@@ -64,7 +65,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
             }
         }).single("file");
 
-        await new Promise(resolve => {
+        await new Promise<number>(resolve => {
             upload(req, reply, async function (err: any) {
                 if(err) {
                     serviceResult.status = false;
@@ -85,8 +86,8 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
                             .webp({quality: 80, force: true, loop: 0})
                             .toBuffer();
 
-                        await new Promise(resolveCreate => {
-                            fs.createWriteStream(path.resolve(Config.paths.uploads.images, ref)).write(data, (error) => {
+                        await new Promise<number>(resolveCreate => {
+                            fs.createWriteStream(path.resolve(Config.paths.uploads.images, ref)).write(data, (error: any) => {
                                 let fileStat = fs.statSync(path.resolve(Config.paths.uploads.images, ref))
                                 serviceResult.data.push(getImageResult(ref, fileStat));
                                 resolveCreate(0);

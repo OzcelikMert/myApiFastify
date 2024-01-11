@@ -54,29 +54,4 @@ export default {
             }
         });
     },
-    checkUrl: async (req: FastifyRequest, reply: FastifyReply) => {
-        await logMiddleware.error(req, reply, async () => {
-            let reqData = req as PostTermSchemaPutDocument;
-
-            if(reqData.body.contents){
-                let title: string = reqData.body.contents.title || "";
-
-                let urlAlreadyCount = 2;
-                let url = title.convertSEOUrl();
-
-                let oldUrl = url;
-                while((await postTermService.getOne({
-                    ignoreTermId: reqData.params._id ? [reqData.params._id] : undefined,
-                    typeId: reqData.body.typeId,
-                    postTypeId: reqData.body.postTypeId,
-                    url: url
-                }))) {
-                    url = `${oldUrl}-${urlAlreadyCount}`;
-                    urlAlreadyCount++;
-                }
-
-                reqData.body.contents.url = url;
-            }
-        });
-    }
 };

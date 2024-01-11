@@ -13,9 +13,19 @@ const postBody = {
 };
 
 const getSchema = object({
+    params: object({
+        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+    }),
     query: object({
-        _id: string(),
-        url: string(),
+        statusId: number(),
+    })
+});
+
+const getWithURLSchema = object({
+    params: object({
+        url: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+    }),
+    query: object({
         statusId: number(),
     })
 });
@@ -27,6 +37,7 @@ const getManySchema = object({
         email: string(),
         count: number(),
         page: number(),
+        url: string(),
     })
 });
 
@@ -79,6 +90,7 @@ export type UserSchemaDeleteDocument = z.infer<typeof deleteSchema>;
 
 export default {
     get: getSchema,
+    getWithURL: getWithURLSchema,
     getMany: getManySchema,
     post: postSchema,
     put: putSchema,

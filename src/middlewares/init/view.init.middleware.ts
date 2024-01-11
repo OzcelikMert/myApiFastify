@@ -10,7 +10,7 @@ export default {
         await logMiddleware.error(req, reply, async () => {
             let ip = req.ip;
             let date = new Date();
-            let _id = (req.session && req.session.data && req.sessionAuth.user?._id) ? req.sessionAuth.user?._id.toString() : "";
+            let _id = (req.session && req.sessionAuth.data() && req.sessionAuth.user) ? req.sessionAuth.user.userId.toString() : "";
 
             Config.onlineUsers = Config.onlineUsers.filter(onlineUser => Number(date.diffMinutes(onlineUser.updatedAt)) < 10);
 

@@ -1,26 +1,29 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../../library/api";
 import logMiddleware from "../log.middleware";
-import {PermissionDocument} from "../../types/constants/permissions";
+import {PermisisonDocumentFunc, PermissionDocument} from "../../types/constants/permissions";
 import UserRoles from "../../constants/userRoles";
 import userService from "../../services/user.service";
 
-const check = (permission: PermissionDocument) => async (
+const check = (permission: PermissionDocument | PermisisonDocumentFunc) => async (
     req: FastifyRequest,
     reply: FastifyReply
 ) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
+        let permissionData = typeof permission == "function" ? permission(req) : permission;
+
         let user = await userService.getOne({_id: req.sessionAuth.user?.userId});
 
         if(user){
-            let permissionMinUserRole = UserRoles.findSingle("id", permission.minUserRoleId);
+            let permissionMinUserRole = UserRoles.findSingle("id", permissionData.minUserRoleId);
             let userRole = UserRoles.findSingle("id", user.roleId);
 
             if (
-                (permissionMinUserRole?.rank > userRole?.rank) ||
-                !(permission.permissionId.every(permissionId => user?.permissions.some(userPermissionId => permissionId == userPermissionId)))
+                (!permissionMinUserRole || !userRole) ||
+                (permissionMinUserRole.rank > userRole.rank) ||
+                !(permissionData.permissionId.every(permissionId => user?.permissions.some(userPermissionId => permissionId == userPermissionId)))
             ) {
                 serviceResult.status = false;
                 serviceResult.errorCode = ErrorCodes.noPerm;

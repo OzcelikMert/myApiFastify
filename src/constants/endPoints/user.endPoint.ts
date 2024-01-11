@@ -1,6 +1,7 @@
 const UserEndPoint = {
     GET: "/get",
     GET_WITH_ID: "/get/:_id",
+    GET_WITH_URL: "/get/url/:url",
     ADD: "/add",
     UPDATE_PROFILE: "/update/profile",
     UPDATE_CHANGE_PASSWORD: "/update/change-password",

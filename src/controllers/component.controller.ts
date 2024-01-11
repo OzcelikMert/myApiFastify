@@ -46,8 +46,8 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let insertData = await componentService.add({
             ...reqData.body,
-            authorId: req.sessionAuth.user?.userId.toString(),
-            lastAuthorId: req.sessionAuth.user?.userId.toString()
+            authorId: req.sessionAuth.user!.userId.toString(),
+            lastAuthorId: req.sessionAuth.user!.userId.toString()
         });
 
         serviceResult.data = {_id: insertData._id};
@@ -65,7 +65,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await componentService.updateOne({
             ...reqData.params,
             ...reqData.body,
-            lastAuthorId: req.sessionAuth.user?.userId.toString()
+            lastAuthorId: req.sessionAuth.user!.userId.toString()
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)

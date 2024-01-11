@@ -4,8 +4,7 @@ import postService from "../services/post.service";
 import logMiddleware from "./log.middleware";
 import {
     PostSchemaDeleteManyDocument,
-    PostSchemaPutDocument,
-    PostSchemaPutManyStatusDocument
+    PostSchemaPutDocument
 } from "../schemas/post.schema";
 
 export default {
@@ -56,28 +55,4 @@ export default {
             }
         });
     },
-    checkUrl: async (req: FastifyRequest, reply: FastifyReply) => {
-        await logMiddleware.error(req, reply, async () => {
-            let reqData = req as PostSchemaPutDocument;
-
-            if(reqData.body.contents){
-                let title: string = reqData.body.contents.title || "";
-
-                let urlAlreadyCount = 2;
-                let url = title.convertSEOUrl();
-
-                let oldUrl = url;
-                while((await postService.getOne({
-                    ignorePostId: reqData.params._id ? [reqData.params._id] : undefined,
-                    typeId: reqData.body.typeId,
-                    url: url
-                }))) {
-                    url = `${oldUrl}-${urlAlreadyCount}`;
-                    urlAlreadyCount++;
-                }
-
-                reqData.body.contents.url = url;
-            }
-        });
-    }
 };
