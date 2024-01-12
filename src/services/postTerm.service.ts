@@ -77,7 +77,7 @@ export default {
         if (doc) {
             if (Array.isArray(doc.contents)) {
                 doc.alternates = doc.contents.map(content => ({
-                    langId: content.langId,
+                    langId: content.langId as string,
                     title: content.title,
                     url: content.url
                 }));
@@ -152,7 +152,7 @@ export default {
         return Promise.all((await query.lean().exec()).map(async (doc: PostTermGetResultDocument) => {
             if (Array.isArray(doc.contents)) {
                 doc.alternates = doc.contents.map(content => ({
-                    langId: content.langId,
+                    langId: content.langId as string,
                     title: content.title,
                     url: content.url
                 }));

@@ -25,9 +25,9 @@ console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
 
 const server = fastify({ trustProxy: true, logger: true, ignoreTrailingSlash: true });
 
-new InitConfig(server).init().then(()=> {
+new InitConfig(server as any).init().then(()=> {
     server.register(fastifyFormBody, {
-        limit: `${trafficMBLimit}MB`,
+        bodyLimit: trafficMBLimit,
     });
 
     server.register(fastifyCors, {

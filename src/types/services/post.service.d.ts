@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import {UserPopulateDocument} from "./user.service";
 import {PostTermPopulateDocument} from "./postTerm.service";
 import {
@@ -11,7 +10,7 @@ import {
 import {ComponentDocument} from "../models/component.model";
 
 export interface PostAlternateDocument {
-    langId: mongoose.Types.ObjectId | string
+    langId: string
     title?: string,
     url?: string
 }

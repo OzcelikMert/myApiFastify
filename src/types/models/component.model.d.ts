@@ -1,14 +1,16 @@
+import { ObjectId } from "mongoose"
+
 export interface ComponentDocument {
-    _id?: string,
-    authorId: string
-    lastAuthorId: string
+    _id?: string | ObjectId,
+    authorId: string | ObjectId
+    lastAuthorId: string | ObjectId
     elementId: string
     langKey: string,
     types: ComponentTypeDocument[]
 }
 
 export interface ComponentTypeDocument {
-    _id?: string,
+    _id?: string | ObjectId,
     elementId: string
     typeId: number,
     langKey: string,
@@ -17,8 +19,8 @@ export interface ComponentTypeDocument {
 }
 
 export interface ComponentTypeContentDocument {
-    _id?: string,
-    langId: string
+    _id?: string | ObjectId,
+    langId: string | ObjectId
     content?: string
     url?: string
     comment?: string

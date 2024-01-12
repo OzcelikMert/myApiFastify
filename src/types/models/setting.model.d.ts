@@ -1,6 +1,8 @@
+import { ObjectId } from "mongoose"
+
 export interface SettingDocument {
-    _id: string
-    defaultLangId: string
+    _id: string | ObjectId
+    defaultLangId: string | ObjectId
     icon?: string
     logo?: string
     logoTwo?: string
@@ -26,14 +28,14 @@ export interface SettingContactDocument {
 }
 
 export interface SettingSocialMediaDocument {
-    _id?: string
+    _id?: string | ObjectId
     elementId: string
     title: string
     url: string
 }
 
 export interface SettingContactFormDocument {
-    _id?: string
+    _id?: string | ObjectId
     name: string
     key: string
     outGoingEmail: string
@@ -45,22 +47,22 @@ export interface SettingContactFormDocument {
 }
 
 export interface SettingSeoContentDocument {
-    _id?: string
-    langId: string
+    _id?: string | ObjectId
+    langId: string | ObjectId
     title?: string,
     content?: string,
     tags?: string[]
 }
 
 export interface SettingStaticLanguageDocument {
-    _id?: string
+    _id?: string | ObjectId
     langKey: string,
     title: string
     contents: SettingStaticLanguageContentDocument[]
 }
 
 export interface SettingStaticLanguageContentDocument {
-    _id?: string
-    langId: string
+    _id?: string | ObjectId
+    langId: string | ObjectId
     content?: string,
 }

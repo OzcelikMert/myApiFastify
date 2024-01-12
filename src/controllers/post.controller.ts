@@ -100,7 +100,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         let reqData = req as PostSchemaPutDocument;
-        let url = await createUrl(null, reqData.body.contents.title, reqData.body.typeId);
+        let url = await createUrl(reqData.params._id, reqData.body.contents.title, reqData.body.typeId);
         reqData.body.contents.url = url;
 
         serviceResult.data = await postService.updateOne({

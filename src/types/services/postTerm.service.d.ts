@@ -1,12 +1,11 @@
-import mongoose from "mongoose";
 import {UserPopulateDocument} from "./user.service";
 import {PostTermContentDocument, PostTermDocument} from "../models/postTerm.model";
 
 export interface PostTermPopulateDocument {
-    _id: mongoose.Types.ObjectId | string,
+    _id: string,
     typeId: number,
     contents: {
-        langId: mongoose.Types.ObjectId | string,
+        langId: string,
         title?: string,
         image?: string
         url?: string
@@ -14,7 +13,7 @@ export interface PostTermPopulateDocument {
 }
 
 export interface PostTermAlternateDocument {
-    langId: mongoose.Types.ObjectId | string
+    langId: string
     title?: string,
     url?: string
 }
@@ -23,9 +22,9 @@ export type PostTermGetResultDocument = {
     authorId: UserPopulateDocument,
     lastAuthorId: UserPopulateDocument,
     mainId?: {
-        _id: mongoose.Types.ObjectId
+        _id: string
         contents: {
-            langId: mongoose.Types.ObjectId
+            langId: string
             title: string,
             url: string,
         }

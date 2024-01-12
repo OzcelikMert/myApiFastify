@@ -1,26 +1,28 @@
+import { ObjectId } from "mongoose"
+
 export interface PostDocument {
-    _id?: string
+    _id?: string | ObjectId
     typeId?: number,
     statusId: number,
     pageTypeId?: number,
-    authorId: string
-    lastAuthorId: string
+    authorId: string | ObjectId
+    lastAuthorId: string | ObjectId
     dateStart: Date,
     rank: number,
     isFixed?: boolean,
     categories?: string[]
     tags?: string[]
     contents: PostContentDocument[]
-    components?: string []
+    components?: string[] | ObjectId[]
     beforeAndAfter?: PostBeforeAndAfterDocument
-    eCommerce?: PostECommerceDocument
+    eCommerce?: PostECommerceDocument<>
     updatedAt?: string
     createdAt?: string
 }
 
 export interface PostContentDocument {
-    _id?: string
-    langId: string
+    _id?: string | ObjectId
+    langId: string | ObjectId
     image?: string
     icon?: string
     title?: string,
@@ -38,7 +40,7 @@ export interface PostBeforeAndAfterDocument {
 }
 
 export interface PostContentButtonDocument {
-    _id?: string
+    _id?: string | ObjectId
     title: string,
     url?: string
 }
@@ -76,14 +78,14 @@ export interface PostECommerceShippingDocument {
 }
 
 export interface PostECommerceAttributeDocument<T = string, P = string[]> {
-    _id?: string
-    attributeId: T
-    variations: P
+    _id?: string | ObjectId
+    attributeId: T | ObjectId
+    variations: P | ObjectId[]
     typeId: number
 }
 
 export interface PostECommerceVariationDocument<T = string> {
-    _id?: string
+    _id?: string | ObjectId
     rank: number
     selectedVariations: PostECommerceVariationSelectedDocument<T>[]
     images: string[]
@@ -94,14 +96,14 @@ export interface PostECommerceVariationDocument<T = string> {
 }
 
 export interface PostECommerceVariationSelectedDocument<T = string> {
-    _id?: string
-    attributeId: T
-    variationId: T
+    _id?: string | ObjectId
+    attributeId: T | ObjectId
+    variationId: T | ObjectId
 }
 
 export interface PostECommerceVariationContentDocument {
-    _id?: string
-    langId: string
+    _id?: string | ObjectId
+    langId: string | ObjectId
     image?: string
     content?: string,
     shortContent?: string,

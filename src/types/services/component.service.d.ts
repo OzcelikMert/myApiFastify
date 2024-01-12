@@ -25,7 +25,7 @@ export type ComponentAddParamDocument = {
     types?: (Omit<ComponentTypeDocument, "contents"> & {
         contents: ComponentTypeContentDocument
     })[]
-} & Omit<ComponentDocument, "_id"|"types">
+} & Omit<ComponentDocument, "_id"|"types"|"">
 
 export type ComponentUpdateOneParamDocument = {
     _id: string

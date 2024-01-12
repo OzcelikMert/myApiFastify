@@ -1,7 +1,8 @@
 import {UserRoleId} from "../../constants/userRoles";
+import { ObjectId } from "mongoose"
 
 export interface SessionAuthUserDocument{
-    userId: string
+    userId: string | ObjectId
     roleId: UserRoleId,
     email: string,
     ip: string,
@@ -12,6 +13,6 @@ export interface SessionAuthUserDocument{
 }
 
 export interface SessionAuthDocument{
-    _id?: string
+    _id?: string | ObjectId
     user: SessionAuthUserDocument
 }

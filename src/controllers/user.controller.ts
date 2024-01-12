@@ -96,7 +96,7 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         const reqData = req as UserSchemaPutProfileDocument;
-        let url = await createUrl(req.sessionAuth.user?.userId, reqData.body.name);
+        let url = await createUrl(req.sessionAuth.user!.userId as string, reqData.body.name);
 
         serviceResult.data = await userService.updateOne({
             ...reqData.body,

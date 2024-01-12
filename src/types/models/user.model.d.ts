@@ -1,5 +1,7 @@
+import { ObjectId } from "mongoose"
+
 export interface UserDocument {
-    _id: string
+    _id: string | ObjectId
     roleId: number,
     statusId: number,
     name: string,

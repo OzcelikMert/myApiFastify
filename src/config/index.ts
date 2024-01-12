@@ -4,7 +4,7 @@ import fastifyCookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
 import http from "http";
 import https from "https";
-import SessionAuth, {sessionAuthKey} from "./session/session.auth";
+import sessionAuth from "./session/session.auth";
 import {ConfigDocument} from "../types/config";
 import dbConnect from "./db";
 import userService from "../services/user.service";
@@ -15,10 +15,25 @@ import settingService from "../services/setting.service";
 import * as path from "path"
 import {generate} from "generate-password";
 import chalk from "chalk";
-
 import fs from "fs";
-import pagePathUtil from "../utils/pagePath.util";
-import sessionAuth from "./session/session.auth";
+
+const setPath = (...paths: (number | string | undefined)[]) => {
+    let returnPath = "";
+    for (let path of paths) {
+        if (path) {
+            if (
+                typeof path === "string" &&
+                path.length > 0 &&
+                path.startsWith("/")
+            ) {
+                path = path.slice(1);
+            }
+            
+            returnPath += `/${path}`;
+        }
+    }
+    return returnPath;
+}
 
 let Config: ConfigDocument = {
     passwordSalt: "_@QffsDh14Q",
@@ -75,7 +90,7 @@ class InitConfig {
             let folderPath = "";
 
             publicFolder.forEach(publicFolderPath => {
-                folderPath = pagePathUtil.setPath(folderPath, publicFolderPath);
+                folderPath = setPath(folderPath, publicFolderPath);
             });
             folderPath = folderPath.slice(1);
 
@@ -93,10 +108,9 @@ class InitConfig {
 
     private setSession() {
         this.server.register(fastifyCookie, {
-            secret: SessionAuth.sessionConfig.secret,
-            key: sessionAuthKey
+            secret: sessionAuth.sessionConfig.secret
         });
-        this.server.register(fastifySecureSession, SessionAuth.sessionConfig)
+        this.server.register(fastifySecureSession, sessionAuth.sessionConfig as any)
     }
 
     private async mongodbConnect() {

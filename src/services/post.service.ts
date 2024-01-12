@@ -143,7 +143,7 @@ export default {
 
             if (Array.isArray(doc.contents)) {
                 doc.alternates = doc.contents.map(content => ({
-                    langId: content.langId,
+                    langId: content.langId as string,
                     title: content.title,
                     url: content.url
                 }));
@@ -279,7 +279,7 @@ export default {
 
             if (Array.isArray(doc.contents)) {
                 doc.alternates = doc.contents.map(content => ({
-                    langId: content.langId,
+                    langId: content.langId as string,
                     title: content.title,
                     url: content.url
                 }));
