@@ -47,7 +47,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
         const reqData = req as UserSchemaGetManyDocument;
 
         serviceResult.data = await userService.getMany({
-            ...reqData.query
+            ...reqData.query,
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)

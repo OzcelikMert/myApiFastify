@@ -37,7 +37,6 @@ const getManySchema = object({
         email: string(),
         count: number(),
         page: number(),
-        url: string(),
     })
 });
 

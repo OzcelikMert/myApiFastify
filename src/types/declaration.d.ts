@@ -7,7 +7,7 @@ declare module "*.jpeg";
 declare module "*.jpg";
 
 declare module 'fastify' {
-    interface FastifyRequest {
+    export interface FastifyRequest {
         sessionAuth?: Session<SessionAuthDocument>
     }
 }
