@@ -1,4 +1,4 @@
-const NavigationEndPoint = {
+export default {
     GET: "/get",
     GET_WITH_ID: "/get/:_id",
     ADD: "/add",

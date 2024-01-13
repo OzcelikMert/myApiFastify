@@ -10,7 +10,7 @@ const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        serviceResult.data = await userService.getOne({_id: req.sessionAuth.user?.userId.toString()});
+        serviceResult.data = await userService.getOne({_id: req.sessionAuth!.user?.userId.toString()});
         reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
@@ -29,8 +29,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
             let user = resData;
             if(user.statusId == StatusId.Active) {
                 let time = new Date().getTime();
-                req.session.get("foo")
-                req.sessionAuth.set("user", {
+                req.sessionAuth!.set("user", {
                     userId: user._id,
                     email: user.email,
                     roleId: user.roleId,
@@ -57,7 +56,7 @@ const logOut = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        req.sessionAuth.delete();
+        req.sessionAuth!.delete();
         reply.status(serviceResult.statusCode).send(serviceResult);
     })
 };

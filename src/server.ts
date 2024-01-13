@@ -23,21 +23,23 @@ const whitelist = config.get("whiteList") as string[];
 console.time(`server`)
 console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
 
-const server = fastify({ trustProxy: true, logger: true, ignoreTrailingSlash: true });
+(async () => {
+    const server = await fastify({ trustProxy: true, logger: true, ignoreTrailingSlash: true });
 
-new InitConfig(server as any).init().then(()=> {
-    server.register(fastifyFormBody, {
+    await new InitConfig(server).init();
+
+    await server.register(fastifyFormBody, {
         bodyLimit: trafficMBLimit,
     });
 
-    server.register(fastifyCors, {
+    await server.register(fastifyCors, {
         origin: whitelist,
         methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS', 'HEAD'],
         credentials: true,
     });
 
-    server.register(fastifyCompress);
-    server.register(fastifyMultipart);
+    await server.register(fastifyCompress);
+    await server.register(fastifyMultipart);
 
     server.addHook('onResponse', async (request, reply) => {
         const responseTime = reply.getResponseTime();
@@ -47,12 +49,12 @@ new InitConfig(server as any).init().then(()=> {
     server.addHook('preHandler', viewInitMiddleware.set);
     server.addHook('preHandler', sessionAuthMiddleware.reload);
 
-    server.register(routers);
+    await server.register(routers);
 
-    server.listen(port,() => {
+    server.listen(port, () => {
         console.log(chalk.cyan(`=========  SERVER STARTED =========\n`));
         console.timeEnd(`server`);
     });
-})
+})();
 
 

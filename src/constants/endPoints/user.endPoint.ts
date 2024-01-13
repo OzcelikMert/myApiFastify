@@ -1,4 +1,4 @@
-const UserEndPoint = {
+export default {
     GET: "/get",
     GET_WITH_ID: "/get/:_id",
     GET_WITH_URL: "/get/url/:url",

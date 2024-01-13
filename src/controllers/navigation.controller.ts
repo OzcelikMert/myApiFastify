@@ -49,8 +49,8 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let insertData = await navigationService.add({
             ...reqData.body,
-            authorId: req.sessionAuth.user!.userId.toString(),
-            lastAuthorId: req.sessionAuth.user!.userId.toString(),
+            authorId: req.sessionAuth!.user!.userId.toString(),
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
         serviceResult.data = {_id: insertData._id};
@@ -68,7 +68,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await navigationService.updateOne({
             ...reqData.params,
             ...reqData.body,
-            lastAuthorId: req.sessionAuth.user!.userId.toString(),
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -84,7 +84,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await navigationService.updateOneRank({
             ...reqData.params,
             ...reqData.body,
-            lastAuthorId: req.sessionAuth.user!.userId.toString(),
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -99,7 +99,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await navigationService.updateManyStatus({
             ...reqData.body,
-            lastAuthorId: req.sessionAuth.user!.userId.toString()
+            lastAuthorId: req.sessionAuth!.user!.userId.toString()
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)

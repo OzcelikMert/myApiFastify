@@ -12,7 +12,7 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
         if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
             if (req.sessionAuth.user?.ip != req.ip) {
                 await new Promise(resolve => {
-                    req.sessionAuth.delete();
+                    req.sessionAuth!.delete();
                     resolve(1);
                 });
             }
@@ -20,7 +20,7 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
 
         if (
             (typeof req.sessionAuth === "undefined" || typeof req.sessionAuth.user === "undefined") ||
-            !(await userService.getOne({_id: req.sessionAuth.user.userId, statusId: StatusId.Active}))
+            !(await userService.getOne({_id: req.sessionAuth.user.userId as string, statusId: StatusId.Active}))
         ) {
             serviceResult.status = false;
             serviceResult.errorCode = ErrorCodes.notLoggedIn;
@@ -40,15 +40,13 @@ const reload = async (req: FastifyRequest,res: FastifyReply) => {
         if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
             if (Number(new Date().diffSeconds(new Date(req.sessionAuth.user.updatedAt ?? ""))) > sessionAuthTTL) {
                 await new Promise(resolve => {
-                    req.sessionAuth.delete();
+                    req.sessionAuth!.delete();
                     resolve(1);
                 })
             }
         }
         if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
-            req.sessionAuth.set("user", {
-                ...req.sessionAuth.user
-            });
+            req.sessionAuth.touch();
         }
     });
 };

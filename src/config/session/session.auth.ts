@@ -11,16 +11,17 @@ export const sessionAuthKey = "ShMf250ld@__45slS";
 const sessionConfig = {
     key: sessionAuthKey,
     secret: 'ShMf250ld@__45slS52_35@QeeR12',
-    sessionName: "auth",
-    cookieName: "sessionAuth",
+    salt: "ShMf250ld@__45slS52_35@QeeR12",
+    sessionName: "sessionAuth",
+    cookieName: "sessionAuthCookie",
     cookie: {
         path: '/',
         maxAge: 1000 * 60 * 60 * 24 * 365,
-        sameSite: 'Lax',
+        sameSite: 'lax',
         httpOnly: true,
         secure: serverProtocol !== "http",
     },
-    store: {
+    /*store: {
         set: async (key: any, value: any) => {
             const session = new sessionAuthModel({ key, value });
             await session.save();
@@ -32,7 +33,7 @@ const sessionConfig = {
         delete: async (key: any) => {
             await sessionAuthModel.deleteOne({ key });
         },
-    },
+    },*/
     /*storage: {
         db: mongoose.connection.db,
         collection: sessionAuthModel,

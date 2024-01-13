@@ -1,3 +1,3 @@
-const ServerInfoEndPoint = {
+export default {
     GET: "/get",
 }

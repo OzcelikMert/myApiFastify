@@ -1,4 +1,4 @@
-const EndPoint = {
+export default {
     AUTH: "/auth",
     USER: "/user",
     POST: "/post",

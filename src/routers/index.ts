@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import EndPoint from "../constants/endPoints";
 
 import userRoute from "./routes/user.route";
 import authRoute from "./routes/auth.route";

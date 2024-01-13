@@ -58,17 +58,17 @@ let Config: ConfigDocument = {
 }
 
 class InitConfig {
-    private server: FastifyInstance<any>;
+    private server: FastifyInstance;
 
-    constructor(server: FastifyInstance<any>) {
+    constructor(server: FastifyInstance) {
         this.server = server;
         Config.paths.root = path.resolve('./', "src");
     }
 
     async init() {
         return new Promise<void>(async resolve => {
-            this.setPublicFolders();
-            this.setSession();
+            await this.setPublicFolders();
+            await this.setSession();
             this.security();
             await this.mongodbConnect();
             await this.checkSuperAdminUser();
@@ -83,10 +83,10 @@ class InitConfig {
         https.globalAgent.maxSockets = Infinity;
     }
 
-    private setPublicFolders() {
+    private async setPublicFolders() {
         console.log(chalk.green("#Public Folders"));
 
-        Config.publicFolders.forEach((publicFolder, index) => {
+        Config.publicFolders.forEach(async (publicFolder, index) => {
             let folderPath = "";
 
             publicFolder.forEach(publicFolderPath => {
@@ -98,7 +98,7 @@ class InitConfig {
                 fs.mkdirSync(path.resolve(Config.paths.root, folderPath));
             }
 
-            this.server.register(fastifyStatic, {
+            await this.server.register(fastifyStatic, {
                 root: path.resolve(Config.paths.root, folderPath),
                 prefix: `/${folderPath}`,
             });
@@ -106,11 +106,11 @@ class InitConfig {
         });
     }
 
-    private setSession() {
-        this.server.register(fastifyCookie, {
+    private async setSession() {
+        await this.server.register(fastifyCookie, {
             secret: sessionAuth.sessionConfig.secret
         });
-        this.server.register(fastifySecureSession, sessionAuth.sessionConfig as any)
+        await this.server.register(fastifySecureSession, sessionAuth.sessionConfig as any)
     }
 
     private async mongodbConnect() {

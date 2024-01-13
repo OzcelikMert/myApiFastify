@@ -96,12 +96,12 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         const reqData = req as UserSchemaPutProfileDocument;
-        let url = await createUrl(req.sessionAuth.user!.userId as string, reqData.body.name);
+        let url = await createUrl(req.sessionAuth!.user!.userId as string, reqData.body.name);
 
         serviceResult.data = await userService.updateOne({
             ...reqData.body,
             url: url,
-            _id: req.sessionAuth.user!.userId.toString(),
+            _id: req.sessionAuth!.user!.userId.toString(),
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -115,7 +115,7 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
         const reqData = req as UserSchemaPutPasswordDocument;
 
         serviceResult.data = await userService.updateOne({
-            _id: req.sessionAuth.user!.userId.toString(),
+            _id: req.sessionAuth!.user!.userId.toString(),
             password: reqData.body.newPassword
         });
 

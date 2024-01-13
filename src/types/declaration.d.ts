@@ -8,6 +8,6 @@ declare module "*.jpg";
 
 declare module 'fastify' {
     interface FastifyRequest {
-        sessionAuth: Session<SessionAuthDocument>
+        sessionAuth?: Session<SessionAuthDocument>
     }
 }

@@ -1,3 +1,3 @@
-const MailerEndPoint = {
+export default {
     SEND: "/send"
 }

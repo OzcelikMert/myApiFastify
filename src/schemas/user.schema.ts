@@ -32,7 +32,7 @@ const getWithURLSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })),
         statusId: number(),
         email: string(),
         count: number(),

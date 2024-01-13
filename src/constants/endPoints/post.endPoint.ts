@@ -1,4 +1,4 @@
-const PostEndPoint = {
+export default {
     GET: "/get",
     GET_COUNT: "/get/count",
     GET_WITH_ID: "/get/:_id",
