@@ -38,11 +38,11 @@ const setPath = (...paths: (number | string | undefined)[]) => {
 let Config: ConfigDocument = {
     passwordSalt: "_@QffsDh14Q",
     publicFolders: [
-        ["uploads"],
-        ["uploads", "flags"],
+        ["uploads"]
+       /* ["uploads", "flags"],
         ["uploads", "images"],
         ["uploads", "static"],
-        ["uploads", "video"]
+        ["uploads", "video"]*/
     ],
     onlineUsers: [],
     paths: {
@@ -98,11 +98,13 @@ class InitConfig {
                 fs.mkdirSync(path.resolve(Config.paths.root, folderPath));
             }
 
+            console.log(chalk.blue(` - /${folderPath}`) + ` : ${path.resolve(Config.paths.root, folderPath)}`)
+
             await this.server.register(fastifyStatic, {
                 root: path.resolve(Config.paths.root, folderPath),
                 prefix: `/${folderPath}`,
             });
-            console.log(chalk.blue(` - /${folderPath}`) + ` : ${path.resolve(Config.paths.root, folderPath)}`)
+            //console.log(chalk.blue(` - /${folderPath}`) + ` : ${path.resolve(Config.paths.root, folderPath)}`)
         });
     }
 

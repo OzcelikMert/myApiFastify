@@ -44,7 +44,7 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const add = (fastify: FastifyInstance) => async (req: FastifyRequest, reply: FastifyReply) => {
+const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
         function newName() {

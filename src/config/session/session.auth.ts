@@ -6,12 +6,12 @@ import crypto from "crypto";
 const serverProtocol = config.get("serverProtocol") as string;
 
 export const sessionAuthTTL = 60 * 60;
-export const sessionAuthKey = "ShMf250ld@__45slS";
+export const sessionAuthKey = crypto.randomBytes(32);
 
 const sessionConfig = {
     key: sessionAuthKey,
-    secret: 'ShMf250ld@__45slS52_35@QeeR12',
-    salt: "ShMf250ld@__45slS52_35@QeeR12",
+    secret: crypto.randomBytes(32).toString('hex'),
+    salt:  "ShMf250ld@__45s1",
     sessionName: "sessionAuth",
     cookieName: "sessionAuthCookie",
     cookie: {

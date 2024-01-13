@@ -14,7 +14,7 @@ const check = (permission: PermissionDocument | PermisisonDocumentFunc) => async
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
-        let user = await userService.getOne({_id: req.sessionAuth.user?.userId});
+        let user = await userService.getOne({_id: req.sessionAuth.user?.userId.toString()});
 
         if(user){
             let permissionMinUserRole = UserRoles.findSingle("id", permissionData.minUserRoleId);

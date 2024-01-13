@@ -47,7 +47,7 @@ export default {
 
             if (userRoleId > 0) {
                 let user = await userService.getOne({
-                    _id: req.sessionAuth.user?.userId
+                    _id: req.sessionAuth.user?.userId as string
                 });
 
                 if(user){

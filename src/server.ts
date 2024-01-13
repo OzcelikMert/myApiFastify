@@ -8,6 +8,7 @@ import chalk from 'chalk';
 import routers from "./routers";
 import config from "config";
 
+import * as Declaration from './types/declaration'
 import "./library/variable/array"
 import "./library/variable/string"
 import "./library/variable/number"
@@ -51,7 +52,7 @@ console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
 
     await server.register(routers);
 
-    server.listen(port, () => {
+    server.listen({port: port}, () => {
         console.log(chalk.cyan(`=========  SERVER STARTED =========\n`));
         console.timeEnd(`server`);
     });
