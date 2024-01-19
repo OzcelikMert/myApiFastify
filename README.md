@@ -22,3 +22,4 @@ Things to do:
     - aythorlar sadece kendi blgolarini yazip duzenleyebilsinler editorlerede yetki verilirse yapabilsinler
     - postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
     - galleryde sadece kendi resilmerini silebilecek ve editor ve adminler tumr esimleri silebilicek editleyebilecek
+    - schema ile kontrol ederken enum degerleride kontrol et enum disinda deger gelmemesi lazim
