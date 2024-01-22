@@ -1,32 +1,32 @@
-import {object, string, array, number, ZodType, z} from 'zod';
-import {ErrorCodes} from "../library/api";
-import {SettingGetParamDocument} from "../types/services/setting.service";
+import {array, number, object, string, z} from 'zod';
+import {ProjectionKeys} from "../constants/projections";
+import {CurrencyId} from "../constants/currencyTypes";
 
 const getSchema = object({
     query: object({
-        langId: string(),
-        projection: string()
-    }) as ZodType<SettingGetParamDocument>
+        langId: string().optional(),
+        projection: z.nativeEnum(ProjectionKeys).optional()
+    })
 });
 
 const putGeneralSchema = object({
     body: object({
-        defaultLangId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        icon: string(),
-        logo: string(),
-        logoTwo: string(),
-        head: string(),
-        script: string(),
+        defaultLangId: string().min(1),
+        icon: string().optional(),
+        logo: string().optional(),
+        logoTwo: string().optional(),
+        head: string().optional(),
+        script: string().optional(),
         contact: object({
-            email: string(),
-            phone: string(),
-            address: string(),
-            addressMap: string(),
-            facebook: string(),
-            instagram: string(),
-            twitter: string(),
-            linkedin: string(),
-            google: string(),
+            email: string().optional(),
+            phone: string().optional(),
+            address: string().optional(),
+            addressMap: string().optional(),
+            facebook: string().optional(),
+            instagram: string().optional(),
+            twitter: string().optional(),
+            linkedin: string().optional(),
+            google: string().optional(),
         }),
     })
 });
@@ -34,10 +34,10 @@ const putGeneralSchema = object({
 const putSeoSchema = object({
     body: object({
         seoContents: object({
-            langId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            title: string(),
-            content: string(),
-            tags: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([])
+            langId: string().min(1),
+            title: string().optional(),
+            content: string().optional(),
+            tags: array(string().min(1)).default([])
         }),
     })
 });
@@ -45,49 +45,49 @@ const putSeoSchema = object({
 const putContactFormSchema = object({
     body: object({
         contactForms: array(object({
-            _id: string(),
-            name: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            key: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            outGoingEmail: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            email: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            password: string(),
-            outGoingServer: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            inComingServer: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            port: number().min(1, { message: ErrorCodes.emptyValue.toString() })
-        })).min(1, { message: ErrorCodes.emptyValue.toString() }),
+            _id: string().optional(),
+            name: string().min(1),
+            key: string().min(1),
+            outGoingEmail: string().min(1),
+            email: string().min(1),
+            password: string().optional(),
+            outGoingServer: string().min(1),
+            inComingServer: string().min(1),
+            port: number().min(1)
+        })).min(1),
     })
 });
 
 const putSocialMediaSchema = object({
     body: object({
         socialMedia: array(object({
-            _id: string(),
+            _id: string().optional(),
             elementId: string().default(""),
             title: string().default(""),
             url: string().default(""),
-        })).min(1, { message: ErrorCodes.emptyValue.toString() }),
+        })).min(1),
     })
 });
 
 const putStaticLanguageSchema = object({
     body: object({
         staticLanguages: array(object({
-            _id: string(),
-            langKey: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+            _id: string().optional(),
+            langKey: string().min(1),
             title: string().default(""),
             contents: object({
-                _id: string(),
-                langId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+                _id: string().optional(),
+                langId: string().min(1),
                 content: string().default(""),
             })
-        })).min(1, { message: ErrorCodes.emptyValue.toString() }),
+        })).min(1),
     })
 });
 
 const putECommerceSchema = object({
     body: object({
         eCommerce: object({
-            currencyId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
+            currencyId: z.nativeEnum(CurrencyId),
         }),
     })
 });

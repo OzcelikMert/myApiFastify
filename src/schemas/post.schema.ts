@@ -1,38 +1,41 @@
 import {object, string, number, array, boolean, z} from 'zod';
-import {ErrorCodes} from "../library/api";
 import {ProductTypeId} from "../constants/productTypes";
+import {StatusId} from "../constants/status";
+import {PostTypeId} from "../constants/postTypes";
+import {PageTypeId} from "../constants/pageTypes";
+import {AttributeTypeId} from "../constants/attributeTypes";
 
 const postBody = object({
-    typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    statusId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    pageTypeId: number(),
-    categories: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-    tags: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-    dateStart: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    rank: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
+    typeId: z.nativeEnum(PostTypeId),
+    statusId: z.nativeEnum(StatusId),
+    pageTypeId: z.nativeEnum(PageTypeId).optional(),
+    categories: array(string().min(1)).default([]),
+    tags: array(string().min(1)).default([]),
+    dateStart: string().min(1),
+    rank: number().min(1),
     isFixed: boolean().default(false),
     contents: object({
-        langId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        title: string().min(3, {message: ErrorCodes.incorrectData.toString()}),
-        image: string(),
-        icon: string(),
-        url: string(),
-        content: string(),
-        shortContent: string(),
+        langId: string().min(1),
+        title: string().min(3),
+        image: string().optional(),
+        icon: string().optional(),
+        url: string().optional(),
+        content: string().optional(),
+        shortContent: string().optional(),
         buttons: array(object({
-            title: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            url: string()
+            title: string().min(1),
+            url: string().optional()
         })).default([])
     }),
     beforeAndAfter: object({
-        imageBefore: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        imageAfter: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        images: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
+        imageBefore: string().min(1),
+        imageAfter: string().min(1),
+        images: array(string().min(1)).default([]),
     }),
-    components: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
+    components: array(string().min(1)).default([]),
     eCommerce: object({
-        typeId: number().default(ProductTypeId.SimpleProduct),
-        images: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
+        typeId: z.nativeEnum(ProductTypeId).default(ProductTypeId.SimpleProduct),
+        images: array(string().min(1)).default([]),
         pricing: object({
             taxRate: number().default(0),
             taxExcluded: number().default(0),
@@ -52,17 +55,17 @@ const postBody = object({
             weight: string().default(""),
         }),
         attributes: array(object({
-            typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            attributeId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            variations: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
+            typeId: z.nativeEnum(AttributeTypeId),
+            attributeId: string().min(1),
+            variations: array(string().min(1)).default([]),
         })).default([]),
         variations: array(object({
             selectedVariations: array(object({
-                attributeId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-                variationId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+                attributeId: string().min(1),
+                variationId: string().min(1),
             })).default([]),
-            images: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-            rank: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
+            images: array(string().min(1)).default([]),
+            rank: number().min(1),
             pricing: object({
                 taxRate: number().default(0),
                 taxExcluded: number().default(0),
@@ -82,54 +85,54 @@ const postBody = object({
                 weight: string().default(""),
             }),
             contents: object({
-                langId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-                image: string(),
-                content: string(),
-                shortContent: string(),
+                langId: string().min(1),
+                image: string().optional(),
+                content: string().optional(),
+                shortContent: string().optional(),
             })
         })).default([]),
         variationDefaults: array(object({
-            attributeId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            variationId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+            attributeId: string().min(1),
+            variationId: string().min(1),
         })).default([]),
     })
 });
 
-const getSchema = object({
+const getOneSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     query: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        langId: string(),
-        url: string(),
-        pageTypeId: number(),
-        statusId: number(),
+        typeId: z.nativeEnum(PostTypeId),
+        langId: string().optional(),
+        url: string().optional(),
+        pageTypeId: z.nativeEnum(PageTypeId).optional(),
+        statusId: z.nativeEnum(StatusId).optional(),
     })
 });
 
 const getManySchema = object({
     query: object({
-        typeId: array(number().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-        pageTypeId: array(number().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-        langId: string(),
-        title: string(),
-        statusId: number(),
-        count: number(),
-        page: number(),
-        ignoreDefaultLanguage: boolean(),
-        isRecent: boolean(),
-        categories: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
+        typeId: array(z.nativeEnum(PostTypeId)).default([]),
+        _id: array(string().min(1)).default([]),
+        pageTypeId: array(z.nativeEnum(PageTypeId)).default([]),
+        langId: string().optional(),
+        title: string().optional(),
+        statusId: z.nativeEnum(StatusId).optional(),
+        count: number().optional(),
+        page: number().optional(),
+        ignoreDefaultLanguage: boolean().optional(),
+        isRecent: boolean().optional(),
+        categories: array(string().min(1)).default([]),
     })
 });
 
 const getCountSchema = object({
     query: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        statusId: number(),
-        categories: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-        title: string(),
+        typeId: z.nativeEnum(PostTypeId),
+        statusId: z.nativeEnum(StatusId).optional(),
+        categories: array(string().min(1)).default([]),
+        title: string().optional(),
     })
 });
 
@@ -137,66 +140,66 @@ const postSchema = object({
     body: postBody
 });
 
-const putSchema = object({
+const putOneSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     body: postBody
 });
 
 const putManyStatusSchema = object({
     body: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
-        statusId: number().min(1, { message: ErrorCodes.emptyValue.toString() })
+        typeId: z.nativeEnum(PostTypeId),
+        _id: array(string().min(1)).min(1),
+        statusId: z.nativeEnum(StatusId)
     }),
 });
 
-const putRankSchema = object({
+const putOneRankSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     body: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        rank: number().min(1, { message: ErrorCodes.emptyValue.toString() })
+        typeId: z.nativeEnum(PostTypeId),
+        rank: number().min(1)
     }),
 });
 
-const putViewSchema = object({
+const putOneViewSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     body: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        langId: string().min(1, { message: ErrorCodes.emptyValue.toString() })
+        typeId: z.nativeEnum(PostTypeId),
+        langId: string().min(1)
     }),
 });
 
 const deleteManySchema = object({
     body: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
+        typeId: z.nativeEnum(PostTypeId),
+        _id: array(string().min(1)).min(1),
     })
 });
 
-export type PostSchemaGetDocument = z.infer<typeof getSchema>;
+export type PostSchemaGetDocument = z.infer<typeof getOneSchema>;
 export type PostSchemaGetManyDocument = z.infer<typeof getManySchema>;
 export type PostSchemaGetCountDocument = z.infer<typeof getCountSchema>;
 export type PostSchemaPostDocument = z.infer<typeof postSchema>;
-export type PostSchemaPutDocument = z.infer<typeof putSchema>;
+export type PostSchemaPutDocument = z.infer<typeof putOneSchema>;
 export type PostSchemaPutManyStatusDocument = z.infer<typeof putManyStatusSchema>;
-export type PostSchemaPutRankDocument = z.infer<typeof putRankSchema>;
-export type PostSchemaPutViewDocument = z.infer<typeof putViewSchema>;
+export type PostSchemaPutRankDocument = z.infer<typeof putOneRankSchema>;
+export type PostSchemaPutViewDocument = z.infer<typeof putOneViewSchema>;
 export type PostSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
 export default {
-    get: getSchema,
+    getOne: getOneSchema,
     getMany: getManySchema,
     getCount: getCountSchema,
     post: postSchema,
-    put: putSchema,
+    putOne: putOneSchema,
     putManyStatus: putManyStatusSchema,
-    putRank: putRankSchema,
-    putView: putViewSchema,
+    putOneRank: putOneRankSchema,
+    putOneView: putOneViewSchema,
     deleteMany: deleteManySchema
 };

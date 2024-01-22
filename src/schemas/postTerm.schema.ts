@@ -1,46 +1,47 @@
 import {object, string, array, boolean, number, z} from 'zod';
-import {ErrorCodes} from "../library/api";
+import {StatusId} from "../constants/status";
+import {PostTypeId} from "../constants/postTypes";
+import {PostTermTypeId} from "../constants/postTermTypes";
 
 const postBody = object({
-    postTypeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    mainId: string(),
-    statusId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
+    postTypeId: z.nativeEnum(PostTypeId),
+    typeId: z.nativeEnum(PostTermTypeId),
+    statusId: z.nativeEnum(StatusId),
+    mainId: string().optional(),
     rank: number().default(0),
     contents: object({
-        langId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        title: string().min(3, { message: ErrorCodes.incorrectData.toString() }),
-        image: string(),
-        url: string(),
+        langId: string().min(1),
+        title: string().min(3),
+        image: string().optional(),
+        url: string().optional(),
     })
 })
 
-const getSchema = object({
+const getOneSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     query: object({
-        postTypeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        _id: string(),
-        url: string(),
-        langId: string(),
-        statusId: number(),
+        postTypeId: z.nativeEnum(PostTypeId),
+        typeId: z.nativeEnum(PostTermTypeId),
+        statusId: z.nativeEnum(StatusId).optional(),
+        url: string().optional(),
+        langId: string().optional(),
     })
 });
 
 const getManySchema = object({
     query: object({
-        postTypeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-        typeId: array(number().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
+        _id: array(string().min(1)).default([]),
+        typeId: array(z.nativeEnum(PostTermTypeId)).default([]),
+        postTypeId: z.nativeEnum(PostTypeId),
+        statusId: z.nativeEnum(StatusId).optional(),
         withPostCount: boolean().default(false),
-        langId: string(),
-        statusId: number(),
-        title: string(),
-        count: number(),
-        page: number(),
-        ignoreDefaultLanguage: boolean()
+        langId: string().optional(),
+        title: string().optional(),
+        count: number().optional(),
+        page: number().optional(),
+        ignoreDefaultLanguage: boolean().optional()
     })
 });
 
@@ -48,55 +49,55 @@ const postSchema = object({
     body: postBody
 });
 
-const putSchema = object({
+const putOneSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     body: postBody
 });
 
 const putManyStatusSchema = object({
     body: object({
-        postTypeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
-        statusId: number().min(1, { message: ErrorCodes.emptyValue.toString() })
+        postTypeId: z.nativeEnum(PostTypeId),
+        typeId: z.nativeEnum(PostTermTypeId),
+        statusId: z.nativeEnum(StatusId),
+        _id: array(string().min(1)).min(1),
     })
 });
 
-const putRankSchema = object({
+const putOneRankSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     body: object({
-        postTypeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        rank: number().min(1, { message: ErrorCodes.emptyValue.toString() })
+        postTypeId: z.nativeEnum(PostTypeId),
+        typeId: z.nativeEnum(PostTermTypeId),
+        rank: number().min(1)
     })
 });
 
 const deleteManySchema = object({
     body: object({
-        postTypeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
+        postTypeId: z.nativeEnum(PostTypeId),
+        typeId: z.nativeEnum(PostTermTypeId),
+        _id: array(string().min(1)).min(1),
     })
 });
 
-export type PostTermSchemaGetDocument = z.infer<typeof getSchema>;
+export type PostTermSchemaGetDocument = z.infer<typeof getOneSchema>;
 export type PostTermSchemaGetManyDocument = z.infer<typeof getManySchema>;
 export type PostTermSchemaPostDocument = z.infer<typeof postSchema>;
-export type PostTermSchemaPutDocument = z.infer<typeof putSchema>;
+export type PostTermSchemaPutDocument = z.infer<typeof putOneSchema>;
 export type PostTermSchemaPutManyStatusDocument = z.infer<typeof putManyStatusSchema>;
-export type PostTermSchemaPutRankDocument = z.infer<typeof putRankSchema>;
+export type PostTermSchemaPutRankDocument = z.infer<typeof putOneRankSchema>;
 export type PostTermSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
 export default {
-    get: getSchema,
+    getOne: getOneSchema,
     getMany: getManySchema,
     post: postSchema,
-    put: putSchema,
+    putOne: putOneSchema,
     putManyStatus: putManyStatusSchema,
-    putRank: putRankSchema,
+    putOneRank: putOneRankSchema,
     deleteMany: deleteManySchema
 };

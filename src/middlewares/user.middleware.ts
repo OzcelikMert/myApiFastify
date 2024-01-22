@@ -6,7 +6,7 @@ import logMiddleware from "./log.middleware";
 import {UserSchemaPutDocument, UserSchemaPutPasswordDocument} from "../schemas/user.schema";
 
 export default {
-    check: async (req: FastifyRequest, reply: FastifyReply) => {
+    checkOne: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 

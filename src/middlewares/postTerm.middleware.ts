@@ -5,7 +5,7 @@ import logMiddleware from "./log.middleware";
 import {PostTermSchemaDeleteManyDocument, PostTermSchemaPutDocument} from "../schemas/postTerm.schema";
 
 export default {
-    check: async (req: FastifyRequest, reply: FastifyReply) => {
+    checkOne: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 

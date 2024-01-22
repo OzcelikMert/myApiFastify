@@ -8,14 +8,14 @@ import {
 } from "../schemas/subscriber.schema";
 
 export default {
-    check: (isThere: boolean) => async (req: FastifyRequest, reply: FastifyReply) => {
+    checkOne: (isThere: boolean) => async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 
             let reqData = req as SubscriberSchemaDeleteDocument;
 
             let resData = await subscriberService.getOne({
-                _id: reqData.body._id,
+                _id: reqData.params._id,
                 email: reqData.body.email
             });
 

@@ -5,7 +5,7 @@ import languageService from "../services/language.service";
 import {LanguageSchemaPutDocument} from "../schemas/language.schema";
 
 export default {
-    check: async (req: FastifyRequest, reply: FastifyReply) => {
+    checkOne: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 

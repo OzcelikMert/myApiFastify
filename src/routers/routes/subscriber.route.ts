@@ -10,9 +10,9 @@ import subscriberPermission from "../../constants/permissions/subscriber.permiss
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
     fastify.get(subscriberEndPoint.GET, { preHandler: [requestMiddleware.check(subscriberSchema.getMany), sessionMiddleware.check, permissionMiddleware.check(subscriberPermission.get)] }, subscriberController.getMany);
-    fastify.get(subscriberEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(subscriberSchema.get), sessionMiddleware.check] }, subscriberController.getOne);
-    fastify.post(subscriberEndPoint.ADD, { preHandler: [requestMiddleware.check(subscriberSchema.post), subscriberMiddleware.check(true)] }, subscriberController.add);
+    fastify.get(subscriberEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(subscriberSchema.getOne), sessionMiddleware.check] }, subscriberController.getOne);
+    fastify.post(subscriberEndPoint.ADD, { preHandler: [requestMiddleware.check(subscriberSchema.post), subscriberMiddleware.checkOne(true)] }, subscriberController.add);
     fastify.delete(subscriberEndPoint.DELETE, { preHandler: [requestMiddleware.check(subscriberSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check(subscriberPermission.delete), subscriberMiddleware.checkMany]}, subscriberController.deleteMany);
-    fastify.delete(subscriberEndPoint.DELETE_WITH_ID, { preHandler: [requestMiddleware.check(subscriberSchema.delete), subscriberMiddleware.check(false)] }, subscriberController.deleteOne);
+    fastify.delete(subscriberEndPoint.DELETE_WITH_ID, { preHandler: [requestMiddleware.check(subscriberSchema.deleteOne), subscriberMiddleware.checkOne(false)] }, subscriberController.deleteOne);
     done();
 }

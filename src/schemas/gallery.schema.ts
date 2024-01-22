@@ -1,9 +1,8 @@
 import {object, string, array, z} from 'zod';
-import {ErrorCodes} from "../library/api";
 
 const deleteSchema = object({
     body: object({
-        images: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })),
+        images: array(string().min(1)).min(1),
     })
 });
 

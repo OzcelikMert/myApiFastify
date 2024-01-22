@@ -1,40 +1,40 @@
 import {object, string, array, number, z} from 'zod';
-import {ErrorCodes} from "../library/api";
+import {ComponentInputTypeId} from "../constants/componentInputTypes";
 
 const postBody = object({
-    elementId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    langKey: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-    types: (array(object({
-        _id: string(),
-        elementId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        langKey: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        rank: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
+    elementId: string().min(1),
+    langKey: string().min(1),
+    types: array(object({
+        _id: string().optional(),
+        elementId: string().min(1),
+        typeId: z.nativeEnum(ComponentInputTypeId),
+        langKey: string().min(1),
+        rank: number().min(1),
         contents: object({
-            _id: string(),
-            url: string(),
-            comment: string(),
-            langId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-            content: string()
+            _id: string().optional(),
+            url: string().optional(),
+            comment: string().optional(),
+            langId: string().min(1),
+            content: string().optional()
         }).required()
-    }))).default([])
+    }).required()).default([])
 });
 
-const getSchema = object({
+const getOneSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     query: object({
-        elementId: string(),
-        langId: string(),
+        elementId: string().optional(),
+        langId: string().optional(),
     })
 });
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })),
-        elementId: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-        langId: string()
+        _id: array(string().min(1)),
+        elementId: array(string().min(1)).default([]),
+        langId: string().optional()
     })
 });
 
@@ -42,29 +42,29 @@ const postSchema = object({
     body: postBody
 });
 
-const putSchema = object({
+const putOneSchema = object({
     params: object({
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: string().min(1),
     }),
     body: postBody
 });
 
 const deleteManySchema = object({
     body: object({
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: array(string().min(1)).min(1),
     })
 });
 
-export type ComponentSchemaGetDocument = z.infer<typeof getSchema>;
+export type ComponentSchemaGetDocument = z.infer<typeof getOneSchema>;
 export type ComponentSchemaGetManyDocument = z.infer<typeof getManySchema>;
 export type ComponentSchemaPostDocument = z.infer<typeof postSchema>;
-export type ComponentSchemaPutDocument = z.infer<typeof putSchema>;
+export type ComponentSchemaPutDocument = z.infer<typeof putOneSchema>;
 export type ComponentSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
 export default {
-    get: getSchema,
+    getOne: getOneSchema,
     getMany: getManySchema,
     post: postSchema,
-    put: putSchema,
+    putOne: putOneSchema,
     deleteMany: deleteManySchema
 };

@@ -10,12 +10,12 @@ import userEndPoint from "../../constants/endPoints/user.endPoint";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
     fastify.get(userEndPoint.GET, { preHandler: [sessionMiddleware.check] }, userController.getMany);
-    fastify.get(userEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(userSchema.get), sessionMiddleware.check] }, userController.getOne);
-    fastify.get(userEndPoint.GET_WITH_URL, { preHandler: [requestMiddleware.check(userSchema.getWithURL)] }, userController.getOne);
+    fastify.get(userEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(userSchema.getOne), sessionMiddleware.check] }, userController.getOne);
+    fastify.get(userEndPoint.GET_WITH_URL, { preHandler: [requestMiddleware.check(userSchema.getOneWithURL)] }, userController.getOne);
     fastify.post(userEndPoint.ADD, { preHandler: [requestMiddleware.check(userSchema.post), sessionMiddleware.check, permissionMiddleware.check(userPermission.add), userMiddleware.checkRoleRank, userMiddleware.checkAlreadyEmail] }, userController.add);
     fastify.put(userEndPoint.UPDATE_PROFILE, { preHandler: [requestMiddleware.check(userSchema.putProfile), sessionMiddleware.check] }, userController.updateProfile);
     fastify.put(userEndPoint.UPDATE_CHANGE_PASSWORD, { preHandler: [requestMiddleware.check(userSchema.putPassword), sessionMiddleware.check, userMiddleware.checkPasswordWithSessionEmail] }, userController.updatePassword);
-    fastify.put(userEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(userSchema.put), sessionMiddleware.check, permissionMiddleware.check(userPermission.update), userMiddleware.check, userMiddleware.checkRoleRank, userMiddleware.checkAlreadyEmail] }, userController.updateOne);
-    fastify.delete(userEndPoint.DELETE_WITH_ID, { preHandler: [requestMiddleware.check(userSchema.delete), sessionMiddleware.check, permissionMiddleware.check(userPermission.delete), userMiddleware.check, userMiddleware.checkRoleRank] }, userController.deleteOne);
+    fastify.put(userEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(userSchema.putOne), sessionMiddleware.check, permissionMiddleware.check(userPermission.update), userMiddleware.checkOne, userMiddleware.checkRoleRank, userMiddleware.checkAlreadyEmail] }, userController.updateOne);
+    fastify.delete(userEndPoint.DELETE_WITH_ID, { preHandler: [requestMiddleware.check(userSchema.deleteOne), sessionMiddleware.check, permissionMiddleware.check(userPermission.delete), userMiddleware.checkOne, userMiddleware.checkRoleRank] }, userController.deleteOne);
     done();
 }

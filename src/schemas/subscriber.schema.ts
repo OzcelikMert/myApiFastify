@@ -1,49 +1,52 @@
 import {object, string, array, z} from 'zod';
-import {ErrorCodes} from "../library/api";
 
-const getSchema = object({
+const getOneSchema = object({
+    params: object({
+        _id: string().min(1),
+    }),
     query: object({
-        _id: string(),
-        email: string().email({ message: ErrorCodes.incorrectData.toString() })
+        email: string().email()
     })
 });
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).default([]),
-        email: string().email({ message: ErrorCodes.incorrectData.toString() })
+        _id: array(string().min(1)).default([]),
+        email: string().email()
     }),
 });
 
 const postSchema = object({
     body: object({
-        email: string().min(1, { message: ErrorCodes.emptyValue.toString() }).email({ message: ErrorCodes.incorrectData.toString() }),
+        email: string().min(1).email(),
     })
 });
 
-const deleteSchema = object({
+const deleteOneSchema = object({
+    params: object({
+        _id: string().min(1),
+    }),
     body: object({
-        email: string().min(1, { message: ErrorCodes.emptyValue.toString() }).email({ message: ErrorCodes.incorrectData.toString() }),
-        _id: string().min(1, { message: ErrorCodes.emptyValue.toString() })
+        email: string().min(1).email(),
     })
 });
 
 const deleteManySchema = object({
     body: object({
-        _id: array(string().min(1, { message: ErrorCodes.emptyValue.toString() })).min(1, { message: ErrorCodes.emptyValue.toString() }),
+        _id: array(string().min(1)).min(1),
     })
 });
 
-export type SubscriberSchemaGetDocument = z.infer<typeof getSchema>;
+export type SubscriberSchemaGetDocument = z.infer<typeof getOneSchema>;
 export type SubscriberSchemaGetManyDocument = z.infer<typeof getManySchema>;
 export type SubscriberSchemaPostDocument = z.infer<typeof postSchema>;
-export type SubscriberSchemaDeleteDocument = z.infer<typeof deleteSchema>;
+export type SubscriberSchemaDeleteDocument = z.infer<typeof deleteOneSchema>;
 export type SubscriberSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
 export default {
-    get: getSchema,
+    getOne: getOneSchema,
     getMany: getManySchema,
     post: postSchema,
-    delete: deleteSchema,
+    deleteOne: deleteOneSchema,
     deleteMany: deleteManySchema
 };

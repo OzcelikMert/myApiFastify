@@ -1,12 +1,11 @@
 import {object, string, z} from 'zod';
-import {ErrorCodes} from "../library/api";
 
 const postSchema = object({
     body: object({
-        contactFormId: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        email: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        message: string().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        replyMessage: string()
+        contactFormId: string().min(1),
+        email: string().min(1),
+        message: string().min(1),
+        replyMessage: string().optional()
     })
 });
 

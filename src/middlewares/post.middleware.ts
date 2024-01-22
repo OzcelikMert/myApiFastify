@@ -8,7 +8,7 @@ import {
 } from "../schemas/post.schema";
 
 export default {
-    check: async (req: FastifyRequest, reply: FastifyReply) => {
+    checkOne: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 

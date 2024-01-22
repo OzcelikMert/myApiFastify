@@ -1,18 +1,19 @@
 import {object, number, z} from 'zod';
-import {ErrorCodes} from "../library/api";
+import {PostTermTypeId} from "../constants/postTermTypes";
+import {PostTypeId} from "../constants/postTypes";
 
 const getPostTermSchema = object({
     query: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        postTypeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        page: number(),
+        typeId: z.nativeEnum(PostTermTypeId),
+        postTypeId: z.nativeEnum(PostTypeId),
+        page: number().optional(),
     })
 });
 
 const getPostSchema = object({
     query: object({
-        typeId: number().min(1, { message: ErrorCodes.emptyValue.toString() }),
-        page: number(),
+        typeId: z.nativeEnum(PostTypeId),
+        page: number().optional(),
     })
 });
 

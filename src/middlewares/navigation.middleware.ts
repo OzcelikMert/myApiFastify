@@ -5,7 +5,7 @@ import navigationService from "../services/navigation.service";
 import {NavigationSchemaPutDocument, NavigationSchemaPutManyStatusDocument} from "../schemas/navigation.schema";
 
 export default {
-    check: async (req: FastifyRequest, reply: FastifyReply) => {
+    checkOne: async (req: FastifyRequest, reply: FastifyReply) => {
         await logMiddleware.error(req, reply, async () => {
             let serviceResult = new Result();
 
