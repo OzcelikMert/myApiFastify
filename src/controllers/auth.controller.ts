@@ -21,28 +21,28 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as AuthSchemaPostDocument;
 
-        let resData = await userService.getOne({
+        let user = await userService.getOne({
             ...reqData.body
         });
 
-        if(resData){
-            let user = resData;
+        if(user){
             if(user.statusId == StatusId.Active) {
                 let time = new Date().getTime();
-                req.sessionAuth!.set("user", {
+                req.sessionAuth.set("user", {
                     userId: user._id,
                     email: user.email,
                     roleId: user.roleId,
                     ip: req.ip,
                     permissions: user.permissions,
                     token: userUtil.createToken(user._id.toString(), req.ip, time),
+                    refreshedAt: (new Date()).toString()
                 });
             }else {
                 serviceResult.status = false;
                 serviceResult.errorCode = ErrorCodes.noPerm;
                 serviceResult.statusCode = StatusCodes.notFound;
             }
-            serviceResult.data = resData;
+            serviceResult.data = user;
         }else {
             serviceResult.status = false;
             serviceResult.errorCode = ErrorCodes.notFound;

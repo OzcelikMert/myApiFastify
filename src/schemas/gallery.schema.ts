@@ -1,13 +1,22 @@
 import {object, string, array, z} from 'zod';
 
-const deleteSchema = object({
-    body: object({
-        images: array(string().min(1)).min(1),
+const getManySchema = object({
+    query: object({
+        _id: array(string().min(1)),
+        name: array(string().min(1)),
     })
 });
 
-export type GallerySchemaDeleteDocument = z.infer<typeof deleteSchema>;
+const deleteManySchema = object({
+    body: object({
+        name: array(string().min(1)),
+    })
+});
+
+export type GallerySchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type GallerySchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
 export default {
-    delete: deleteSchema
+    getMany: getManySchema,
+    deleteMany: deleteManySchema
 };

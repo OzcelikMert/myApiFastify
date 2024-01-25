@@ -7,6 +7,6 @@ export default {
         return Crypto.createHash('sha256').update(Config.passwordSalt + password).digest('hex')
     },
     createToken(userId: string, ip: string, time: number) : string {
-        return V.hash((userId + ip + time.toString()).toString(), "sha256")
+        return V.hash((userId + "HAaRsLbXC@3P_98" + ip + time.toString()).toString() + "pH2Q3#rRsLNI98HnVvQ", "sha256")
     }
 };

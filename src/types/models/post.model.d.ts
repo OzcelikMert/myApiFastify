@@ -15,7 +15,7 @@ export interface PostDocument {
     contents: PostContentDocument[]
     components?: string[] | ObjectId[]
     beforeAndAfter?: PostBeforeAndAfterDocument
-    eCommerce?: PostECommerceDocument<>
+    eCommerce?: PostECommerceDocument
     updatedAt?: string
     createdAt?: string
 }

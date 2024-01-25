@@ -8,7 +8,7 @@ const serverProtocol = config.get("serverProtocol") as string;
 export const sessionAuthTTL = 60 * 60;
 export const sessionAuthKey = crypto.randomBytes(32);
 
-const sessionConfig = {
+const config = {
     key: sessionAuthKey,
     secret: crypto.randomBytes(32).toString('hex'),
     salt:  "ShMf250ld@__45s1",
@@ -40,4 +40,4 @@ const sessionConfig = {
     },*/
 }
 
-export default { sessionConfig };
+export default config;

@@ -46,12 +46,8 @@ export default {
             }
 
             if (userRoleId > 0) {
-                let user = await userService.getOne({
-                    _id: req.sessionAuth.user?.userId as string
-                });
-
-                if(user){
-                    let sessionUserRole = UserRoles.findSingle("id", user.roleId);
+                if(req.sessionAuth.user){
+                    let sessionUserRole = UserRoles.findSingle("id", req.sessionAuth.user.roleId);
                     let userRole = UserRoles.findSingle("id", userRoleId);
 
                     if(

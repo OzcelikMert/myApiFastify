@@ -15,8 +15,6 @@ Things to do:
     + permission kontrolunu routlara gonderdigin fonskyonun icine atadigin parametreler ile yap ve permisison middlewareyi ona gore tekrar ayarla
     + schema ile kontrol ederken enum degerleride kontrol et enum disinda deger gelmemesi lazim
     + schemalar ile kontrol yaptiktan sonra schemalarda berlitilen datalar disinda bir data geliyormu kontrol et eger geliyorsa temizle
-    - bloggerlarda sadece bloggerlar kendi yazdiklarini duzenleyebilsin ve gorebilsin
-    - authorlar sadece kendi blgolarini yazip duzenleyebilsinler editorlerede yetki verilirse yapabilsinler
+    + blogerlar sadece kendi yazdiklarini duzenleyebilsin (editorlerde yetki varsa hepsini guncelleyebilsinler)
+    + resimlseri kimin eklediginin datasini tut ve sadece kendi resimlerini silsinler (editor hepsini duzenleyebilsin)
     - postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
-    - resimlseri kimin eklediginin datasini tut ve sadece kendi resimlerini silsinler
-    - galleryde sadece kendi resilmerini silebilecek ve editor ve adminler tumr esimleri silebilicek editleyebilecek

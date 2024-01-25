@@ -3,6 +3,7 @@ import {PermissionDocument} from "../types/constants/permissions";
 import {PostTypeId} from "../constants/postTypes";
 import postPermission from "../constants/permissions/post.permission";
 import EndPoints from "../constants/endPoints";
+import UserRoles, {UserRoleId} from "../constants/userRoles";
 
 const getPermissionKeyPrefix = (method: string) => {
     let prefix = "";
@@ -28,5 +29,11 @@ export default {
         const postTypeIdKey = Object.keys(PostTypeId).find(key => PostTypeId[key as keyof typeof PostTypeId] === typeId) ?? "";
 
         return (postPermission as any)[`${permissionKeyPrefix}${postTypeIdKey}`] ?? {permissionId: [], minUserRoleId: 0};
+    },
+    checkPermissionRoleRank(minRoleId: UserRoleId, targetRoleId: UserRoleId) {
+        let userRole = UserRoles.findSingle("id", targetRoleId);
+        let minRole = UserRoles.findSingle("id", UserRoleId.Editor);
+
+        return userRole?.rank >= minRole?.rank;
     }
 }

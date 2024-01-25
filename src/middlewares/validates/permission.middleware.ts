@@ -2,8 +2,8 @@ import {FastifyReply, FastifyRequest} from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../../library/api";
 import logMiddleware from "../log.middleware";
 import {PermisisonDocumentFunc, PermissionDocument} from "../../types/constants/permissions";
-import UserRoles from "../../constants/userRoles";
-import userService from "../../services/user.service";
+import UserRoles, {UserRoleId} from "../../constants/userRoles";
+import permissionUtil from "../../utils/permission.util";
 
 const check = (permission: PermissionDocument | PermisisonDocumentFunc) => async (
     req: FastifyRequest,
@@ -14,20 +14,14 @@ const check = (permission: PermissionDocument | PermisisonDocumentFunc) => async
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
-        let user = await userService.getOne({_id: req.sessionAuth.user?.userId.toString()});
-
-        if(user){
-            let permissionMinUserRole = UserRoles.findSingle("id", permissionData.minUserRoleId);
-            let userRole = UserRoles.findSingle("id", user.roleId);
-
+        if(req.sessionAuth.user){
             if (
-                (!permissionMinUserRole || !userRole) ||
-                (permissionMinUserRole.rank > userRole.rank) ||
-                !(permissionData.permissionId.every(permissionId => user?.permissions.some(userPermissionId => permissionId == userPermissionId)))
+                !permissionUtil.checkPermissionRoleRank(permissionData.minUserRoleId, req.sessionAuth.user!.roleId) ||
+                !(permissionData.permissionId.every(permissionId => req.sessionAuth.user?.permissions.some(userPermissionId => permissionId == userPermissionId)))
             ) {
                 serviceResult.status = false;
                 serviceResult.errorCode = ErrorCodes.noPerm;
-                serviceResult.statusCode = StatusCodes.notFound;
+                serviceResult.statusCode = StatusCodes.forbidden;
             }
         }else {
             serviceResult.status = false;

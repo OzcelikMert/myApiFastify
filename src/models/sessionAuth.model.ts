@@ -11,6 +11,7 @@ const schemaUser = new mongoose.Schema<SessionAuthUserDocument>(
             email: {type: String, required: true},
             token: {type: String, default: "", required: true},
             permissions: {type: [Number], default: []},
+            refreshedAt: {type: String, default: ""},
     },
     {timestamps: true}
 )

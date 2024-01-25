@@ -1,13 +1,14 @@
 import * as mongoose from "mongoose";
 import userModel from "./user.model";
 import {GalleryDocument} from "../types/models/gallery.model";
+import {GalleryTypeId} from "../constants/galleryTypeId";
 
 const schema = new mongoose.Schema<GalleryDocument>(
     {
-            name: {type: String, default: ""},
-            oldName: {type: String, default: ""},
-            title: {type: String, default: ""},
-            authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel},
+        name: {type: String, default: ""},
+        oldName: {type: String, default: ""},
+        typeId: {type: Number, enum: GalleryTypeId, default: GalleryTypeId.Image},
+        authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel},
     },
     {timestamps: true}
 )

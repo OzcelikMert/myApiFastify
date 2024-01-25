@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import {FastifyReply, FastifyRequest} from 'fastify';
 import {DateMask} from "../library/variable"
 import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import fs, {Stats} from "fs";
@@ -6,9 +6,12 @@ import {Config} from "../config";
 import path from "path";
 import sharp from "sharp";
 import multer from "fastify-multer";
-import {GallerySchemaDeleteDocument} from "../schemas/gallery.schema";
+import {GallerySchemaDeleteManyDocument, GallerySchemaGetManyDocument} from "../schemas/gallery.schema";
 import logMiddleware from "../middlewares/log.middleware";
-import { FastifyInstance } from 'fastify/types/instance';
+import galleryService from "../services/gallery.service";
+import permissionUtil from "../utils/permission.util";
+import {UserRoleId} from "../constants/userRoles";
+import {GalleryTypeId} from "../constants/galleryTypeId";
 
 function getImageResult(name: string, stats: Stats) {
     return {
@@ -19,34 +22,38 @@ function getImageResult(name: string, stats: Stats) {
     }
 }
 
-const get = async (req: FastifyRequest, reply: FastifyReply) => {
+const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
+        const reqData = req as GallerySchemaGetManyDocument;
+
+        let gallery = await galleryService.getMany({
+            ...reqData.query,
+            ...(!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+        });
+
         const fileType = [".jpg", ".png", ".webp", ".gif", ".jpeg"];
 
-        await new Promise(resolve => {
-            fs.readdir(Config.paths.uploads.images, async (err, images) => {
-                for(let i=0; i < images.length; i++) {
-                    let image = images[i];
-                    if(fs.existsSync(path.resolve(Config.paths.uploads.images, image))) {
-                        if (fileType.includes(path.extname(image))){
-                            let fileStat = fs.statSync(path.resolve(Config.paths.uploads.images, image))
-                            serviceResult.data.push(getImageResult(image, fileStat));
-                        }
-                    }
-                }
-                resolve(0)
-            });
-        })
+        for (const item of gallery) {
+            if(fileType.includes(path.extname(item.name))){
+                fs.stat(path.resolve(Config.paths.uploads.images, item.name), (err, stats) => {
+                    serviceResult.data.push({
+                        ...item,
+                        ...getImageResult(item.name, stats)
+                    });
+                })
+            }
+        }
 
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
-const add = async (req: FastifyRequest, reply: FastifyReply) => {
+const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
+
         function newName() {
             const timestamp = new Date().getStringWithMask(DateMask.UNIFIED_ALL);
             return `${timestamp}-${Math.randomCustom(1, 999999)}.webp`;
@@ -74,9 +81,9 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
                 }
 
                 try {
-                    let ref = newName();
+                    let name = newName();
                     while(fs.existsSync(path.resolve(Config.paths.uploads.images, newName()))) {
-                        ref = newName();
+                        name = newName();
                     }
 
                     const file = await req.file();
@@ -87,10 +94,26 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
                             .toBuffer();
 
                         await new Promise<number>(resolveCreate => {
-                            fs.createWriteStream(path.resolve(Config.paths.uploads.images, ref)).write(data, (error: any) => {
-                                let fileStat = fs.statSync(path.resolve(Config.paths.uploads.images, ref))
-                                serviceResult.data.push(getImageResult(ref, fileStat));
+                            fs.createWriteStream(path.resolve(Config.paths.uploads.images, name)).write(data, (error: any) => {
                                 resolveCreate(0);
+                            });
+                        })
+
+                        let insertedData = await galleryService.add({
+                            oldName: file.filename,
+                            name: name,
+                            authorId: req.sessionAuth.user!.userId,
+                            typeId: GalleryTypeId.Image
+                        });
+
+                        let galleryItem = await galleryService.getOne({
+                            _id: insertedData._id.toString()
+                        });
+
+                        fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
+                            serviceResult.data.push({
+                                ...galleryItem,
+                                ...getImageResult(galleryItem.name, stats)
                             });
                         })
                     }
@@ -109,14 +132,14 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
+const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        const reqData = req as GallerySchemaDeleteDocument;
+        const reqData = req as GallerySchemaDeleteManyDocument;
 
         await new Promise(resolve => {
-            reqData.body.images?.forEach(image => {
+            reqData.body.name?.forEach(image => {
                 if (fs.existsSync(path.resolve(Config.paths.uploads.images, image))) {
                     fs.unlinkSync(path.resolve(Config.paths.uploads.images, image));
                     fs.close(0);
@@ -126,12 +149,16 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
             resolve(0);
         });
 
+        await galleryService.deleteMany({
+            name: reqData.body.name
+        })
+
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
 export default {
-    get: get,
-    add: add,
-    delete: deleteMany
+    getManyImage: getManyImage,
+    addImage: addImage,
+    deleteManyImage: deleteManyImage
 };

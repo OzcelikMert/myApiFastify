@@ -10,6 +10,7 @@ export interface SessionAuthUserDocument{
     permissions: number[]
     createAt?: string,
     updatedAt?: string
+    refreshedAt?: string
 }
 
 export interface SessionAuthDocument{

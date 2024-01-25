@@ -4,10 +4,11 @@ import gallerySchema from "../../schemas/gallery.schema";
 import sessionMiddleware from "../../middlewares/validates/sessionAuth.middleware";
 import requestMiddleware from "../../middlewares/validates/request.middleware";
 import galleryEndPoint from "../../constants/endPoints/gallery.endPoint";
+import galleryMiddleware from "../../middlewares/gallery.middleware";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(galleryEndPoint.GET, { preHandler: [sessionMiddleware.check] }, galleryController.get);
-    fastify.post(galleryEndPoint.ADD, { preHandler: [sessionMiddleware.check] }, galleryController.add);
-    fastify.delete(galleryEndPoint.DELETE, { preHandler: [requestMiddleware.check(gallerySchema.delete), sessionMiddleware.check] }, galleryController.delete);
+    fastify.get(galleryEndPoint.GET_IMAGE, { preHandler: [requestMiddleware.check(gallerySchema.getMany), sessionMiddleware.check] }, galleryController.getManyImage);
+    fastify.post(galleryEndPoint.ADD_IMAGE, { preHandler: [sessionMiddleware.check] }, galleryController.addImage);
+    fastify.delete(galleryEndPoint.DELETE_IMAGE, { preHandler: [requestMiddleware.check(gallerySchema.deleteMany), sessionMiddleware.check, galleryMiddleware.checkManyIsAuthor] }, galleryController.deleteManyImage);
     done();
 }
