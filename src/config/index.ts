@@ -4,7 +4,7 @@ import fastifyCookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
 import http from "http";
 import https from "https";
-import sessionAuth from "./session/session.auth.config";
+import sessionAuthConfig from "./session/session.auth.config";
 import {ConfigDocument} from "../types/config";
 import dbConnect from "./db";
 import userService from "../services/user.service";
@@ -110,9 +110,9 @@ class InitConfig {
 
     private async setSession() {
         await this.server.register(fastifyCookie, {
-            secret: sessionAuth.sessionConfig.secret
+            secret: sessionAuthConfig.secret
         });
-        await this.server.register(fastifySecureSession, sessionAuth.sessionConfig as any)
+        await this.server.register(fastifySecureSession, sessionAuthConfig as any)
     }
 
     private async mongodbConnect() {

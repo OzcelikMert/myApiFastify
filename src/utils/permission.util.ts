@@ -34,6 +34,6 @@ export default {
         let userRole = UserRoles.findSingle("id", targetRoleId);
         let minRole = UserRoles.findSingle("id", UserRoleId.Editor);
 
-        return userRole?.rank >= minRole?.rank;
+        return (userRole && minRole) && (userRole.rank >= minRole.rank);
     }
 }
