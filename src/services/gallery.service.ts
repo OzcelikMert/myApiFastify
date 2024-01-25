@@ -28,7 +28,9 @@ export default {
             authorId: params.authorId
         }
 
-        let query = galleryModel.findOne(filters).populate<{ authorId: GalleryGetResultDocument["authorId"] }>({
+        let query = galleryModel.findOne(filters);
+
+        query.populate({
             path: [
                 "authorId",
             ].join(" "),
@@ -37,7 +39,7 @@ export default {
 
         query.sort({ createdAt: -1 });
 
-        return (await query.lean().exec()) as GalleryGetResultDocument;
+        return (await query.lean<GalleryGetResultDocument>().exec());
     },
     async getMany(params: GalleryGetManyParamDocument) {
         let filters: mongoose.FilterQuery<GalleryDocument> = {}
@@ -56,7 +58,9 @@ export default {
             authorId: params.authorId
         }
 
-        let query = galleryModel.find(filters).populate<{ authorId: GalleryGetResultDocument["authorId"] }>({
+        let query = galleryModel.find(filters);
+
+        query.populate({
             path: [
                 "authorId",
             ].join(" "),
@@ -65,7 +69,7 @@ export default {
 
         query.sort({ createdAt: -1 });
 
-        return (await query.lean().exec()) as GalleryGetResultDocument[];
+        return (await query.lean<GalleryGetResultDocument[]>().exec());
     },
     async add(params: GalleryAddParamDocument) {
         params = Variable.clearAllScriptTags(params);

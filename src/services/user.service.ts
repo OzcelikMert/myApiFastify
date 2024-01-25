@@ -70,7 +70,7 @@ export default {
 
         query.sort({createdAt: -1});
 
-        let doc = (await query.lean().exec()) as UserGetResultDocument | null;
+        let doc = (await query.lean<UserGetResultDocument>().exec());
 
         if(doc){
             delete doc.password;
@@ -124,7 +124,7 @@ export default {
 
         query.sort({createdAt: -1});
 
-        return (await query.lean().exec()).map((user: UserGetResultDocument) => {
+        return (await query.lean<UserGetResultDocument[]>().exec()).map((user) => {
             delete user.password;
             user.isOnline = Config.onlineUsers.indexOfKey("_id", user._id?.toString()) > -1;
             return user;

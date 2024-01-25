@@ -35,7 +35,7 @@ export default {
 
         query.sort({createdAt: -1});
 
-        return (await query.lean().exec()) as SubscriberGetResultDocument | null;
+        return (await query.lean<SubscriberGetResultDocument>().exec());
     },
     async getMany(params: SubscriberGetManyParamDocument) {
         let filters: mongoose.FilterQuery<SubscriberDocument> = {}
@@ -58,7 +58,7 @@ export default {
 
         query.sort({createdAt: -1});
 
-        return (await query.lean().exec()) as SubscriberGetResultDocument[];
+        return (await query.lean<SubscriberGetResultDocument[]>().exec());
     },
     async add(params: SubscriberAddDocument) {
         params = Variable.clearAllScriptTags(params);

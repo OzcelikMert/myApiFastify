@@ -40,7 +40,7 @@ export default {
         query.skip(sitemapLimit * (params.page && params.page > 0 ? params.page - 1 : 0));
         query.limit(sitemapLimit);
 
-        return (await query.lean().exec()).map(doc => {
+        return (await query.lean<SitemapPostDocument[]>().exec()).map(doc => {
             return {
                 updatedAt: doc.updatedAt,
                 createdAt: doc.createdAt,
@@ -52,7 +52,7 @@ export default {
                     url: content.url
                 }))
             };
-        }) as SitemapPostDocument[];
+        });
     },
     async getPostCount(params: SitemapGetPostCountParamDocument) {
         let filters: mongoose.FilterQuery<PostDocument> = {statusId: StatusId.Active}
@@ -111,7 +111,7 @@ export default {
         query.skip(sitemapLimit * (params.page && params.page > 0 ? params.page - 1 : 0));
         query.limit(sitemapLimit);
 
-        return (await query.lean().exec()).map(doc => {
+        return (await query.lean<SitemapPostTermDocument[]>().exec()).map(doc => {
             return {
                 updatedAt: doc.updatedAt,
                 createdAt: doc.createdAt,
@@ -123,7 +123,7 @@ export default {
                     url: content.url
                 }))
             };
-        }) as SitemapPostTermDocument[];
+        });
     },
     async getPostTermCount(params: SitemapGetPostTermCountParamDocument) {
         let filters: mongoose.FilterQuery<PostDocument> = {statusId: StatusId.Active}

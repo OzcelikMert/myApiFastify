@@ -8,6 +8,7 @@ import {
     PostECommerceVariationDocument
 } from "../models/post.model";
 import {ComponentDocument} from "../models/component.model";
+import {ObjectId} from "mongoose";
 
 export interface PostAlternateDocument {
     langId: string
@@ -29,7 +30,7 @@ export type PostGetOneResultDocument = {
             contents?: PostECommerceVariationContentDocument | PostECommerceVariationContentDocument[]
         })[]
     })
-} & Omit<PostDocument, "contents"|"categories"|"tags"|"components"|"eCommerce">
+} & Omit<PostDocument, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce">
 
 export type PostGetManyResultDocument = {
     components?: PostDocument["components"]
@@ -48,6 +49,7 @@ export interface PostGetOneParamDocument {
     url?: string
     statusId?: number,
     ignorePostId?: string[]
+    authorId?: string
 }
 
 export interface PostGetManyParamDocument {
@@ -63,6 +65,7 @@ export interface PostGetManyParamDocument {
     title?: string
     ignoreDefaultLanguage?: boolean
     categories?: string[]
+    authorId?: string
 }
 
 export interface PostGetCountParamDocument {

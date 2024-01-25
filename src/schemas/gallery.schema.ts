@@ -2,8 +2,8 @@ import {object, string, array, z} from 'zod';
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)),
-        name: array(string().min(1)),
+        _id: array(string().min(1)).optional(),
+        name: array(string().min(1)).optional(),
     })
 });
 

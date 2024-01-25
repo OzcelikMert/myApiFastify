@@ -13,6 +13,8 @@ import {
     PostSchemaPutRankDocument,
     PostSchemaPutViewDocument
 } from "../schemas/post.schema";
+import permissionUtil from "../utils/permission.util";
+import {UserRoleId} from "../constants/userRoles";
 
 const createUrl = async (_id: string | null | undefined, name: string, typeId: number) => {
     let urlAlreadyCount = 2;
@@ -39,7 +41,8 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await postService.getOne({
             ...reqData.params,
-            ...reqData.query
+            ...reqData.query,
+            ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -53,7 +56,8 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as PostSchemaGetManyDocument;
 
         serviceResult.data = await postService.getMany({
-            ...reqData.query
+            ...reqData.query,
+            ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)

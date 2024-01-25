@@ -39,7 +39,7 @@ export default {
 
         let query = settingModel.findOne(filters, projection);
 
-        let doc = (await query.lean().exec()) as SettingGetResultDocument;
+        let doc = (await query.lean<SettingGetResultDocument>().exec());
 
         if(doc){
             if (Array.isArray(doc.seoContents)) {

@@ -29,17 +29,19 @@ export default {
             elementId: params.elementId
         }
 
-        let query = componentModel.findOne(filters).populate<{ authorId: ComponentGetResultDocument["authorId"], lastAuthorId: ComponentGetResultDocument["lastAuthorId"] }>({
+        let query = componentModel.findOne(filters);
+
+        query.populate({
             path: [
                 "authorId",
                 "lastAuthorId"
             ].join(" "),
             select: "_id name url"
-        })
+        });
 
         query.sort({ createdAt: -1 });
 
-        let doc = (await query.lean().exec()) as ComponentGetResultDocument | null;
+        let doc = (await query.lean<ComponentGetResultDocument>().exec());
 
         if (doc) {
             for (let docType of doc.types) {
@@ -66,17 +68,19 @@ export default {
             elementId: { $in: params.elementId }
         }
 
-        let query = componentModel.find(filters).populate<{ authorId: ComponentGetResultDocument["authorId"], lastAuthorId: ComponentGetResultDocument["lastAuthorId"] }>({
+        let query = componentModel.find(filters);
+
+        query.populate({
             path: [
                 "authorId",
                 "lastAuthorId"
             ].join(" "),
             select: "_id name url"
-        })
+        });
 
         query.sort({ createdAt: -1 });
 
-        return (await query.lean().exec()).map((doc: ComponentGetResultDocument) => {
+        return (await query.lean<ComponentGetResultDocument[]>().exec()).map((doc) => {
             for (let docType of doc.types) {
                 if (Array.isArray(docType.contents)) {
                     docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);

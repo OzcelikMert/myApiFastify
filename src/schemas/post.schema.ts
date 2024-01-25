@@ -107,7 +107,7 @@ const getOneSchema = object({
         langId: string().optional(),
         url: string().optional(),
         pageTypeId: z.nativeEnum(PageTypeId).optional(),
-        statusId: z.nativeEnum(StatusId).optional(),
+        statusId: z.nativeEnum(StatusId).optional()
     })
 });
 
@@ -123,7 +123,7 @@ const getManySchema = object({
         page: number().optional(),
         ignoreDefaultLanguage: boolean().optional(),
         isRecent: boolean().optional(),
-        categories: array(string().min(1)).default([]),
+        categories: array(string().min(1)).default([])
     })
 });
 

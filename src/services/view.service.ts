@@ -3,7 +3,7 @@ import viewModel from "../models/view.model";
 import {
     ViewDeleteManyParamDocument,
     ViewAddParamDocument,
-    ViewGetParamDocument, ViewGetTotalResultDocument
+    ViewGetParamDocument, ViewGetTotalResultDocument, ViewGetResultDocument
 } from "../types/services/view.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
@@ -49,7 +49,7 @@ export default {
             }
         }
 
-        return await viewModel.findOne(filters, {}).lean().exec();
+        return await viewModel.findOne(filters).lean<ViewGetResultDocument>().exec();
     },
     async getTotalWithDate(params: ViewGetParamDocument) {
         let filters: mongoose.FilterQuery<ViewDocument> = {}

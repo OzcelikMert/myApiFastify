@@ -16,6 +16,7 @@ import "./library/variable/date"
 import "./library/variable/math"
 import viewInitMiddleware from "./middlewares/init/view.init.middleware";
 import sessionAuthMiddleware from "./middlewares/validates/sessionAuth.middleware";
+import requestInitMiddleware from "./middlewares/init/request.init.middleware";
 
 const port = config.get("serverPort") as number;
 const trafficMBLimit = config.get("serverTrafficMBLimit") as number || 2;
@@ -47,6 +48,7 @@ console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
         console.log(`Response time for ${request.method} ${request.url}: ${responseTime}ms`);
     });
 
+    server.addHook('preHandler', requestInitMiddleware.set);
     server.addHook('preHandler', viewInitMiddleware.set);
     server.addHook('preHandler', sessionAuthMiddleware.reload);
 

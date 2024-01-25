@@ -26,6 +26,10 @@ export default {
             ...filters,
             _id: params._id
         }
+        if (params.authorId) filters = {
+            ...filters,
+            authorId: params.authorId
+        }
         if (params.url) filters = {
             ...filters,
             "contents.url": params.url
@@ -49,7 +53,9 @@ export default {
             }
         }
 
-        let query = postTermModel.findOne(filters, {}).populate<{ mainId: PostTermGetResultDocument["mainId"] }>({
+        let query = postTermModel.findOne(filters);
+
+        query.populate({
             path: "mainId",
             select: "_id typeId contents.title contents.langId contents.url contents.image",
             match: { statusId: StatusId.Active },
@@ -62,22 +68,24 @@ export default {
                 }
                 return doc;
             }
-        }).populate<{ authorId: PostTermGetResultDocument["authorId"], lastAuthorId: PostTermGetResultDocument["lastAuthorId"] }>({
+        });
+
+        query.populate({
             path: [
                 "authorId",
                 "lastAuthorId"
             ].join(" "),
             select: "_id name url"
-        })
+        });
 
         query.sort({ rank: 1, createdAt: -1 });
 
-        let doc = (await query.lean().exec()) as PostTermGetResultDocument | null;
+        let doc = (await query.lean<PostTermGetResultDocument>().exec());
 
         if (doc) {
             if (Array.isArray(doc.contents)) {
                 doc.alternates = doc.contents.map(content => ({
-                    langId: content.langId as string,
+                    langId: content.langId.toString(),
                     title: content.title,
                     url: content.url
                 }));
@@ -95,6 +103,10 @@ export default {
         if (params._id) filters = {
             ...filters,
             _id: params._id
+        }
+        if (params.authorId) filters = {
+            ...filters,
+            authorId: params.authorId
         }
         if (params.url) filters = {
             ...filters,
@@ -123,7 +135,9 @@ export default {
             }
         }
 
-        let query = postTermModel.find(filters, {}).populate<{ mainId: PostTermGetResultDocument["mainId"] }>({
+        let query = postTermModel.find(filters);
+
+        query.populate({
             path: "mainId",
             select: "_id typeId contents.title contents.langId contents.url contents.image",
             match: { statusId: StatusId.Active },
@@ -136,7 +150,9 @@ export default {
                 }
                 return doc;
             }
-        }).populate<{ authorId: PostTermGetResultDocument["authorId"], lastAuthorId: PostTermGetResultDocument["lastAuthorId"] }>({
+        });
+
+        query.populate({
             path: [
                 "authorId",
                 "lastAuthorId"
@@ -149,10 +165,10 @@ export default {
 
         query.sort({ rank: 1, createdAt: -1 });
 
-        return Promise.all((await query.lean().exec()).map(async (doc: PostTermGetResultDocument) => {
+        return Promise.all((await query.lean<PostTermGetResultDocument[]>().exec()).map(async (doc) => {
             if (Array.isArray(doc.contents)) {
                 doc.alternates = doc.contents.map(content => ({
-                    langId: content.langId as string,
+                    langId: content.langId.toString(),
                     title: content.title,
                     url: content.url
                 }));

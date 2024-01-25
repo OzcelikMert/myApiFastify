@@ -11,6 +11,8 @@ import {
 } from "../schemas/postTerm.schema";
 import postTermService from "../services/postTerm.service";
 import logMiddleware from "../middlewares/log.middleware";
+import permissionUtil from "../utils/permission.util";
+import {UserRoleId} from "../constants/userRoles";
 
 const createUrl = async (_id: string | null | undefined, name: string, typeId: number, postTypeId: number) => {
     let urlAlreadyCount = 2;
@@ -38,7 +40,8 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await postTermService.getOne({
             ...reqData.params,
-            ...reqData.query
+            ...reqData.query,
+            ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -52,7 +55,8 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as PostTermSchemaGetManyDocument;
 
         serviceResult.data = await postTermService.getMany({
-            ...reqData.query
+            ...reqData.query,
+            ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)

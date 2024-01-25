@@ -32,6 +32,10 @@ export default {
             ...filters,
             _id: params._id
         }
+        if (params.authorId) filters = {
+            ...filters,
+            authorId: params.authorId
+        }
         if (params.url) filters = {
             ...filters,
             "contents.url": params.url
@@ -57,7 +61,9 @@ export default {
             }
         }
 
-        let query = postModel.findOne(filters).populate<{ categories: PostGetOneResultDocument["categories"], tags: PostGetOneResultDocument["tags"] }>({
+        let query = postModel.findOne(filters);
+
+        query.populate({
             path: [
                 "categories",
                 "tags"
@@ -66,7 +72,7 @@ export default {
             match: {
                 typeId: { $in: [PostTermTypeId.Category, PostTermTypeId.Tag] },
                 statusId: StatusId.Active,
-                postTypeId: params.typeId
+                postTypeId: params.typeId,
             },
             options: { omitUndefined: true },
             transform: (doc: PostTermGetResultDocument) => {
@@ -77,7 +83,9 @@ export default {
                 }
                 return doc;
             }
-        }).populate<{ eCommerce: PostGetOneResultDocument["eCommerce"] }>({
+        })
+
+        query.populate({
             path: [
                 "eCommerce.attributes.attributeId",
                 "eCommerce.attributes.variations",
@@ -101,7 +109,9 @@ export default {
                 }
                 return doc;
             }
-        }).populate<{ components: PostGetOneResultDocument["components"] }>({
+        })
+
+        query.populate({
             path: "components",
             options: { omitUndefined: true },
             transform: (doc: ComponentGetResultDocument) => {
@@ -114,7 +124,9 @@ export default {
                 }
                 return doc;
             }
-        }).populate<{ authorId: PostGetOneResultDocument["authorId"], lastAuthorId: PostGetOneResultDocument["lastAuthorId"] }>({
+        })
+
+        query.populate({
             path: [
                 "authorId",
                 "lastAuthorId"
@@ -124,7 +136,7 @@ export default {
 
         query.sort({ isFixed: -1, rank: 1, createdAt: -1 });
 
-        let doc = (await query.lean().exec()) as PostGetOneResultDocument | null;
+        let doc = (await query.lean<PostGetOneResultDocument>().exec());
 
         if (doc) {
             let views = 0;
@@ -143,7 +155,7 @@ export default {
 
             if (Array.isArray(doc.contents)) {
                 doc.alternates = doc.contents.map(content => ({
-                    langId: content.langId as string,
+                    langId: content.langId.toString(),
                     title: content.title,
                     url: content.url
                 }));
@@ -198,6 +210,10 @@ export default {
             ...filters,
             _id: { $in: params._id }
         }
+        if (params.authorId) filters = {
+            ...filters,
+            authorId: params.authorId
+        }
         if (params.title) filters = {
             ...filters,
             "contents.title": { $regex: new RegExp(params.title, "i") }
@@ -229,7 +245,9 @@ export default {
             }
         }
 
-        let query = postModel.find(filters).populate<{ categories: PostGetManyResultDocument["categories"], tags: PostGetManyResultDocument["tags"] }>({
+        let query = postModel.find(filters);
+
+        query.populate({
             path: [
                 "categories",
                 "tags"
@@ -249,7 +267,9 @@ export default {
                 }
                 return doc;
             }
-        }).populate<{ authorId: PostGetManyResultDocument["authorId"], lastAuthorId: PostGetManyResultDocument["lastAuthorId"] }>({
+        });
+
+        query.populate({
             path: [
                 "authorId",
                 "lastAuthorId"
@@ -266,7 +286,7 @@ export default {
         if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
         if (params.count) query.limit(params.count);
 
-        return (await query.lean().exec()).map((doc: PostGetManyResultDocument) => {
+        return (await query.lean<PostGetManyResultDocument[]>().exec()).map((doc) => {
             let views = 0;
 
             if (doc.categories) {
@@ -279,7 +299,7 @@ export default {
 
             if (Array.isArray(doc.contents)) {
                 doc.alternates = doc.contents.map(content => ({
-                    langId: content.langId as string,
+                    langId: content.langId.toString(),
                     title: content.title,
                     url: content.url
                 }));

@@ -39,7 +39,7 @@ export default {
 
         query.sort({ rank: 1, createdAt: -1 });
 
-        return (await query.lean().exec()) as LanguageGetResultDocument | null;
+        return (await query.lean<LanguageGetResultDocument>().exec());
     },
     async getMany(params: LanguageGetManyParamDocument) {
         let filters: mongoose.FilterQuery<LanguageDocument> = {}
@@ -63,7 +63,7 @@ export default {
 
         query.sort({ rank: 1, createdAt: -1 });
 
-        return (await query.lean().exec()) as LanguageGetResultDocument[];
+        return (await query.lean<LanguageGetResultDocument[]>().exec());
     },
     async add(params: LanguageAddParamDocument) {
         params = Variable.clearAllScriptTags(params);

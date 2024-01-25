@@ -41,7 +41,8 @@ export interface PostTermGetOneParamDocument {
     postTypeId: number,
     url?: string
     statusId?: number,
-    ignoreTermId?: string[],
+    ignoreTermId?: string[]
+    authorId?: string
 }
 
 export interface PostTermGetManyParamDocument {
@@ -57,6 +58,7 @@ export interface PostTermGetManyParamDocument {
     page?: number
     withPostCount?: boolean
     ignoreDefaultLanguage?: boolean
+    authorId?: string
 }
 
 export type PostTermAddParamDocument = {

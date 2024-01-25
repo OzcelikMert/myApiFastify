@@ -1,5 +1,4 @@
 export default {
-    clientUrl: "http://localhost:3000/",
     serverProtocol: "http",
     serverPort: 5001,
     serverTrafficMBLimit: 2,

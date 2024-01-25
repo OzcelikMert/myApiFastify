@@ -31,10 +31,12 @@ export default {
             statusId: params.statusId
         }
 
-        let query = navigationModel.findOne(filters).populate<{ mainId: NavigationGetResultDocument["mainId"] }>({
+        let query = navigationModel.findOne(filters);
+
+        query.populate({
             path: "mainId",
-            select: "_id contents.title contents.url contents.langId",
-            match: { statusId: StatusId.Active },
+            select: "_id contents",
+            match: { statusId: StatusId.Active},
             options: { omitUndefined: true },
             transform: (doc: NavigationGetResultDocument) => {
                 if (doc) {
@@ -44,7 +46,9 @@ export default {
                     return doc;
                 }
             }
-        }).populate<{ authorId: NavigationGetResultDocument["authorId"], lastAuthorId: NavigationGetResultDocument["lastAuthorId"] }>({
+        });
+
+        query.populate({
             path: [
                 "authorId",
                 "lastAuthorId"
@@ -54,7 +58,7 @@ export default {
 
         query.sort({ rank: 1, createdAt: -1 });
 
-        let doc = (await query.lean().exec()) as NavigationGetResultDocument | null;
+        let doc = (await query.lean<NavigationGetResultDocument>().exec());
 
         if (doc) {
             if (Array.isArray(doc.contents)) {
@@ -81,7 +85,9 @@ export default {
             statusId: params.statusId
         }
 
-        let query = navigationModel.find(filters).populate<{ mainId: NavigationGetResultDocument["mainId"] }>({
+        let query = navigationModel.find(filters);
+
+        query.populate({
             path: "mainId",
             select: "_id contents.title contents.url contents.langId",
             match: { statusId: StatusId.Active },
@@ -94,7 +100,9 @@ export default {
                     return doc;
                 }
             }
-        }).populate<{ authorId: NavigationGetResultDocument["authorId"], lastAuthorId: NavigationGetResultDocument["lastAuthorId"] }>({
+        });
+
+        query.populate({
             path: [
                 "authorId",
                 "lastAuthorId"
@@ -104,7 +112,7 @@ export default {
 
         query.sort({ rank: 1, createdAt: -1 });
 
-        return (await query.lean().exec()).map((doc: NavigationGetResultDocument) => {
+        return (await query.lean<NavigationGetResultDocument[]>().exec()).map((doc) => {
             if (Array.isArray(doc.contents)) {
                 let docContent = doc.contents.findSingle("langId", params.langId);
                 if (!docContent && !params.ignoreDefaultLanguage) {

@@ -45,7 +45,7 @@ export interface PostContentButtonDocument {
     url?: string
 }
 
-export interface PostECommerceDocument<T = string, P = string[]> {
+export interface PostECommerceDocument<T = string | ObjectId, P = string[] | ObjectId[]> {
     typeId: number
     images: string[]
     pricing?: PostECommercePricingDocument
@@ -77,14 +77,14 @@ export interface PostECommerceShippingDocument {
     weight: string
 }
 
-export interface PostECommerceAttributeDocument<T = string, P = string[]> {
+export interface PostECommerceAttributeDocument<T = string | ObjectId, P = string[] | ObjectId[]> {
     _id?: string | ObjectId
-    attributeId: T | ObjectId
-    variations: P | ObjectId[]
+    attributeId: T
+    variations: P
     typeId: number
 }
 
-export interface PostECommerceVariationDocument<T = string> {
+export interface PostECommerceVariationDocument<T = string | ObjectId> {
     _id?: string | ObjectId
     rank: number
     selectedVariations: PostECommerceVariationSelectedDocument<T>[]
@@ -95,10 +95,10 @@ export interface PostECommerceVariationDocument<T = string> {
     pricing: PostECommercePricingDocument
 }
 
-export interface PostECommerceVariationSelectedDocument<T = string> {
+export interface PostECommerceVariationSelectedDocument<T = string | ObjectId> {
     _id?: string | ObjectId
-    attributeId: T | ObjectId
-    variationId: T | ObjectId
+    attributeId: T
+    variationId: T
 }
 
 export interface PostECommerceVariationContentDocument {

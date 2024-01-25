@@ -7,7 +7,7 @@ export type ComponentGetResultDocument = {
     types: (Omit<ComponentTypeDocument, "contents"> & {
         contents?: ComponentTypeContentDocument | ComponentTypeContentDocument[]
     })[]
-} & Omit<ComponentDocument, "types">
+} & Omit<ComponentDocument, "types"|"authorId"|"lastAuthorId">
 
 export interface ComponentGetOneParamDocument {
     _id: string
