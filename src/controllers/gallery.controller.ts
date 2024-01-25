@@ -110,12 +110,14 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                             _id: insertedData._id.toString()
                         });
 
-                        fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
-                            serviceResult.data.push({
-                                ...galleryItem,
-                                ...getImageResult(galleryItem.name, stats)
-                            });
-                        })
+                        if(galleryItem){
+                            fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
+                                serviceResult.data.push({
+                                    ...galleryItem,
+                                    ...getImageResult(galleryItem!.name, stats)
+                                });
+                            })
+                        }
                     }
 
                 } catch (e) {

@@ -13,14 +13,16 @@ export default {
 
             let setting = (await settingService.get({}));
 
-            if((typeof setting.contactForms === "undefined") || (setting.contactForms && setting.contactForms?.indexOfKey("_id", reqData.body.contactFormId) < 0)){
-                serviceResult.status = false;
-                serviceResult.errorCode = ErrorCodes.notFound;
-                serviceResult.statusCode = StatusCodes.notFound;
-            }
+            if(setting){
+                if((typeof setting.contactForms === "undefined") || (setting.contactForms && setting.contactForms?.indexOfKey("_id", reqData.body.contactFormId) < 0)){
+                    serviceResult.status = false;
+                    serviceResult.errorCode = ErrorCodes.notFound;
+                    serviceResult.statusCode = StatusCodes.notFound;
+                }
 
-            if (!serviceResult.status) {
-                reply.status(serviceResult.statusCode).send(serviceResult)
+                if (!serviceResult.status) {
+                    reply.status(serviceResult.statusCode).send(serviceResult)
+                }
             }
         });
     }
