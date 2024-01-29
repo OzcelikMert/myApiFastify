@@ -10,86 +10,94 @@ import {
 } from "../types/services/gallery.service";
 import galleryModel from "../models/gallery.model";
 
-export default {
-    async getOne(params: GalleryGetOneParamDocument) {
-        let filters: mongoose.FilterQuery<GalleryDocument> = {}
-        params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
+const getOne = async (params: GalleryGetOneParamDocument) => {
+    let filters: mongoose.FilterQuery<GalleryDocument> = {}
+    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
-        if (params.name) filters = {
-            ...filters,
-            _id: params._id
-        }
-        if (params.name) filters = {
-            ...filters,
-            name: params.name
-        }
-        if (params.authorId) filters = {
-            ...filters,
-            authorId: params.authorId
-        }
-
-        let query = galleryModel.findOne(filters);
-
-        query.populate({
-            path: [
-                "authorId",
-            ].join(" "),
-            select: "_id name url"
-        });
-
-        query.sort({ createdAt: -1 });
-
-        return (await query.lean<GalleryGetResultDocument>().exec());
-    },
-    async getMany(params: GalleryGetManyParamDocument) {
-        let filters: mongoose.FilterQuery<GalleryDocument> = {}
-        params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
-
-        if (params.name) filters = {
-            ...filters,
-            _id: { $in: params._id }
-        }
-        if (params.name) filters = {
-            ...filters,
-            name: { $in: params.name }
-        }
-        if (params.authorId) filters = {
-            ...filters,
-            authorId: params.authorId
-        }
-
-        let query = galleryModel.find(filters);
-
-        query.populate({
-            path: [
-                "authorId",
-            ].join(" "),
-            select: "_id name url"
-        });
-
-        query.sort({ createdAt: -1 });
-
-        return (await query.lean<GalleryGetResultDocument[]>().exec());
-    },
-    async add(params: GalleryAddParamDocument) {
-        params = Variable.clearAllScriptTags(params);
-        params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
-
-        return await galleryModel.create(params);
-    },
-    async deleteMany(params: GalleryDeleteManyParamDocument) {
-        let filters: mongoose.FilterQuery<GalleryDocument> = {};
-        params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
-
-        if (params.name) filters = {
-            ...filters,
-            name: { $in: params.name }
-        }
-        if (params.authorId) filters = {
-            ...filters,
-            authorId: params.authorId
-        }
-
-        return (await galleryModel.deleteMany(filters).exec()).deletedCount;
+    if (params.name) filters = {
+        ...filters,
+        _id: params._id
     }
+    if (params.name) filters = {
+        ...filters,
+        name: params.name
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+
+    let query = galleryModel.findOne(filters);
+
+    query.populate({
+        path: [
+            "authorId",
+        ].join(" "),
+        select: "_id name url"
+    });
+
+    query.sort({ createdAt: -1 });
+
+    return (await query.lean<GalleryGetResultDocument>().exec());
+}
+
+const getMany = async (params: GalleryGetManyParamDocument) => {
+    let filters: mongoose.FilterQuery<GalleryDocument> = {}
+    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
+
+    if (params.name) filters = {
+        ...filters,
+        _id: { $in: params._id }
+    }
+    if (params.name) filters = {
+        ...filters,
+        name: { $in: params.name }
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+
+    let query = galleryModel.find(filters);
+
+    query.populate({
+        path: [
+            "authorId",
+        ].join(" "),
+        select: "_id name url"
+    });
+
+    query.sort({ createdAt: -1 });
+
+    return (await query.lean<GalleryGetResultDocument[]>().exec());
+}
+
+const add = async (params: GalleryAddParamDocument) => {
+    params = Variable.clearAllScriptTags(params);
+    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
+
+    return await galleryModel.create(params);
+}
+
+const deleteMany = async (params: GalleryDeleteManyParamDocument) => {
+    let filters: mongoose.FilterQuery<GalleryDocument> = {};
+    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
+
+    if (params.name) filters = {
+        ...filters,
+        name: { $in: params.name }
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+
+    return (await galleryModel.deleteMany(filters).exec()).deletedCount;
+}
+
+export default {
+    getOne: getOne,
+    getMany: getMany,
+    add: add,
+    deleteMany: deleteMany
 };

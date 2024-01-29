@@ -7,7 +7,7 @@ import {ProductTypeId} from "../../constants/productTypes";
 
 export interface PostDocument {
     _id?: string | ObjectId
-    typeId?: PostTypeId,
+    typeId: PostTypeId,
     statusId: StatusId,
     pageTypeId?: PageTypeId,
     authorId: string | ObjectId

@@ -31,7 +31,7 @@ const postBody = object({
         imageBefore: string().min(1),
         imageAfter: string().min(1),
         images: array(string().min(1)).default([]),
-    }),
+    }).optional(),
     components: array(string().min(1)).default([]),
     eCommerce: object({
         typeId: z.nativeEnum(ProductTypeId).default(ProductTypeId.SimpleProduct),
@@ -95,7 +95,7 @@ const postBody = object({
             attributeId: string().min(1),
             variationId: string().min(1),
         })).default([]),
-    })
+    }).optional()
 });
 
 const getOneSchema = object({

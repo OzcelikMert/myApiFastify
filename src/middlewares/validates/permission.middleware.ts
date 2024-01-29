@@ -2,7 +2,6 @@ import {FastifyReply, FastifyRequest} from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../../library/api";
 import logMiddleware from "../log.middleware";
 import {PermisisonDocumentFunc, PermissionDocument} from "../../types/constants/permissions";
-import UserRoles, {UserRoleId} from "../../constants/userRoles";
 import permissionUtil from "../../utils/permission.util";
 
 const check = (permission: PermissionDocument | PermisisonDocumentFunc) => async (

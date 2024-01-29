@@ -14,24 +14,6 @@ import logMiddleware from "../middlewares/log.middleware";
 import permissionUtil from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 
-const createUrl = async (_id: string | null | undefined, name: string, typeId: number, postTypeId: number) => {
-    let urlAlreadyCount = 2;
-    let url = name.convertSEOUrl();
-
-    let oldUrl = url;
-    while ((await postTermService.getOne({
-        ignoreTermId: _id ? [_id] : undefined,
-        url: url,
-        postTypeId: postTypeId,
-        typeId: typeId
-    }))) {
-        url = `${oldUrl}-${urlAlreadyCount}`;
-        urlAlreadyCount++;
-    }
-
-    return url;
-}
-
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
@@ -68,8 +50,6 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         let reqData = req as PostTermSchemaPostDocument;
-        let url = await createUrl(null, reqData.body.contents.title, reqData.body.typeId, reqData.body.postTypeId);
-        reqData.body.contents.url = url;
 
         let insertData = await postTermService.add({
             ...reqData.body,
@@ -88,8 +68,6 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         let reqData = req as PostTermSchemaPutDocument;
-        let url = await createUrl(reqData.params._id, reqData.body.contents.title, reqData.body.typeId, reqData.body.postTypeId);
-        reqData.body.contents.url = url;
 
         serviceResult.data = await postTermService.updateOne({
             ...reqData.body,

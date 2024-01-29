@@ -39,10 +39,6 @@ let Config: ConfigDocument = {
     passwordSalt: "_@QffsDh14Q",
     publicFolders: [
         ["uploads"]
-       /* ["uploads", "flags"],
-        ["uploads", "images"],
-        ["uploads", "static"],
-        ["uploads", "video"]*/
     ],
     onlineUsers: [],
     paths: {

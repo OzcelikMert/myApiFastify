@@ -17,5 +17,7 @@ Things to do:
     + schemalar ile kontrol yaptiktan sonra schemalarda berlitilen datalar disinda bir data geliyormu kontrol et eger geliyorsa temizle
     + blogerlar sadece kendi yazdiklarini duzenleyebilsin (editorlerde yetki varsa hepsini guncelleyebilsinler)
     + resimlseri kimin eklediginin datasini tut ve sadece kendi resimlerini silsinler (editor hepsini duzenleyebilsin)
+    - export defualttan fonskiyonlari ayikla const olarak olustur sonra export defaulta ekle
     - postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
     - sessiona duzen var sayfayi kapatinca falan bozulmasin gitmesin
+

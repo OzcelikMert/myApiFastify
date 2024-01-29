@@ -78,7 +78,7 @@ export interface PostGetCountParamDocument {
 }
 
 export type PostAddParamDocument = {
-    contents?: PostContentDocument
+    contents: PostContentDocument
     eCommerce?: (Omit<PostECommerceDocument, "variations"> & {
         variations?: (Omit<PostECommerceVariationDocument, "contents"> & {
             contents: PostECommerceVariationContentDocument
@@ -88,7 +88,8 @@ export type PostAddParamDocument = {
 
 export type PostUpdateOneParamDocument = {
     _id: string
-} & Omit<PostAddParamDocument, "authorId">
+    contents?: PostContentDocument
+} & Omit<PostAddParamDocument, "authorId"|"contents">
 
 export type PostUpdateOneRankParamDocument = {
     _id: string

@@ -16,23 +16,6 @@ import {
 import permissionUtil from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 
-const createUrl = async (_id: string | null | undefined, name: string, typeId: number) => {
-    let urlAlreadyCount = 2;
-    let url = name.convertSEOUrl();
-
-    let oldUrl = url;
-    while ((await postService.getOne({
-        ignorePostId: _id ? [_id] : undefined,
-        url: url,
-        typeId: typeId
-    }))) {
-        url = `${oldUrl}-${urlAlreadyCount}`;
-        urlAlreadyCount++;
-    }
-
-    return url;
-}
-
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
@@ -83,8 +66,6 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         let reqData = req as PostSchemaPostDocument;
-        let url = await createUrl(null, reqData.body.contents.title, reqData.body.typeId);
-        reqData.body.contents.url = url;
 
         let insertData = await postService.add({
             ...reqData.body,
@@ -104,8 +85,6 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         let reqData = req as PostSchemaPutDocument;
-        let url = await createUrl(reqData.params._id, reqData.body.contents.title, reqData.body.typeId);
-        reqData.body.contents.url = url;
 
         serviceResult.data = await postService.updateOne({
             ...reqData.params,

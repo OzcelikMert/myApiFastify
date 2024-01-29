@@ -9,22 +9,6 @@ import {
 import userService from "../services/user.service";
 import logMiddleware from "../middlewares/log.middleware";
 
-const createUrl = async (_id: string | null | undefined, name: string) => {
-    let urlAlreadyCount = 2;
-    let url = name.convertSEOUrl();
-
-    let oldUrl = url;
-    while ((await userService.getOne({
-        ignoreUserId: _id ? [_id] : undefined,
-        url: url
-    }))) {
-        url = `${oldUrl}-${urlAlreadyCount}`;
-        urlAlreadyCount++;
-    }
-
-    return url;
-}
-
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
@@ -59,11 +43,9 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         const reqData = req as UserSchemaPostDocument;
-        let url = await createUrl(null, reqData.body.name);
 
         let insertData = await userService.add({
             ...reqData.body,
-            url: url,
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
         });
 
@@ -78,12 +60,10 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         const reqData = req as UserSchemaPutDocument
-        let url = await createUrl(reqData.params._id, reqData.body.name);
 
         serviceResult.data = await userService.updateOne({
             ...reqData.params,
             ...reqData.body,
-            url: url,
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
         });
 
@@ -96,11 +76,9 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new Result();
 
         const reqData = req as UserSchemaPutProfileDocument;
-        let url = await createUrl(req.sessionAuth!.user!.userId.toString(), reqData.body.name);
 
         serviceResult.data = await userService.updateOne({
             ...reqData.body,
-            url: url,
             _id: req.sessionAuth!.user!.userId.toString(),
         });
 
