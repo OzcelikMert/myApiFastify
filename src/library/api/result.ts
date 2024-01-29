@@ -1,4 +1,5 @@
 import ErrorCodes from "./errorCodes";
+import StatusCodes from "./statusCodes";
 
 class Result {
     constructor(
@@ -6,8 +7,8 @@ class Result {
         customData: any = null,
         status: boolean = true,
         message: any = "",
-        errorCode: number = ErrorCodes.success,
-        statusCode: number = 200,
+        errorCode: ErrorCodes = ErrorCodes.success,
+        statusCode: StatusCodes = StatusCodes.success,
         source: string = ""
     ) {
         this.data = data;
@@ -23,8 +24,8 @@ class Result {
     customData: any;
     status: boolean;
     message: any;
-    errorCode: number;
-    statusCode: number;
+    errorCode: ErrorCodes;
+    statusCode: StatusCodes;
     source: string;
 }
 
