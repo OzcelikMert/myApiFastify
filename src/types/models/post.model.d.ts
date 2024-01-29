@@ -1,10 +1,15 @@
 import { ObjectId } from "mongoose"
+import {PostTypeId} from "../../constants/postTypes";
+import {PageTypeId} from "../../constants/pageTypes";
+import {StatusId} from "../../constants/status";
+import {AttributeTypeId} from "../../constants/attributeTypes";
+import {ProductTypeId} from "../../constants/productTypes";
 
 export interface PostDocument {
     _id?: string | ObjectId
-    typeId?: number,
-    statusId: number,
-    pageTypeId?: number,
+    typeId?: PostTypeId,
+    statusId: StatusId,
+    pageTypeId?: PageTypeId,
     authorId: string | ObjectId
     lastAuthorId: string | ObjectId
     dateStart: Date,
@@ -46,7 +51,7 @@ export interface PostContentButtonDocument {
 }
 
 export interface PostECommerceDocument<T = string | ObjectId, P = string[] | ObjectId[]> {
-    typeId: number
+    typeId: ProductTypeId
     images: string[]
     pricing?: PostECommercePricingDocument
     inventory?: PostECommerceInventoryDocument
@@ -81,7 +86,7 @@ export interface PostECommerceAttributeDocument<T = string | ObjectId, P = strin
     _id?: string | ObjectId
     attributeId: T
     variations: P
-    typeId: number
+    typeId: AttributeTypeId
 }
 
 export interface PostECommerceVariationDocument<T = string | ObjectId> {

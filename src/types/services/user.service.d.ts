@@ -1,4 +1,6 @@
 import {UserDocument} from "../models/user.model";
+import {StatusId} from "../../constants/status";
+import {UserRoleId} from "../../constants/userRoles";
 
 export interface UserPopulateDocument {
     _id: string
@@ -15,19 +17,19 @@ export interface UserGetOneParamDocument {
     _id?: string
     email?: string
     password?: string
-    statusId?: number
+    statusId?: StatusId
     url?: string
-    roleId?: number
+    roleId?: UserRoleId
     ignoreUserId?: string[]
 }
 
 export interface UserGetManyParamDocument {
     _id?: string[]
-    statusId?: number
+    statusId?: StatusId
     email?: string,
     count?: number,
     page?: number
-    roleId?: number
+    roleId?: UserRoleId
     ignoreUserId?: string[]
 }
 
@@ -37,8 +39,8 @@ export type UserAddParamDocument = {
 
 export type UserUpdateOneParamDocument = {
     _id: string
-    roleId?: number
-    statusId?: number
+    roleId?: UserRoleId
+    statusId?: StatusId
     name?: string
     email?: string
     permissions?: number[]

@@ -1,15 +1,18 @@
 import {UserPopulateDocument} from "./user.service";
 import {PostTermContentDocument, PostTermDocument} from "../models/postTerm.model";
+import {PostTermTypeId} from "../../constants/postTermTypes";
+import {PostTypeId} from "../../constants/postTypes";
+import {StatusId} from "../../constants/status";
 
 export interface PostTermPopulateDocument {
     _id: string,
-    typeId: number,
+    typeId: PostTermTypeId,
     contents: {
         langId: string,
         title?: string,
         image?: string
         url?: string
-    }[]
+    }
 }
 
 export interface PostTermAlternateDocument {
@@ -21,14 +24,7 @@ export interface PostTermAlternateDocument {
 export type PostTermGetResultDocument = {
     authorId: UserPopulateDocument,
     lastAuthorId: UserPopulateDocument,
-    mainId?: {
-        _id: string
-        contents: {
-            langId: string
-            title: string,
-            url: string,
-        }
-    },
+    mainId?: PostTermPopulateDocument,
     contents?: PostTermContentDocument | PostTermContentDocument[]
     alternates?: PostTermAlternateDocument[],
     postCount?: number
@@ -37,10 +33,10 @@ export type PostTermGetResultDocument = {
 export interface PostTermGetOneParamDocument {
     langId?: string
     _id?: string
-    typeId: number,
-    postTypeId: number,
+    typeId: PostTermTypeId,
+    postTypeId: PostTypeId,
+    statusId?: StatusId,
     url?: string
-    statusId?: number,
     ignoreTermId?: string[]
     authorId?: string
 }
@@ -48,11 +44,11 @@ export interface PostTermGetOneParamDocument {
 export interface PostTermGetManyParamDocument {
     langId?: string
     _id?: string[]
-    typeId?: number[],
-    postTypeId: number,
+    typeId?: PostTermTypeId[],
+    postTypeId: PostTypeId,
     url?: string
     title?: string
-    statusId?: number,
+    statusId?: StatusId,
     ignoreTermId?: string[],
     count?: number
     page?: number
@@ -71,22 +67,22 @@ export type PostTermUpdateOneParamDocument = {
 
 export type PostTermUpdateOneRankParamDocument = {
     _id: string,
-    postTypeId: number,
-    typeId: number
+    postTypeId: PostTypeId,
+    typeId: PostTermTypeId
     rank: number,
     lastAuthorId: string
 }
 
 export type PostTermUpdateManyStatusIdParamDocument = {
     _id: string[],
-    postTypeId: number,
-    typeId: number
-    statusId: number,
+    postTypeId: PostTypeId,
+    typeId: PostTermTypeId
+    statusId: StatusId,
     lastAuthorId: string
 }
 
 export interface PostTermDeleteManyParamDocument {
     _id: string[]
-    typeId: number,
-    postTypeId: number
+    typeId: PostTermTypeId,
+    postTypeId: PostTypeId
 }

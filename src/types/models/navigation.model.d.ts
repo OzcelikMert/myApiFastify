@@ -1,8 +1,9 @@
 import { ObjectId } from "mongoose"
+import {StatusId} from "../../constants/status";
 
 export interface NavigationDocument {
     _id?: string | ObjectId
-    statusId: number,
+    statusId: StatusId,
     mainId?: string | ObjectId
     authorId: string | ObjectId
     lastAuthorId: string | ObjectId

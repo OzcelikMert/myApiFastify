@@ -1,11 +1,14 @@
 import { ObjectId } from "mongoose"
+import {PostTypeId} from "../../constants/postTypes";
+import {PostTermTypeId} from "../../constants/postTermTypes";
+import {StatusId} from "../../constants/status";
 
 export interface PostTermDocument {
     _id: string | ObjectId
-    postTypeId: number,
-    typeId: number,
+    postTypeId: PostTypeId,
+    typeId: PostTermTypeId,
+    statusId: StatusId,
     mainId?: string | ObjectId
-    statusId: number,
     authorId: string | ObjectId
     lastAuthorId: string | ObjectId
     rank: number,

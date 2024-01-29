@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose"
+import {StatusId} from "../../constants/status";
 
 export interface LanguageDocument {
     _id?: string | ObjectId
@@ -6,6 +7,6 @@ export interface LanguageDocument {
     image: string
     shortKey: string
     locale: string
-    statusId: number
+    statusId: StatusId
     rank: number
 }

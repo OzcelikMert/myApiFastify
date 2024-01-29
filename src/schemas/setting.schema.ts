@@ -1,11 +1,11 @@
 import {array, number, object, string, z} from 'zod';
-import {ProjectionKeys} from "../constants/projections";
+import {SettingProjectionKeys} from "../constants/settingProjections";
 import {CurrencyId} from "../constants/currencyTypes";
 
 const getSchema = object({
     query: object({
         langId: string().optional(),
-        projection: z.nativeEnum(ProjectionKeys).optional()
+        projection: z.nativeEnum(SettingProjectionKeys).optional()
     })
 });
 

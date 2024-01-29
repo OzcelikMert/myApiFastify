@@ -1,30 +1,33 @@
 import {UserPopulateDocument} from "./user.service";
 import {NavigationContentDocument, NavigationDocument} from "../models/navigation.model";
+import {StatusId} from "../../constants/status";
+
+export interface NavigatePopulateDocument {
+    _id:  string
+    contents: {
+        langId: string
+        title: string,
+        url: string,
+    }
+}
 
 export type NavigationGetResultDocument = {
     authorId: UserPopulateDocument,
     lastAuthorId: UserPopulateDocument,
-    mainId?: {
-        _id:  string
-        contents: {
-            langId: string
-            title: string,
-            url: string,
-        }
-    },
+    mainId?: NavigatePopulateDocument,
     contents?: NavigationContentDocument | NavigationContentDocument[]
 } & Omit<NavigationDocument, "contents">
 
 export interface NavigationGetOneParamDocument {
     _id?: string
     langId?: string
-    statusId?: number
+    statusId?: StatusId
 }
 
 export interface NavigationGetManyParamDocument {
     _id?: string[]
     langId?: string
-    statusId?: number
+    statusId?: StatusId
     ignoreDefaultLanguage?: boolean
 }
 
@@ -44,7 +47,7 @@ export type NavigationUpdateOneRankParamDocument = {
 
 export type NavigationUpdateManyStatusIdParamDocument = {
     _id: string[],
-    statusId: number,
+    statusId: StatusId,
     lastAuthorId: string
 }
 

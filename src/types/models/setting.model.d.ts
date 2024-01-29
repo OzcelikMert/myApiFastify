@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose"
+import {CurrencyId} from "../../constants/currencyTypes";
 
 export interface SettingDocument {
     _id: string | ObjectId
@@ -17,7 +18,7 @@ export interface SettingDocument {
 }
 
 export interface SettingECommerceDocument {
-    currencyId: number
+    currencyId: CurrencyId
 }
 
 export interface SettingContactDocument {

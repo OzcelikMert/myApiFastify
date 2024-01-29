@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose"
+import {ComponentInputTypeId} from "../../constants/componentInputTypes";
 
 export interface ComponentDocument {
     _id?: string | ObjectId,
@@ -12,7 +13,7 @@ export interface ComponentDocument {
 export interface ComponentTypeDocument {
     _id?: string | ObjectId,
     elementId: string
-    typeId: number,
+    typeId: ComponentInputTypeId,
     langKey: string,
     rank: number,
     contents: ComponentTypeContentDocument[]

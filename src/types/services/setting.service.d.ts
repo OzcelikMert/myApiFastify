@@ -5,6 +5,7 @@ import {
     SettingStaticLanguageContentDocument,
     SettingStaticLanguageDocument
 } from "../models/setting.model";
+import {SettingProjectionKeys} from "../../constants/settingProjections";
 
 export type SettingGetResultDocument = {
     seoContents?: SettingSeoContentDocument | SettingSeoContentDocument[]
@@ -13,7 +14,7 @@ export type SettingGetResultDocument = {
 
 export type SettingGetParamDocument = {
     langId?: string
-    projection?: "general" | "seo" | "eCommerce" | "contactForm" | "socialMedia" | "staticLanguage"
+    projection?: SettingProjectionKeys
 }
 
 export type SettingAddParamDocument = {

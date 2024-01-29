@@ -18,3 +18,4 @@ Things to do:
     + blogerlar sadece kendi yazdiklarini duzenleyebilsin (editorlerde yetki varsa hepsini guncelleyebilsinler)
     + resimlseri kimin eklediginin datasini tut ve sadece kendi resimlerini silsinler (editor hepsini duzenleyebilsin)
     - postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
+    - sessiona duzen var sayfayi kapatinca falan bozulmasin gitmesin

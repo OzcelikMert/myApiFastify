@@ -1,9 +1,11 @@
 import { ObjectId } from "mongoose"
+import {UserRoleId} from "../../constants/userRoles";
+import {StatusId} from "../../constants/status";
 
 export interface UserDocument {
     _id: string | ObjectId
-    roleId: number,
-    statusId: number,
+    roleId: UserRoleId,
+    statusId: StatusId,
     name: string,
     email: string,
     image?: string,
