@@ -17,7 +17,7 @@ import { StatusId } from "../constants/status";
 import { PostTermDocument } from "../types/models/postTerm.model";
 import {PostTypeId} from "../constants/postTypes";
 
-const createUrl = async (_id: string | null, title: string, typeId: PostTermTypeId, postTypeId: PostTypeId) => {
+const createURL = async (_id: string | null, title: string, typeId: PostTermTypeId, postTypeId: PostTypeId) => {
     let urlAlreadyCount = 2;
     let url = title.convertSEOUrl();
 
@@ -218,7 +218,7 @@ const add = async (params: PostTermAddParamDocument) => {
     }
 
     if(params.contents){
-        params.contents.url = await createUrl(null, params.contents.title ?? "", params.typeId, params.postTypeId);
+        params.contents.url = await createURL(null, params.contents.title ?? "", params.typeId, params.postTypeId);
     }
 
     return await postTermModel.create(params)
@@ -253,11 +253,11 @@ const updateOne = async (params: PostTermUpdateOneParamDocument) => {
             let docContent = doc.contents.findSingle("langId", params.contents.langId);
             if (docContent) {
                 if(docContent.title != params.contents.title){
-                    params.contents.url = await createUrl(doc._id.toString(), params.contents.title ?? "", params.typeId, params.postTypeId);
+                    params.contents.url = await createURL(doc._id.toString(), params.contents.title ?? "", params.typeId, params.postTypeId);
                 }
                 docContent = Object.assign(docContent, params.contents);
             } else {
-                params.contents.url = await createUrl(doc._id.toString(), params.contents.title ?? "", params.typeId, params.postTypeId);
+                params.contents.url = await createURL(doc._id.toString(), params.contents.title ?? "", params.typeId, params.postTypeId);
                 doc.contents.push(params.contents)
             }
             delete params.contents;

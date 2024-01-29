@@ -15,7 +15,7 @@ import Variable from "../library/variable";
 import userObjectIdKeys from "../constants/objectIdKeys/user.objectIdKeys";
 import {UserDocument} from "../types/models/user.model";
 
-const createUrl = async (_id: string | null, name: string) => {
+const createURL = async (_id: string | null, name: string) => {
     let urlAlreadyCount = 2;
     let url = name.convertSEOUrl();
 
@@ -151,7 +151,7 @@ const add = async (params: UserAddParamDocument) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
 
-    params.url = await createUrl(null, params.name);
+    params.url = await createURL(null, params.name);
 
     return await userModel.create({
         ...params,
@@ -184,7 +184,7 @@ const updateOne = async (params: UserUpdateOneParamDocument) => {
         }
 
         if(params.name && doc.name != params.name){
-            params.url = await createUrl(doc._id.toString(), params.name);
+            params.url = await createURL(doc._id.toString(), params.name);
         }
 
         doc = Object.assign(doc, params);

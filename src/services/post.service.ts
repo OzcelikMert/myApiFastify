@@ -22,7 +22,7 @@ import { StatusId } from "../constants/status";
 import { PostTermTypeId } from "../constants/postTermTypes";
 import { PostTypeId } from "../constants/postTypes";
 
-const createUrl = async (_id: string | null, title: string, typeId: PostTypeId) => {
+const createURL = async (_id: string | null, title: string, typeId: PostTypeId) => {
     let urlAlreadyCount = 2;
     let url = title.convertSEOUrl();
 
@@ -402,7 +402,7 @@ const add = async (params: PostAddParamDocument) => {
     params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     if(params.contents){
-        params.contents.url = await createUrl(null, params.contents.title ?? "", params.typeId);
+        params.contents.url = await createURL(null, params.contents.title ?? "", params.typeId);
     }
 
     return await postModel.create(params);
@@ -434,11 +434,11 @@ const updateOne = async (params: PostUpdateOneParamDocument) => {
                 let docContent = doc.contents.findSingle("langId", params.contents.langId);
                 if (docContent) {
                     if(docContent.title != params.contents.title){
-                        params.contents.url = await createUrl(doc._id.toString(), params.contents.title ?? "", params.typeId);
+                        params.contents.url = await createURL(doc._id.toString(), params.contents.title ?? "", params.typeId);
                     }
                     docContent = Object.assign(docContent, params.contents);
                 } else {
-                    params.contents.url = await createUrl(doc._id.toString(), params.contents.title ?? "", params.typeId);
+                    params.contents.url = await createURL(doc._id.toString(), params.contents.title ?? "", params.typeId);
                     doc.contents.push(params.contents)
                 }
             }
