@@ -18,22 +18,26 @@ const getPermissionKeyPrefix = (method: string) => {
     return prefix;
 }
 
+const getPostPermission = (req: FastifyRequest) : PermissionDocument => {
+    let reqData = req as any;
+    let path = req.originalUrl.replace(`/api`, "");
+    let method = req.method.toUpperCase();
+    let typeIdKey = path.startsWith(EndPoints.POST_TERM) ? "postTypeId" : "typeId";
+    let typeId: PostTypeId = reqData.query[typeIdKey] ?? reqData.body[typeIdKey] ?? 0;
+    let permissionKeyPrefix = getPermissionKeyPrefix(method);
+    const postTypeIdKey = Object.keys(PostTypeId).find(key => PostTypeId[key as keyof typeof PostTypeId] === typeId) ?? "";
+
+    return (postPermission as any)[`${permissionKeyPrefix}${postTypeIdKey}`] ?? {permissionId: [], minUserRoleId: 0};
+}
+
+const checkPermissionRoleRank = (minRoleId: UserRoleId, targetRoleId: UserRoleId) => {
+    let userRole = UserRoles.findSingle("id", targetRoleId);
+    let minRole = UserRoles.findSingle("id", UserRoleId.Editor);
+
+    return (userRole && minRole) && (userRole.rank >= minRole.rank);
+}
+
 export default {
-    getPostPermission(req: FastifyRequest) : PermissionDocument {
-        let reqData = req as any;
-        let path = req.originalUrl.replace(`/api`, "");
-        let method = req.method.toUpperCase();
-        let typeIdKey = path.startsWith(EndPoints.POST_TERM) ? "postTypeId" : "typeId";
-        let typeId: PostTypeId = reqData.query[typeIdKey] ?? reqData.body[typeIdKey] ?? 0;
-        let permissionKeyPrefix = getPermissionKeyPrefix(method);
-        const postTypeIdKey = Object.keys(PostTypeId).find(key => PostTypeId[key as keyof typeof PostTypeId] === typeId) ?? "";
-
-        return (postPermission as any)[`${permissionKeyPrefix}${postTypeIdKey}`] ?? {permissionId: [], minUserRoleId: 0};
-    },
-    checkPermissionRoleRank(minRoleId: UserRoleId, targetRoleId: UserRoleId) {
-        let userRole = UserRoles.findSingle("id", targetRoleId);
-        let minRole = UserRoles.findSingle("id", UserRoleId.Editor);
-
-        return (userRole && minRole) && (userRole.rank >= minRole.rank);
-    }
+    getPostPermission: getPostPermission,
+    checkPermissionRoleRank: checkPermissionRoleRank
 }

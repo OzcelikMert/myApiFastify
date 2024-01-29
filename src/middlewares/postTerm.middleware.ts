@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import {FastifyRequest, FastifyReply} from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import postTermService from "../services/postTerm.service";
 import logMiddleware from "./log.middleware";
@@ -6,111 +6,119 @@ import {PostTermSchemaDeleteManyDocument, PostTermSchemaPutDocument} from "../sc
 import {UserRoleId} from "../constants/userRoles";
 import permissionUtil from "../utils/permission.util";
 
-export default {
-    checkOne: async (req: FastifyRequest, reply: FastifyReply) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
+const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
 
-            let reqData = req as PostTermSchemaPutDocument;
+        let reqData = req as PostTermSchemaPutDocument;
 
-            let resData = await postTermService.getOne({
+        let resData = await postTermService.getOne({
+            _id: reqData.params._id,
+            postTypeId: reqData.body.postTypeId,
+            typeId: reqData.body.typeId,
+        });
+
+        if (!resData) {
+            serviceResult.status = false;
+            serviceResult.errorCode = ErrorCodes.notFound;
+            serviceResult.statusCode = StatusCodes.notFound;
+        }
+
+        if (!serviceResult.status) {
+            reply.status(serviceResult.statusCode).send(serviceResult)
+        }
+    });
+}
+
+const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostTermSchemaDeleteManyDocument;
+
+        let resData = await postTermService.getMany({
+            _id: reqData.body._id,
+            postTypeId: reqData.body.postTypeId,
+            typeId: [reqData.body.typeId],
+        });
+
+        if (
+            resData.length === 0 ||
+            (resData.length != reqData.body._id.length)
+        ) {
+            serviceResult.status = false;
+            serviceResult.errorCode = ErrorCodes.notFound;
+            serviceResult.statusCode = StatusCodes.notFound;
+        }
+
+        if (!serviceResult.status) {
+            reply.status(serviceResult.statusCode).send(serviceResult)
+        }
+    });
+}
+
+const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
+
+        let reqData = req as PostTermSchemaPutDocument;
+
+        if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
+            let postTerm = await postTermService.getOne({
                 _id: reqData.params._id,
                 postTypeId: reqData.body.postTypeId,
                 typeId: reqData.body.typeId,
             });
 
-            if (!resData) {
-                serviceResult.status = false;
-                serviceResult.errorCode = ErrorCodes.notFound;
-                serviceResult.statusCode = StatusCodes.notFound;
+            if (postTerm) {
+                if (postTerm.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
+                    serviceResult.status = false;
+                    serviceResult.errorCode = ErrorCodes.noPerm;
+                    serviceResult.statusCode = StatusCodes.forbidden;
+                }
             }
+        }
 
-            if (!serviceResult.status) {
-                reply.status(serviceResult.statusCode).send(serviceResult)
-            }
-        });
-    },
-    checkMany: async (req: FastifyRequest, reply: FastifyReply) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
+        if (!serviceResult.status) {
+            reply.status(serviceResult.statusCode).send(serviceResult)
+        }
+    });
+}
 
-            let reqData = req as PostTermSchemaDeleteManyDocument;
+const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new Result();
 
-            let resData = await postTermService.getMany({
+        let reqData = req as PostTermSchemaDeleteManyDocument;
+
+        if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
+            let postTerms = await postTermService.getMany({
                 _id: reqData.body._id,
                 postTypeId: reqData.body.postTypeId,
                 typeId: [reqData.body.typeId],
             });
 
-            if (
-                resData.length === 0 ||
-                (resData.length != reqData.body._id.length)
-            ) {
-                serviceResult.status = false;
-                serviceResult.errorCode = ErrorCodes.notFound;
-                serviceResult.statusCode = StatusCodes.notFound;
-            }
-
-            if (!serviceResult.status) {
-                reply.status(serviceResult.statusCode).send(serviceResult)
-            }
-        });
-    },
-    checkOneIsAuthor: async (req: FastifyRequest, reply: FastifyReply) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
-
-            let reqData = req as PostTermSchemaPutDocument;
-
-            if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
-                let postTerm = await postTermService.getOne({
-                    _id: reqData.params._id,
-                    postTypeId: reqData.body.postTypeId,
-                    typeId: reqData.body.typeId,
-                });
-
-                if (postTerm) {
+            if (postTerms) {
+                for (const postTerm of postTerms) {
                     if (postTerm.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
                         serviceResult.status = false;
                         serviceResult.errorCode = ErrorCodes.noPerm;
                         serviceResult.statusCode = StatusCodes.forbidden;
+                        break;
                     }
                 }
             }
+        }
 
-            if (!serviceResult.status) {
-                reply.status(serviceResult.statusCode).send(serviceResult)
-            }
-        });
-    },
-    checkManyIsAuthor: async (req: FastifyRequest, reply: FastifyReply) => {
-        await logMiddleware.error(req, reply, async () => {
-            let serviceResult = new Result();
+        if (!serviceResult.status) {
+            reply.status(serviceResult.statusCode).send(serviceResult)
+        }
+    });
+}
 
-            let reqData = req as PostTermSchemaDeleteManyDocument;
-
-            if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
-                let postTerms = await postTermService.getMany({
-                    _id: reqData.body._id,
-                    postTypeId: reqData.body.postTypeId,
-                    typeId: [reqData.body.typeId],
-                });
-
-                if (postTerms) {
-                    for (const postTerm of postTerms) {
-                        if (postTerm.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
-                            serviceResult.status = false;
-                            serviceResult.errorCode = ErrorCodes.noPerm;
-                            serviceResult.statusCode = StatusCodes.forbidden;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!serviceResult.status) {
-                reply.status(serviceResult.statusCode).send(serviceResult)
-            }
-        });
-    },
+export default {
+    checkOne: checkOne,
+    checkMany: checkMany,
+    checkOneIsAuthor: checkOneIsAuthor,
+    checkManyIsAuthor: checkManyIsAuthor,
 };
