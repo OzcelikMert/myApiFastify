@@ -4,7 +4,7 @@ import postService from "../services/post.service";
 import logMiddleware from "./log.middleware";
 import {
     PostSchemaDeleteManyDocument,
-    PostSchemaPutDocument
+    PostSchemaPutOneDocument
 } from "../schemas/post.schema";
 import {UserRoleId} from "../constants/userRoles";
 import permissionUtil from "../utils/permission.util";
@@ -13,7 +13,7 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostSchemaPutDocument;
+        let reqData = req as PostSchemaPutOneDocument;
 
         let post = await postService.getOne({
             _id: reqData.params._id,
@@ -62,7 +62,7 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostSchemaPutDocument;
+        let reqData = req as PostSchemaPutOneDocument;
 
         if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
             let post = await postService.getOne({

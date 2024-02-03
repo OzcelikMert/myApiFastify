@@ -2,7 +2,7 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import postTermService from "../services/postTerm.service";
 import logMiddleware from "./log.middleware";
-import {PostTermSchemaDeleteManyDocument, PostTermSchemaPutDocument} from "../schemas/postTerm.schema";
+import {PostTermSchemaDeleteManyDocument, PostTermSchemaPutOneDocument} from "../schemas/postTerm.schema";
 import {UserRoleId} from "../constants/userRoles";
 import permissionUtil from "../utils/permission.util";
 
@@ -10,7 +10,7 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostTermSchemaPutDocument;
+        let reqData = req as PostTermSchemaPutOneDocument;
 
         let resData = await postTermService.getOne({
             _id: reqData.params._id,
@@ -61,7 +61,7 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostTermSchemaPutDocument;
+        let reqData = req as PostTermSchemaPutOneDocument;
 
         if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
             let postTerm = await postTermService.getOne({

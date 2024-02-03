@@ -3,8 +3,8 @@ import {Result} from "../library/api";
 import subscriberService from "../services/subscriber.service";
 import logMiddleware from "../middlewares/log.middleware";
 import {
-    SubscriberSchemaDeleteDocument, SubscriberSchemaDeleteManyDocument,
-    SubscriberSchemaGetDocument,
+    SubscriberSchemaDeleteOneDocument, SubscriberSchemaDeleteManyDocument,
+    SubscriberSchemaGetOneDocument,
     SubscriberSchemaGetManyDocument,
     SubscriberSchemaPostDocument
 } from "../schemas/subscriber.schema";
@@ -13,7 +13,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        const reqData = req as SubscriberSchemaGetDocument;
+        const reqData = req as SubscriberSchemaGetOneDocument;
 
         serviceResult.data = await subscriberService.getOne({
             ...reqData.query
@@ -57,7 +57,7 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        const reqData = req as SubscriberSchemaDeleteDocument;
+        const reqData = req as SubscriberSchemaDeleteOneDocument;
 
         serviceResult.data = await subscriberService.deleteOne({
             ...reqData.body

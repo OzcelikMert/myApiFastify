@@ -182,14 +182,14 @@ const deleteManySchema = object({
     })
 });
 
-export type PostSchemaGetDocument = z.infer<typeof getOneSchema>;
+export type PostSchemaGetOneDocument = z.infer<typeof getOneSchema>;
 export type PostSchemaGetManyDocument = z.infer<typeof getManySchema>;
 export type PostSchemaGetCountDocument = z.infer<typeof getCountSchema>;
 export type PostSchemaPostDocument = z.infer<typeof postSchema>;
-export type PostSchemaPutDocument = z.infer<typeof putOneSchema>;
+export type PostSchemaPutOneDocument = z.infer<typeof putOneSchema>;
 export type PostSchemaPutManyStatusDocument = z.infer<typeof putManyStatusSchema>;
-export type PostSchemaPutRankDocument = z.infer<typeof putOneRankSchema>;
-export type PostSchemaPutViewDocument = z.infer<typeof putOneViewSchema>;
+export type PostSchemaPutOneRankDocument = z.infer<typeof putOneRankSchema>;
+export type PostSchemaPutOneViewDocument = z.infer<typeof putOneViewSchema>;
 export type PostSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
 export default {

@@ -2,13 +2,13 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import componentService from "../services/component.service";
 import logMiddleware from "./log.middleware";
-import {ComponentSchemaDeleteManyDocument, ComponentSchemaPutDocument} from "../schemas/component.schema";
+import {ComponentSchemaDeleteManyDocument, ComponentSchemaPutOneDocument} from "../schemas/component.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as ComponentSchemaPutDocument;
+        let reqData = req as ComponentSchemaPutOneDocument;
 
         let resData = await componentService.getOne({_id: reqData.params._id});
 

@@ -4,19 +4,19 @@ import logMiddleware from "../middlewares/log.middleware";
 import navigationService from "../services/navigation.service";
 import {
     NavigationSchemaDeleteManyDocument,
-    NavigationSchemaGetDocument,
+    NavigationSchemaGetOneDocument,
     NavigationSchemaGetManyDocument,
     NavigationSchemaPostDocument,
-    NavigationSchemaPutDocument,
+    NavigationSchemaPutOneDocument,
     NavigationSchemaPutManyStatusDocument,
-    NavigationSchemaPutRankDocument
+    NavigationSchemaPutOneRankDocument
 } from "../schemas/navigation.schema";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as NavigationSchemaGetDocument;
+        let reqData = req as NavigationSchemaGetOneDocument;
 
         serviceResult.data = await navigationService.getOne({
             ...reqData.params,
@@ -63,7 +63,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as NavigationSchemaPutDocument;
+        let reqData = req as NavigationSchemaPutOneDocument;
 
         serviceResult.data = await navigationService.updateOne({
             ...reqData.params,
@@ -79,7 +79,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as NavigationSchemaPutRankDocument;
+        let reqData = req as NavigationSchemaPutOneRankDocument;
 
         serviceResult.data = await navigationService.updateOneRank({
             ...reqData.params,

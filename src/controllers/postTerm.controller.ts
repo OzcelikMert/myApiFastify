@@ -2,12 +2,12 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {Result} from "../library/api";
 import {
     PostTermSchemaDeleteManyDocument,
-    PostTermSchemaGetDocument,
+    PostTermSchemaGetOneDocument,
     PostTermSchemaGetManyDocument,
     PostTermSchemaPostDocument,
-    PostTermSchemaPutDocument,
+    PostTermSchemaPutOneDocument,
     PostTermSchemaPutManyStatusDocument,
-    PostTermSchemaPutRankDocument
+    PostTermSchemaPutOneRankDocument
 } from "../schemas/postTerm.schema";
 import postTermService from "../services/postTerm.service";
 import logMiddleware from "../middlewares/log.middleware";
@@ -18,7 +18,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostTermSchemaGetDocument;
+        let reqData = req as PostTermSchemaGetOneDocument;
 
         serviceResult.data = await postTermService.getOne({
             ...reqData.params,
@@ -67,7 +67,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostTermSchemaPutDocument;
+        let reqData = req as PostTermSchemaPutOneDocument;
 
         serviceResult.data = await postTermService.updateOne({
             ...reqData.body,
@@ -83,7 +83,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostTermSchemaPutRankDocument;
+        let reqData = req as PostTermSchemaPutOneRankDocument;
 
         serviceResult.data = await postTermService.updateOneRank({
             ...reqData.body,

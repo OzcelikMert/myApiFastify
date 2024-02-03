@@ -5,13 +5,13 @@ import logMiddleware from "../middlewares/log.middleware";
 import {
     PostSchemaDeleteManyDocument,
     PostSchemaGetCountDocument,
-    PostSchemaGetDocument,
+    PostSchemaGetOneDocument,
     PostSchemaGetManyDocument,
     PostSchemaPostDocument,
-    PostSchemaPutDocument,
+    PostSchemaPutOneDocument,
     PostSchemaPutManyStatusDocument,
-    PostSchemaPutRankDocument,
-    PostSchemaPutViewDocument
+    PostSchemaPutOneRankDocument,
+    PostSchemaPutOneViewDocument
 } from "../schemas/post.schema";
 import permissionUtil from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
@@ -20,7 +20,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostSchemaGetDocument;
+        let reqData = req as PostSchemaGetOneDocument;
 
         serviceResult.data = await postService.getOne({
             ...reqData.params,
@@ -84,7 +84,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostSchemaPutDocument;
+        let reqData = req as PostSchemaPutOneDocument;
 
         serviceResult.data = await postService.updateOne({
             ...reqData.params,
@@ -101,7 +101,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostSchemaPutRankDocument;
+        let reqData = req as PostSchemaPutOneRankDocument;
 
         serviceResult.data = await postService.updateOneRank({
             ...reqData.body,
@@ -117,7 +117,7 @@ const updateOneView = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as PostSchemaPutViewDocument;
+        let reqData = req as PostSchemaPutOneViewDocument;
 
         serviceResult.data = await postService.updateOneView({
             ...reqData.params,

@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import {Result} from "../library/api";
 import {
-    LanguageSchemaGetDocument,
+    LanguageSchemaGetOneDocument,
     LanguageSchemaGetManyDocument,
-    LanguageSchemaPostDocument, LanguageSchemaPutDocument, LanguageSchemaPutRankDocument
+    LanguageSchemaPostDocument, LanguageSchemaPutOneDocument, LanguageSchemaPutOneRankDocument
 } from "../schemas/language.schema";
 import languageService from "../services/language.service";
 import logMiddleware from "../middlewares/log.middleware";
@@ -15,7 +15,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as LanguageSchemaGetDocument;
+        let reqData = req as LanguageSchemaGetOneDocument;
 
         serviceResult.data = await languageService.getOne({
             ...reqData.params,
@@ -84,7 +84,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as LanguageSchemaPutDocument;
+        let reqData = req as LanguageSchemaPutOneDocument;
 
         serviceResult.data = await languageService.updateOne({
             ...reqData.params,
@@ -99,7 +99,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as LanguageSchemaPutRankDocument;
+        let reqData = req as LanguageSchemaPutOneRankDocument;
 
         serviceResult.data = await languageService.updateOneRank({
             ...reqData.params,

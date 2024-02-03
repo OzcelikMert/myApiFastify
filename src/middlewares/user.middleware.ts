@@ -3,13 +3,13 @@ import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import userService from "../services/user.service";
 import UserRoles from "../constants/userRoles";
 import logMiddleware from "./log.middleware";
-import {UserSchemaPutDocument, UserSchemaPutPasswordDocument} from "../schemas/user.schema";
+import {UserSchemaPutOneDocument, UserSchemaPutPasswordDocument} from "../schemas/user.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as UserSchemaPutDocument;
+        let reqData = req as UserSchemaPutOneDocument;
 
         let resData = await userService.getOne({
             _id: reqData.params._id
@@ -31,7 +31,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as UserSchemaPutDocument;
+        let reqData = req as UserSchemaPutOneDocument;
         let userRoleId = 0;
 
         if (reqData.body.roleId) {
@@ -71,7 +71,7 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as UserSchemaPutDocument;
+        let reqData = req as UserSchemaPutOneDocument;
 
         if (reqData.body.email) {
             let resData = await userService.getOne({

@@ -1,10 +1,10 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {Result} from "../library/api";
 import {
-    UserSchemaDeleteDocument,
-    UserSchemaGetDocument,
+    UserSchemaDeleteOneDocument,
+    UserSchemaGetOneDocument,
     UserSchemaGetManyDocument,
-    UserSchemaPostDocument, UserSchemaPutDocument, UserSchemaPutPasswordDocument, UserSchemaPutProfileDocument
+    UserSchemaPostDocument, UserSchemaPutOneDocument, UserSchemaPutPasswordDocument, UserSchemaPutProfileDocument
 } from "../schemas/user.schema";
 import userService from "../services/user.service";
 import logMiddleware from "../middlewares/log.middleware";
@@ -13,7 +13,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        const reqData = req as UserSchemaGetDocument;
+        const reqData = req as UserSchemaGetOneDocument;
 
         serviceResult.data = await userService.getOne({
             ...reqData.params,
@@ -59,7 +59,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        const reqData = req as UserSchemaPutDocument
+        const reqData = req as UserSchemaPutOneDocument
 
         serviceResult.data = await userService.updateOne({
             ...reqData.params,
@@ -105,7 +105,7 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        const reqData = req as UserSchemaDeleteDocument;
+        const reqData = req as UserSchemaDeleteOneDocument;
 
         serviceResult.data = await userService.deleteOne(reqData.params);
 

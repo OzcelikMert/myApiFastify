@@ -2,9 +2,9 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {Result} from "../library/api";
 import {
     ComponentSchemaDeleteManyDocument,
-    ComponentSchemaGetDocument,
+    ComponentSchemaGetOneDocument,
     ComponentSchemaGetManyDocument,
-    ComponentSchemaPostDocument, ComponentSchemaPutDocument
+    ComponentSchemaPostDocument, ComponentSchemaPutOneDocument
 } from "../schemas/component.schema";
 import componentService from "../services/component.service";
 import logMiddleware from "../middlewares/log.middleware";
@@ -13,7 +13,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as ComponentSchemaGetDocument;
+        let reqData = req as ComponentSchemaGetOneDocument;
 
         serviceResult.data = await componentService.getOne({
             ...reqData.params,
@@ -60,7 +60,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as ComponentSchemaPutDocument;
+        let reqData = req as ComponentSchemaPutOneDocument;
 
         serviceResult.data = await componentService.updateOne({
             ...reqData.params,

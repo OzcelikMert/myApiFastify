@@ -2,13 +2,13 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ErrorCodes, Result, StatusCodes} from "../library/api";
 import logMiddleware from "./log.middleware";
 import languageService from "../services/language.service";
-import {LanguageSchemaPutDocument} from "../schemas/language.schema";
+import {LanguageSchemaPutOneDocument} from "../schemas/language.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new Result();
 
-        let reqData = req as LanguageSchemaPutDocument;
+        let reqData = req as LanguageSchemaPutOneDocument;
 
         let resData = await languageService.getOne({_id: reqData.params._id});
 
