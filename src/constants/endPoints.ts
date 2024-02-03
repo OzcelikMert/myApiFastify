@@ -1,4 +1,4 @@
-export const EndPoint = {
+export const EndPoints = {
     AUTH: "/auth",
     USER: "/user",
     POST: "/post",

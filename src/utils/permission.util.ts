@@ -2,7 +2,7 @@ import {FastifyRequest} from "fastify";
 import {PermissionDocument} from "../types/constants/permissions";
 import {PostTypeId} from "../constants/postTypes";
 import postPermission from "../constants/permissions/post.permission";
-import EndPoints from "../constants/endPoints";
+import {EndPoints} from "../constants/endPoints";
 import UserRoles, {UserRoleId} from "../constants/userRoles";
 
 const getPermissionKeyPrefix = (method: string) => {
