@@ -1,4 +1,4 @@
-export default {
+export const AuthEndPoint = {
     GET: "/get",
     LOGIN: "/login",
     LOGOUT: "/logout"

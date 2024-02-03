@@ -1,4 +1,4 @@
-export default {
+export const SettingEndPoint = {
     GET: "/get",
     UPDATE_GENERAL: "/update/general",
     UPDATE_SEO: "/update/seo",

@@ -1,4 +1,4 @@
-export default {
+export const LanguageEndPoint = {
     GET: "/get",
     GET_FLAGS: "/get/flags",
     GET_WITH_ID: "/get/:_id",

@@ -5,14 +5,14 @@ import componentController from "../../controllers/component.controller";
 import requestMiddleware from "../../middlewares/validates/request.middleware";
 import sessionMiddleware from "../../middlewares/validates/sessionAuth.middleware";
 import permissionMiddleware from "../../middlewares/validates/permission.middleware";
-import componentEndPoint from "../../constants/endPoints/component.endPoint";
+import {ComponentEndPoint} from "../../constants/endPoints/component.endPoint";
 import componentPermission from "../../constants/permissions/component.permission";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(componentEndPoint.GET, { preHandler: [requestMiddleware.check(componentSchema.getMany)] }, componentController.getMany);
-    fastify.get(componentEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(componentSchema.getOne)] }, componentController.getOne);
-    fastify.post(componentEndPoint.ADD, { preHandler: [requestMiddleware.check(componentSchema.post), sessionMiddleware.check, permissionMiddleware.check(componentPermission.add)] }, componentController.add);
-    fastify.put(componentEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(componentSchema.putOne), sessionMiddleware.check, permissionMiddleware.check(componentPermission.update), componentMiddleware.checkOne] }, componentController.updateOne);
-    fastify.delete(componentEndPoint.DELETE, { preHandler: [requestMiddleware.check(componentSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check(componentPermission.delete), componentMiddleware.checkMany] }, componentController.deleteMany);
+    fastify.get(ComponentEndPoint.GET, { preHandler: [requestMiddleware.check(componentSchema.getMany)] }, componentController.getMany);
+    fastify.get(ComponentEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(componentSchema.getOne)] }, componentController.getOne);
+    fastify.post(ComponentEndPoint.ADD, { preHandler: [requestMiddleware.check(componentSchema.post), sessionMiddleware.check, permissionMiddleware.check(componentPermission.add)] }, componentController.add);
+    fastify.put(ComponentEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(componentSchema.putOne), sessionMiddleware.check, permissionMiddleware.check(componentPermission.update), componentMiddleware.checkOne] }, componentController.updateOne);
+    fastify.delete(ComponentEndPoint.DELETE, { preHandler: [requestMiddleware.check(componentSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check(componentPermission.delete), componentMiddleware.checkMany] }, componentController.deleteMany);
     done();
 }

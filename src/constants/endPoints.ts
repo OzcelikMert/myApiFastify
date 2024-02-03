@@ -1,4 +1,4 @@
-export default {
+export const EndPoint = {
     AUTH: "/auth",
     USER: "/user",
     POST: "/post",
@@ -13,4 +13,4 @@ export default {
     COMPONENT: "/component",
     SITEMAP: "/sitemap",
     NAVIGATION: "/navigation"
-}
+};
