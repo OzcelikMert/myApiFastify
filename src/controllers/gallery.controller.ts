@@ -1,6 +1,8 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
 import {DateMask} from "../library/variable"
-import {ErrorCodes, Result, StatusCodes} from "../library/api";
+import {ApiResult} from "../library/api/result";
+import {ApiErrorCodes} from "../library/api/errorCodes";
+import {ApiStatusCodes} from "../library/api/statusCodes";
 import fs, {Stats} from "fs";
 import {Config} from "../config";
 import path from "path";
@@ -24,7 +26,7 @@ function getImageResult(name: string, stats: Stats) {
 
 const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as GallerySchemaGetManyDocument;
 
@@ -52,7 +54,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         function newName() {
             const timestamp = new Date().getStringWithMask(DateMask.UNIFIED_ALL);
@@ -76,8 +78,8 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
             upload(req, reply, async function (err: any) {
                 if(err) {
                     serviceResult.status = false;
-                    serviceResult.errorCode = ErrorCodes.uploadError;
-                    serviceResult.statusCode = StatusCodes.badRequest;
+                    serviceResult.errorCode = ApiErrorCodes.uploadError;
+                    serviceResult.statusCode = ApiStatusCodes.badRequest;
                 }
 
                 try {
@@ -122,8 +124,8 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
                 } catch (e) {
                     serviceResult.status = false;
-                    serviceResult.errorCode = ErrorCodes.uploadError;
-                    serviceResult.statusCode = StatusCodes.badRequest;
+                    serviceResult.errorCode = ApiErrorCodes.uploadError;
+                    serviceResult.statusCode = ApiStatusCodes.badRequest;
                 } finally {
                     resolve(0);
                 }
@@ -136,7 +138,7 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as GallerySchemaDeleteManyDocument;
 

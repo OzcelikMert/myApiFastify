@@ -1,5 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import logMiddleware from "../middlewares/log.middleware";
 import navigationService from "../services/navigation.service";
 import {
@@ -14,7 +14,7 @@ import {
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaGetOneDocument;
 
@@ -29,7 +29,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaGetManyDocument;
 
@@ -43,7 +43,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPostDocument;
 
@@ -61,7 +61,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPutOneDocument;
 
@@ -77,7 +77,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPutOneRankDocument;
 
@@ -93,7 +93,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPutManyStatusDocument;
 
@@ -108,7 +108,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaDeleteManyDocument;
 

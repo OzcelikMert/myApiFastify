@@ -1,5 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import logMiddleware from "../middlewares/log.middleware";
 import sitemapService from "../services/sitemap.service";
 import {PostTypeId} from "../constants/postTypes";
@@ -8,7 +8,7 @@ import {SitemapSchemaGetPostDocument, SitemapSchemaGetPostTermDocument} from "..
 
 const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         serviceResult.data = {
             post: await sitemapService.getPostCount({typeId: [PostTypeId.Page, PostTypeId.Portfolio, PostTypeId.Blog]}),
@@ -24,7 +24,7 @@ const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getPost = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as SitemapSchemaGetPostDocument;
 
@@ -36,7 +36,7 @@ const getPost = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getPostTerm = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as SitemapSchemaGetPostTermDocument;
 

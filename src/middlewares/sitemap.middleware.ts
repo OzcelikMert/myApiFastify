@@ -1,10 +1,10 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import logMiddleware from "./log.middleware";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         if (!serviceResult.status) {
             reply.status(serviceResult.statusCode).send(serviceResult)

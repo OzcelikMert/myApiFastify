@@ -1,5 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import {lookup} from "geoip-lite";
 import viewService from "../services/view.service";
 import {Config} from "../config";
@@ -9,7 +9,7 @@ import Variable from "../library/variable";
 
 const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let dateStart = new Date();
         dateStart.addDays(-7);
@@ -39,7 +39,7 @@ const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getStatistics = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let dateStart = new Date();
         dateStart.addDays(-7);
@@ -55,7 +55,7 @@ const getStatistics = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as ViewSchemaPostDocument;
 

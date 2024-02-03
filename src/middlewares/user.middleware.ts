@@ -1,5 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ErrorCodes, Result, StatusCodes} from "../library/api";
+import {ApiResult} from "../library/api/result";
+import {ApiErrorCodes} from "../library/api/errorCodes";
+import {ApiStatusCodes} from "../library/api/statusCodes";
 import userService from "../services/user.service";
 import UserRoles from "../constants/userRoles";
 import logMiddleware from "./log.middleware";
@@ -7,7 +9,7 @@ import {UserSchemaPutOneDocument, UserSchemaPutPasswordDocument} from "../schema
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as UserSchemaPutOneDocument;
 
@@ -17,8 +19,8 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (!resData) {
             serviceResult.status = false;
-            serviceResult.errorCode = ErrorCodes.notFound;
-            serviceResult.statusCode = StatusCodes.notFound;
+            serviceResult.errorCode = ApiErrorCodes.notFound;
+            serviceResult.statusCode = ApiStatusCodes.notFound;
         }
 
         if (!serviceResult.status) {
@@ -29,7 +31,7 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as UserSchemaPutOneDocument;
         let userRoleId = 0;
@@ -55,8 +57,8 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
                     (userRole.rank >= sessionUserRole.rank)
                 ) {
                     serviceResult.status = false;
-                    serviceResult.errorCode = ErrorCodes.noPerm;
-                    serviceResult.statusCode = StatusCodes.notFound;
+                    serviceResult.errorCode = ApiErrorCodes.noPerm;
+                    serviceResult.statusCode = ApiStatusCodes.notFound;
                 }
             }
         }
@@ -69,7 +71,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as UserSchemaPutOneDocument;
 
@@ -81,8 +83,8 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 
             if (resData) {
                 serviceResult.status = false;
-                serviceResult.errorCode = ErrorCodes.alreadyData;
-                serviceResult.statusCode = StatusCodes.conflict;
+                serviceResult.errorCode = ApiErrorCodes.alreadyData;
+                serviceResult.statusCode = ApiStatusCodes.conflict;
             }
         }
 
@@ -94,7 +96,7 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as UserSchemaPutPasswordDocument;
 
@@ -105,8 +107,8 @@ const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: Fastify
 
         if (!resData) {
             serviceResult.status = false;
-            serviceResult.errorCode = ErrorCodes.notFound;
-            serviceResult.statusCode = StatusCodes.notFound;
+            serviceResult.errorCode = ApiErrorCodes.notFound;
+            serviceResult.statusCode = ApiStatusCodes.notFound;
         }
 
         if (!serviceResult.status) {

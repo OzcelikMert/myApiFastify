@@ -1,5 +1,7 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
-import {ErrorCodes, Result, StatusCodes} from "../../library/api";
+import {ApiResult} from "../../library/api/result";
+import {ApiErrorCodes} from "../../library/api/errorCodes";
+import {ApiStatusCodes} from "../../library/api/statusCodes";
 import logMiddleware from "../log.middleware";
 import {PermisisonDocumentFunc, PermissionDocument} from "../../types/constants/permissions";
 import permissionUtil from "../../utils/permission.util";
@@ -9,7 +11,7 @@ const check = (permission: PermissionDocument | PermisisonDocumentFunc) => async
     reply: FastifyReply
 ) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
@@ -19,13 +21,13 @@ const check = (permission: PermissionDocument | PermisisonDocumentFunc) => async
                 !(permissionData.permissionId.every(permissionId => req.sessionAuth.user?.permissions.some(userPermissionId => permissionId == userPermissionId)))
             ) {
                 serviceResult.status = false;
-                serviceResult.errorCode = ErrorCodes.noPerm;
-                serviceResult.statusCode = StatusCodes.forbidden;
+                serviceResult.errorCode = ApiErrorCodes.noPerm;
+                serviceResult.statusCode = ApiStatusCodes.forbidden;
             }
         }else {
             serviceResult.status = false;
-            serviceResult.errorCode = ErrorCodes.notLoggedIn;
-            serviceResult.statusCode = StatusCodes.unauthorized;
+            serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
+            serviceResult.statusCode = ApiStatusCodes.unauthorized;
         }
 
 

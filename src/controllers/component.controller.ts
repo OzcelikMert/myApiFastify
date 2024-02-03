@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import {
     ComponentSchemaDeleteManyDocument,
     ComponentSchemaGetOneDocument,
@@ -11,7 +11,7 @@ import logMiddleware from "../middlewares/log.middleware";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaGetOneDocument;
 
@@ -26,7 +26,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaGetManyDocument;
 
@@ -40,7 +40,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaPostDocument;
 
@@ -58,7 +58,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaPutOneDocument;
 
@@ -74,7 +74,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaDeleteManyDocument;
 

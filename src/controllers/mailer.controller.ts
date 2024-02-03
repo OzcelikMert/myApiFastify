@@ -1,5 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {ErrorCodes, Result, StatusCodes} from "../library/api";
+import {ApiResult} from "../library/api/result";
+import {ApiErrorCodes} from "../library/api/errorCodes";
+import {ApiStatusCodes} from "../library/api/statusCodes";
 import {MailerSchemaPostDocument} from "../schemas/mailer.schema";
 import * as NodeMailer from "nodemailer";
 import settingService from "../services/setting.service";
@@ -8,7 +10,7 @@ import logMiddleware from "../middlewares/log.middleware";
 
 const send = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as MailerSchemaPostDocument;
 
@@ -64,19 +66,19 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
 
                     }else {
                         serviceResult.status = false;
-                        serviceResult.statusCode = StatusCodes.conflict;
-                        serviceResult.errorCode = ErrorCodes.incorrectData;
+                        serviceResult.statusCode = ApiStatusCodes.conflict;
+                        serviceResult.errorCode = ApiErrorCodes.incorrectData;
                     }
                 }catch (e) {
                     serviceResult.status = false;
-                    serviceResult.statusCode = StatusCodes.conflict;
-                    serviceResult.errorCode = ErrorCodes.incorrectData;
+                    serviceResult.statusCode = ApiStatusCodes.conflict;
+                    serviceResult.errorCode = ApiErrorCodes.incorrectData;
                     serviceResult.customData = e;
                 }
             }else {
                 serviceResult.status = false;
-                serviceResult.statusCode = StatusCodes.conflict;
-                serviceResult.errorCode = ErrorCodes.incorrectData;
+                serviceResult.statusCode = ApiStatusCodes.conflict;
+                serviceResult.errorCode = ApiErrorCodes.incorrectData;
             }
         }
 

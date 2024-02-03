@@ -1,5 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ErrorCodes, Result, StatusCodes} from "../library/api";
+import {ApiResult} from "../library/api/result";
+import {ApiErrorCodes} from "../library/api/errorCodes";
+import {ApiStatusCodes} from "../library/api/statusCodes";
 import viewService from "../services/view.service";
 import Variable, {DateMask} from "../library/variable";
 import logMiddleware from "./log.middleware";
@@ -7,7 +9,7 @@ import {ViewSchemaPostDocument} from "../schemas/view.schema";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as ViewSchemaPostDocument;
 
@@ -26,8 +28,8 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (resData) {
             serviceResult.status = false;
-            serviceResult.errorCode = ErrorCodes.alreadyData;
-            serviceResult.statusCode = StatusCodes.conflict;
+            serviceResult.errorCode = ApiErrorCodes.alreadyData;
+            serviceResult.statusCode = ApiStatusCodes.conflict;
         }
 
         if (!serviceResult.status) {

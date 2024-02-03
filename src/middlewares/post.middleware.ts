@@ -1,5 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ErrorCodes, Result, StatusCodes} from "../library/api";
+import {ApiResult} from "../library/api/result";
+import {ApiErrorCodes} from "../library/api/errorCodes";
+import {ApiStatusCodes} from "../library/api/statusCodes";
 import postService from "../services/post.service";
 import logMiddleware from "./log.middleware";
 import {
@@ -11,7 +13,7 @@ import permissionUtil from "../utils/permission.util";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPutOneDocument;
 
@@ -22,8 +24,8 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (!post) {
             serviceResult.status = false;
-            serviceResult.errorCode = ErrorCodes.notFound;
-            serviceResult.statusCode = StatusCodes.notFound;
+            serviceResult.errorCode = ApiErrorCodes.notFound;
+            serviceResult.statusCode = ApiStatusCodes.notFound;
         }
 
         if (!serviceResult.status) {
@@ -34,7 +36,7 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaDeleteManyDocument;
 
@@ -48,8 +50,8 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
             (posts.length != reqData.body._id.length)
         ) {
             serviceResult.status = false;
-            serviceResult.errorCode = ErrorCodes.notFound;
-            serviceResult.statusCode = StatusCodes.notFound;
+            serviceResult.errorCode = ApiErrorCodes.notFound;
+            serviceResult.statusCode = ApiStatusCodes.notFound;
         }
 
         if (!serviceResult.status) {
@@ -60,7 +62,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPutOneDocument;
 
@@ -73,8 +75,8 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
             if (post) {
                 if (post.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
                     serviceResult.status = false;
-                    serviceResult.errorCode = ErrorCodes.noPerm;
-                    serviceResult.statusCode = StatusCodes.forbidden;
+                    serviceResult.errorCode = ApiErrorCodes.noPerm;
+                    serviceResult.statusCode = ApiStatusCodes.forbidden;
                 }
             }
         }
@@ -87,7 +89,7 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaDeleteManyDocument;
 
@@ -101,8 +103,8 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
                 for (const post of posts) {
                     if (post.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
                         serviceResult.status = false;
-                        serviceResult.errorCode = ErrorCodes.noPerm;
-                        serviceResult.statusCode = StatusCodes.forbidden;
+                        serviceResult.errorCode = ApiErrorCodes.noPerm;
+                        serviceResult.statusCode = ApiStatusCodes.forbidden;
                         break;
                     }
                 }

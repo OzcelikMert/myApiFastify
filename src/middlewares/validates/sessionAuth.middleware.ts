@@ -1,5 +1,7 @@
 import {FastifyReply, FastifyRequest, RouteHandlerMethod} from "fastify";
-import {ErrorCodes, Result, StatusCodes} from "../../library/api";
+import {ApiResult} from "../../library/api/result";
+import {ApiErrorCodes} from "../../library/api/errorCodes";
+import {ApiStatusCodes} from "../../library/api/statusCodes";
 import userService from "../../services/user.service";
 import {StatusId} from "../../constants/status";
 import {sessionAuthTTL} from "../../config/session/session.auth.config";
@@ -8,7 +10,7 @@ import userUtil from "../../utils/user.util";
 
 const check = async (req: FastifyRequest,res: FastifyReply) => {
     await logMiddleware.error(req, res, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
             if (req.sessionAuth.user?.ip != req.ip) {
@@ -24,8 +26,8 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
             !(await userService.getOne({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}))
         ) {
             serviceResult.status = false;
-            serviceResult.errorCode = ErrorCodes.notLoggedIn;
-            serviceResult.statusCode = StatusCodes.unauthorized;
+            serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
+            serviceResult.statusCode = ApiStatusCodes.unauthorized;
         }
 
         if (serviceResult.status) {

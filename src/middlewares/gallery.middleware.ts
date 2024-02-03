@@ -1,5 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ErrorCodes, Result, StatusCodes} from "../library/api";
+import {ApiResult} from "../library/api/result";
+import {ApiErrorCodes} from "../library/api/errorCodes";
+import {ApiStatusCodes} from "../library/api/statusCodes";
 import logMiddleware from "./log.middleware";
 import {UserRoleId} from "../constants/userRoles";
 import galleryService from "../services/gallery.service";
@@ -8,7 +10,7 @@ import permissionUtil from "../utils/permission.util";
 
 const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as GallerySchemaDeleteManyDocument;
 
@@ -21,8 +23,8 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
                 for (const item of gallery) {
                     if (item.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
                         serviceResult.status = false;
-                        serviceResult.errorCode = ErrorCodes.noPerm;
-                        serviceResult.statusCode = StatusCodes.forbidden;
+                        serviceResult.errorCode = ApiErrorCodes.noPerm;
+                        serviceResult.statusCode = ApiStatusCodes.forbidden;
                         break;
                     }
                 }

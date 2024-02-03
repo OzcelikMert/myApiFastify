@@ -1,5 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import subscriberService from "../services/subscriber.service";
 import logMiddleware from "../middlewares/log.middleware";
 import {
@@ -11,7 +11,7 @@ import {
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaGetOneDocument;
 
@@ -25,7 +25,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaGetManyDocument;
 
@@ -39,7 +39,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaPostDocument;
 
@@ -55,7 +55,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaDeleteOneDocument;
 
@@ -69,7 +69,7 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaDeleteManyDocument;
 

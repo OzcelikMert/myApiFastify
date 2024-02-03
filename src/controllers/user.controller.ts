@@ -1,5 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import {
     UserSchemaDeleteOneDocument,
     UserSchemaGetOneDocument,
@@ -11,7 +11,7 @@ import logMiddleware from "../middlewares/log.middleware";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as UserSchemaGetOneDocument;
 
@@ -26,7 +26,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as UserSchemaGetManyDocument;
 
@@ -40,7 +40,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as UserSchemaPostDocument;
 
@@ -57,7 +57,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as UserSchemaPutOneDocument
 
@@ -73,7 +73,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as UserSchemaPutProfileDocument;
 
@@ -88,7 +88,7 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as UserSchemaPutPasswordDocument;
 
@@ -103,7 +103,7 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         const reqData = req as UserSchemaDeleteOneDocument;
 

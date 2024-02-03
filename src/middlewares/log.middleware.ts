@@ -1,5 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {ErrorCodes, Result, StatusCodes} from "../library/api";
+import {ApiResult} from "../library/api/result";
+import {ApiErrorCodes} from "../library/api/errorCodes";
+import {ApiStatusCodes} from "../library/api/statusCodes";
 import logService from "../services/log.service";
 
 const error = async (req: FastifyRequest, reply: FastifyReply, func: () => Promise<void>) => {
@@ -17,9 +19,9 @@ const error = async (req: FastifyRequest, reply: FastifyReply, func: () => Promi
             body: req.body,
             ...(req.sessionAuth.data() && req.sessionAuth.user?.userId ? {userId: req.sessionAuth.user?.userId} : {})
         });
-        let serviceResult = new Result();
-        serviceResult.statusCode = StatusCodes.badRequest;
-        serviceResult.errorCode = ErrorCodes.incorrectData;
+        let serviceResult = new ApiResult();
+        serviceResult.statusCode = ApiStatusCodes.badRequest;
+        serviceResult.errorCode = ApiErrorCodes.incorrectData;
         serviceResult.status = false;
         reply.status(serviceResult.statusCode).send(serviceResult)
     }

@@ -1,5 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import {
     PostTermSchemaDeleteManyDocument,
     PostTermSchemaGetOneDocument,
@@ -16,7 +16,7 @@ import {UserRoleId} from "../constants/userRoles";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaGetOneDocument;
 
@@ -32,7 +32,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaGetManyDocument;
 
@@ -47,7 +47,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaPostDocument;
 
@@ -65,7 +65,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaPutOneDocument;
 
@@ -81,7 +81,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaPutOneRankDocument;
 
@@ -97,7 +97,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaPutManyStatusDocument;
 
@@ -112,7 +112,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaDeleteManyDocument;
 

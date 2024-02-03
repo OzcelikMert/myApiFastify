@@ -1,5 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {Result} from "../library/api";
+import {ApiResult} from "../library/api/result";
 import {
     SettingSchemaGetDocument, SettingSchemaPutContactFormDocument, SettingSchemaPutECommerceDocument,
     SettingSchemaPutGeneralDocument,
@@ -10,7 +10,7 @@ import logMiddleware from "../middlewares/log.middleware";
 
 const get = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaGetDocument;
 
@@ -24,7 +24,7 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateGeneral = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutGeneralDocument;
 
@@ -36,7 +36,7 @@ const updateGeneral = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateSEO = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutSEODocument;
 
@@ -48,7 +48,7 @@ const updateSEO = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutContactFormDocument;
 
@@ -60,7 +60,7 @@ const updateContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateStaticLanguage = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutStaticLanguageDocument;
 
@@ -72,7 +72,7 @@ const updateStaticLanguage = async (req: FastifyRequest, reply: FastifyReply) =>
 
 const updateSocialMedia = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutSocialMediaDocument;
 
@@ -84,7 +84,7 @@ const updateSocialMedia = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateECommerce = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
-        let serviceResult = new Result();
+        let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutECommerceDocument;
 
