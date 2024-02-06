@@ -83,6 +83,7 @@ const deleteOneSchema = object({
 
 export type UserSchemaGetOneDocument = z.infer<typeof getOneSchema>;
 export type UserSchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type UserSchemaGetOneWithURLDocument = z.infer<typeof getOneWithURLSchema>;
 export type UserSchemaPostDocument = z.infer<typeof postSchema>;
 export type UserSchemaPutOneDocument = z.infer<typeof putOneSchema>;
 export type UserSchemaPutProfileDocument = z.infer<typeof putProfileSchema>;

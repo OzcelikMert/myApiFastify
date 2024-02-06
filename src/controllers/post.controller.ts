@@ -11,7 +11,7 @@ import {
     PostSchemaPutOneDocument,
     PostSchemaPutManyStatusDocument,
     PostSchemaPutOneRankDocument,
-    PostSchemaPutOneViewDocument
+    PostSchemaPutOneViewDocument, PostSchemaGetOneWithURLDocument
 } from "../schemas/post.schema";
 import permissionUtil from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
@@ -25,10 +25,10 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await postService.getOne({
             ...reqData.params,
             ...reqData.query,
-            ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
     })
 }
 
@@ -43,7 +43,22 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
+    })
+}
+
+const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new ApiResult();
+
+        let reqData = req as PostSchemaGetOneWithURLDocument;
+
+        serviceResult.data = await postService.getOne({
+            ...reqData.params,
+            ...reqData.query
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult);
     })
 }
 
@@ -57,7 +72,7 @@ const getCount = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
     });
 }
 
@@ -76,7 +91,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = {_id: insertData._id};
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
     });
 }
 
@@ -93,7 +108,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
             dateStart: new Date(reqData.body.dateStart)
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
     });
 }
 
@@ -109,7 +124,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
     });
 }
 
@@ -124,7 +139,7 @@ const updateOneView = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
     });
 }
 
@@ -139,7 +154,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
     });
 }
 
@@ -153,13 +168,14 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        reply.status(serviceResult.statusCode).send(serviceResult);
     });
 }
 
 export default {
     getOne: getOne,
     getMany: getMany,
+    getOneWithURL: getOneWithURL,
     getCount: getCount,
     add: add,
     updateOne: updateOne,

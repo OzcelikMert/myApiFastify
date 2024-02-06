@@ -7,7 +7,7 @@ import {
     PostTermSchemaPostDocument,
     PostTermSchemaPutOneDocument,
     PostTermSchemaPutManyStatusDocument,
-    PostTermSchemaPutOneRankDocument
+    PostTermSchemaPutOneRankDocument, PostTermSchemaGetOneWithURLDocument
 } from "../schemas/postTerm.schema";
 import postTermService from "../services/postTerm.service";
 import logMiddleware from "../middlewares/log.middleware";
@@ -23,7 +23,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await postTermService.getOne({
             ...reqData.params,
             ...reqData.query,
-            ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -39,6 +39,21 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await postTermService.getMany({
             ...reqData.query,
             ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new ApiResult();
+
+        let reqData = req as PostTermSchemaGetOneWithURLDocument;
+
+        serviceResult.data = await postTermService.getOne({
+            ...reqData.params,
+            ...reqData.query
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -127,6 +142,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 export default {
     getOne: getOne,
     getMany: getMany,
+    getOneWithURL: getOneWithURL,
     add: add,
     updateOne: updateOne,
     updateOneRank: updateOneRank,

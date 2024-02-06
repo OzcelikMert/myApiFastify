@@ -6,7 +6,7 @@ import {
     SubscriberSchemaDeleteOneDocument, SubscriberSchemaDeleteManyDocument,
     SubscriberSchemaGetOneDocument,
     SubscriberSchemaGetManyDocument,
-    SubscriberSchemaPostDocument
+    SubscriberSchemaPostDocument, SubscriberSchemaDeleteOneWithEmailDocument, SubscriberSchemaGetOneWithEmailDocument
 } from "../schemas/subscriber.schema";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -16,7 +16,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
         const reqData = req as SubscriberSchemaGetOneDocument;
 
         serviceResult.data = await subscriberService.getOne({
-            ...reqData.query
+            ...reqData.params
         })
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -31,6 +31,20 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await subscriberService.getMany({
             ...reqData.query
+        })
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const getOneWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new ApiResult();
+
+        const reqData = req as SubscriberSchemaGetOneWithEmailDocument;
+
+        serviceResult.data = await subscriberService.getOne({
+            ...reqData.params
         })
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -60,7 +74,21 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
         const reqData = req as SubscriberSchemaDeleteOneDocument;
 
         serviceResult.data = await subscriberService.deleteOne({
-            ...reqData.body
+            ...reqData.params
+        })
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const deleteOneWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new ApiResult();
+
+        const reqData = req as SubscriberSchemaDeleteOneWithEmailDocument;
+
+        serviceResult.data = await subscriberService.deleteOne({
+            ...reqData.params
         })
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -84,7 +112,9 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 export default {
     getOne: getOne,
     getMany: getMany,
+    getOneWithEmail: getOneWithEmail,
     add: add,
     deleteOne: deleteOne,
+    deleteOneWithEmail: deleteOneWithEmail,
     deleteMany: deleteMany
 };

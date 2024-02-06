@@ -4,7 +4,11 @@ import {
     UserSchemaDeleteOneDocument,
     UserSchemaGetOneDocument,
     UserSchemaGetManyDocument,
-    UserSchemaPostDocument, UserSchemaPutOneDocument, UserSchemaPutPasswordDocument, UserSchemaPutProfileDocument
+    UserSchemaPostDocument,
+    UserSchemaPutOneDocument,
+    UserSchemaPutPasswordDocument,
+    UserSchemaPutProfileDocument,
+    UserSchemaGetOneWithURLDocument
 } from "../schemas/user.schema";
 import userService from "../services/user.service";
 import logMiddleware from "../middlewares/log.middleware";
@@ -32,6 +36,21 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await userService.getMany({
             ...reqData.query,
+        });
+
+        reply.status(serviceResult.statusCode).send(serviceResult)
+    });
+}
+
+const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
+    await logMiddleware.error(req, reply, async () => {
+        let serviceResult = new ApiResult();
+
+        const reqData = req as UserSchemaGetOneWithURLDocument;
+
+        serviceResult.data = await userService.getOne({
+            ...reqData.params,
+            ...reqData.query
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -116,6 +135,7 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
 export default {
     getOne: getOne,
     getMany: getMany,
+    getOneWithURL: getOneWithURL,
     add: add,
     updateOne: updateOne,
     updateProfile: updateProfile,

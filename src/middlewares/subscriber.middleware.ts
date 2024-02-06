@@ -16,8 +16,7 @@ const checkOne = (isThere: boolean) => async (req: FastifyRequest, reply: Fastif
         let reqData = req as SubscriberSchemaDeleteOneDocument;
 
         let resData = await subscriberService.getOne({
-            _id: reqData.params._id,
-            email: reqData.body.email
+            ...reqData.params
         });
 
         if ((isThere && resData) || (!isThere && !resData)) {

@@ -105,7 +105,6 @@ const getOneSchema = object({
     query: object({
         typeId: z.nativeEnum(PostTypeId),
         langId: string().optional(),
-        url: string().optional(),
         pageTypeId: z.nativeEnum(PageTypeId).optional(),
         statusId: z.nativeEnum(StatusId).optional()
     })
@@ -124,6 +123,18 @@ const getManySchema = object({
         ignoreDefaultLanguage: boolean().optional(),
         isRecent: boolean().optional(),
         categories: array(string().min(1)).default([])
+    })
+});
+
+const getOneWithURLSchema = object({
+    params: object({
+        url: string().min(1),
+    }),
+    query: object({
+        typeId: z.nativeEnum(PostTypeId),
+        langId: string().optional(),
+        pageTypeId: z.nativeEnum(PageTypeId).optional(),
+        statusId: z.nativeEnum(StatusId).optional()
     })
 });
 
@@ -184,6 +195,7 @@ const deleteManySchema = object({
 
 export type PostSchemaGetOneDocument = z.infer<typeof getOneSchema>;
 export type PostSchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type PostSchemaGetOneWithURLDocument = z.infer<typeof getOneWithURLSchema>;
 export type PostSchemaGetCountDocument = z.infer<typeof getCountSchema>;
 export type PostSchemaPostDocument = z.infer<typeof postSchema>;
 export type PostSchemaPutOneDocument = z.infer<typeof putOneSchema>;
@@ -195,6 +207,7 @@ export type PostSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 export default {
     getOne: getOneSchema,
     getMany: getManySchema,
+    getOneWithURL: getOneWithURLSchema,
     getCount: getCountSchema,
     post: postSchema,
     putOne: putOneSchema,

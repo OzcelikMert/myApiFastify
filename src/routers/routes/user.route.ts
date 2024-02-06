@@ -10,8 +10,8 @@ import {UserEndPoint} from "../../constants/endPoints/user.endPoint";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
     fastify.get(UserEndPoint.GET, { preHandler: [sessionMiddleware.check] }, userController.getMany);
+    fastify.get(UserEndPoint.GET_WITH_URL, { preHandler: [requestMiddleware.check(userSchema.getOneWithURL)] }, userController.getOneWithURL);
     fastify.get(UserEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(userSchema.getOne), sessionMiddleware.check] }, userController.getOne);
-    fastify.get(UserEndPoint.GET_WITH_URL, { preHandler: [requestMiddleware.check(userSchema.getOneWithURL)] }, userController.getOne);
     fastify.post(UserEndPoint.ADD, { preHandler: [requestMiddleware.check(userSchema.post), sessionMiddleware.check, permissionMiddleware.check(userPermission.add), userMiddleware.checkRoleRank, userMiddleware.checkAlreadyEmail] }, userController.add);
     fastify.put(UserEndPoint.UPDATE_PROFILE, { preHandler: [requestMiddleware.check(userSchema.putProfile), sessionMiddleware.check] }, userController.updateProfile);
     fastify.put(UserEndPoint.UPDATE_PASSWORD, { preHandler: [requestMiddleware.check(userSchema.putPassword), sessionMiddleware.check, userMiddleware.checkPasswordWithSessionEmail] }, userController.updatePassword);

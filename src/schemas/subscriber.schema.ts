@@ -3,9 +3,6 @@ import {object, string, array, z} from 'zod';
 const getOneSchema = object({
     params: object({
         _id: string().min(1),
-    }),
-    query: object({
-        email: string().email()
     })
 });
 
@@ -14,6 +11,12 @@ const getManySchema = object({
         _id: array(string().min(1)).default([]),
         email: string().email()
     }),
+});
+
+const getOneWithEmailSchema = object({
+    params: object({
+        email: string().min(1).email(),
+    })
 });
 
 const postSchema = object({
@@ -25,8 +28,11 @@ const postSchema = object({
 const deleteOneSchema = object({
     params: object({
         _id: string().min(1),
-    }),
-    body: object({
+    })
+});
+
+const deleteOneWithEmailSchema = object({
+    params: object({
         email: string().min(1).email(),
     })
 });
@@ -39,14 +45,18 @@ const deleteManySchema = object({
 
 export type SubscriberSchemaGetOneDocument = z.infer<typeof getOneSchema>;
 export type SubscriberSchemaGetManyDocument = z.infer<typeof getManySchema>;
+export type SubscriberSchemaGetOneWithEmailDocument = z.infer<typeof getOneWithEmailSchema>;
 export type SubscriberSchemaPostDocument = z.infer<typeof postSchema>;
 export type SubscriberSchemaDeleteOneDocument = z.infer<typeof deleteOneSchema>;
 export type SubscriberSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
+export type SubscriberSchemaDeleteOneWithEmailDocument = z.infer<typeof deleteOneWithEmailSchema>;
 
 export default {
     getOne: getOneSchema,
     getMany: getManySchema,
+    getOneWithEmail: getOneWithEmailSchema,
     post: postSchema,
     deleteOne: deleteOneSchema,
-    deleteMany: deleteManySchema
+    deleteMany: deleteManySchema,
+    deleteOneWithEmail: deleteOneWithEmailSchema
 };

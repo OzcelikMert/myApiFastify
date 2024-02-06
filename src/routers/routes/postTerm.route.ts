@@ -10,7 +10,8 @@ import {PostTermEndPoint} from "../../constants/endPoints/postTerm.endPoint";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
     fastify.get(PostTermEndPoint.GET, { preHandler: [requestMiddleware.check(postTermSchema.getMany)] }, postTermController.getMany);
-    fastify.get(PostTermEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(postTermSchema.getOne)] }, postTermController.getOne);
+    fastify.get(PostTermEndPoint.GET_WITH_URL, { preHandler: [requestMiddleware.check(postTermSchema.getOneWithURL)] }, postTermController.getOneWithURL);
+    fastify.get(PostTermEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(postTermSchema.getOne), sessionMiddleware.check] }, postTermController.getOne);
     fastify.post(PostTermEndPoint.ADD, { preHandler: [requestMiddleware.check(postTermSchema.post), sessionMiddleware.check, permissionMiddleware.check(permissionUtil.getPostPermission)] }, postTermController.add);
     fastify.put(PostTermEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [requestMiddleware.check(postTermSchema.putOneRank), sessionMiddleware.check, permissionMiddleware.check(permissionUtil.getPostPermission), postTermMiddleware.checkOne, postTermMiddleware.checkOneIsAuthor] }, postTermController.updateOneRank);
     fastify.put(PostTermEndPoint.UPDATE_STATUS, { preHandler: [requestMiddleware.check(postTermSchema.putManyStatus), sessionMiddleware.check, permissionMiddleware.check(permissionUtil.getPostPermission), postTermMiddleware.checkMany, postTermMiddleware.checkManyIsAuthor] }, postTermController.updateManyStatus);
