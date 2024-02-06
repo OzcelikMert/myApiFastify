@@ -8,8 +8,8 @@ const getOneSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)).default([]),
-        email: string().email()
+        _id: array(string().min(1)).optional(),
+        email: array(string().min(1).email()).optional()
     }),
 });
 
