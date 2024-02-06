@@ -1,15 +1,17 @@
 import {object, string, array, z} from 'zod';
+import {GalleryTypeId} from "../constants/galleryTypeId";
 
 const getManySchema = object({
     query: object({
         _id: array(string().min(1)).optional(),
         name: array(string().min(1)).optional(),
+        typeId: z.nativeEnum(GalleryTypeId).optional(),
     })
 });
 
 const deleteManySchema = object({
     body: object({
-        name: array(string().min(1)),
+        _id: array(string().min(1)),
     })
 });
 

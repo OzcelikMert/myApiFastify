@@ -57,6 +57,10 @@ const getMany = async (params: GalleryGetManyParamDocument) => {
         ...filters,
         authorId: params.authorId
     }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: params.typeId
+    }
 
     let query = galleryModel.find(filters);
 
@@ -83,9 +87,9 @@ const deleteMany = async (params: GalleryDeleteManyParamDocument) => {
     let filters: mongoose.FilterQuery<GalleryDocument> = {};
     params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
-    if (params.name) filters = {
+    if (params._id) filters = {
         ...filters,
-        name: { $in: params.name }
+        _id: { $in: params._id }
     }
     if (params.authorId) filters = {
         ...filters,

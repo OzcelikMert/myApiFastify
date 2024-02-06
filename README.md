@@ -2,6 +2,7 @@
 Api for My Admin Panel
 
 Things to do:
+- subsriber da email ve id ile farkli routelar ata
 - eger bir data url ile de cekilebiliyor ise getOnelerin hepsine url ile cektir parametrelerini ona gore ayarlattir schemalardan
 - postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
 - sessiona duzen var sayfayi kapatinca falan bozulmasin gitmesin

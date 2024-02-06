@@ -142,20 +142,24 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as GallerySchemaDeleteManyDocument;
 
+        let galleryItems = await galleryService.getMany({
+            _id: reqData.body._id
+        });
+
         await new Promise(resolve => {
-            reqData.body.name?.forEach(image => {
-                if (fs.existsSync(path.resolve(Config.paths.uploads.images, image))) {
-                    fs.unlinkSync(path.resolve(Config.paths.uploads.images, image));
+            galleryItems.forEach(galleryItem => {
+                if (fs.existsSync(path.resolve(Config.paths.uploads.images, galleryItem.name))) {
+                    fs.unlinkSync(path.resolve(Config.paths.uploads.images, galleryItem.name));
                     fs.close(0);
-                    serviceResult.data.push(image);
+                    serviceResult.data.push(galleryItem.name);
                 }
             })
             resolve(0);
         });
 
         await galleryService.deleteMany({
-            name: reqData.body.name
-        })
+            ...reqData.body
+        });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
