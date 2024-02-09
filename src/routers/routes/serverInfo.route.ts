@@ -3,9 +3,9 @@ import serverInfoController from "../../controllers/serverInfo.controller";
 import sessionMiddleware from "../../middlewares/validates/sessionAuth.middleware";
 import permissionMiddleware from "../../middlewares/validates/permission.middleware";
 import {ServerInfoEndPoint} from "../../constants/endPoints/serverInfo.endPoint";
-import serverInfoPermission from "../../constants/permissions/serverInfo.permission";
+import {ServerInfoEndPointPermission} from "../../constants/endPointPermissions/serverInfo.endPoint.permission";
 
 export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(ServerInfoEndPoint.GET, { preHandler: [sessionMiddleware.check, permissionMiddleware.check(serverInfoPermission.get)] }, serverInfoController.get);
+    fastify.get(ServerInfoEndPoint.GET, { preHandler: [sessionMiddleware.check, permissionMiddleware.check(ServerInfoEndPointPermission.GET)] }, serverInfoController.get);
     done();
 }

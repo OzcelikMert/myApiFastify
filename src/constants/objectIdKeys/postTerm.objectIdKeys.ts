@@ -1,4 +1,4 @@
-export default [
+export const PostTermObjectIdKeys = [
     "_id",
     "mainId",
     "authorId",

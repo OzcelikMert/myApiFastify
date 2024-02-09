@@ -1,4 +1,4 @@
-export default [
+export const ViewObjectIdKeys = [
     "_id",
     "langId",
 ]

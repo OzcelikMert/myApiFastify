@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
-import galleryObjectIdKeys from "../constants/objectIdKeys/gallery.objectIdKeys";
+import {GalleryObjectIdKeys} from "../constants/objectIdKeys/gallery.objectIdKeys";
 import {GalleryDocument} from "../types/models/gallery.model";
 import {
     GalleryAddParamDocument, GalleryDeleteManyParamDocument,
@@ -12,7 +12,7 @@ import galleryModel from "../models/gallery.model";
 
 const getOne = async (params: GalleryGetOneParamDocument) => {
     let filters: mongoose.FilterQuery<GalleryDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
 
     if (params.name) filters = {
         ...filters,
@@ -43,7 +43,7 @@ const getOne = async (params: GalleryGetOneParamDocument) => {
 
 const getMany = async (params: GalleryGetManyParamDocument) => {
     let filters: mongoose.FilterQuery<GalleryDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
 
     if (params.name) filters = {
         ...filters,
@@ -78,14 +78,14 @@ const getMany = async (params: GalleryGetManyParamDocument) => {
 
 const add = async (params: GalleryAddParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
 
     return await galleryModel.create(params);
 }
 
 const deleteMany = async (params: GalleryDeleteManyParamDocument) => {
     let filters: mongoose.FilterQuery<GalleryDocument> = {};
-    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
 
     if (params._id) filters = {
         ...filters,

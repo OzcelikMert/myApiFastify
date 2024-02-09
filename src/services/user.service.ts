@@ -12,7 +12,7 @@ import userUtil from "../utils/user.util";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import {Config} from "../config";
 import Variable from "../library/variable";
-import userObjectIdKeys from "../constants/objectIdKeys/user.objectIdKeys";
+import {UserObjectIdKeys} from "../constants/objectIdKeys/user.objectIdKeys";
 import {UserDocument} from "../types/models/user.model";
 
 const createURL = async (_id: string | null, name: string) => {
@@ -32,7 +32,7 @@ const createURL = async (_id: string | null, name: string) => {
 }
 
 const getOne = async (params: UserGetOneParamDocument) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, [...userObjectIdKeys, "ignoreUserId"]);
+    params = MongoDBHelpers.convertObjectIdInData(params, [...UserObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<UserDocument> = {
         statusId: { $ne: StatusId.Deleted},
@@ -96,7 +96,7 @@ const getOne = async (params: UserGetOneParamDocument) => {
 }
 
 const getMany = async (params: UserGetManyParamDocument) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, [...userObjectIdKeys, "ignoreUserId"]);
+    params = MongoDBHelpers.convertObjectIdInData(params, [...UserObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<UserDocument> = {
         statusId: { $ne: StatusId.Deleted},
@@ -149,7 +149,7 @@ const getMany = async (params: UserGetManyParamDocument) => {
 
 const add = async (params: UserAddParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
 
     params.url = await createURL(null, params.name);
 
@@ -161,7 +161,7 @@ const add = async (params: UserAddParamDocument) => {
 
 const updateOne = async (params: UserUpdateOneParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
 
     let filters: mongoose.FilterQuery<UserDocument> = {}
 
@@ -196,7 +196,7 @@ const updateOne = async (params: UserUpdateOneParamDocument) => {
 
 const deleteOne = async (params: UserDeleteOneParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
 
     let filters: mongoose.FilterQuery<UserDocument> = {}
 

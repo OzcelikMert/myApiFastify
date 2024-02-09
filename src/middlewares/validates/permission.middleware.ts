@@ -3,10 +3,10 @@ import {ApiResult} from "../../library/api/result";
 import {ApiErrorCodes} from "../../library/api/errorCodes";
 import {ApiStatusCodes} from "../../library/api/statusCodes";
 import logMiddleware from "../log.middleware";
-import {PermisisonDocumentFunc, PermissionDocument} from "../../types/constants/permissions";
+import {EndPointPermissionDocumentFunc, EndPointPermissionDocument} from "../../types/constants/endPoint.permissions";
 import permissionUtil from "../../utils/permission.util";
 
-const check = (permission: PermissionDocument | PermisisonDocumentFunc) => async (
+const check = (permission: EndPointPermissionDocument | EndPointPermissionDocumentFunc) => async (
     req: FastifyRequest,
     reply: FastifyReply
 ) => {

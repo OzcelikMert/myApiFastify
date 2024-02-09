@@ -7,12 +7,12 @@ import {
 } from "../types/services/view.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
-import viewObjectIdKeys from "../constants/objectIdKeys/view.objectIdKeys";
+import {ViewObjectIdKeys} from "../constants/objectIdKeys/view.objectIdKeys";
 import {ViewDocument} from "../types/models/view.model";
 
 const getOne = async (params: ViewGetParamDocument) => {
     let filters: mongoose.FilterQuery<ViewDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     if (params.ip) filters = {
         ...filters,
@@ -53,7 +53,7 @@ const getOne = async (params: ViewGetParamDocument) => {
 
 const getTotalWithDate = async (params: ViewGetParamDocument) => {
     let filters: mongoose.FilterQuery<ViewDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     if (params.dateStart) {
         filters = {
@@ -89,7 +89,7 @@ const getTotalWithDate = async (params: ViewGetParamDocument) => {
 
 const getTotalWithCountry = async (params: ViewGetParamDocument) => {
     let filters: mongoose.FilterQuery<ViewDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     if (params.dateStart) {
         filters = {
@@ -125,14 +125,14 @@ const getTotalWithCountry = async (params: ViewGetParamDocument) => {
 
 const add = async (params: ViewAddParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     return await viewModel.create(params)
 }
 
 const deleteMany = async (params: ViewDeleteManyParamDocument) => {
     let filters: mongoose.FilterQuery<ViewDocument> = {};
-    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     if(params.dateEnd){
         filters = {

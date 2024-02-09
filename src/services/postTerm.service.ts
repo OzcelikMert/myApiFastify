@@ -10,7 +10,7 @@ import {
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import { Config } from "../config";
-import postTermObjectIdKeys from "../constants/objectIdKeys/postTerm.objectIdKeys";
+import {PostTermObjectIdKeys} from "../constants/objectIdKeys/postTerm.objectIdKeys";
 import postModel from "../models/post.model";
 import { PostTermTypeId } from "../constants/postTermTypes";
 import { StatusId } from "../constants/status";
@@ -37,7 +37,7 @@ const createURL = async (_id: string | null, title: string, typeId: PostTermType
 
 const getOne = async (params: PostTermGetOneParamDocument) => {
     let filters: mongoose.FilterQuery<PostTermDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, [...postTermObjectIdKeys, "ignoreTermId"]);
+    params = MongoDBHelpers.convertObjectIdInData(params, [...PostTermObjectIdKeys, "ignoreTermId"]);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
@@ -116,7 +116,7 @@ const getOne = async (params: PostTermGetOneParamDocument) => {
 
 const getMany = async (params: PostTermGetManyParamDocument) => {
     let filters: mongoose.FilterQuery<PostTermDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, [...postTermObjectIdKeys, "ignoreTermId"]);
+    params = MongoDBHelpers.convertObjectIdInData(params, [...PostTermObjectIdKeys, "ignoreTermId"]);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
@@ -211,7 +211,7 @@ const getMany = async (params: PostTermGetManyParamDocument) => {
 }
 
 const add = async (params: PostTermAddParamDocument) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, PostTermObjectIdKeys);
 
     if (Variable.isEmpty(params.mainId)) {
         delete params.mainId;
@@ -226,7 +226,7 @@ const add = async (params: PostTermAddParamDocument) => {
 
 const updateOne = async (params: PostTermUpdateOneParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, PostTermObjectIdKeys);
 
     let filters: mongoose.FilterQuery<PostTermDocument> = {}
 
@@ -284,7 +284,7 @@ const updateOne = async (params: PostTermUpdateOneParamDocument) => {
 
 const updateOneRank = async (params: PostTermUpdateOneRankParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, PostTermObjectIdKeys);
 
     let filters: mongoose.FilterQuery<PostTermDocument> = {}
 
@@ -323,7 +323,7 @@ const updateOneRank = async (params: PostTermUpdateOneRankParamDocument) => {
 
 const updateManyStatus = async (params: PostTermUpdateManyStatusIdParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, PostTermObjectIdKeys);
 
     let filters: mongoose.FilterQuery<PostTermDocument> = {}
 
@@ -360,7 +360,7 @@ const updateManyStatus = async (params: PostTermUpdateManyStatusIdParamDocument)
 
 const deleteMany = async (params: PostTermDeleteManyParamDocument) => {
     let filters: mongoose.FilterQuery<PostTermDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, PostTermObjectIdKeys);
 
     filters = {
         ...filters,

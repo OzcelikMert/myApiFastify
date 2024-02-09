@@ -2,7 +2,7 @@ import * as mongoose from "mongoose";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import { Config } from "../config";
-import navigationObjectIdKeys from "../constants/objectIdKeys/navigation.objectIdKeys";
+import {NavigationObjectIdKeys} from "../constants/objectIdKeys/navigation.objectIdKeys";
 import {
     NavigationDeleteManyParamDocument,
     NavigationAddParamDocument,
@@ -18,7 +18,7 @@ import { NavigationDocument } from "../types/models/navigation.model";
 
 const getOne = async (params: NavigationGetOneParamDocument) => {
     let filters: mongoose.FilterQuery<NavigationDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
@@ -73,7 +73,7 @@ const getOne = async (params: NavigationGetOneParamDocument) => {
 
 const getMany = async (params: NavigationGetManyParamDocument) => {
     let filters: mongoose.FilterQuery<NavigationDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
@@ -130,7 +130,7 @@ const getMany = async (params: NavigationGetManyParamDocument) => {
 
 const add = async (params: NavigationAddParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
     if (Variable.isEmpty(params.mainId)) {
         delete params.mainId;
@@ -141,7 +141,7 @@ const add = async (params: NavigationAddParamDocument) => {
 
 const updateOne = async (params: NavigationUpdateOneParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<NavigationDocument> = {}
 
@@ -185,7 +185,7 @@ const updateOne = async (params: NavigationUpdateOneParamDocument) => {
 
 const updateOneRank = async (params: NavigationUpdateOneRankParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<NavigationDocument> = {}
 
@@ -214,7 +214,7 @@ const updateOneRank = async (params: NavigationUpdateOneRankParamDocument) => {
 
 const updateManyStatus = async (params: NavigationUpdateManyStatusIdParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<NavigationDocument> = {}
 
@@ -240,7 +240,7 @@ const updateManyStatus = async (params: NavigationUpdateManyStatusIdParamDocumen
 }
 
 const deleteMany = async (params: NavigationDeleteManyParamDocument) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<NavigationDocument> = {}
 

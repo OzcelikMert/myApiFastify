@@ -1,7 +1,7 @@
 import {FastifyRequest} from "fastify";
-import {PermissionDocument} from "../types/constants/permissions";
+import {EndPointPermissionDocument} from "../types/constants/endPoint.permissions";
 import {PostTypeId} from "../constants/postTypes";
-import postPermission from "../constants/permissions/post.permission";
+import {PostEndPointPermission} from "../constants/endPointPermissions/post.endPoint.permission";
 import {EndPoints} from "../constants/endPoints";
 import UserRoles, {UserRoleId} from "../constants/userRoles";
 
@@ -9,16 +9,16 @@ const getPermissionKeyPrefix = (method: string) => {
     let prefix = "";
 
     switch (method) {
-        case "GET": prefix = "get"; break;
-        case "POST": prefix = "add"; break;
-        case "PUT": prefix = "update"; break;
-        case "DELETE": prefix = "delete"; break;
+        case "GET": prefix = "GET_"; break;
+        case "POST": prefix = "ADD_"; break;
+        case "PUT": prefix = "UPDATE_"; break;
+        case "DELETE": prefix = "DELETE_"; break;
     }
 
     return prefix;
 }
 
-const getPostPermission = (req: FastifyRequest) : PermissionDocument => {
+const getPostPermission = (req: FastifyRequest) : EndPointPermissionDocument => {
     let reqData = req as any;
     let path = req.originalUrl.replace(`/api`, "");
     let method = req.method.toUpperCase();
@@ -27,7 +27,7 @@ const getPostPermission = (req: FastifyRequest) : PermissionDocument => {
     let permissionKeyPrefix = getPermissionKeyPrefix(method);
     const postTypeIdKey = Object.keys(PostTypeId).find(key => PostTypeId[key as keyof typeof PostTypeId] === typeId) ?? "";
 
-    return (postPermission as any)[`${permissionKeyPrefix}${postTypeIdKey}`] ?? {permissionId: [], minUserRoleId: 0};
+    return (PostEndPointPermission as any)[`${permissionKeyPrefix}${postTypeIdKey.toUpperCase()}`] ?? {permissionId: [], minUserRoleId: 0};
 }
 
 const checkPermissionRoleRank = (minRoleId: UserRoleId, targetRoleId: UserRoleId) => {

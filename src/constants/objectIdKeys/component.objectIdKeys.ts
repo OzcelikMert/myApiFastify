@@ -1,4 +1,4 @@
-export default [
+export const ComponentObjectIdKeys = [
     "_id",
     "authorId",
     "lastAuthorId",

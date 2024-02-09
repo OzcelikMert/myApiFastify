@@ -8,12 +8,12 @@ import {
 } from "../types/services/language.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
-import languageObjectIdKeys from "../constants/objectIdKeys/language.objectIdKeys";
+import {LanguageObjectIdKeys} from "../constants/objectIdKeys/language.objectIdKeys";
 import { LanguageDocument } from "../types/models/language.model";
 
 const getOne = async (params: LanguageGetOneParamDocument) => {
     let filters: mongoose.FilterQuery<LanguageDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
     if (params._id) {
         filters = {
@@ -43,7 +43,7 @@ const getOne = async (params: LanguageGetOneParamDocument) => {
 
 const getMany = async (params: LanguageGetManyParamDocument) => {
     let filters: mongoose.FilterQuery<LanguageDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
     if (params._id) {
         filters = {
@@ -68,7 +68,7 @@ const getMany = async (params: LanguageGetManyParamDocument) => {
 
 const add = async (params: LanguageAddParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
     return await languageModel.create(params)
 }
@@ -76,7 +76,7 @@ const add = async (params: LanguageAddParamDocument) => {
 const updateOne = async (params: LanguageUpdateOneParamDocument) => {
     let filters: mongoose.FilterQuery<LanguageDocument> = {}
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
     if (params._id) {
         filters = {
@@ -101,7 +101,7 @@ const updateOne = async (params: LanguageUpdateOneParamDocument) => {
 const updateOneRank = async (params: LanguageUpdateOneRankParamDocument) => {
     let filters: mongoose.FilterQuery<LanguageDocument> = {}
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
     if (params._id) {
         filters = {

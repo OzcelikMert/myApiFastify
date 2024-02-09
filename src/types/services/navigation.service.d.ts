@@ -2,7 +2,7 @@ import {UserPopulateDocument} from "./user.service";
 import {NavigationContentDocument, NavigationDocument} from "../models/navigation.model";
 import {StatusId} from "../../constants/status";
 
-export interface NavigatePopulateDocument {
+export interface NavigationPopulateDocument {
     _id:  string
     contents: {
         langId: string
@@ -14,7 +14,7 @@ export interface NavigatePopulateDocument {
 export type NavigationGetResultDocument = {
     authorId: UserPopulateDocument,
     lastAuthorId: UserPopulateDocument,
-    mainId?: NavigatePopulateDocument,
+    mainId?: NavigationPopulateDocument,
     contents?: NavigationContentDocument | NavigationContentDocument[]
 } & Omit<NavigationDocument, "contents">
 

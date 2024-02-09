@@ -10,12 +10,12 @@ import {
     SubscriberDeleteOneParamDocument
 } from "../types/services/subscriber.service";
 import subscriberModel from "../models/subscriber.model";
-import postObjectIdKeys from "../constants/objectIdKeys/post.objectIdKeys";
 import {SubscriberDocument} from "../types/models/subscriber.model";
+import {SubscriberObjectIdKeys} from "../constants/objectIdKeys/subscriber.objectIdKeys";
 
 const getOne = async (params: SubscriberGetOneParamDocument) => {
     let filters: mongoose.FilterQuery<SubscriberDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, SubscriberObjectIdKeys);
 
     if (params._id) {
         filters = {
@@ -39,7 +39,7 @@ const getOne = async (params: SubscriberGetOneParamDocument) => {
 
 const getMany = async (params: SubscriberGetManyParamDocument) => {
     let filters: mongoose.FilterQuery<SubscriberDocument> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, SubscriberObjectIdKeys);
 
     if (params._id) {
         filters = {
@@ -63,14 +63,14 @@ const getMany = async (params: SubscriberGetManyParamDocument) => {
 
 const add = async (params: SubscriberAddDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, SubscriberObjectIdKeys);
 
     return await subscriberModel.create(params)
 }
 
 const deleteOne = async (params: SubscriberDeleteOneParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, SubscriberObjectIdKeys);
 
     let filters: mongoose.FilterQuery<SubscriberDocument> = {}
 
@@ -92,7 +92,7 @@ const deleteOne = async (params: SubscriberDeleteOneParamDocument) => {
 
 const deleteMany = async (params: SubscriberDeleteManyParamDocument) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, SubscriberObjectIdKeys);
 
     let filters: mongoose.FilterQuery<SubscriberDocument> = {}
 
