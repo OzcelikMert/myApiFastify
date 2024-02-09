@@ -5,6 +5,7 @@ Things to do:
 - postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
 - sessiona duzen var sayfayi kapatinca falan bozulmasin gitmesin
 - tum dosyalarinda export defaultlari export olarak duzenle ve artik constlar gibi degerleri buyuk harflerle baslatarak cekme zorunlulugu yap (opsiyonel)
+- tum interfacelerdeki Document ekini sil onun yerine I kullan basinda
 
 + Yup'u Zod'a cevir
 + Express.js'i Fastify'a cevir
