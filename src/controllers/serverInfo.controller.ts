@@ -22,6 +22,6 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const ServerInfoController = {
     get: get
 };

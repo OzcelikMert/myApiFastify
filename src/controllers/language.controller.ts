@@ -110,7 +110,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const LanguageController = {
     getOne: getOne,
     getMany: getMany,
     getFlags: getFlags,

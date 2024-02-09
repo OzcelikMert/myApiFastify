@@ -3,7 +3,7 @@ import {IEndPointPermission} from "../types/constants/endPoint.permissions";
 import {PostTypeId} from "../constants/postTypes";
 import {PostEndPointPermission} from "../constants/endPointPermissions/post.endPoint.permission";
 import {EndPoints} from "../constants/endPoints";
-import UserRoles, {UserRoleId} from "../constants/userRoles";
+import {UserRoles, UserRoleId} from "../constants/userRoles";
 
 const getPermissionKeyPrefix = (method: string) => {
     let prefix = "";

@@ -9,7 +9,7 @@ export interface ISubscriberGetOneParamService {
 
 export interface ISubscriberGetManyParamService {
     _id?: string[]
-    email?: string
+    email?: string[]
 }
 
 export type ISubscriberAddService = {} & Omit<ISubscriberModel, "_id">

@@ -54,6 +54,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
         reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
+
 const logOut = async (req: FastifyRequest, reply: FastifyReply) => {
     await logMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
@@ -63,7 +64,7 @@ const logOut = async (req: FastifyRequest, reply: FastifyReply) => {
     })
 };
 
-export default {
+export const AuthController = {
     getSession: getSession,
     login: login,
     logOut: logOut

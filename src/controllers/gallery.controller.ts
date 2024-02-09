@@ -165,7 +165,7 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const GalleryController = {
     getManyImage: getManyImage,
     addImage: addImage,
     deleteManyImage: deleteManyImage

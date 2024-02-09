@@ -132,7 +132,7 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const UserController = {
     getOne: getOne,
     getMany: getMany,
     getOneWithURL: getOneWithURL,

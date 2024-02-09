@@ -109,7 +109,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const SubscriberController = {
     getOne: getOne,
     getMany: getMany,
     getOneWithEmail: getOneWithEmail,

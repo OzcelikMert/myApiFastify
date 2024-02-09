@@ -46,7 +46,7 @@ const getPostTerm = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const SitemapController = {
     getMaps: getMaps,
     getPost: getPost,
     getPostTerm: getPostTerm

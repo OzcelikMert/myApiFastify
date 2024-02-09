@@ -94,7 +94,7 @@ const updateECommerce = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const SettingController = {
     get: get,
     updateGeneral: updateGeneral,
     updateSEO: updateSEO,

@@ -50,7 +50,7 @@ const getMany = async (params: ISubscriberGetManyParamService) => {
     if (params.email) {
         filters = {
             ...filters,
-            email: {$regex: new RegExp(params.email, "i")}
+            email: {$in: params.email}
         }
     }
 

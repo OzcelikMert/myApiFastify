@@ -86,7 +86,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const ComponentController = {
     getOne: getOne,
     getMany: getMany,
     add: add,

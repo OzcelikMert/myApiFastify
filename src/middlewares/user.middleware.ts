@@ -3,7 +3,7 @@ import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import userService from "../services/user.service";
-import UserRoles from "../constants/userRoles";
+import {UserRoles} from "../constants/userRoles";
 import logMiddleware from "./log.middleware";
 import {UserSchemaPutOneDocument, UserSchemaPutPasswordDocument} from "../schemas/user.schema";
 

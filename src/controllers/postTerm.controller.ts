@@ -139,7 +139,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const PostTermController = {
     getOne: getOne,
     getMany: getMany,
     getOneWithURL: getOneWithURL,

@@ -75,7 +75,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const ViewController = {
     getNumber: getNumber,
     getStatistics: getStatistics,
     add: add,
