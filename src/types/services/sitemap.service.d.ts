@@ -1,57 +1,57 @@
-export interface SitemapMapPostTermCountDocument {
+export interface ISitemapMapPostTermCountService {
     typeId: number
     postTypeId: number
     total: number
 }
 
-export interface SitemapMapPostCountDocument {
+export interface ISitemapMapPostCountService {
     typeId: number
     total: number
 }
 
-export interface SitemapMapsDocument {
-    post: SitemapMapPostCountDocument[]
-    postTerm: SitemapMapPostTermCountDocument[]
+export interface ISitemapMapsService {
+    post: ISitemapMapPostCountService[]
+    postTerm: ISitemapMapPostTermCountService[]
 }
 
-export interface SitemapPostTermDocument {
+export interface ISitemapPostTermService {
     updatedAt: string
     createdAt: string
     typeId: number
     postTypeId: number
-    contents: SitemapContentDocument[]
+    contents: ISitemapContentService[]
 }
 
-export interface SitemapPostDocument {
+export interface ISitemapPostService {
     updatedAt: string
     createdAt: string
     typeId: number
     pageTypeId?: number
-    contents: SitemapContentDocument[]
+    contents: ISitemapContentService[]
 }
 
-export interface SitemapContentDocument {
+export interface ISitemapContentService {
     langId: string
     title: string
     url: string
 }
 
-export interface SitemapGetPostTermParamDocument {
+export interface ISitemapGetPostTermParamService {
     typeId: number
     postTypeId: number
     page?: number
 }
 
-export interface SitemapGetPostParamDocument {
+export interface ISitemapGetPostParamService {
     typeId: number
     page?: number
 }
 
-export interface SitemapGetPostTermCountParamDocument {
+export interface ISitemapGetPostTermCountParamService {
     typeId: number[]
     postTypeId: number[]
 }
 
-export interface SitemapGetPostCountParamDocument {
+export interface ISitemapGetPostCountParamService {
     typeId: number[]
 }

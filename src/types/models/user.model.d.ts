@@ -2,7 +2,7 @@ import { ObjectId } from "mongoose"
 import {UserRoleId} from "../../constants/userRoles";
 import {StatusId} from "../../constants/status";
 
-export interface UserDocument {
+export interface IUserModel {
     _id: string | ObjectId
     roleId: UserRoleId,
     statusId: StatusId,

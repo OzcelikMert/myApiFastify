@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose"
 
-export interface ViewDocument {
+export interface IViewModel {
     _id: string | ObjectId
     url: string,
     langId: string | ObjectId

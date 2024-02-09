@@ -1,49 +1,49 @@
-import {UserPopulateDocument} from "./user.service";
-import {PostTermPopulateDocument} from "./postTerm.service";
+import {IUserPopulateService} from "./user.service";
+import {IPostTermPopulateService} from "./postTerm.service";
 import {
-    PostContentDocument,
-    PostDocument,
-    PostECommerceDocument,
-    PostECommerceVariationContentDocument,
-    PostECommerceVariationDocument
+    IPostContentModel,
+    IPostModel,
+    IPostECommerceModel,
+    IPostECommerceVariationContentModel,
+    IPostECommerceVariationModel
 } from "../models/post.model";
-import {ComponentDocument} from "../models/component.model";
+import {IComponentModel} from "../models/component.model";
 import {PostTypeId} from "../../constants/postTypes";
 import {PageTypeId} from "../../constants/pageTypes";
 import {StatusId} from "../../constants/status";
 
-export interface PostAlternateDocument {
+export interface IPostAlternateService {
     langId: string
     title?: string,
     url?: string
 }
 
-export type PostGetOneResultDocument = {
-    authorId: UserPopulateDocument,
-    lastAuthorId: UserPopulateDocument,
+export type IPostGetOneResultService = {
+    authorId: IUserPopulateService,
+    lastAuthorId: IUserPopulateService,
     views?: number,
-    categories?: PostTermPopulateDocument[]
-    tags?: PostTermPopulateDocument[]
-    contents?: PostContentDocument | PostContentDocument[]
-    components?: ComponentDocument[],
-    alternates?: PostAlternateDocument[]
-    eCommerce?: (Omit<PostECommerceDocument<PostTermPopulateDocument, PostTermPopulateDocument[]>, "variations"> & {
-        variations?: (Omit<PostECommerceVariationDocument<PostTermPopulateDocument>, "contents"> & {
-            contents?: PostECommerceVariationContentDocument | PostECommerceVariationContentDocument[]
+    categories?: IPostTermPopulateService[]
+    tags?: IPostTermPopulateService[]
+    contents?: IPostContentModel | IPostContentModel[]
+    components?: IComponentModel[],
+    alternates?: IPostAlternateService[]
+    eCommerce?: (Omit<IPostECommerceModel<IPostTermPopulateService, IPostTermPopulateService[]>, "variations"> & {
+        variations?: (Omit<IPostECommerceVariationModel<IPostTermPopulateService>, "contents"> & {
+            contents?: IPostECommerceVariationContentModel | IPostECommerceVariationContentModel[]
         })[]
     })
-} & Omit<PostDocument, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce">
+} & Omit<IPostModel, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce">
 
-export type PostGetManyResultDocument = {
-    components?: PostDocument["components"]
-    eCommerce?: (Omit<PostECommerceDocument, "variations"> & {
-        variations?: (Omit<PostECommerceVariationDocument, "contents"> & {
-            contents?: PostECommerceVariationContentDocument | PostECommerceVariationContentDocument[]
+export type IPostGetManyResultService = {
+    components?: IPostModel["components"]
+    eCommerce?: (Omit<IPostECommerceModel, "variations"> & {
+        variations?: (Omit<IPostECommerceVariationModel, "contents"> & {
+            contents?: IPostECommerceVariationContentModel | IPostECommerceVariationContentModel[]
         })[]
     })
-} & Omit<PostGetOneResultDocument, "eCommerce"|"components">
+} & Omit<IPostGetOneResultService, "eCommerce"|"components">
 
-export interface PostGetOneParamDocument {
+export interface IPostGetOneParamService {
     typeId: PostTypeId,
     _id?: string
     pageTypeId?: PageTypeId
@@ -54,7 +54,7 @@ export interface PostGetOneParamDocument {
     authorId?: string
 }
 
-export interface PostGetManyParamDocument {
+export interface IPostGetManyParamService {
     _id?: string[]
     isRecent?: boolean
     typeId?: PostTypeId[],
@@ -70,48 +70,48 @@ export interface PostGetManyParamDocument {
     authorId?: string
 }
 
-export interface PostGetCountParamDocument {
+export interface IPostGetCountParamService {
     typeId: PostTypeId
     statusId?: StatusId
     title?: string
     categories?: string[]
 }
 
-export type PostAddParamDocument = {
-    contents: PostContentDocument
-    eCommerce?: (Omit<PostECommerceDocument, "variations"> & {
-        variations?: (Omit<PostECommerceVariationDocument, "contents"> & {
-            contents: PostECommerceVariationContentDocument
+export type IPostAddParamService = {
+    contents: IPostContentModel
+    eCommerce?: (Omit<IPostECommerceModel, "variations"> & {
+        variations?: (Omit<IPostECommerceVariationModel, "contents"> & {
+            contents: IPostECommerceVariationContentModel
         })[]
     })
-} & Omit<PostDocument, "_id"|"views"|"contents"|"eCommerce">
+} & Omit<IPostModel, "_id"|"views"|"contents"|"eCommerce">
 
-export type PostUpdateOneParamDocument = {
+export type IPostUpdateOneParamService = {
     _id: string
-    contents?: PostContentDocument
-} & Omit<PostAddParamDocument, "authorId"|"contents">
+    contents?: IPostContentModel
+} & Omit<IPostAddParamService, "authorId"|"contents">
 
-export type PostUpdateOneRankParamDocument = {
+export type IPostUpdateOneRankParamService = {
     _id: string
     typeId: PostTypeId
     rank: number
     lastAuthorId: string
 }
 
-export type PostUpdateOneViewParamDocument = {
+export type IPostUpdateOneViewParamService = {
     _id: string,
     typeId: PostTypeId
     langId: string
 }
 
-export type PostUpdateManyStatusIdParamDocument = {
+export type IPostUpdateManyStatusIdParamService = {
     _id: string[],
     typeId: PostTypeId
     statusId: StatusId,
     lastAuthorId: string
 }
 
-export interface PostDeleteManyParamDocument {
+export interface IPostDeleteManyParamService {
     _id: string[]
     typeId: PostTypeId
 }

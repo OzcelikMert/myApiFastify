@@ -1,8 +1,8 @@
 import * as mongoose from "mongoose";
-import {LanguageDocument} from "../types/models/language.model";
+import {ILanguageModel} from "../types/models/language.model";
 import {StatusId} from "../constants/status";
 
-const schema = new mongoose.Schema<LanguageDocument>(
+const schema = new mongoose.Schema<ILanguageModel>(
     {
         title: {type: String, required: true},
         image: {type: String, required: true},
@@ -14,4 +14,4 @@ const schema = new mongoose.Schema<LanguageDocument>(
     {timestamps: true}
 )
 
-export default mongoose.model<LanguageDocument, mongoose.Model<LanguageDocument>>("languages", schema)
+export default mongoose.model<ILanguageModel, mongoose.Model<ILanguageModel>>("languages", schema)

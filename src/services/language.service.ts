@@ -1,18 +1,18 @@
 import * as mongoose from "mongoose";
 import languageModel from "../models/language.model";
 import {
-    LanguageGetResultDocument,
-    LanguageGetManyParamDocument,
-    LanguageAddParamDocument,
-    LanguageGetOneParamDocument, LanguageUpdateOneParamDocument, LanguageUpdateOneRankParamDocument
+    ILanguageGetResultService,
+    ILanguageGetManyParamService,
+    ILanguageAddParamService,
+    ILanguageGetOneParamService, ILanguageUpdateOneParamService, ILanguageUpdateOneRankParamService
 } from "../types/services/language.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import {LanguageObjectIdKeys} from "../constants/objectIdKeys/language.objectIdKeys";
-import { LanguageDocument } from "../types/models/language.model";
+import { ILanguageModel } from "../types/models/language.model";
 
-const getOne = async (params: LanguageGetOneParamDocument) => {
-    let filters: mongoose.FilterQuery<LanguageDocument> = {}
+const getOne = async (params: ILanguageGetOneParamService) => {
+    let filters: mongoose.FilterQuery<ILanguageModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
     if (params._id) {
@@ -38,11 +38,11 @@ const getOne = async (params: LanguageGetOneParamDocument) => {
 
     query.sort({ rank: 1, createdAt: -1 });
 
-    return (await query.lean<LanguageGetResultDocument>().exec());
+    return (await query.lean<ILanguageGetResultService>().exec());
 }
 
-const getMany = async (params: LanguageGetManyParamDocument) => {
-    let filters: mongoose.FilterQuery<LanguageDocument> = {}
+const getMany = async (params: ILanguageGetManyParamService) => {
+    let filters: mongoose.FilterQuery<ILanguageModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
     if (params._id) {
@@ -63,18 +63,18 @@ const getMany = async (params: LanguageGetManyParamDocument) => {
 
     query.sort({ rank: 1, createdAt: -1 });
 
-    return (await query.lean<LanguageGetResultDocument[]>().exec());
+    return (await query.lean<ILanguageGetResultService[]>().exec());
 }
 
-const add = async (params: LanguageAddParamDocument) => {
+const add = async (params: ILanguageAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
     return await languageModel.create(params)
 }
 
-const updateOne = async (params: LanguageUpdateOneParamDocument) => {
-    let filters: mongoose.FilterQuery<LanguageDocument> = {}
+const updateOne = async (params: ILanguageUpdateOneParamService) => {
+    let filters: mongoose.FilterQuery<ILanguageModel> = {}
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 
@@ -98,8 +98,8 @@ const updateOne = async (params: LanguageUpdateOneParamDocument) => {
     };
 }
 
-const updateOneRank = async (params: LanguageUpdateOneRankParamDocument) => {
-    let filters: mongoose.FilterQuery<LanguageDocument> = {}
+const updateOneRank = async (params: ILanguageUpdateOneRankParamService) => {
+    let filters: mongoose.FilterQuery<ILanguageModel> = {}
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, LanguageObjectIdKeys);
 

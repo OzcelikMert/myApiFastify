@@ -5,24 +5,24 @@ import {PostTypeId} from "../constants/postTypes";
 import languageModel from "./language.model";
 import postTermModel from "./postTerm.model";
 import {
-    PostBeforeAndAfterDocument,
-    PostContentButtonDocument,
-    PostContentDocument,
-    PostDocument,
-    PostECommerceAttributeDocument,
-    PostECommerceDocument,
-    PostECommerceInventoryDocument,
-    PostECommercePricingDocument,
-    PostECommerceShippingDocument,
-    PostECommerceVariationContentDocument,
-    PostECommerceVariationDocument,
-    PostECommerceVariationSelectedDocument
+    IPostBeforeAndAfterModel,
+    IPostContentButtonModel,
+    IPostContentModel,
+    IPostModel,
+    IPostECommerceAttributeModel,
+    IPostECommerceModel,
+    IPostECommerceInventoryModel,
+    IPostECommercePricingModel,
+    IPostECommerceShippingModel,
+    IPostECommerceVariationContentModel,
+    IPostECommerceVariationModel,
+    IPostECommerceVariationSelectedModel
 } from "../types/models/post.model";
 import componentModel from "./component.model";
 import {ProductTypeId} from "../constants/productTypes";
 import {AttributeTypeId} from "../constants/attributeTypes";
 
-const schemaPostECommerceVariationContent = new mongoose.Schema<PostECommerceVariationContentDocument>(
+const schemaPostECommerceVariationContent = new mongoose.Schema<IPostECommerceVariationContentModel>(
     {
         langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
         image: {type: String, default: ""},
@@ -31,7 +31,7 @@ const schemaPostECommerceVariationContent = new mongoose.Schema<PostECommerceVar
     }
 ).index({langId: 1});
 
-const schemaECommerceVariationSelected = new mongoose.Schema<PostECommerceVariationSelectedDocument>(
+const schemaECommerceVariationSelected = new mongoose.Schema<IPostECommerceVariationSelectedModel>(
     {
         attributeId: {type: mongoose.Schema.Types.ObjectId, ref: postTermModel, required: true},
         variationId: {type: mongoose.Schema.Types.ObjectId, ref: postTermModel, required: true},
@@ -39,7 +39,7 @@ const schemaECommerceVariationSelected = new mongoose.Schema<PostECommerceVariat
     {timestamps: true}
 ).index({attributeId: 1});
 
-const schemaECommerceAttribute = new mongoose.Schema<PostECommerceAttributeDocument>(
+const schemaECommerceAttribute = new mongoose.Schema<IPostECommerceAttributeModel>(
     {
         attributeId: {type: mongoose.Schema.Types.ObjectId, ref: postTermModel, required: true},
         variations: {type: [mongoose.Schema.Types.ObjectId], ref: postTermModel, default: []},
@@ -48,7 +48,7 @@ const schemaECommerceAttribute = new mongoose.Schema<PostECommerceAttributeDocum
     {timestamps: true}
 ).index({attributeId: 1});
 
-const schemaECommerceShipping = new mongoose.Schema<PostECommerceShippingDocument>(
+const schemaECommerceShipping = new mongoose.Schema<IPostECommerceShippingModel>(
     {
         width: {type: String, default: ""},
         height: {type: String, default: ""},
@@ -57,7 +57,7 @@ const schemaECommerceShipping = new mongoose.Schema<PostECommerceShippingDocumen
     }
 );
 
-const schemaECommerceInventory = new mongoose.Schema<PostECommerceInventoryDocument>(
+const schemaECommerceInventory = new mongoose.Schema<IPostECommerceInventoryModel>(
     {
         sku: {type: String, default: ""},
         quantity: {type: Number, default: 0},
@@ -65,7 +65,7 @@ const schemaECommerceInventory = new mongoose.Schema<PostECommerceInventoryDocum
     }
 );
 
-const schemaECommercePricing = new mongoose.Schema<PostECommercePricingDocument>(
+const schemaECommercePricing = new mongoose.Schema<IPostECommercePricingModel>(
     {
         compared: {type: Number, default: 0},
         shipping: {type: Number, default: 0},
@@ -75,7 +75,7 @@ const schemaECommercePricing = new mongoose.Schema<PostECommercePricingDocument>
     }
 );
 
-const schemaECommerceVariation= new mongoose.Schema<PostECommerceVariationDocument>(
+const schemaECommerceVariation= new mongoose.Schema<IPostECommerceVariationModel>(
     {
         rank: {type: Number, default: 0},
         selectedVariations: {type: [schemaECommerceVariationSelected], default: []},
@@ -88,7 +88,7 @@ const schemaECommerceVariation= new mongoose.Schema<PostECommerceVariationDocume
     {timestamps: true}
 );
 
-const schemaECommerce = new mongoose.Schema<PostECommerceDocument>(
+const schemaECommerce = new mongoose.Schema<IPostECommerceModel>(
     {
         typeId: {type: Number, enum: ProductTypeId, required: true},
         images: {type: [String], default: []},
@@ -101,14 +101,14 @@ const schemaECommerce = new mongoose.Schema<PostECommerceDocument>(
     }
 );
 
-const schemaContentButton = new mongoose.Schema<PostContentButtonDocument>(
+const schemaContentButton = new mongoose.Schema<IPostContentButtonModel>(
     {
         title: {type: String, default: ""},
         url: {type: String, default: ""}
     }
 );
 
-const schemaBeforeAndAfter = new mongoose.Schema<PostBeforeAndAfterDocument>(
+const schemaBeforeAndAfter = new mongoose.Schema<IPostBeforeAndAfterModel>(
     {
         imageBefore: {type: String, default: ""},
         imageAfter: {type: String, default: ""},
@@ -117,7 +117,7 @@ const schemaBeforeAndAfter = new mongoose.Schema<PostBeforeAndAfterDocument>(
 );
 
 
-const schemaContent = new mongoose.Schema<PostContentDocument>(
+const schemaContent = new mongoose.Schema<IPostContentModel>(
     {
         langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
         image: {type: String, default: ""},
@@ -131,7 +131,7 @@ const schemaContent = new mongoose.Schema<PostContentDocument>(
     }
 ).index({langId: 1});
 
-const schema = new mongoose.Schema<PostDocument>(
+const schema = new mongoose.Schema<IPostModel>(
     {
         typeId: {type: Number, enum: PostTypeId, default: PostTypeId.Blog},
         statusId: {type: Number, required: true, enum: StatusId},
@@ -151,4 +151,4 @@ const schema = new mongoose.Schema<PostDocument>(
     {timestamps: true}
 ).index({typeId: 1, statusId: 1, authorId: 1});
 
-export default mongoose.model<PostDocument, mongoose.Model<PostDocument>>("posts", schema)
+export default mongoose.model<IPostModel, mongoose.Model<IPostModel>>("posts", schema)

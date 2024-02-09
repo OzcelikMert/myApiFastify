@@ -1,25 +1,25 @@
 import * as mongoose from "mongoose";
 import settingModel from "../models/setting.model";
 import {
-    SettingAddParamDocument,
-    SettingGetParamDocument,
-    SettingGetResultDocument,
-    SettingUpdateStaticLanguageParamDocument,
-    SettingUpdateSocialMediaParamDocument,
-    SettingUpdateSEOParamDocument,
-    SettingUpdateContactFormParamDocument,
-    SettingUpdateECommerceParamDocument,
-    SettingUpdateGeneralParamDocument
+    ISettingAddParamService,
+    ISettingGetParamService,
+    ISettingGetResultService,
+    ISettingUpdateStaticLanguageParamService,
+    ISettingUpdateSocialMediaParamService,
+    ISettingUpdateSEOParamService,
+    ISettingUpdateContactFormParamService,
+    ISettingUpdateECommerceParamService,
+    ISettingUpdateGeneralParamService
 } from "../types/services/setting.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import {Config} from "../config";
 import {SettingObjectIdKeys} from "../constants/objectIdKeys/setting.objectIdKeys";
-import {SettingDocument} from "../types/models/setting.model";
+import {ISettingModel} from "../types/models/setting.model";
 
-const get = async (params: SettingGetParamDocument, withPassword: boolean = false) => {
-    let filters: mongoose.FilterQuery<SettingDocument> = {}
-    let projection: mongoose.ProjectionType<SettingDocument> = {};
+const get = async (params: ISettingGetParamService, withPassword: boolean = false) => {
+    let filters: mongoose.FilterQuery<ISettingModel> = {}
+    let projection: mongoose.ProjectionType<ISettingModel> = {};
 
     params = MongoDBHelpers.convertObjectIdInData(params, SettingObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
@@ -38,7 +38,7 @@ const get = async (params: SettingGetParamDocument, withPassword: boolean = fals
 
     let query = settingModel.findOne(filters, projection);
 
-    let doc = (await query.lean<SettingGetResultDocument>().exec());
+    let doc = (await query.lean<ISettingGetResultService>().exec());
 
     if(doc){
         if (Array.isArray(doc.seoContents)) {
@@ -65,14 +65,14 @@ const get = async (params: SettingGetParamDocument, withPassword: boolean = fals
     return doc;
 }
 
-const add = async (params: SettingAddParamDocument) => {
+const add = async (params: ISettingAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, SettingObjectIdKeys);
 
     return await settingModel.create(params)
 }
 
-const updateGeneral = async (params: SettingUpdateGeneralParamDocument) => {
+const updateGeneral = async (params: ISettingUpdateGeneralParamService) => {
     params = Variable.clearAllScriptTags(params, ["head", "script"]);
     params = MongoDBHelpers.convertObjectIdInData(params, SettingObjectIdKeys);
 
@@ -91,7 +91,7 @@ const updateGeneral = async (params: SettingUpdateGeneralParamDocument) => {
     return params;
 }
 
-const updateSEO = async (params: SettingUpdateSEOParamDocument) => {
+const updateSEO = async (params: ISettingUpdateSEOParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, SettingObjectIdKeys);
 
@@ -115,7 +115,7 @@ const updateSEO = async (params: SettingUpdateSEOParamDocument) => {
     return params;
 }
 
-const updateContactForm = async (params: SettingUpdateContactFormParamDocument) => {
+const updateContactForm = async (params: ISettingUpdateContactFormParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, SettingObjectIdKeys);
 
@@ -138,7 +138,7 @@ const updateContactForm = async (params: SettingUpdateContactFormParamDocument) 
     return params;
 }
 
-const updateStaticLanguage = async (params: SettingUpdateStaticLanguageParamDocument) => {
+const updateStaticLanguage = async (params: ISettingUpdateStaticLanguageParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, SettingObjectIdKeys);
 
@@ -180,7 +180,7 @@ const updateStaticLanguage = async (params: SettingUpdateStaticLanguageParamDocu
     return params;
 }
 
-const updateSocialMedia = async (params: SettingUpdateSocialMediaParamDocument) => {
+const updateSocialMedia = async (params: ISettingUpdateSocialMediaParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, SettingObjectIdKeys);
 
@@ -194,7 +194,7 @@ const updateSocialMedia = async (params: SettingUpdateSocialMediaParamDocument) 
     return params;
 }
 
-const updateECommerce = async (params: SettingUpdateECommerceParamDocument) => {
+const updateECommerce = async (params: ISettingUpdateECommerceParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, SettingObjectIdKeys);
 

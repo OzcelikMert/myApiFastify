@@ -1,10 +1,10 @@
-import {UserPopulateDocument} from "./user.service";
-import {PostTermContentDocument, PostTermDocument} from "../models/postTerm.model";
+import {IUserPopulateService} from "./user.service";
+import {IPostTermContentModel, IPostTermModel} from "../models/postTerm.model";
 import {PostTermTypeId} from "../../constants/postTermTypes";
 import {PostTypeId} from "../../constants/postTypes";
 import {StatusId} from "../../constants/status";
 
-export interface PostTermPopulateDocument {
+export interface IPostTermPopulateService {
     _id: string,
     typeId: PostTermTypeId,
     contents: {
@@ -15,22 +15,22 @@ export interface PostTermPopulateDocument {
     }
 }
 
-export interface PostTermAlternateDocument {
+export interface IPostTermAlternateService {
     langId: string
     title?: string,
     url?: string
 }
 
-export type PostTermGetResultDocument = {
-    authorId: UserPopulateDocument,
-    lastAuthorId: UserPopulateDocument,
-    mainId?: PostTermPopulateDocument,
-    contents?: PostTermContentDocument | PostTermContentDocument[]
-    alternates?: PostTermAlternateDocument[],
+export type IPostTermGetResultService = {
+    authorId: IUserPopulateService,
+    lastAuthorId: IUserPopulateService,
+    mainId?: IPostTermPopulateService,
+    contents?: IPostTermContentModel | IPostTermContentModel[]
+    alternates?: IPostTermAlternateService[],
     postCount?: number
-} & Omit<PostTermDocument, "contents">
+} & Omit<IPostTermModel, "contents">
 
-export interface PostTermGetOneParamDocument {
+export interface IPostTermGetOneParamService {
     langId?: string
     _id?: string
     typeId: PostTermTypeId,
@@ -41,7 +41,7 @@ export interface PostTermGetOneParamDocument {
     authorId?: string
 }
 
-export interface PostTermGetManyParamDocument {
+export interface IPostTermGetManyParamService {
     langId?: string
     _id?: string[]
     typeId?: PostTermTypeId[],
@@ -57,15 +57,15 @@ export interface PostTermGetManyParamDocument {
     authorId?: string
 }
 
-export type PostTermAddParamDocument = {
-    contents?: PostTermContentDocument
-} & Omit<PostTermDocument, "_id"|"contents">
+export type IPostTermAddParamService = {
+    contents?: IPostTermContentModel
+} & Omit<IPostTermModel, "_id"|"contents">
 
-export type PostTermUpdateOneParamDocument = {
+export type IPostTermUpdateOneParamService = {
     _id: string,
-} & Omit<PostTermAddParamDocument, "authorId">
+} & Omit<IPostTermAddParamService, "authorId">
 
-export type PostTermUpdateOneRankParamDocument = {
+export type IPostTermUpdateOneRankParamService = {
     _id: string,
     postTypeId: PostTypeId,
     typeId: PostTermTypeId
@@ -73,7 +73,7 @@ export type PostTermUpdateOneRankParamDocument = {
     lastAuthorId: string
 }
 
-export type PostTermUpdateManyStatusIdParamDocument = {
+export type IPostTermUpdateManyStatusIdParamService = {
     _id: string[],
     postTypeId: PostTypeId,
     typeId: PostTermTypeId
@@ -81,7 +81,7 @@ export type PostTermUpdateManyStatusIdParamDocument = {
     lastAuthorId: string
 }
 
-export interface PostTermDeleteManyParamDocument {
+export interface IPostTermDeleteManyParamService {
     _id: string[]
     typeId: PostTermTypeId,
     postTypeId: PostTypeId

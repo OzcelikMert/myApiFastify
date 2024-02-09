@@ -1,17 +1,17 @@
 import { ObjectId } from "mongoose"
 import {StatusId} from "../../constants/status";
 
-export interface NavigationDocument {
+export interface INavigationModel {
     _id?: string | ObjectId
     statusId: StatusId,
     mainId?: string | ObjectId
     authorId: string | ObjectId
     lastAuthorId: string | ObjectId
     rank: number,
-    contents: NavigationContentDocument[]
+    contents: INavigationContentModel[]
 }
 
-export interface NavigationContentDocument {
+export interface INavigationContentModel {
     _id?: string | ObjectId
     langId: string | ObjectId
     title?: string,

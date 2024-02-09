@@ -2,20 +2,20 @@ import * as mongoose from "mongoose";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import { Config } from "../config";
 import {
-    ComponentAddParamDocument,
-    ComponentGetResultDocument,
-    ComponentGetOneParamDocument,
-    ComponentGetManyParamDocument,
-    ComponentUpdateOneParamDocument,
-    ComponentDeleteManyParamDocument
+    IComponentAddParamService,
+    IComponentGetResultService,
+    IComponentGetOneParamService,
+    IComponentGetManyParamService,
+    IComponentUpdateOneParamService,
+    IComponentDeleteManyParamService
 } from "../types/services/component.service";
 import componentModel from "../models/component.model";
 import Variable from "../library/variable";
 import {ComponentObjectIdKeys} from "../constants/objectIdKeys/component.objectIdKeys";
-import { ComponentDocument } from "../types/models/component.model";
+import { IComponentModel } from "../types/models/component.model";
 
-const getOne = async (params: ComponentGetOneParamDocument) => {
-    let filters: mongoose.FilterQuery<ComponentDocument> = {}
+const getOne = async (params: IComponentGetOneParamService) => {
+    let filters: mongoose.FilterQuery<IComponentModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, ComponentObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
@@ -40,7 +40,7 @@ const getOne = async (params: ComponentGetOneParamDocument) => {
 
     query.sort({ createdAt: -1 });
 
-    let doc = (await query.lean<ComponentGetResultDocument>().exec());
+    let doc = (await query.lean<IComponentGetResultService>().exec());
 
     if (doc) {
         for (let docType of doc.types) {
@@ -53,8 +53,8 @@ const getOne = async (params: ComponentGetOneParamDocument) => {
     return doc;
 }
 
-const getMany = async (params: ComponentGetManyParamDocument) => {
-    let filters: mongoose.FilterQuery<ComponentDocument> = {}
+const getMany = async (params: IComponentGetManyParamService) => {
+    let filters: mongoose.FilterQuery<IComponentModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, ComponentObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
@@ -80,7 +80,7 @@ const getMany = async (params: ComponentGetManyParamDocument) => {
 
     query.sort({ createdAt: -1 });
 
-    return (await query.lean<ComponentGetResultDocument[]>().exec()).map((doc) => {
+    return (await query.lean<IComponentGetResultService[]>().exec()).map((doc) => {
         for (let docType of doc.types) {
             if (Array.isArray(docType.contents)) {
                 docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);
@@ -94,18 +94,18 @@ const getMany = async (params: ComponentGetManyParamDocument) => {
     });
 }
 
-const add = async (params: ComponentAddParamDocument) => {
+const add = async (params: IComponentAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, ComponentObjectIdKeys);
 
     return await componentModel.create(params)
 }
 
-const updateOne = async (params: ComponentUpdateOneParamDocument) => {
+const updateOne = async (params: IComponentUpdateOneParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, ComponentObjectIdKeys);
 
-    let filters: mongoose.FilterQuery<ComponentDocument> = {}
+    let filters: mongoose.FilterQuery<IComponentModel> = {}
 
     if (params._id) {
         filters = {
@@ -152,8 +152,8 @@ const updateOne = async (params: ComponentUpdateOneParamDocument) => {
     return { _id: doc?._id }
 }
 
-const deleteMany = async (params: ComponentDeleteManyParamDocument) => {
-    let filters: mongoose.FilterQuery<ComponentDocument> = {}
+const deleteMany = async (params: IComponentDeleteManyParamService) => {
+    let filters: mongoose.FilterQuery<IComponentModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, ComponentObjectIdKeys);
 
     filters = {

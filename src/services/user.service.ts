@@ -1,11 +1,11 @@
 import * as mongoose from "mongoose";
 import userModel from "../models/user.model";
 import {
-    UserDeleteOneParamDocument,
-    UserAddParamDocument,
-    UserGetOneParamDocument, UserGetResultDocument,
-    UserUpdateOneParamDocument,
-    UserGetManyParamDocument
+    IUserDeleteOneParamService,
+    IUserAddParamService,
+    IUserGetOneParamService, IUserGetResultService,
+    IUserUpdateOneParamService,
+    IUserGetManyParamService
 } from "../types/services/user.service";
 import {StatusId} from "../constants/status";
 import userUtil from "../utils/user.util";
@@ -13,7 +13,7 @@ import MongoDBHelpers from "../library/mongodb/helpers";
 import {Config} from "../config";
 import Variable from "../library/variable";
 import {UserObjectIdKeys} from "../constants/objectIdKeys/user.objectIdKeys";
-import {UserDocument} from "../types/models/user.model";
+import {IUserModel} from "../types/models/user.model";
 
 const createURL = async (_id: string | null, name: string) => {
     let urlAlreadyCount = 2;
@@ -31,10 +31,10 @@ const createURL = async (_id: string | null, name: string) => {
     return url;
 }
 
-const getOne = async (params: UserGetOneParamDocument) => {
+const getOne = async (params: IUserGetOneParamService) => {
     params = MongoDBHelpers.convertObjectIdInData(params, [...UserObjectIdKeys, "ignoreUserId"]);
 
-    let filters: mongoose.FilterQuery<UserDocument> = {
+    let filters: mongoose.FilterQuery<IUserModel> = {
         statusId: { $ne: StatusId.Deleted},
     }
 
@@ -85,7 +85,7 @@ const getOne = async (params: UserGetOneParamDocument) => {
 
     query.sort({createdAt: -1});
 
-    let doc = (await query.lean<UserGetResultDocument>().exec());
+    let doc = (await query.lean<IUserGetResultService>().exec());
 
     if(doc){
         delete doc.password;
@@ -95,10 +95,10 @@ const getOne = async (params: UserGetOneParamDocument) => {
     return doc;
 }
 
-const getMany = async (params: UserGetManyParamDocument) => {
+const getMany = async (params: IUserGetManyParamService) => {
     params = MongoDBHelpers.convertObjectIdInData(params, [...UserObjectIdKeys, "ignoreUserId"]);
 
-    let filters: mongoose.FilterQuery<UserDocument> = {
+    let filters: mongoose.FilterQuery<IUserModel> = {
         statusId: { $ne: StatusId.Deleted},
     }
 
@@ -140,14 +140,14 @@ const getMany = async (params: UserGetManyParamDocument) => {
 
     query.sort({createdAt: -1});
 
-    return (await query.lean<UserGetResultDocument[]>().exec()).map((user) => {
+    return (await query.lean<IUserGetResultService[]>().exec()).map((user) => {
         delete user.password;
         user.isOnline = Config.onlineUsers.indexOfKey("_id", user._id?.toString()) > -1;
         return user;
     });
 }
 
-const add = async (params: UserAddParamDocument) => {
+const add = async (params: IUserAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
 
@@ -159,11 +159,11 @@ const add = async (params: UserAddParamDocument) => {
     })
 }
 
-const updateOne = async (params: UserUpdateOneParamDocument) => {
+const updateOne = async (params: IUserUpdateOneParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
 
-    let filters: mongoose.FilterQuery<UserDocument> = {}
+    let filters: mongoose.FilterQuery<IUserModel> = {}
 
     if (Variable.isEmpty(params.password)) {
         delete params.password;
@@ -194,11 +194,11 @@ const updateOne = async (params: UserUpdateOneParamDocument) => {
     return params;
 }
 
-const deleteOne = async (params: UserDeleteOneParamDocument) => {
+const deleteOne = async (params: IUserDeleteOneParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
 
-    let filters: mongoose.FilterQuery<UserDocument> = {}
+    let filters: mongoose.FilterQuery<IUserModel> = {}
 
     if (params._id) {
         filters = {

@@ -3,7 +3,7 @@ import {PostTypeId} from "../../constants/postTypes";
 import {PostTermTypeId} from "../../constants/postTermTypes";
 import {StatusId} from "../../constants/status";
 
-export interface PostTermDocument {
+export interface IPostTermModel {
     _id: string | ObjectId
     postTypeId: PostTypeId,
     typeId: PostTermTypeId,
@@ -12,12 +12,12 @@ export interface PostTermDocument {
     authorId: string | ObjectId
     lastAuthorId: string | ObjectId
     rank: number,
-    contents: PostTermContentDocument[]
+    contents: IPostTermContentModel[]
     updatedAt?: string
     createdAt?: string
 }
 
-export interface PostTermContentDocument {
+export interface IPostTermContentModel {
     langId: string | ObjectId
     image?: string,
     title?: string,

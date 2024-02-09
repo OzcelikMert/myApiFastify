@@ -1,8 +1,8 @@
-import {ViewDocument} from "../models/view.model";
+import {IViewModel} from "../models/view.model";
 
-export type ViewGetResultDocument = {} & ViewDocument
+export type IViewGetResultService = {} & IViewModel
 
-export interface ViewGetParamDocument {
+export interface IViewGetParamService {
     ip?: string
     langId?: string
     url?: string
@@ -13,12 +13,12 @@ export interface ViewGetParamDocument {
     dateEnd?: Date
 }
 
-export type ViewGetTotalResultDocument = {
+export type IViewGetTotalResultService = {
     total: number
     _id: string
 }
 
-export interface ViewAddParamDocument {
+export interface IViewAddParamService {
     url: string,
     langId: string
     ip: string,
@@ -27,6 +27,6 @@ export interface ViewAddParamDocument {
     region?: string
 }
 
-export interface ViewDeleteManyParamDocument {
+export interface IViewDeleteManyParamService {
     dateEnd: Date
 }

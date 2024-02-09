@@ -1,36 +1,36 @@
-import {UserPopulateDocument} from "./user.service";
-import {ComponentDocument, ComponentTypeContentDocument, ComponentTypeDocument} from "../models/component.model";
+import {IUserPopulateService} from "./user.service";
+import {IComponentModel, IComponentTypeContentModel, IComponentTypeModel} from "../models/component.model";
 
-export type ComponentGetResultDocument = {
-    authorId: UserPopulateDocument,
-    lastAuthorId: UserPopulateDocument,
-    types: (Omit<ComponentTypeDocument, "contents"> & {
-        contents?: ComponentTypeContentDocument | ComponentTypeContentDocument[]
+export type IComponentGetResultService = {
+    authorId: IUserPopulateService,
+    lastAuthorId: IUserPopulateService,
+    types: (Omit<IComponentTypeModel, "contents"> & {
+        contents?: IComponentTypeContentModel | IComponentTypeContentModel[]
     })[]
-} & Omit<ComponentDocument, "types"|"authorId"|"lastAuthorId">
+} & Omit<IComponentModel, "types"|"authorId"|"lastAuthorId">
 
-export interface ComponentGetOneParamDocument {
+export interface IComponentGetOneParamService {
     _id: string
     langId?: string,
     elementId?: string
 }
 
-export interface ComponentGetManyParamDocument {
+export interface IComponentGetManyParamService {
     _id?: string[]
     langId?: string,
     elementId?: string[]
 }
 
-export type ComponentAddParamDocument = {
-    types?: (Omit<ComponentTypeDocument, "contents"> & {
-        contents: ComponentTypeContentDocument
+export type IComponentAddParamService = {
+    types?: (Omit<IComponentTypeModel, "contents"> & {
+        contents: IComponentTypeContentModel
     })[]
-} & Omit<ComponentDocument, "_id"|"types"|"">
+} & Omit<IComponentModel, "_id"|"types"|"">
 
-export type ComponentUpdateOneParamDocument = {
+export type IComponentUpdateOneParamService = {
     _id: string
-} & Omit<ComponentAddParamDocument, "authorId">
+} & Omit<IComponentAddParamService, "authorId">
 
-export interface ComponentDeleteManyParamDocument {
+export interface IComponentDeleteManyParamService {
     _id: string[]
 }

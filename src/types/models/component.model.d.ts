@@ -1,25 +1,25 @@
 import { ObjectId } from "mongoose"
 import {ComponentInputTypeId} from "../../constants/componentInputTypes";
 
-export interface ComponentDocument {
+export interface IComponentModel {
     _id?: string | ObjectId,
     authorId: string | ObjectId
     lastAuthorId: string | ObjectId
     elementId: string
     langKey: string,
-    types: ComponentTypeDocument[]
+    types: IComponentTypeModel[]
 }
 
-export interface ComponentTypeDocument {
+export interface IComponentTypeModel {
     _id?: string | ObjectId,
     elementId: string
     typeId: ComponentInputTypeId,
     langKey: string,
     rank: number,
-    contents: ComponentTypeContentDocument[]
+    contents: IComponentTypeContentModel[]
 }
 
-export interface ComponentTypeContentDocument {
+export interface IComponentTypeContentModel {
     _id?: string | ObjectId,
     langId: string | ObjectId
     content?: string

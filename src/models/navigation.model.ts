@@ -2,9 +2,9 @@ import * as mongoose from "mongoose";
 import userModel from "./user.model";
 import {StatusId} from "../constants/status";
 import languageModel from "./language.model";
-import {NavigationContentDocument, NavigationDocument} from "../types/models/navigation.model";
+import {INavigationContentModel, INavigationModel} from "../types/models/navigation.model";
 
-const schemaContent = new mongoose.Schema<NavigationContentDocument>(
+const schemaContent = new mongoose.Schema<INavigationContentModel>(
     {
         langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
         title: {type: String, default: ""},
@@ -12,7 +12,7 @@ const schemaContent = new mongoose.Schema<NavigationContentDocument>(
     }
 ).index({langId: 1});
 
-const schema = new mongoose.Schema<NavigationDocument>(
+const schema = new mongoose.Schema<INavigationModel>(
     {
         statusId: {type: Number, required: true, enum: StatusId},
         mainId: {type: mongoose.Schema.Types.ObjectId, ref: "navigations"},
@@ -24,4 +24,4 @@ const schema = new mongoose.Schema<NavigationDocument>(
     {timestamps: true}
 ).index({statusId: 1, authorId: 1});
 
-export default mongoose.model<NavigationDocument, mongoose.Model<NavigationDocument>>("navigations", schema)
+export default mongoose.model<INavigationModel, mongoose.Model<INavigationModel>>("navigations", schema)

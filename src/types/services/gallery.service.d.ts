@@ -1,27 +1,27 @@
-import {GalleryDocument} from "../models/gallery.model";
-import {UserPopulateDocument} from "./user.service";
+import {IGalleryModel} from "../models/gallery.model";
+import {IUserPopulateService} from "./user.service";
 import {GalleryTypeId} from "../../constants/galleryTypeId";
 
-export type GalleryGetResultDocument = {
-    authorId: UserPopulateDocument
-} & GalleryDocument
+export type IGalleryGetResultService = {
+    authorId: IUserPopulateService
+} & IGalleryModel
 
-export interface GalleryGetOneParamDocument {
+export interface IGalleryGetOneParamService {
     _id?: string
     name?: string
     authorId?: string
 }
 
-export interface GalleryGetManyParamDocument {
+export interface IGalleryGetManyParamService {
     _id?: string[]
     name?: string[]
     authorId?: string
     typeId?: GalleryTypeId
 }
 
-export type GalleryAddParamDocument = {} & Omit<GalleryDocument, "_id">
+export type IGalleryAddParamService = {} & Omit<IGalleryModel, "_id">
 
-export interface GalleryDeleteManyParamDocument {
+export interface IGalleryDeleteManyParamService {
     _id: string[]
     authorId?: string
 }

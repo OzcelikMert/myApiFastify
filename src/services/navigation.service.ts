@@ -4,20 +4,20 @@ import Variable from "../library/variable";
 import { Config } from "../config";
 import {NavigationObjectIdKeys} from "../constants/objectIdKeys/navigation.objectIdKeys";
 import {
-    NavigationDeleteManyParamDocument,
-    NavigationAddParamDocument,
-    NavigationGetOneParamDocument,
-    NavigationGetResultDocument,
-    NavigationUpdateOneParamDocument,
-    NavigationUpdateOneRankParamDocument,
-    NavigationUpdateManyStatusIdParamDocument, NavigationGetManyParamDocument
+    INavigationDeleteManyParamService,
+    INavigationAddParamService,
+    INavigationGetOneParamService,
+    INavigationGetResultService,
+    INavigationUpdateOneParamService,
+    INavigationUpdateOneRankParamService,
+    INavigationUpdateManyStatusIdParamService, INavigationGetManyParamService
 } from "../types/services/navigation.service";
 import navigationModel from "../models/navigation.model";
 import { StatusId } from "../constants/status";
-import { NavigationDocument } from "../types/models/navigation.model";
+import { INavigationModel } from "../types/models/navigation.model";
 
-const getOne = async (params: NavigationGetOneParamDocument) => {
-    let filters: mongoose.FilterQuery<NavigationDocument> = {}
+const getOne = async (params: INavigationGetOneParamService) => {
+    let filters: mongoose.FilterQuery<INavigationModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
@@ -37,7 +37,7 @@ const getOne = async (params: NavigationGetOneParamDocument) => {
         select: "_id contents",
         match: { statusId: StatusId.Active},
         options: { omitUndefined: true },
-        transform: (doc: NavigationGetResultDocument) => {
+        transform: (doc: INavigationGetResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
                     doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
@@ -57,7 +57,7 @@ const getOne = async (params: NavigationGetOneParamDocument) => {
 
     query.sort({ rank: 1, createdAt: -1 });
 
-    let doc = (await query.lean<NavigationGetResultDocument>().exec());
+    let doc = (await query.lean<INavigationGetResultService>().exec());
 
     if (doc) {
         if (Array.isArray(doc.contents)) {
@@ -71,8 +71,8 @@ const getOne = async (params: NavigationGetOneParamDocument) => {
     return doc
 }
 
-const getMany = async (params: NavigationGetManyParamDocument) => {
-    let filters: mongoose.FilterQuery<NavigationDocument> = {}
+const getMany = async (params: INavigationGetManyParamService) => {
+    let filters: mongoose.FilterQuery<INavigationModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
@@ -92,7 +92,7 @@ const getMany = async (params: NavigationGetManyParamDocument) => {
         select: "_id contents.title contents.url contents.langId",
         match: { statusId: StatusId.Active },
         options: { omitUndefined: true },
-        transform: (doc: NavigationGetResultDocument) => {
+        transform: (doc: INavigationGetResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
                     doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
@@ -112,7 +112,7 @@ const getMany = async (params: NavigationGetManyParamDocument) => {
 
     query.sort({ rank: 1, createdAt: -1 });
 
-    return (await query.lean<NavigationGetResultDocument[]>().exec()).map((doc) => {
+    return (await query.lean<INavigationGetResultService[]>().exec()).map((doc) => {
         if (Array.isArray(doc.contents)) {
             let docContent = doc.contents.findSingle("langId", params.langId);
             if (!docContent && !params.ignoreDefaultLanguage) {
@@ -128,7 +128,7 @@ const getMany = async (params: NavigationGetManyParamDocument) => {
     });
 }
 
-const add = async (params: NavigationAddParamDocument) => {
+const add = async (params: INavigationAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
@@ -139,11 +139,11 @@ const add = async (params: NavigationAddParamDocument) => {
     return await navigationModel.create(params);
 }
 
-const updateOne = async (params: NavigationUpdateOneParamDocument) => {
+const updateOne = async (params: INavigationUpdateOneParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
-    let filters: mongoose.FilterQuery<NavigationDocument> = {}
+    let filters: mongoose.FilterQuery<INavigationModel> = {}
 
     if (params._id) {
         filters = {
@@ -183,11 +183,11 @@ const updateOne = async (params: NavigationUpdateOneParamDocument) => {
     }
 }
 
-const updateOneRank = async (params: NavigationUpdateOneRankParamDocument) => {
+const updateOneRank = async (params: INavigationUpdateOneRankParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
-    let filters: mongoose.FilterQuery<NavigationDocument> = {}
+    let filters: mongoose.FilterQuery<INavigationModel> = {}
 
     if (params._id) {
         filters = {
@@ -212,11 +212,11 @@ const updateOneRank = async (params: NavigationUpdateOneRankParamDocument) => {
     };
 }
 
-const updateManyStatus = async (params: NavigationUpdateManyStatusIdParamDocument) => {
+const updateManyStatus = async (params: INavigationUpdateManyStatusIdParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
-    let filters: mongoose.FilterQuery<NavigationDocument> = {}
+    let filters: mongoose.FilterQuery<INavigationModel> = {}
 
     if (params._id) {
         filters = {
@@ -239,10 +239,10 @@ const updateManyStatus = async (params: NavigationUpdateManyStatusIdParamDocumen
     }));
 }
 
-const deleteMany = async (params: NavigationDeleteManyParamDocument) => {
+const deleteMany = async (params: INavigationDeleteManyParamService) => {
     params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
 
-    let filters: mongoose.FilterQuery<NavigationDocument> = {}
+    let filters: mongoose.FilterQuery<INavigationModel> = {}
 
     filters = {
         ...filters,

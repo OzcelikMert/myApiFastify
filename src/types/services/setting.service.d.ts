@@ -1,47 +1,47 @@
 import {
-    SettingContactFormDocument,
-    SettingDocument, SettingECommerceDocument,
-    SettingSeoContentDocument, SettingSocialMediaDocument,
-    SettingStaticLanguageContentDocument,
-    SettingStaticLanguageDocument
+    ISettingContactFormModel,
+    ISettingModel, ISettingECommerceModel,
+    ISettingSeoContentModel, ISettingSocialMediaModel,
+    ISettingStaticLanguageContentModel,
+    ISettingStaticLanguageModel
 } from "../models/setting.model";
 import {SettingProjectionKeys} from "../../constants/settingProjections";
 
-export type SettingGetResultDocument = {
-    seoContents?: SettingSeoContentDocument | SettingSeoContentDocument[]
-    staticLanguages?: (Omit<SettingStaticLanguageDocument, "contents"> & { contents?: SettingStaticLanguageContentDocument | SettingStaticLanguageContentDocument[] })[]
-} & Omit<SettingDocument, "seoContents" | "staticLanguages">
+export type ISettingGetResultService = {
+    seoContents?: ISettingSeoContentModel | ISettingSeoContentModel[]
+    staticLanguages?: (Omit<ISettingStaticLanguageModel, "contents"> & { contents?: ISettingStaticLanguageContentModel | ISettingStaticLanguageContentModel[] })[]
+} & Omit<ISettingModel, "seoContents" | "staticLanguages">
 
-export type SettingGetParamDocument = {
+export type ISettingGetParamService = {
     langId?: string
     projection?: SettingProjectionKeys
 }
 
-export type SettingAddParamDocument = {
-    seoContents?: SettingSeoContentDocument
-    staticLanguages?: (Omit<SettingStaticLanguageDocument, "contents"> & { contents: SettingStaticLanguageContentDocument})[]
-} & Omit<SettingDocument, "_id" | "seoContents" | "staticLanguages">
+export type ISettingAddParamService = {
+    seoContents?: ISettingSeoContentModel
+    staticLanguages?: (Omit<ISettingStaticLanguageModel, "contents"> & { contents: ISettingStaticLanguageContentModel})[]
+} & Omit<ISettingModel, "_id" | "seoContents" | "staticLanguages">
 
-export type SettingUpdateGeneralParamDocument = {
+export type ISettingUpdateGeneralParamService = {
 
-} & Omit<SettingAddParamDocument, "seoContents"|"contactForms"|"staticLanguages"|"socialMedia">
+} & Omit<ISettingAddParamService, "seoContents"|"contactForms"|"staticLanguages"|"socialMedia">
 
-export type SettingUpdateSEOParamDocument = {
-    seoContents?: SettingSeoContentDocument
+export type ISettingUpdateSEOParamService = {
+    seoContents?: ISettingSeoContentModel
 }
 
-export type SettingUpdateECommerceParamDocument = {
-    eCommerce: SettingECommerceDocument
+export type ISettingUpdateECommerceParamService = {
+    eCommerce: ISettingECommerceModel
 }
 
-export type SettingUpdateContactFormParamDocument = {
-    contactForms: SettingContactFormDocument[]
+export type ISettingUpdateContactFormParamService = {
+    contactForms: ISettingContactFormModel[]
 }
 
-export type SettingUpdateSocialMediaParamDocument = {
-    socialMedia: SettingSocialMediaDocument[]
+export type ISettingUpdateSocialMediaParamService = {
+    socialMedia: ISettingSocialMediaModel[]
 }
 
-export type SettingUpdateStaticLanguageParamDocument = {
-    staticLanguages?: (Omit<SettingStaticLanguageDocument, "contents"> & { contents: SettingStaticLanguageContentDocument})[]
+export type ISettingUpdateStaticLanguageParamService = {
+    staticLanguages?: (Omit<ISettingStaticLanguageModel, "contents"> & { contents: ISettingStaticLanguageContentModel})[]
 }

@@ -1,9 +1,9 @@
 import * as mongoose from "mongoose";
 import userModel from "./user.model";
 import {UserRoleId} from "../constants/userRoles";
-import {SessionAuthDocument, SessionAuthUserDocument} from "../types/models/sessionAuth.model";
+import {ISessionAuthModel, ISessionAuthUserModel} from "../types/models/sessionAuth.model";
 
-const schemaUser = new mongoose.Schema<SessionAuthUserDocument>(
+const schemaUser = new mongoose.Schema<ISessionAuthUserModel>(
     {
             userId: {type: mongoose.Schema.Types.ObjectId, ref: userModel},
             roleId: {type: Number, required: true, enum: UserRoleId},
@@ -16,11 +16,11 @@ const schemaUser = new mongoose.Schema<SessionAuthUserDocument>(
     {timestamps: true}
 )
 
-const schema = new mongoose.Schema<SessionAuthDocument>(
+const schema = new mongoose.Schema<ISessionAuthModel>(
     {
             user: {type: schemaUser, required: true}
     },
     {timestamps: true}
 )
 
-export default mongoose.model<SessionAuthDocument, mongoose.Model<SessionAuthDocument>>("sessionAuth", schema);
+export default mongoose.model<ISessionAuthModel, mongoose.Model<ISessionAuthModel>>("sessionAuth", schema);

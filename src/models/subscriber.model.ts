@@ -1,11 +1,11 @@
 import * as mongoose from "mongoose";
-import {SubscriberDocument} from "../types/models/subscriber.model";
+import {ISubscriberModel} from "../types/models/subscriber.model";
 
-const schema = new mongoose.Schema<SubscriberDocument>(
+const schema = new mongoose.Schema<ISubscriberModel>(
     {
             email: {type: String, required: true},
     },
     {timestamps: true}
 )
 
-export default mongoose.model<SubscriberDocument, mongoose.Model<SubscriberDocument>>("subscribers", schema)
+export default mongoose.model<ISubscriberModel, mongoose.Model<ISubscriberModel>>("subscribers", schema)

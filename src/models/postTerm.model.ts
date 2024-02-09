@@ -4,9 +4,9 @@ import {PostTypeId} from "../constants/postTypes";
 import {PostTermTypeId} from "../constants/postTermTypes";
 import userModel from "./user.model";
 import languageModel from "./language.model";
-import {PostTermContentDocument, PostTermDocument} from "../types/models/postTerm.model";
+import {IPostTermContentModel, IPostTermModel} from "../types/models/postTerm.model";
 
-const schemaContent = new mongoose.Schema<PostTermContentDocument>(
+const schemaContent = new mongoose.Schema<IPostTermContentModel>(
     {
         langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
         image: {type: String, default: ""},
@@ -17,7 +17,7 @@ const schemaContent = new mongoose.Schema<PostTermContentDocument>(
     {timestamps: true}
 ).index({langId: 1});
 
-const schema = new mongoose.Schema<PostTermDocument>(
+const schema = new mongoose.Schema<IPostTermModel>(
     {
         typeId: {type: Number, required: true, enum: PostTermTypeId},
         postTypeId: {type: Number, required: true, enum: PostTypeId},
@@ -31,4 +31,4 @@ const schema = new mongoose.Schema<PostTermDocument>(
     {timestamps: true}
 ).index({typeId: 1, postTypeId: 1, statusId: 1, authorId: 1});
 
-export default mongoose.model<PostTermDocument, mongoose.Model<PostTermDocument>>("postTerms", schema)
+export default mongoose.model<IPostTermModel, mongoose.Model<IPostTermModel>>("postTerms", schema)

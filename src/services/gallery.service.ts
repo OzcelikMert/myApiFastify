@@ -2,16 +2,16 @@ import * as mongoose from "mongoose";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import {GalleryObjectIdKeys} from "../constants/objectIdKeys/gallery.objectIdKeys";
-import {GalleryDocument} from "../types/models/gallery.model";
+import {IGalleryModel} from "../types/models/gallery.model";
 import {
-    GalleryAddParamDocument, GalleryDeleteManyParamDocument,
-    GalleryGetManyParamDocument, GalleryGetOneParamDocument,
-    GalleryGetResultDocument
+    IGalleryAddParamService, IGalleryDeleteManyParamService,
+    IGalleryGetManyParamService, IGalleryGetOneParamService,
+    IGalleryGetResultService
 } from "../types/services/gallery.service";
 import galleryModel from "../models/gallery.model";
 
-const getOne = async (params: GalleryGetOneParamDocument) => {
-    let filters: mongoose.FilterQuery<GalleryDocument> = {}
+const getOne = async (params: IGalleryGetOneParamService) => {
+    let filters: mongoose.FilterQuery<IGalleryModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
 
     if (params.name) filters = {
@@ -38,11 +38,11 @@ const getOne = async (params: GalleryGetOneParamDocument) => {
 
     query.sort({ createdAt: -1 });
 
-    return (await query.lean<GalleryGetResultDocument>().exec());
+    return (await query.lean<IGalleryGetResultService>().exec());
 }
 
-const getMany = async (params: GalleryGetManyParamDocument) => {
-    let filters: mongoose.FilterQuery<GalleryDocument> = {}
+const getMany = async (params: IGalleryGetManyParamService) => {
+    let filters: mongoose.FilterQuery<IGalleryModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
 
     if (params.name) filters = {
@@ -73,18 +73,18 @@ const getMany = async (params: GalleryGetManyParamDocument) => {
 
     query.sort({ createdAt: -1 });
 
-    return (await query.lean<GalleryGetResultDocument[]>().exec());
+    return (await query.lean<IGalleryGetResultService[]>().exec());
 }
 
-const add = async (params: GalleryAddParamDocument) => {
+const add = async (params: IGalleryAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
 
     return await galleryModel.create(params);
 }
 
-const deleteMany = async (params: GalleryDeleteManyParamDocument) => {
-    let filters: mongoose.FilterQuery<GalleryDocument> = {};
+const deleteMany = async (params: IGalleryDeleteManyParamService) => {
+    let filters: mongoose.FilterQuery<IGalleryModel> = {};
     params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
 
     if (params._id) filters = {

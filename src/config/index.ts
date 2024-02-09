@@ -5,7 +5,7 @@ import fastifyStatic from '@fastify/static';
 import http from "http";
 import https from "https";
 import sessionAuthConfig from "./session/session.auth.config";
-import {ConfigDocument} from "../types/config";
+import {IConfig} from "../types/config";
 import dbConnect from "./db";
 import userService from "../services/user.service";
 import {UserRoleId} from "../constants/userRoles";
@@ -35,7 +35,7 @@ const setPath = (...paths: (number | string | undefined)[]) => {
     return returnPath;
 }
 
-let Config: ConfigDocument = {
+let Config: IConfig = {
     passwordSalt: "_@QffsDh14Q",
     publicFolders: [
         ["uploads"]

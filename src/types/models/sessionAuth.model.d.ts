@@ -1,7 +1,7 @@
 import {UserRoleId} from "../../constants/userRoles";
 import { ObjectId } from "mongoose"
 
-export interface SessionAuthUserDocument{
+export interface ISessionAuthUserModel {
     userId: string | ObjectId
     roleId: UserRoleId,
     email: string,
@@ -13,7 +13,7 @@ export interface SessionAuthUserDocument{
     refreshedAt?: string
 }
 
-export interface SessionAuthDocument{
+export interface ISessionAuthModel {
     _id?: string | ObjectId
-    user: SessionAuthUserDocument
+    user: ISessionAuthUserModel
 }

@@ -1,17 +1,17 @@
 import * as mongoose from "mongoose";
 import viewModel from "../models/view.model";
 import {
-    ViewDeleteManyParamDocument,
-    ViewAddParamDocument,
-    ViewGetParamDocument, ViewGetTotalResultDocument, ViewGetResultDocument
+    IViewDeleteManyParamService,
+    IViewAddParamService,
+    IViewGetParamService, IViewGetTotalResultService, IViewGetResultService
 } from "../types/services/view.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import {ViewObjectIdKeys} from "../constants/objectIdKeys/view.objectIdKeys";
-import {ViewDocument} from "../types/models/view.model";
+import {IViewModel} from "../types/models/view.model";
 
-const getOne = async (params: ViewGetParamDocument) => {
-    let filters: mongoose.FilterQuery<ViewDocument> = {}
+const getOne = async (params: IViewGetParamService) => {
+    let filters: mongoose.FilterQuery<IViewModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     if (params.ip) filters = {
@@ -48,11 +48,11 @@ const getOne = async (params: ViewGetParamDocument) => {
         }
     }
 
-    return await viewModel.findOne(filters).lean<ViewGetResultDocument>().exec();
+    return await viewModel.findOne(filters).lean<IViewGetResultService>().exec();
 }
 
-const getTotalWithDate = async (params: ViewGetParamDocument) => {
-    let filters: mongoose.FilterQuery<ViewDocument> = {}
+const getTotalWithDate = async (params: IViewGetParamService) => {
+    let filters: mongoose.FilterQuery<IViewModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     if (params.dateStart) {
@@ -84,11 +84,11 @@ const getTotalWithDate = async (params: ViewGetParamDocument) => {
                 total: { $sum: 1 }
             },
         }
-    ]).sort({_id: 1}).exec()) as ViewGetTotalResultDocument[];
+    ]).sort({_id: 1}).exec()) as IViewGetTotalResultService[];
 }
 
-const getTotalWithCountry = async (params: ViewGetParamDocument) => {
-    let filters: mongoose.FilterQuery<ViewDocument> = {}
+const getTotalWithCountry = async (params: IViewGetParamService) => {
+    let filters: mongoose.FilterQuery<IViewModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     if (params.dateStart) {
@@ -120,18 +120,18 @@ const getTotalWithCountry = async (params: ViewGetParamDocument) => {
                 total: { $sum: 1 }
             },
         }
-    ]).sort({_id: 1}).exec()) as ViewGetTotalResultDocument[];
+    ]).sort({_id: 1}).exec()) as IViewGetTotalResultService[];
 }
 
-const add = async (params: ViewAddParamDocument) => {
+const add = async (params: IViewAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     return await viewModel.create(params)
 }
 
-const deleteMany = async (params: ViewDeleteManyParamDocument) => {
-    let filters: mongoose.FilterQuery<ViewDocument> = {};
+const deleteMany = async (params: IViewDeleteManyParamService) => {
+    let filters: mongoose.FilterQuery<IViewModel> = {};
     params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
 
     if(params.dateEnd){

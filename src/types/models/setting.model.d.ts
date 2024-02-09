@@ -1,7 +1,7 @@
 import { ObjectId } from "mongoose"
 import {CurrencyId} from "../../constants/currencyTypes";
 
-export interface SettingDocument {
+export interface ISettingModel {
     _id: string | ObjectId
     defaultLangId: string | ObjectId
     icon?: string
@@ -9,33 +9,33 @@ export interface SettingDocument {
     logoTwo?: string
     head?: string
     script?: string
-    seoContents: SettingSeoContentDocument[],
-    contact?: SettingContactDocument
-    contactForms: SettingContactFormDocument[],
-    staticLanguages: SettingStaticLanguageDocument[]
-    socialMedia: SettingSocialMediaDocument[]
-    eCommerce?: SettingECommerceDocument
+    seoContents: ISettingSeoContentModel[],
+    contact?: ISettingContactModel
+    contactForms: ISettingContactFormModel[],
+    staticLanguages: ISettingStaticLanguageModel[]
+    socialMedia: ISettingSocialMediaModel[]
+    eCommerce?: ISettingECommerceModel
 }
 
-export interface SettingECommerceDocument {
+export interface ISettingECommerceModel {
     currencyId: CurrencyId
 }
 
-export interface SettingContactDocument {
+export interface ISettingContactModel {
     email?: string,
     phone?: string,
     address?: string,
     addressMap?: string
 }
 
-export interface SettingSocialMediaDocument {
+export interface ISettingSocialMediaModel {
     _id?: string | ObjectId
     elementId: string
     title: string
     url: string
 }
 
-export interface SettingContactFormDocument {
+export interface ISettingContactFormModel {
     _id?: string | ObjectId
     name: string
     key: string
@@ -47,7 +47,7 @@ export interface SettingContactFormDocument {
     port: number
 }
 
-export interface SettingSeoContentDocument {
+export interface ISettingSeoContentModel {
     _id?: string | ObjectId
     langId: string | ObjectId
     title?: string,
@@ -55,14 +55,14 @@ export interface SettingSeoContentDocument {
     tags?: string[]
 }
 
-export interface SettingStaticLanguageDocument {
+export interface ISettingStaticLanguageModel {
     _id?: string | ObjectId
     langKey: string,
     title: string
-    contents: SettingStaticLanguageContentDocument[]
+    contents: ISettingStaticLanguageContentModel[]
 }
 
-export interface SettingStaticLanguageContentDocument {
+export interface ISettingStaticLanguageContentModel {
     _id?: string | ObjectId
     langId: string | ObjectId
     content?: string,

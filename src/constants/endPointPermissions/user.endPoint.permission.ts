@@ -1,18 +1,18 @@
 import {PermissionId} from "../permissions";
-import {EndPointPermissionDocument} from "../../types/constants/endPoint.permissions";
+import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
 import {UserRoleId} from "../userRoles";
 
-const add: EndPointPermissionDocument = {
+const add: IEndPointPermission = {
     permissionId: [PermissionId.UserAdd],
     minUserRoleId: UserRoleId.Editor
 }
 
-const update: EndPointPermissionDocument = {
+const update: IEndPointPermission = {
     permissionId: [PermissionId.UserEdit],
     minUserRoleId: UserRoleId.Editor
 }
 
-const remove: EndPointPermissionDocument = {
+const remove: IEndPointPermission = {
     permissionId: [PermissionId.UserDelete],
     minUserRoleId: UserRoleId.Editor
 }

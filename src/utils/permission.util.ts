@@ -1,5 +1,5 @@
 import {FastifyRequest} from "fastify";
-import {EndPointPermissionDocument} from "../types/constants/endPoint.permissions";
+import {IEndPointPermission} from "../types/constants/endPoint.permissions";
 import {PostTypeId} from "../constants/postTypes";
 import {PostEndPointPermission} from "../constants/endPointPermissions/post.endPoint.permission";
 import {EndPoints} from "../constants/endPoints";
@@ -18,7 +18,7 @@ const getPermissionKeyPrefix = (method: string) => {
     return prefix;
 }
 
-const getPostPermission = (req: FastifyRequest) : EndPointPermissionDocument => {
+const getPostPermission = (req: FastifyRequest) : IEndPointPermission => {
     let reqData = req as any;
     let path = req.originalUrl.replace(`/api`, "");
     let method = req.method.toUpperCase();

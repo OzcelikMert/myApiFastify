@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import postModel from "../models/post.model";
 import {
-    PostDocument,
+    IPostModel,
 } from "../types/models/post.model";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import {PostObjectIdKeys} from "../constants/objectIdKeys/post.objectIdKeys";
@@ -9,20 +9,20 @@ import {StatusId} from "../constants/status";
 import {PostTermObjectIdKeys} from "../constants/objectIdKeys/postTerm.objectIdKeys";
 import postTermModel from "../models/postTerm.model";
 import {
-    SitemapGetPostCountParamDocument,
-    SitemapGetPostParamDocument,
-    SitemapGetPostTermCountParamDocument,
-    SitemapGetPostTermParamDocument,
-    SitemapMapPostCountDocument,
-    SitemapMapPostTermCountDocument,
-    SitemapPostDocument,
-    SitemapPostTermDocument
+    ISitemapGetPostCountParamService,
+    ISitemapGetPostParamService,
+    ISitemapGetPostTermCountParamService,
+    ISitemapGetPostTermParamService,
+    ISitemapMapPostCountService,
+    ISitemapMapPostTermCountService,
+    ISitemapPostService,
+    ISitemapPostTermService
 } from "../types/services/sitemap.service";
 
 export const sitemapLimit = 500;
 
-const getPost = async (params: SitemapGetPostParamDocument) => {
-    let filters: mongoose.FilterQuery<PostDocument> = {statusId: StatusId.Active}
+const getPost = async (params: ISitemapGetPostParamService) => {
+    let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
     params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
 
     if (params.typeId) {
@@ -39,7 +39,7 @@ const getPost = async (params: SitemapGetPostParamDocument) => {
     query.skip(sitemapLimit * (params.page && params.page > 0 ? params.page - 1 : 0));
     query.limit(sitemapLimit);
 
-    return (await query.lean<SitemapPostDocument[]>().exec()).map(doc => {
+    return (await query.lean<ISitemapPostService[]>().exec()).map(doc => {
         return {
             updatedAt: doc.updatedAt,
             createdAt: doc.createdAt,
@@ -54,8 +54,8 @@ const getPost = async (params: SitemapGetPostParamDocument) => {
     });
 }
 
-const getPostCount = async (params: SitemapGetPostCountParamDocument) => {
-    let filters: mongoose.FilterQuery<PostDocument> = {statusId: StatusId.Active}
+const getPostCount = async (params: ISitemapGetPostCountParamService) => {
+    let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
     params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
 
     if (params.typeId) {
@@ -84,11 +84,11 @@ const getPostCount = async (params: SitemapGetPostCountParamDocument) => {
             typeId: doc._id,
             total: doc.total
         }
-    }) as SitemapMapPostCountDocument[];
+    }) as ISitemapMapPostCountService[];
 }
 
-const getPostTerm = async (params: SitemapGetPostTermParamDocument) => {
-    let filters: mongoose.FilterQuery<PostDocument> = {statusId: StatusId.Active}
+const getPostTerm = async (params: ISitemapGetPostTermParamService) => {
+    let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
     params = MongoDBHelpers.convertObjectIdInData(params, PostTermObjectIdKeys);
 
     if (params.typeId) {
@@ -112,7 +112,7 @@ const getPostTerm = async (params: SitemapGetPostTermParamDocument) => {
     query.skip(sitemapLimit * (params.page && params.page > 0 ? params.page - 1 : 0));
     query.limit(sitemapLimit);
 
-    return (await query.lean<SitemapPostTermDocument[]>().exec()).map(doc => {
+    return (await query.lean<ISitemapPostTermService[]>().exec()).map(doc => {
         return {
             updatedAt: doc.updatedAt,
             createdAt: doc.createdAt,
@@ -127,8 +127,8 @@ const getPostTerm = async (params: SitemapGetPostTermParamDocument) => {
     });
 }
 
-const getPostTermCount = async (params: SitemapGetPostTermCountParamDocument) => {
-    let filters: mongoose.FilterQuery<PostDocument> = {statusId: StatusId.Active}
+const getPostTermCount = async (params: ISitemapGetPostTermCountParamService) => {
+    let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
     params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
 
     if (params.typeId) {
@@ -164,7 +164,7 @@ const getPostTermCount = async (params: SitemapGetPostTermCountParamDocument) =>
             postTypeId: doc._id.postTypeId,
             total: doc.total
         }
-    }) as SitemapMapPostTermCountDocument[];
+    }) as ISitemapMapPostTermCountService[];
 }
 
 export default {

@@ -1,19 +1,19 @@
-import {UserDocument} from "../models/user.model";
+import {IUserModel} from "../models/user.model";
 import {StatusId} from "../../constants/status";
 import {UserRoleId} from "../../constants/userRoles";
 
-export interface UserPopulateDocument {
+export interface IUserPopulateService {
     _id: string
     name: string,
     url: string,
     image: string
 }
 
-export type UserGetResultDocument = {
+export type IUserGetResultService = {
     isOnline?: boolean
-} & UserDocument
+} & IUserModel
 
-export interface UserGetOneParamDocument {
+export interface IUserGetOneParamService {
     _id?: string
     email?: string
     password?: string
@@ -23,7 +23,7 @@ export interface UserGetOneParamDocument {
     ignoreUserId?: string[]
 }
 
-export interface UserGetManyParamDocument {
+export interface IUserGetManyParamService {
     _id?: string[]
     statusId?: StatusId
     email?: string,
@@ -33,19 +33,19 @@ export interface UserGetManyParamDocument {
     ignoreUserId?: string[]
 }
 
-export type UserAddParamDocument = {
+export type IUserAddParamService = {
     password: string
-} & Omit<UserDocument, "_id"|"password">
+} & Omit<IUserModel, "_id"|"password">
 
-export type UserUpdateOneParamDocument = {
+export type IUserUpdateOneParamService = {
     _id: string
     roleId?: UserRoleId
     statusId?: StatusId
     name?: string
     email?: string
     permissions?: number[]
-} & Omit<UserDocument, "_id"|"roleId"|"statusId"|"name"|"email"|"permissions">
+} & Omit<IUserModel, "_id"|"roleId"|"statusId"|"name"|"email"|"permissions">
 
-export type UserDeleteOneParamDocument = {
+export type IUserDeleteOneParamService = {
     _id: string
 }

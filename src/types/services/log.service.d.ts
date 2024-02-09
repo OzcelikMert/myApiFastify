@@ -1,3 +1,3 @@
-import {LogDocument} from "../models/log.model";
+import {ILogModel} from "../models/log.model";
 
-export type LogAddParamDocument = {} & Omit<LogDocument, "_id">
+export type ILogAddParamService = {} & Omit<ILogModel, "_id">

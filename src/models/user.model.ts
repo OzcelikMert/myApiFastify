@@ -1,9 +1,9 @@
 import * as mongoose from "mongoose";
 import {StatusId} from "../constants/status";
 import {UserRoleId} from "../constants/userRoles";
-import {UserDocument} from "../types/models/user.model";
+import {IUserModel} from "../types/models/user.model";
 
-const schema = new mongoose.Schema<UserDocument>(
+const schema = new mongoose.Schema<IUserModel>(
     {
         roleId: {type: Number, required: true, enum: UserRoleId},
         statusId: {type: Number, required: true, enum: StatusId},
@@ -24,4 +24,4 @@ const schema = new mongoose.Schema<UserDocument>(
     {timestamps: true}
 ).index({roleId: 1, statusId: 1});
 
-export default mongoose.model<UserDocument, mongoose.Model<UserDocument>>("users", schema)
+export default mongoose.model<IUserModel, mongoose.Model<IUserModel>>("users", schema)

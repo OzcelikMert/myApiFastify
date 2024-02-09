@@ -1,16 +1,16 @@
 import * as mongoose from "mongoose";
 import languageModel from "./language.model";
 import {
-    SettingContactDocument,
-    SettingContactFormDocument,
-    SettingDocument,
-    SettingSeoContentDocument,
-    SettingStaticLanguageDocument,
-    SettingStaticLanguageContentDocument, SettingSocialMediaDocument, SettingECommerceDocument
+    ISettingContactModel,
+    ISettingContactFormModel,
+    ISettingModel,
+    ISettingSeoContentModel,
+    ISettingStaticLanguageModel,
+    ISettingStaticLanguageContentModel, ISettingSocialMediaModel, ISettingECommerceModel
 } from "../types/models/setting.model";
 import {CurrencyId} from "../constants/currencyTypes";
 
-const schemaStaticLanguageContent = new mongoose.Schema<SettingStaticLanguageContentDocument>(
+const schemaStaticLanguageContent = new mongoose.Schema<ISettingStaticLanguageContentModel>(
     {
         langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
         content: {type: String, default: ""}
@@ -18,7 +18,7 @@ const schemaStaticLanguageContent = new mongoose.Schema<SettingStaticLanguageCon
     {timestamps: true}
 ).index({langId: 1});
 
-const schemaStaticLanguage = new mongoose.Schema<SettingStaticLanguageDocument>(
+const schemaStaticLanguage = new mongoose.Schema<ISettingStaticLanguageModel>(
     {
         langKey: {type: String, default: "", required: true},
         title: {type: String, default: ""},
@@ -27,7 +27,7 @@ const schemaStaticLanguage = new mongoose.Schema<SettingStaticLanguageDocument>(
     {timestamps: true}
 );
 
-const schemaContactForm = new mongoose.Schema<SettingContactFormDocument>(
+const schemaContactForm = new mongoose.Schema<ISettingContactFormModel>(
     {
         name: {type: String, default: ""},
         outGoingEmail: {type: String, default: ""},
@@ -41,7 +41,7 @@ const schemaContactForm = new mongoose.Schema<SettingContactFormDocument>(
     {timestamps: true}
 );
 
-const schemaSocialMedia = new mongoose.Schema<SettingSocialMediaDocument>(
+const schemaSocialMedia = new mongoose.Schema<ISettingSocialMediaModel>(
     {
         elementId: {type: String},
         title: {type: String},
@@ -49,13 +49,13 @@ const schemaSocialMedia = new mongoose.Schema<SettingSocialMediaDocument>(
     }
 );
 
-const schemaECommerce = new mongoose.Schema<SettingECommerceDocument>(
+const schemaECommerce = new mongoose.Schema<ISettingECommerceModel>(
     {
         currencyId: {type: Number, enum: CurrencyId, default: CurrencyId.TurkishLira},
     }
 );
 
-const schemaContact = new mongoose.Schema<SettingContactDocument>(
+const schemaContact = new mongoose.Schema<ISettingContactModel>(
     {
         email: {type: String},
         phone: {type: String},
@@ -64,7 +64,7 @@ const schemaContact = new mongoose.Schema<SettingContactDocument>(
     }
 );
 
-const schemaSEOContent = new mongoose.Schema<SettingSeoContentDocument>(
+const schemaSEOContent = new mongoose.Schema<ISettingSeoContentModel>(
     {
         langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
         title: {type: String, default: ""},
@@ -74,7 +74,7 @@ const schemaSEOContent = new mongoose.Schema<SettingSeoContentDocument>(
     {timestamps: true}
 ).index({langId: 1});
 
-const schema = new mongoose.Schema<SettingDocument>(
+const schema = new mongoose.Schema<ISettingModel>(
     {
         defaultLangId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
         icon: {type: String, default: ""},
@@ -92,4 +92,4 @@ const schema = new mongoose.Schema<SettingDocument>(
     {timestamps: true}
 );
 
-export default mongoose.model<SettingDocument, mongoose.Model<SettingDocument>>("settings", schema)
+export default mongoose.model<ISettingModel, mongoose.Model<ISettingModel>>("settings", schema)

@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose"
 
-export interface LogDocument {
+export interface ILogModel {
     _id: string | ObjectId
     url: string,
     method: string

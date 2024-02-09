@@ -5,7 +5,7 @@ import {StatusId} from "../../constants/status";
 import {AttributeTypeId} from "../../constants/attributeTypes";
 import {ProductTypeId} from "../../constants/productTypes";
 
-export interface PostDocument {
+export interface IPostModel {
     _id?: string | ObjectId
     typeId: PostTypeId,
     statusId: StatusId,
@@ -17,15 +17,15 @@ export interface PostDocument {
     isFixed?: boolean,
     categories?: string[]
     tags?: string[]
-    contents: PostContentDocument[]
+    contents: IPostContentModel[]
     components?: string[] | ObjectId[]
-    beforeAndAfter?: PostBeforeAndAfterDocument
-    eCommerce?: PostECommerceDocument
+    beforeAndAfter?: IPostBeforeAndAfterModel
+    eCommerce?: IPostECommerceModel
     updatedAt?: string
     createdAt?: string
 }
 
-export interface PostContentDocument {
+export interface IPostContentModel {
     _id?: string | ObjectId
     langId: string | ObjectId
     image?: string
@@ -35,33 +35,33 @@ export interface PostContentDocument {
     shortContent?: string,
     url?: string,
     views?: number,
-    buttons?: PostContentButtonDocument[]
+    buttons?: IPostContentButtonModel[]
 }
 
-export interface PostBeforeAndAfterDocument {
+export interface IPostBeforeAndAfterModel {
     imageBefore: string
     imageAfter: string
     images: string[]
 }
 
-export interface PostContentButtonDocument {
+export interface IPostContentButtonModel {
     _id?: string | ObjectId
     title: string,
     url?: string
 }
 
-export interface PostECommerceDocument<T = string | ObjectId, P = string[] | ObjectId[]> {
+export interface IPostECommerceModel<T = string | ObjectId, P = string[] | ObjectId[]> {
     typeId: ProductTypeId
     images: string[]
-    pricing?: PostECommercePricingDocument
-    inventory?: PostECommerceInventoryDocument
-    shipping?: PostECommerceShippingDocument
-    attributes?: PostECommerceAttributeDocument<T, P>[]
-    variations?: PostECommerceVariationDocument<T>[]
-    variationDefaults?: PostECommerceVariationSelectedDocument<T>[]
+    pricing?: IPostECommercePricingModel
+    inventory?: IPostECommerceInventoryModel
+    shipping?: IPostECommerceShippingModel
+    attributes?: IPostECommerceAttributeModel<T, P>[]
+    variations?: IPostECommerceVariationModel<T>[]
+    variationDefaults?: IPostECommerceVariationSelectedModel<T>[]
 }
 
-export interface PostECommercePricingDocument {
+export interface IPostECommercePricingModel {
     taxRate: number
     taxExcluded: number
     taxIncluded: number
@@ -69,44 +69,44 @@ export interface PostECommercePricingDocument {
     shipping: number
 }
 
-export interface PostECommerceInventoryDocument {
+export interface IPostECommerceInventoryModel {
     sku: string
     isManageStock: boolean
     quantity: number
 }
 
-export interface PostECommerceShippingDocument {
+export interface IPostECommerceShippingModel {
     width: string
     height: string
     depth: string
     weight: string
 }
 
-export interface PostECommerceAttributeDocument<T = string | ObjectId, P = string[] | ObjectId[]> {
+export interface IPostECommerceAttributeModel<T = string | ObjectId, P = string[] | ObjectId[]> {
     _id?: string | ObjectId
     attributeId: T
     variations: P
     typeId: AttributeTypeId
 }
 
-export interface PostECommerceVariationDocument<T = string | ObjectId> {
+export interface IPostECommerceVariationModel<T = string | ObjectId> {
     _id?: string | ObjectId
     rank: number
-    selectedVariations: PostECommerceVariationSelectedDocument<T>[]
+    selectedVariations: IPostECommerceVariationSelectedModel<T>[]
     images: string[]
-    contents?: PostECommerceVariationContentDocument[]
-    inventory: PostECommerceInventoryDocument
-    shipping: PostECommerceShippingDocument
-    pricing: PostECommercePricingDocument
+    contents?: IPostECommerceVariationContentModel[]
+    inventory: IPostECommerceInventoryModel
+    shipping: IPostECommerceShippingModel
+    pricing: IPostECommercePricingModel
 }
 
-export interface PostECommerceVariationSelectedDocument<T = string | ObjectId> {
+export interface IPostECommerceVariationSelectedModel<T = string | ObjectId> {
     _id?: string | ObjectId
     attributeId: T
     variationId: T
 }
 
-export interface PostECommerceVariationContentDocument {
+export interface IPostECommerceVariationContentModel {
     _id?: string | ObjectId
     langId: string | ObjectId
     image?: string

@@ -1,14 +1,14 @@
-interface OnlineUserDocument {
+export interface IOnlineUser {
     ip: string,
     _id: string,
     createdAt: Date,
     updatedAt: Date
 }
 
-interface ConfigDocument {
+export interface IConfig {
     passwordSalt: string
     publicFolders: string[][]
-    onlineUsers: OnlineUserDocument[]
+    onlineUsers: IOnlineUser[]
     paths: {
         root: string
         uploads: {
@@ -19,9 +19,4 @@ interface ConfigDocument {
         }
     },
     defaultLangId: string
-}
-
-export {
-    OnlineUserDocument,
-    ConfigDocument
 }

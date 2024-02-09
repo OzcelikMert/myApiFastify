@@ -1,8 +1,8 @@
 import * as mongoose from "mongoose";
-import {LogDocument} from "../types/models/log.model";
+import {ILogModel} from "../types/models/log.model";
 import userModel from "./user.model";
 
-const schema = new mongoose.Schema<LogDocument>(
+const schema = new mongoose.Schema<ILogModel>(
     {
         ip: {type: String, default: "", required: true},
         url: {type: String, default: "", required: true},
@@ -16,4 +16,4 @@ const schema = new mongoose.Schema<LogDocument>(
     {timestamps: true}
 )
 
-export default mongoose.model<LogDocument, mongoose.Model<LogDocument>>("logs", schema)
+export default mongoose.model<ILogModel, mongoose.Model<ILogModel>>("logs", schema)
