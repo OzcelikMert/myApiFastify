@@ -4,6 +4,7 @@ import {PostTypeId} from "../constants/postTypes";
 import {PostEndPointPermission} from "../constants/endPointPermissions/post.endPoint.permission";
 import {EndPoints} from "../constants/endPoints";
 import {userRoles, UserRoleId} from "../constants/userRoles";
+import {PermissionId} from "../constants/permissions";
 
 const getPermissionKeyPrefix = (method: string) => {
     let prefix = "";
@@ -37,7 +38,12 @@ const checkPermissionRoleRank = (minRoleId: UserRoleId, targetRoleId: UserRoleId
     return (userRole && minRole) && (userRole.rank >= minRole.rank);
 }
 
+const checkPermissionId = (minPermissionId: PermissionId[], targetPermissionId: PermissionId[]) => {
+    return (minPermissionId.every(permissionId => targetPermissionId.some(userPermissionId => permissionId == userPermissionId)));
+}
+
 export const PermissionUtil = {
     getPostPermission: getPostPermission,
-    checkPermissionRoleRank: checkPermissionRoleRank
+    checkPermissionRoleRank: checkPermissionRoleRank,
+    checkPermissionId: checkPermissionId
 }
