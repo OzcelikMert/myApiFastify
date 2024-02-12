@@ -2,22 +2,22 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import postService from "../services/post.service";
-import logMiddleware from "./log.middleware";
+import {PostService} from "../services/post.service";
+import {LogMiddleware} from "./log.middleware";
 import {
     PostSchemaDeleteManyDocument,
     PostSchemaPutOneDocument
 } from "../schemas/post.schema";
 import {UserRoleId} from "../constants/userRoles";
-import permissionUtil from "../utils/permission.util";
+import {PermissionUtil} from "../utils/permission.util";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPutOneDocument;
 
-        let post = await postService.getOne({
+        let post = await PostService.getOne({
             _id: reqData.params._id,
             typeId: reqData.body.typeId
         });
@@ -35,12 +35,12 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaDeleteManyDocument;
 
-        let posts = await postService.getMany({
+        let posts = await PostService.getMany({
             _id: reqData.body._id,
             typeId: [reqData.body.typeId]
         });
@@ -61,13 +61,13 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPutOneDocument;
 
-        if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
-            let post = await postService.getOne({
+        if (!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
+            let post = await PostService.getOne({
                 _id: reqData.params._id,
                 typeId: reqData.body.typeId
             });
@@ -88,13 +88,13 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaDeleteManyDocument;
 
-        if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
-            let posts = await postService.getMany({
+        if (!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
+            let posts = await PostService.getMany({
                 _id: reqData.body._id,
                 typeId: [reqData.body.typeId]
             });
@@ -117,7 +117,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const PostMiddleware = {
     checkOne: checkOne,
     checkMany: checkMany,
     checkOneIsAuthor: checkOneIsAuthor,

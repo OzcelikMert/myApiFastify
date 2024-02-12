@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import viewModel from "../models/view.model";
+import {viewModel} from "../models/view.model";
 import {
     IViewDeleteManyParamService,
     IViewAddParamService,
@@ -7,12 +7,12 @@ import {
 } from "../types/services/view.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
-import {ViewObjectIdKeys} from "../constants/objectIdKeys/view.objectIdKeys";
+import {viewObjectIdKeys} from "../constants/objectIdKeys/view.objectIdKeys";
 import {IViewModel} from "../types/models/view.model";
 
 const getOne = async (params: IViewGetParamService) => {
     let filters: mongoose.FilterQuery<IViewModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
 
     if (params.ip) filters = {
         ...filters,
@@ -53,7 +53,7 @@ const getOne = async (params: IViewGetParamService) => {
 
 const getTotalWithDate = async (params: IViewGetParamService) => {
     let filters: mongoose.FilterQuery<IViewModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
 
     if (params.dateStart) {
         filters = {
@@ -89,7 +89,7 @@ const getTotalWithDate = async (params: IViewGetParamService) => {
 
 const getTotalWithCountry = async (params: IViewGetParamService) => {
     let filters: mongoose.FilterQuery<IViewModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
 
     if (params.dateStart) {
         filters = {
@@ -125,14 +125,14 @@ const getTotalWithCountry = async (params: IViewGetParamService) => {
 
 const add = async (params: IViewAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
 
     return await viewModel.create(params)
 }
 
 const deleteMany = async (params: IViewDeleteManyParamService) => {
     let filters: mongoose.FilterQuery<IViewModel> = {};
-    params = MongoDBHelpers.convertObjectIdInData(params, ViewObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
 
     if(params.dateEnd){
         filters = {
@@ -146,7 +146,7 @@ const deleteMany = async (params: IViewDeleteManyParamService) => {
     return (await viewModel.deleteMany(filters).exec()).deletedCount;
 }
 
-export default {
+export const ViewService = {
     getOne: getOne,
     getTotalWithDate: getTotalWithDate,
     getTotalWithCountry: getTotalWithCountry,

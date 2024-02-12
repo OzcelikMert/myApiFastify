@@ -72,7 +72,7 @@ export type NavigationSchemaPutManyStatusDocument = z.infer<typeof putManyStatus
 export type NavigationSchemaPutOneRankDocument = z.infer<typeof putOneRankSchema>;
 export type NavigationSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
-export default {
+export const NavigationSchema = {
     getOne: getOneSchema,
     getMany: getManySchema,
     post: postSchema,

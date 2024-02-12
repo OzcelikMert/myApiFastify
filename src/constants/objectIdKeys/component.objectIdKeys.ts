@@ -1,4 +1,4 @@
-export const ComponentObjectIdKeys = [
+export const componentObjectIdKeys = [
     "_id",
     "authorId",
     "lastAuthorId",

@@ -2,20 +2,20 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import subscriberService from "../services/subscriber.service";
-import logMiddleware from "./log.middleware";
+import {SubscriberService} from "../services/subscriber.service";
+import {LogMiddleware} from "./log.middleware";
 import {
     SubscriberSchemaDeleteOneDocument,
     SubscriberSchemaDeleteManyDocument
 } from "../schemas/subscriber.schema";
 
 const checkOne = (isThere: boolean) => async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SubscriberSchemaDeleteOneDocument;
 
-        let resData = await subscriberService.getOne({
+        let resData = await SubscriberService.getOne({
             ...reqData.params
         });
 
@@ -32,12 +32,12 @@ const checkOne = (isThere: boolean) => async (req: FastifyRequest, reply: Fastif
 }
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SubscriberSchemaDeleteManyDocument;
 
-        let resData = await subscriberService.getMany({
+        let resData = await SubscriberService.getMany({
             _id: reqData.body._id
         });
 
@@ -56,7 +56,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const SubscribeMiddleware = {
     checkOne: checkOne,
     checkMany: checkMany
 };

@@ -61,7 +61,7 @@ export type ComponentSchemaPostDocument = z.infer<typeof postSchema>;
 export type ComponentSchemaPutOneDocument = z.infer<typeof putOneSchema>;
 export type ComponentSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
-export default {
+export const ComponentSchema = {
     getOne: getOneSchema,
     getMany: getManySchema,
     post: postSchema,

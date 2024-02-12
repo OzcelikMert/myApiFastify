@@ -9,6 +9,6 @@ const postSchema = object({
 
 export type AuthSchemaPostDocument = z.infer<typeof postSchema>;
 
-export default {
+export const AuthSchema = {
   post: postSchema
 };

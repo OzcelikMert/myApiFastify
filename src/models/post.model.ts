@@ -1,9 +1,9 @@
 import * as mongoose from "mongoose";
-import userModel from "./user.model";
+import {userModel} from "./user.model";
 import {StatusId} from "../constants/status";
 import {PostTypeId} from "../constants/postTypes";
-import languageModel from "./language.model";
-import postTermModel from "./postTerm.model";
+import {languageModel} from "./language.model";
+import {postTermModel} from "./postTerm.model";
 import {
     IPostBeforeAndAfterModel,
     IPostContentButtonModel,
@@ -18,7 +18,7 @@ import {
     IPostECommerceVariationModel,
     IPostECommerceVariationSelectedModel
 } from "../types/models/post.model";
-import componentModel from "./component.model";
+import {componentModel} from "./component.model";
 import {ProductTypeId} from "../constants/productTypes";
 import {AttributeTypeId} from "../constants/attributeTypes";
 
@@ -151,4 +151,4 @@ const schema = new mongoose.Schema<IPostModel>(
     {timestamps: true}
 ).index({typeId: 1, statusId: 1, authorId: 1});
 
-export default mongoose.model<IPostModel, mongoose.Model<IPostModel>>("posts", schema)
+export const postModel = mongoose.model<IPostModel, mongoose.Model<IPostModel>>("posts", schema)

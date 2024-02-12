@@ -5,19 +5,19 @@ import {
     LanguageSchemaGetManyDocument,
     LanguageSchemaPostDocument, LanguageSchemaPutOneDocument, LanguageSchemaPutOneRankDocument
 } from "../schemas/language.schema";
-import languageService from "../services/language.service";
-import logMiddleware from "../middlewares/log.middleware";
+import {LanguageService} from "../services/language.service";
+import {LogMiddleware} from "../middlewares/log.middleware";
 import fs from "fs";
 import {Config} from "../config";
 import path from "path";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as LanguageSchemaGetOneDocument;
 
-        serviceResult.data = await languageService.getOne({
+        serviceResult.data = await LanguageService.getOne({
             ...reqData.params,
             ...reqData.query,
         });
@@ -27,12 +27,12 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as LanguageSchemaGetManyDocument;
 
-        serviceResult.data = await languageService.getMany({
+        serviceResult.data = await LanguageService.getMany({
             ...reqData.query
         });
 
@@ -41,7 +41,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const fileType = [".jpg", ".png", ".webp", ".gif", ".jpeg"];
@@ -65,12 +65,12 @@ const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as LanguageSchemaPostDocument;
 
-        let insertData = await languageService.add({
+        let insertData = await LanguageService.add({
             ...reqData.body,
         });
 
@@ -81,12 +81,12 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as LanguageSchemaPutOneDocument;
 
-        serviceResult.data = await languageService.updateOne({
+        serviceResult.data = await LanguageService.updateOne({
             ...reqData.params,
             ...reqData.body,
         });
@@ -96,12 +96,12 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as LanguageSchemaPutOneRankDocument;
 
-        serviceResult.data = await languageService.updateOneRank({
+        serviceResult.data = await LanguageService.updateOneRank({
             ...reqData.params,
             ...reqData.body,
         });

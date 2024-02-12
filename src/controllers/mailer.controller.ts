@@ -4,17 +4,17 @@ import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {MailerSchemaPostDocument} from "../schemas/mailer.schema";
 import * as NodeMailer from "nodemailer";
-import settingService from "../services/setting.service";
+import {SettingService} from "../services/setting.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
-import logMiddleware from "../middlewares/log.middleware";
+import {LogMiddleware} from "../middlewares/log.middleware";
 
 const send = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as MailerSchemaPostDocument;
 
-        let setting = (await settingService.get({}, true));
+        let setting = (await SettingService.get({}, true));
 
         if(setting){
             let contactForm = setting.contactForms?.findSingle("_id", MongoDBHelpers.createObjectId(reqData.body.contactFormId));

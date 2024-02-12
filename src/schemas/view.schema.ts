@@ -9,6 +9,6 @@ const postSchema = object({
 
 export type ViewSchemaPostDocument = z.infer<typeof postSchema>;
 
-export default {
+export const ViewSchema = {
     post: postSchema
 };

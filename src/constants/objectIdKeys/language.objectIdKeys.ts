@@ -1,3 +1,3 @@
-export const LanguageObjectIdKeys = [
+export const languageObjectIdKeys = [
     "_id"
 ]

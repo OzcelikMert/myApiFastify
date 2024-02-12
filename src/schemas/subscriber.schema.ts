@@ -51,7 +51,7 @@ export type SubscriberSchemaDeleteOneDocument = z.infer<typeof deleteOneSchema>;
 export type SubscriberSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 export type SubscriberSchemaDeleteOneWithEmailDocument = z.infer<typeof deleteOneWithEmailSchema>;
 
-export default {
+export const SubscriberSchema = {
     getOne: getOneSchema,
     getMany: getManySchema,
     getOneWithEmail: getOneWithEmailSchema,

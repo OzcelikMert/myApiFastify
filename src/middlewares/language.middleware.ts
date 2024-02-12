@@ -2,17 +2,17 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import logMiddleware from "./log.middleware";
-import languageService from "../services/language.service";
+import {LogMiddleware} from "./log.middleware";
+import {LanguageService} from "../services/language.service";
 import {LanguageSchemaPutOneDocument} from "../schemas/language.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as LanguageSchemaPutOneDocument;
 
-        let resData = await languageService.getOne({_id: reqData.params._id});
+        let resData = await LanguageService.getOne({_id: reqData.params._id});
 
         if (!resData) {
             serviceResult.status = false;
@@ -26,6 +26,6 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const LanguageMiddleware = {
     checkOne: checkOne
 };

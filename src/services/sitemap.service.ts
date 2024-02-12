@@ -1,13 +1,13 @@
 import * as mongoose from "mongoose";
-import postModel from "../models/post.model";
+import {postModel} from "../models/post.model";
 import {
     IPostModel,
 } from "../types/models/post.model";
 import MongoDBHelpers from "../library/mongodb/helpers";
-import {PostObjectIdKeys} from "../constants/objectIdKeys/post.objectIdKeys";
+import {postObjectIdKeys} from "../constants/objectIdKeys/post.objectIdKeys";
 import {StatusId} from "../constants/status";
-import {PostTermObjectIdKeys} from "../constants/objectIdKeys/postTerm.objectIdKeys";
-import postTermModel from "../models/postTerm.model";
+import {postTermObjectIdKeys} from "../constants/objectIdKeys/postTerm.objectIdKeys";
+import {postTermModel} from "../models/postTerm.model";
 import {
     ISitemapGetPostCountParamService,
     ISitemapGetPostParamService,
@@ -23,7 +23,7 @@ export const sitemapLimit = 500;
 
 const getPost = async (params: ISitemapGetPostParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     if (params.typeId) {
         filters = {
@@ -56,7 +56,7 @@ const getPost = async (params: ISitemapGetPostParamService) => {
 
 const getPostCount = async (params: ISitemapGetPostCountParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     if (params.typeId) {
         filters = {
@@ -89,7 +89,7 @@ const getPostCount = async (params: ISitemapGetPostCountParamService) => {
 
 const getPostTerm = async (params: ISitemapGetPostTermParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
-    params = MongoDBHelpers.convertObjectIdInData(params, PostTermObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
 
     if (params.typeId) {
         filters = {
@@ -129,7 +129,7 @@ const getPostTerm = async (params: ISitemapGetPostTermParamService) => {
 
 const getPostTermCount = async (params: ISitemapGetPostTermCountParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     if (params.typeId) {
         filters = {
@@ -167,7 +167,7 @@ const getPostTermCount = async (params: ISitemapGetPostTermCountParamService) =>
     }) as ISitemapMapPostTermCountService[];
 }
 
-export default {
+export const SitemapService = {
     getPost: getPost,
     getPostCount: getPostCount,
     getPostTerm: getPostTerm,

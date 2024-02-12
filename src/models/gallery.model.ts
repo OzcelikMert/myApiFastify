@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import userModel from "./user.model";
+import {userModel} from "./user.model";
 import {IGalleryModel} from "../types/models/gallery.model";
 import {GalleryTypeId} from "../constants/galleryTypeId";
 
@@ -13,4 +13,4 @@ const schema = new mongoose.Schema<IGalleryModel>(
     {timestamps: true}
 )
 
-export default mongoose.model<IGalleryModel, mongoose.Model<IGalleryModel>>("gallery", schema);
+export const galleryModel = mongoose.model<IGalleryModel, mongoose.Model<IGalleryModel>>("gallery", schema);

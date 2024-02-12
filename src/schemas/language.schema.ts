@@ -53,7 +53,7 @@ export type LanguageSchemaPostDocument = z.infer<typeof postSchema>;
 export type LanguageSchemaPutOneDocument = z.infer<typeof putOneSchema>;
 export type LanguageSchemaPutOneRankDocument = z.infer<typeof putOneRankSchema>;
 
-export default {
+export const LanguageSchema = {
     getOne: getOneSchema,
     getMany: getManySchema,
     post: postSchema,

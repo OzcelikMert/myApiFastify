@@ -2,22 +2,22 @@ import {FastifyReply, FastifyRequest} from 'fastify';
 import {ApiResult} from "../../library/api/result";
 import {ApiErrorCodes} from "../../library/api/errorCodes";
 import {ApiStatusCodes} from "../../library/api/statusCodes";
-import logMiddleware from "../log.middleware";
+import {LogMiddleware} from "../log.middleware";
 import {IEndPointPermissionFunc, IEndPointPermission} from "../../types/constants/endPoint.permissions";
-import permissionUtil from "../../utils/permission.util";
+import {PermissionUtil} from "../../utils/permission.util";
 
 const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => async (
     req: FastifyRequest,
     reply: FastifyReply
 ) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
         if(req.sessionAuth.user){
             if (
-                !permissionUtil.checkPermissionRoleRank(permissionData.minUserRoleId, req.sessionAuth.user!.roleId) ||
+                !PermissionUtil.checkPermissionRoleRank(permissionData.minUserRoleId, req.sessionAuth.user!.roleId) ||
                 !(permissionData.permissionId.every(permissionId => req.sessionAuth.user?.permissions.some(userPermissionId => permissionId == userPermissionId)))
             ) {
                 serviceResult.status = false;
@@ -37,6 +37,6 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
     });
 };
 
-export default {
+export const PermissionMiddleware = {
     check: check
 };

@@ -1,18 +1,18 @@
 import * as mongoose from "mongoose";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
-import {GalleryObjectIdKeys} from "../constants/objectIdKeys/gallery.objectIdKeys";
+import {galleryObjectIdKeys} from "../constants/objectIdKeys/gallery.objectIdKeys";
 import {IGalleryModel} from "../types/models/gallery.model";
 import {
     IGalleryAddParamService, IGalleryDeleteManyParamService,
     IGalleryGetManyParamService, IGalleryGetOneParamService,
     IGalleryGetResultService
 } from "../types/services/gallery.service";
-import galleryModel from "../models/gallery.model";
+import {galleryModel} from "../models/gallery.model";
 
 const getOne = async (params: IGalleryGetOneParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
     if (params.name) filters = {
         ...filters,
@@ -43,7 +43,7 @@ const getOne = async (params: IGalleryGetOneParamService) => {
 
 const getMany = async (params: IGalleryGetManyParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
     if (params.name) filters = {
         ...filters,
@@ -78,14 +78,14 @@ const getMany = async (params: IGalleryGetManyParamService) => {
 
 const add = async (params: IGalleryAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
     return await galleryModel.create(params);
 }
 
 const deleteMany = async (params: IGalleryDeleteManyParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {};
-    params = MongoDBHelpers.convertObjectIdInData(params, GalleryObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
     if (params._id) filters = {
         ...filters,
@@ -99,7 +99,7 @@ const deleteMany = async (params: IGalleryDeleteManyParamService) => {
     return (await galleryModel.deleteMany(filters).exec()).deletedCount;
 }
 
-export default {
+export const GalleryService = {
     getOne: getOne,
     getMany: getMany,
     add: add,

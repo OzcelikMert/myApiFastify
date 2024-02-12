@@ -2,7 +2,7 @@ import * as mongoose from "mongoose";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import { Config } from "../config";
-import {NavigationObjectIdKeys} from "../constants/objectIdKeys/navigation.objectIdKeys";
+import {navigationObjectIdKeys} from "../constants/objectIdKeys/navigation.objectIdKeys";
 import {
     INavigationDeleteManyParamService,
     INavigationAddParamService,
@@ -12,13 +12,13 @@ import {
     INavigationUpdateOneRankParamService,
     INavigationUpdateManyStatusIdParamService, INavigationGetManyParamService
 } from "../types/services/navigation.service";
-import navigationModel from "../models/navigation.model";
+import {navigationModel} from "../models/navigation.model";
 import { StatusId } from "../constants/status";
 import { INavigationModel } from "../types/models/navigation.model";
 
 const getOne = async (params: INavigationGetOneParamService) => {
     let filters: mongoose.FilterQuery<INavigationModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
@@ -73,7 +73,7 @@ const getOne = async (params: INavigationGetOneParamService) => {
 
 const getMany = async (params: INavigationGetManyParamService) => {
     let filters: mongoose.FilterQuery<INavigationModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
@@ -130,7 +130,7 @@ const getMany = async (params: INavigationGetManyParamService) => {
 
 const add = async (params: INavigationAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
 
     if (Variable.isEmpty(params.mainId)) {
         delete params.mainId;
@@ -141,7 +141,7 @@ const add = async (params: INavigationAddParamService) => {
 
 const updateOne = async (params: INavigationUpdateOneParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<INavigationModel> = {}
 
@@ -185,7 +185,7 @@ const updateOne = async (params: INavigationUpdateOneParamService) => {
 
 const updateOneRank = async (params: INavigationUpdateOneRankParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<INavigationModel> = {}
 
@@ -214,7 +214,7 @@ const updateOneRank = async (params: INavigationUpdateOneRankParamService) => {
 
 const updateManyStatus = async (params: INavigationUpdateManyStatusIdParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<INavigationModel> = {}
 
@@ -240,7 +240,7 @@ const updateManyStatus = async (params: INavigationUpdateManyStatusIdParamServic
 }
 
 const deleteMany = async (params: INavigationDeleteManyParamService) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, NavigationObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<INavigationModel> = {}
 
@@ -252,7 +252,7 @@ const deleteMany = async (params: INavigationDeleteManyParamService) => {
     return (await navigationModel.deleteMany(filters).exec()).deletedCount;
 }
 
-export default {
+export const NavigationService = {
     getOne: getOne,
     getMany: getMany,
     add: add,

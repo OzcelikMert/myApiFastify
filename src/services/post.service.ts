@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import postModel from "../models/post.model";
+import {postModel} from "../models/post.model";
 import {
     IPostDeleteManyParamService,
     IPostAddParamService,
@@ -17,7 +17,7 @@ import { IPostTermGetResultService } from "../types/services/postTerm.service";
 import Variable from "../library/variable";
 import { Config } from "../config";
 import { IComponentGetResultService } from "../types/services/component.service";
-import {PostObjectIdKeys} from "../constants/objectIdKeys/post.objectIdKeys";
+import {postObjectIdKeys} from "../constants/objectIdKeys/post.objectIdKeys";
 import { StatusId } from "../constants/status";
 import { PostTermTypeId } from "../constants/postTermTypes";
 import { PostTypeId } from "../constants/postTypes";
@@ -41,7 +41,7 @@ const createURL = async (_id: string | null, title: string, typeId: PostTypeId) 
 
 const getOne = async (params: IPostGetOneParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, [...PostObjectIdKeys, "ignorePostId"]);
+    params = MongoDBHelpers.convertObjectIdInData(params, [...postObjectIdKeys, "ignorePostId"]);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
@@ -220,7 +220,7 @@ const getOne = async (params: IPostGetOneParamService) => {
 
 const getMany = async (params: IPostGetManyParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, [...PostObjectIdKeys, "ignorePostId"]);
+    params = MongoDBHelpers.convertObjectIdInData(params, [...postObjectIdKeys, "ignorePostId"]);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
@@ -369,7 +369,7 @@ const getMany = async (params: IPostGetManyParamService) => {
 
 const getCount = async (params: IPostGetCountParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = { statusId: StatusId.Active }
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     if (params.typeId) {
         filters = {
@@ -399,7 +399,7 @@ const getCount = async (params: IPostGetCountParamService) => {
 
 const add = async (params: IPostAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     if(params.contents){
         params.contents.url = await createURL(null, params.contents.title ?? "", params.typeId);
@@ -410,7 +410,7 @@ const add = async (params: IPostAddParamService) => {
 
 const updateOne = async (params: IPostUpdateOneParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -459,7 +459,7 @@ const updateOne = async (params: IPostUpdateOneParamService) => {
 
 const updateOneRank = async (params: IPostUpdateOneRankParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -494,7 +494,7 @@ const updateOneRank = async (params: IPostUpdateOneRankParamService) => {
 
 const updateOneView = async (params: IPostUpdateOneViewParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -545,7 +545,7 @@ const updateOneView = async (params: IPostUpdateOneViewParamService) => {
 
 const updateManyStatus = async (params: IPostUpdateManyStatusIdParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -578,7 +578,7 @@ const updateManyStatus = async (params: IPostUpdateManyStatusIdParamService) => 
 
 const deleteMany = async (params: IPostDeleteManyParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, PostObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
     filters = {
         ...filters,
@@ -595,7 +595,7 @@ const deleteMany = async (params: IPostDeleteManyParamService) => {
     return (await postModel.deleteMany(filters).exec()).deletedCount;
 }
 
-export default {
+export const PostService = {
     getOne: getOne,
     getMany: getMany,
     getCount: getCount,

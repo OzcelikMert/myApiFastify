@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import {ILogModel} from "../types/models/log.model";
-import userModel from "./user.model";
+import {userModel} from "./user.model";
 
 const schema = new mongoose.Schema<ILogModel>(
     {
@@ -16,4 +16,4 @@ const schema = new mongoose.Schema<ILogModel>(
     {timestamps: true}
 )
 
-export default mongoose.model<ILogModel, mongoose.Model<ILogModel>>("logs", schema)
+export const logModel = mongoose.model<ILogModel, mongoose.Model<ILogModel>>("logs", schema)

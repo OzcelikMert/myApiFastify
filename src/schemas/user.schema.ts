@@ -90,7 +90,7 @@ export type UserSchemaPutProfileDocument = z.infer<typeof putProfileSchema>;
 export type UserSchemaPutPasswordDocument = z.infer<typeof putPasswordSchema>;
 export type UserSchemaDeleteOneDocument = z.infer<typeof deleteOneSchema>;
 
-export default {
+export const UserSchema = {
     getOne: getOneSchema,
     getOneWithURL: getOneWithURLSchema,
     getMany: getManySchema,

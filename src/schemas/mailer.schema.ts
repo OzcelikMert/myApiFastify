@@ -11,6 +11,6 @@ const postSchema = object({
 
 export type MailerSchemaPostDocument = z.infer<typeof postSchema>;
 
-export default {
+export const MailerSchema = {
     post: postSchema
 };

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import languageModel from "./language.model";
+import {languageModel} from "./language.model";
 import {IViewModel} from "../types/models/view.model";
 
 const schema = new mongoose.Schema<IViewModel>(
@@ -14,4 +14,4 @@ const schema = new mongoose.Schema<IViewModel>(
     {timestamps: true}
 ).index({langId: 1})
 
-export default mongoose.model<IViewModel, mongoose.Model<IViewModel>>("views", schema)
+export const viewModel = mongoose.model<IViewModel, mongoose.Model<IViewModel>>("views", schema)

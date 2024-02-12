@@ -29,6 +29,6 @@ const check = (schema: ZodSchema) => async (
     }
 }
 
-export default {
+export const RequestMiddleware = {
     check: check
 };

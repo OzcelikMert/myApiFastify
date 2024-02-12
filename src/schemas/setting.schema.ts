@@ -100,7 +100,7 @@ export type SettingSchemaPutSocialMediaDocument = z.infer<typeof putSocialMediaS
 export type SettingSchemaPutStaticLanguageDocument = z.infer<typeof putStaticLanguageSchema>;
 export type SettingSchemaPutECommerceDocument = z.infer<typeof putECommerceSchema>;
 
-export default {
+export const SettingSchema = {
     get: getSchema,
     putGeneral: putGeneralSchema,
     putSeo: putSeoSchema,

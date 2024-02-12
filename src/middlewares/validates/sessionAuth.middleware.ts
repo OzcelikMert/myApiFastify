@@ -2,14 +2,14 @@ import {FastifyReply, FastifyRequest, RouteHandlerMethod} from "fastify";
 import {ApiResult} from "../../library/api/result";
 import {ApiErrorCodes} from "../../library/api/errorCodes";
 import {ApiStatusCodes} from "../../library/api/statusCodes";
-import userService from "../../services/user.service";
+import {UserService} from "../../services/user.service";
 import {StatusId} from "../../constants/status";
 import {sessionAuthTTL} from "../../config/session/session.auth.config";
-import logMiddleware from "../log.middleware";
-import userUtil from "../../utils/user.util";
+import {LogMiddleware} from "../log.middleware";
+import {UserUtil} from "../../utils/user.util";
 
 const check = async (req: FastifyRequest,res: FastifyReply) => {
-    await logMiddleware.error(req, res, async () => {
+    await LogMiddleware.error(req, res, async () => {
         let serviceResult = new ApiResult();
 
         if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
@@ -23,7 +23,7 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
 
         if (
             (typeof req.sessionAuth === "undefined" || typeof req.sessionAuth.user === "undefined") ||
-            !(await userService.getOne({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}))
+            !(await UserService.getOne({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}))
         ) {
             serviceResult.status = false;
             serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
@@ -39,7 +39,7 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
 };
 
 const reload = async (req: FastifyRequest,res: FastifyReply) => {
-    await logMiddleware.error(req, res, async () => {
+    await LogMiddleware.error(req, res, async () => {
         if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
             if (Number(new Date().diffSeconds(new Date(req.sessionAuth.user.updatedAt ?? ""))) > sessionAuthTTL) {
                 req.sessionAuth.delete();
@@ -47,7 +47,7 @@ const reload = async (req: FastifyRequest,res: FastifyReply) => {
         }
         if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
             if(Number(new Date().diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > 120) {
-                let user = await userService.getOne({
+                let user = await UserService.getOne({
                     _id: req.sessionAuth.user.userId.toString()
                 });
                 if(user){
@@ -58,7 +58,7 @@ const reload = async (req: FastifyRequest,res: FastifyReply) => {
                         roleId: user.roleId,
                         ip: req.ip,
                         permissions: user.permissions,
-                        token: userUtil.createToken(user._id.toString(), req.ip, date.getTime()),
+                        token: UserUtil.createToken(user._id.toString(), req.ip, date.getTime()),
                         refreshedAt: date.toString()
                     })
                 }
@@ -67,7 +67,7 @@ const reload = async (req: FastifyRequest,res: FastifyReply) => {
     });
 };
 
-export default {
+export const SessionAuthMiddleware = {
     check: check,
     reload: reload
 };

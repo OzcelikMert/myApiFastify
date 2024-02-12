@@ -1,12 +1,12 @@
 import Variable from "../library/variable";
 import { ILogAddParamService } from "../types/services/log.service";
-import logModel from "../models/log.model";
+import {logModel} from "../models/log.model";
 import MongoDBHelpers from "../library/mongodb/helpers";
-import {LogObjectIdKeys} from "../constants/objectIdKeys/log.objectIdKeys";
+import {logObjectIdKeys} from "../constants/objectIdKeys/log.objectIdKeys";
 
 const add = async (params: ILogAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, LogObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, logObjectIdKeys);
 
     return await logModel.create({
         ...params,
@@ -17,6 +17,6 @@ const add = async (params: ILogAddParamService) => {
     })
 }
 
-export default {
+export const LogService = {
     add: add
 };

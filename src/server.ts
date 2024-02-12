@@ -5,7 +5,7 @@ import fastifyCompress from '@fastify/compress';
 import fastifyMultipart from '@fastify/multipart';
 import InitConfig from "./config";
 import chalk from 'chalk';
-import routers from "./routers";
+import {routers} from "./routers";
 import config from "config";
 
 import * as Declaration from './types/declaration'
@@ -14,9 +14,9 @@ import "./library/variable/string"
 import "./library/variable/number"
 import "./library/variable/date"
 import "./library/variable/math"
-import viewInitMiddleware from "./middlewares/init/view.init.middleware";
-import sessionAuthMiddleware from "./middlewares/validates/sessionAuth.middleware";
-import requestInitMiddleware from "./middlewares/init/request.init.middleware";
+import {ViewInitMiddleware} from "./middlewares/init/view.init.middleware";
+import {SessionAuthMiddleware} from "./middlewares/validates/sessionAuth.middleware";
+import {RequestInitMiddleware} from "./middlewares/init/request.init.middleware";
 
 const port = config.get("serverPort") as number;
 const trafficMBLimit = config.get("serverTrafficMBLimit") as number || 2;
@@ -48,9 +48,9 @@ console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
         console.log(`Response time for ${request.method} ${request.url}: ${responseTime}ms`);
     });
 
-    server.addHook('preHandler', requestInitMiddleware.set);
-    server.addHook('preHandler', viewInitMiddleware.set);
-    server.addHook('preHandler', sessionAuthMiddleware.reload);
+    server.addHook('preHandler', RequestInitMiddleware.set);
+    server.addHook('preHandler', ViewInitMiddleware.set);
+    server.addHook('preHandler', SessionAuthMiddleware.reload);
 
     await server.register(routers);
 

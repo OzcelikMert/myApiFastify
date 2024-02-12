@@ -5,16 +5,16 @@ import {
     SettingSchemaPutGeneralDocument,
     SettingSchemaPutSEODocument, SettingSchemaPutSocialMediaDocument, SettingSchemaPutStaticLanguageDocument
 } from "../schemas/setting.schema";
-import settingService from "../services/setting.service";
-import logMiddleware from "../middlewares/log.middleware";
+import {SettingService} from "../services/setting.service";
+import {LogMiddleware} from "../middlewares/log.middleware";
 
 const get = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaGetDocument;
 
-        serviceResult.data = await settingService.get({
+        serviceResult.data = await SettingService.get({
             ...reqData.query
         }, false);
 
@@ -23,72 +23,72 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateGeneral = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutGeneralDocument;
 
-        serviceResult.data = await settingService.updateGeneral(reqData.body)
+        serviceResult.data = await SettingService.updateGeneral(reqData.body)
 
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
 const updateSEO = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutSEODocument;
 
-        serviceResult.data = await settingService.updateSEO(reqData.body)
+        serviceResult.data = await SettingService.updateSEO(reqData.body)
 
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
 const updateContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutContactFormDocument;
 
-        serviceResult.data = await settingService.updateContactForm(reqData.body)
+        serviceResult.data = await SettingService.updateContactForm(reqData.body)
 
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
 const updateStaticLanguage = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutStaticLanguageDocument;
 
-        serviceResult.data = await settingService.updateStaticLanguage(reqData.body)
+        serviceResult.data = await SettingService.updateStaticLanguage(reqData.body)
 
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
 const updateSocialMedia = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutSocialMediaDocument;
 
-        serviceResult.data = await settingService.updateSocialMedia(reqData.body)
+        serviceResult.data = await SettingService.updateSocialMedia(reqData.body)
 
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
 const updateECommerce = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as SettingSchemaPutECommerceDocument;
 
-        serviceResult.data = await settingService.updateECommerce(reqData.body)
+        serviceResult.data = await SettingService.updateECommerce(reqData.body)
 
         reply.status(serviceResult.statusCode).send(serviceResult)
     });

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import userModel from "../models/user.model";
+import {userModel} from "../models/user.model";
 import {
     IUserDeleteOneParamService,
     IUserAddParamService,
@@ -8,11 +8,11 @@ import {
     IUserGetManyParamService
 } from "../types/services/user.service";
 import {StatusId} from "../constants/status";
-import userUtil from "../utils/user.util";
+import {UserUtil} from "../utils/user.util";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import {Config} from "../config";
 import Variable from "../library/variable";
-import {UserObjectIdKeys} from "../constants/objectIdKeys/user.objectIdKeys";
+import {userObjectIdKeys} from "../constants/objectIdKeys/user.objectIdKeys";
 import {IUserModel} from "../types/models/user.model";
 
 const createURL = async (_id: string | null, name: string) => {
@@ -32,7 +32,7 @@ const createURL = async (_id: string | null, name: string) => {
 }
 
 const getOne = async (params: IUserGetOneParamService) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, [...UserObjectIdKeys, "ignoreUserId"]);
+    params = MongoDBHelpers.convertObjectIdInData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
         statusId: { $ne: StatusId.Deleted},
@@ -47,7 +47,7 @@ const getOne = async (params: IUserGetOneParamService) => {
     if(params.password) {
         filters = {
             ...filters,
-            password: userUtil.encodePassword(params.password)
+            password: UserUtil.encodePassword(params.password)
         }
     }
     if(params._id) {
@@ -96,7 +96,7 @@ const getOne = async (params: IUserGetOneParamService) => {
 }
 
 const getMany = async (params: IUserGetManyParamService) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, [...UserObjectIdKeys, "ignoreUserId"]);
+    params = MongoDBHelpers.convertObjectIdInData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
         statusId: { $ne: StatusId.Deleted},
@@ -149,19 +149,19 @@ const getMany = async (params: IUserGetManyParamService) => {
 
 const add = async (params: IUserAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
 
     params.url = await createURL(null, params.name);
 
     return await userModel.create({
         ...params,
-        password: userUtil.encodePassword(params.password)
+        password: UserUtil.encodePassword(params.password)
     })
 }
 
 const updateOne = async (params: IUserUpdateOneParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IUserModel> = {}
 
@@ -179,7 +179,7 @@ const updateOne = async (params: IUserUpdateOneParamService) => {
 
     if(doc){
         if(params.password) {
-            doc.password = userUtil.encodePassword(params.password)
+            doc.password = UserUtil.encodePassword(params.password)
             delete params.password;
         }
 
@@ -196,7 +196,7 @@ const updateOne = async (params: IUserUpdateOneParamService) => {
 
 const deleteOne = async (params: IUserDeleteOneParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, UserObjectIdKeys);
+    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IUserModel> = {}
 
@@ -218,7 +218,7 @@ const deleteOne = async (params: IUserDeleteOneParamService) => {
     };
 }
 
-export default {
+export const UserService = {
     getOne: getOne,
     getMany: getMany,
     add: add,

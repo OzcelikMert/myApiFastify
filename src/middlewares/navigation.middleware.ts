@@ -2,17 +2,17 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import logMiddleware from "./log.middleware";
-import navigationService from "../services/navigation.service";
+import {LogMiddleware} from "./log.middleware";
+import {NavigationService} from "../services/navigation.service";
 import {NavigationSchemaPutOneDocument, NavigationSchemaPutManyStatusDocument} from "../schemas/navigation.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPutOneDocument;
 
-        let resData = await navigationService.getOne({_id: reqData.params._id});
+        let resData = await NavigationService.getOne({_id: reqData.params._id});
 
         if (!resData) {
             serviceResult.status = false;
@@ -27,12 +27,12 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPutManyStatusDocument;
 
-        let resData = await navigationService.getMany({_id: reqData.body._id});
+        let resData = await NavigationService.getMany({_id: reqData.body._id});
 
         if (
             resData.length == 0 ||
@@ -49,7 +49,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const NavigationMiddleware = {
     checkOne: checkOne,
     checkMany: checkMany
 };

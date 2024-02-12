@@ -2,18 +2,18 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import userService from "../services/user.service";
-import {UserRoles} from "../constants/userRoles";
-import logMiddleware from "./log.middleware";
+import {UserService} from "../services/user.service";
+import {userRoles} from "../constants/userRoles";
+import {LogMiddleware} from "./log.middleware";
 import {UserSchemaPutOneDocument, UserSchemaPutPasswordDocument} from "../schemas/user.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as UserSchemaPutOneDocument;
 
-        let resData = await userService.getOne({
+        let resData = await UserService.getOne({
             _id: reqData.params._id
         });
 
@@ -30,7 +30,7 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as UserSchemaPutOneDocument;
@@ -39,7 +39,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
         if (reqData.body.roleId) {
             userRoleId = reqData.body.roleId;
         } else if (reqData.params._id) {
-            let user = await userService.getOne({
+            let user = await UserService.getOne({
                 _id: reqData.params._id
             });
             if (user) {
@@ -49,8 +49,8 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (userRoleId > 0) {
             if (req.sessionAuth.user) {
-                let sessionUserRole = UserRoles.findSingle("id", req.sessionAuth.user.roleId);
-                let userRole = UserRoles.findSingle("id", userRoleId);
+                let sessionUserRole = userRoles.findSingle("id", req.sessionAuth.user.roleId);
+                let userRole = userRoles.findSingle("id", userRoleId);
 
                 if (
                     (typeof sessionUserRole === "undefined" || typeof userRole === "undefined") ||
@@ -70,13 +70,13 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as UserSchemaPutOneDocument;
 
         if (reqData.body.email) {
-            let resData = await userService.getOne({
+            let resData = await UserService.getOne({
                 email: reqData.body.email,
                 ignoreUserId: reqData.params._id ? [reqData.params._id] : undefined
             });
@@ -95,12 +95,12 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as UserSchemaPutPasswordDocument;
 
-        let resData = await userService.getOne({
+        let resData = await UserService.getOne({
             email: req.sessionAuth.user?.email,
             password: reqData.body.password
         });
@@ -117,7 +117,7 @@ const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: Fastify
     });
 }
 
-export default {
+export const UserMiddleware = {
     checkOne: checkOne,
     checkRoleRank: checkRoleRank,
     checkAlreadyEmail: checkAlreadyEmail,

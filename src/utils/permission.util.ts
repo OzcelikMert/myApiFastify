@@ -3,7 +3,7 @@ import {IEndPointPermission} from "../types/constants/endPoint.permissions";
 import {PostTypeId} from "../constants/postTypes";
 import {PostEndPointPermission} from "../constants/endPointPermissions/post.endPoint.permission";
 import {EndPoints} from "../constants/endPoints";
-import {UserRoles, UserRoleId} from "../constants/userRoles";
+import {userRoles, UserRoleId} from "../constants/userRoles";
 
 const getPermissionKeyPrefix = (method: string) => {
     let prefix = "";
@@ -31,13 +31,13 @@ const getPostPermission = (req: FastifyRequest) : IEndPointPermission => {
 }
 
 const checkPermissionRoleRank = (minRoleId: UserRoleId, targetRoleId: UserRoleId) => {
-    let userRole = UserRoles.findSingle("id", targetRoleId);
-    let minRole = UserRoles.findSingle("id", UserRoleId.Editor);
+    let userRole = userRoles.findSingle("id", targetRoleId);
+    let minRole = userRoles.findSingle("id", UserRoleId.Editor);
 
     return (userRole && minRole) && (userRole.rank >= minRole.rank);
 }
 
-export default {
+export const PermissionUtil = {
     getPostPermission: getPostPermission,
     checkPermissionRoleRank: checkPermissionRoleRank
 }

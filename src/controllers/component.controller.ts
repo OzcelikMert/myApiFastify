@@ -6,16 +6,16 @@ import {
     ComponentSchemaGetManyDocument,
     ComponentSchemaPostDocument, ComponentSchemaPutOneDocument
 } from "../schemas/component.schema";
-import componentService from "../services/component.service";
-import logMiddleware from "../middlewares/log.middleware";
+import {ComponentService} from "../services/component.service";
+import {LogMiddleware} from "../middlewares/log.middleware";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaGetOneDocument;
 
-        serviceResult.data = await componentService.getOne({
+        serviceResult.data = await ComponentService.getOne({
             ...reqData.params,
             ...reqData.query,
         });
@@ -25,12 +25,12 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaGetManyDocument;
 
-        serviceResult.data = await componentService.getMany({
+        serviceResult.data = await ComponentService.getMany({
             ...reqData.query
         });
 
@@ -39,12 +39,12 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaPostDocument;
 
-        let insertData = await componentService.add({
+        let insertData = await ComponentService.add({
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString()
@@ -57,12 +57,12 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaPutOneDocument;
 
-        serviceResult.data = await componentService.updateOne({
+        serviceResult.data = await ComponentService.updateOne({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString()
@@ -73,12 +73,12 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaDeleteManyDocument;
 
-        serviceResult.data = await componentService.deleteMany({
+        serviceResult.data = await ComponentService.deleteMany({
             ...reqData.body
         });
 

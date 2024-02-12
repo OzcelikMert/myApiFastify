@@ -1,3 +1,3 @@
-export const UserObjectIdKeys = [
+export const userObjectIdKeys = [
     "_id"
 ]

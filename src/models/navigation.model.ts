@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
-import userModel from "./user.model";
+import {userModel} from "./user.model";
 import {StatusId} from "../constants/status";
-import languageModel from "./language.model";
+import {languageModel} from "./language.model";
 import {INavigationContentModel, INavigationModel} from "../types/models/navigation.model";
 
 const schemaContent = new mongoose.Schema<INavigationContentModel>(
@@ -24,4 +24,4 @@ const schema = new mongoose.Schema<INavigationModel>(
     {timestamps: true}
 ).index({statusId: 1, authorId: 1});
 
-export default mongoose.model<INavigationModel, mongoose.Model<INavigationModel>>("navigations", schema)
+export const navigationModel = mongoose.model<INavigationModel, mongoose.Model<INavigationModel>>("navigations", schema)

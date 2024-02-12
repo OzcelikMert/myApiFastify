@@ -1,7 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
-import subscriberService from "../services/subscriber.service";
-import logMiddleware from "../middlewares/log.middleware";
+import {SubscriberService} from "../services/subscriber.service";
+import {LogMiddleware} from "../middlewares/log.middleware";
 import {
     SubscriberSchemaDeleteOneDocument, SubscriberSchemaDeleteManyDocument,
     SubscriberSchemaGetOneDocument,
@@ -10,12 +10,12 @@ import {
 } from "../schemas/subscriber.schema";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaGetOneDocument;
 
-        serviceResult.data = await subscriberService.getOne({
+        serviceResult.data = await SubscriberService.getOne({
             ...reqData.params
         })
 
@@ -24,12 +24,12 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaGetManyDocument;
 
-        serviceResult.data = await subscriberService.getMany({
+        serviceResult.data = await SubscriberService.getMany({
             ...reqData.query
         })
 
@@ -38,12 +38,12 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getOneWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaGetOneWithEmailDocument;
 
-        serviceResult.data = await subscriberService.getOne({
+        serviceResult.data = await SubscriberService.getOne({
             ...reqData.params
         })
 
@@ -52,12 +52,12 @@ const getOneWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaPostDocument;
 
-        let insertData = await subscriberService.add({
+        let insertData = await SubscriberService.add({
             ...reqData.body
         });
 
@@ -68,12 +68,12 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaDeleteOneDocument;
 
-        serviceResult.data = await subscriberService.deleteOne({
+        serviceResult.data = await SubscriberService.deleteOne({
             ...reqData.params
         })
 
@@ -82,12 +82,12 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const deleteOneWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaDeleteOneWithEmailDocument;
 
-        serviceResult.data = await subscriberService.deleteOne({
+        serviceResult.data = await SubscriberService.deleteOne({
             ...reqData.params
         })
 
@@ -96,12 +96,12 @@ const deleteOneWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as SubscriberSchemaDeleteManyDocument;
 
-        serviceResult.data = await subscriberService.deleteMany({
+        serviceResult.data = await SubscriberService.deleteMany({
             ...reqData.body
         })
 

@@ -104,7 +104,7 @@ export type PostTermSchemaPutManyStatusDocument = z.infer<typeof putManyStatusSc
 export type PostTermSchemaPutOneRankDocument = z.infer<typeof putOneRankSchema>;
 export type PostTermSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
-export default {
+export const PostTermSchema = {
     getOne: getOneSchema,
     getMany: getManySchema,
     getOneWithURL: getOneWithURLSchema,

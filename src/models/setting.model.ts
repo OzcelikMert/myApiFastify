@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import languageModel from "./language.model";
+import {languageModel} from "./language.model";
 import {
     ISettingContactModel,
     ISettingContactFormModel,
@@ -92,4 +92,4 @@ const schema = new mongoose.Schema<ISettingModel>(
     {timestamps: true}
 );
 
-export default mongoose.model<ISettingModel, mongoose.Model<ISettingModel>>("settings", schema)
+export const settingModel = mongoose.model<ISettingModel, mongoose.Model<ISettingModel>>("settings", schema)

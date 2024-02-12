@@ -2,14 +2,14 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import logService from "../services/log.service";
+import {LogService} from "../services/log.service";
 
 const error = async (req: FastifyRequest, reply: FastifyReply, func: () => Promise<void>) => {
     try {
         await func();
     }catch (e: any) {
         console.log(e);
-        await logService.add({
+        await LogService.add({
             url: req.originalUrl,
             ip: req.ip,
             method: req.method,
@@ -27,6 +27,6 @@ const error = async (req: FastifyRequest, reply: FastifyReply, func: () => Promi
     }
 }
 
-export default {
+export const LogMiddleware = {
     error: error
 }

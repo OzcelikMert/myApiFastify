@@ -20,7 +20,7 @@ const getPostSchema = object({
 export type SitemapSchemaGetPostTermDocument = z.infer<typeof getPostTermSchema>;
 export type SitemapSchemaGetPostDocument = z.infer<typeof getPostSchema>;
 
-export default {
+export const SitemapSchema = {
     getPostTerm: getPostTermSchema,
     getPost: getPostSchema
 };

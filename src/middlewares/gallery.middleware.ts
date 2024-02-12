@@ -2,21 +2,21 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import logMiddleware from "./log.middleware";
+import {LogMiddleware} from "./log.middleware";
 import {UserRoleId} from "../constants/userRoles";
-import galleryService from "../services/gallery.service";
+import {GalleryService} from "../services/gallery.service";
 import {GallerySchemaDeleteManyDocument} from "../schemas/gallery.schema";
-import permissionUtil from "../utils/permission.util";
+import {PermissionUtil} from "../utils/permission.util";
 
 const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as GallerySchemaDeleteManyDocument;
 
-        if (!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
-            let gallery = await galleryService.getMany({
-                name: reqData.body.name
+        if (!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
+            let gallery = await GalleryService.getMany({
+                name: reqData.body._id
             });
 
             if (gallery) {
@@ -37,6 +37,6 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const GalleryMiddleware = {
     checkManyIsAuthor: checkManyIsAuthor,
 };

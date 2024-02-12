@@ -1,20 +1,20 @@
 import { FastifyInstance } from 'fastify';
-import subscriberSchema from "../../schemas/subscriber.schema";
+import {SubscriberSchema} from "../../schemas/subscriber.schema";
 import {SubscriberController} from "../../controllers/subscriber.controller";
-import subscriberMiddleware from "../../middlewares/subscriber.middleware";
-import requestMiddleware from "../../middlewares/validates/request.middleware";
-import sessionMiddleware from "../../middlewares/validates/sessionAuth.middleware";
-import permissionMiddleware from "../../middlewares/validates/permission.middleware";
+import {SubscribeMiddleware} from "../../middlewares/subscriber.middleware";
+import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
+import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
+import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
 import {SubscriberEndPoint} from "../../constants/endPoints/subscriber.endPoint";
 import {SubscriberEndPointPermission} from "../../constants/endPointPermissions/subscriber.endPoint.permission";
 
-export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(SubscriberEndPoint.GET, { preHandler: [requestMiddleware.check(subscriberSchema.getMany), sessionMiddleware.check, permissionMiddleware.check(SubscriberEndPointPermission.GET)] }, SubscriberController.getMany);
-    fastify.get(SubscriberEndPoint.GET_WITH_EMAIL, { preHandler: [requestMiddleware.check(subscriberSchema.getOneWithEmail)] }, SubscriberController.getOneWithEmail);
-    fastify.get(SubscriberEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(subscriberSchema.getOne), sessionMiddleware.check] }, SubscriberController.getOne);
-    fastify.post(SubscriberEndPoint.ADD, { preHandler: [requestMiddleware.check(subscriberSchema.post), subscriberMiddleware.checkOne(true)] }, SubscriberController.add);
-    fastify.delete(SubscriberEndPoint.DELETE, { preHandler: [requestMiddleware.check(subscriberSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check(SubscriberEndPointPermission.DELETE), subscriberMiddleware.checkMany]}, SubscriberController.deleteMany);
-    fastify.delete(SubscriberEndPoint.DELETE_WITH_EMAIL, { preHandler: [requestMiddleware.check(subscriberSchema.deleteOneWithEmail), subscriberMiddleware.checkOne(false)] }, SubscriberController.deleteOneWithEmail);
-    fastify.delete(SubscriberEndPoint.DELETE_WITH_ID, { preHandler: [requestMiddleware.check(subscriberSchema.deleteOne), subscriberMiddleware.checkOne(false)] }, SubscriberController.deleteOne);
+export const subscriberRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
+    fastify.get(SubscriberEndPoint.GET, { preHandler: [RequestMiddleware.check(SubscriberSchema.getMany), SessionAuthMiddleware.check, PermissionMiddleware.check(SubscriberEndPointPermission.GET)] }, SubscriberController.getMany);
+    fastify.get(SubscriberEndPoint.GET_WITH_EMAIL, { preHandler: [RequestMiddleware.check(SubscriberSchema.getOneWithEmail)] }, SubscriberController.getOneWithEmail);
+    fastify.get(SubscriberEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(SubscriberSchema.getOne), SessionAuthMiddleware.check] }, SubscriberController.getOne);
+    fastify.post(SubscriberEndPoint.ADD, { preHandler: [RequestMiddleware.check(SubscriberSchema.post), SubscribeMiddleware.checkOne(true)] }, SubscriberController.add);
+    fastify.delete(SubscriberEndPoint.DELETE, { preHandler: [RequestMiddleware.check(SubscriberSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(SubscriberEndPointPermission.DELETE), SubscribeMiddleware.checkMany]}, SubscriberController.deleteMany);
+    fastify.delete(SubscriberEndPoint.DELETE_WITH_EMAIL, { preHandler: [RequestMiddleware.check(SubscriberSchema.deleteOneWithEmail), SubscribeMiddleware.checkOne(false)] }, SubscriberController.deleteOneWithEmail);
+    fastify.delete(SubscriberEndPoint.DELETE_WITH_ID, { preHandler: [RequestMiddleware.check(SubscriberSchema.deleteOne), SubscribeMiddleware.checkOne(false)] }, SubscriberController.deleteOne);
     done();
 }

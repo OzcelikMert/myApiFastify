@@ -1,7 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
-import postService from "../services/post.service";
-import logMiddleware from "../middlewares/log.middleware";
+import {PostService} from "../services/post.service";
+import {LogMiddleware} from "../middlewares/log.middleware";
 import {
     PostSchemaDeleteManyDocument,
     PostSchemaGetCountDocument,
@@ -13,19 +13,19 @@ import {
     PostSchemaPutOneRankDocument,
     PostSchemaPutOneViewDocument, PostSchemaGetOneWithURLDocument
 } from "../schemas/post.schema";
-import permissionUtil from "../utils/permission.util";
+import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaGetOneDocument;
 
-        serviceResult.data = await postService.getOne({
+        serviceResult.data = await PostService.getOne({
             ...reqData.params,
             ...reqData.query,
-            ...(!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult);
@@ -33,14 +33,14 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaGetManyDocument;
 
-        serviceResult.data = await postService.getMany({
+        serviceResult.data = await PostService.getMany({
             ...reqData.query,
-            ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult);
@@ -48,12 +48,12 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaGetOneWithURLDocument;
 
-        serviceResult.data = await postService.getOne({
+        serviceResult.data = await PostService.getOne({
             ...reqData.params,
             ...reqData.query
         });
@@ -63,12 +63,12 @@ const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getCount = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaGetCountDocument;
 
-        serviceResult.data = await postService.getCount({
+        serviceResult.data = await PostService.getCount({
             ...reqData.query
         });
 
@@ -77,12 +77,12 @@ const getCount = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPostDocument;
 
-        let insertData = await postService.add({
+        let insertData = await PostService.add({
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -96,12 +96,12 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPutOneDocument;
 
-        serviceResult.data = await postService.updateOne({
+        serviceResult.data = await PostService.updateOne({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -113,12 +113,12 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPutOneRankDocument;
 
-        serviceResult.data = await postService.updateOneRank({
+        serviceResult.data = await PostService.updateOneRank({
             ...reqData.body,
             ...reqData.params,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -129,12 +129,12 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOneView = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPutOneViewDocument;
 
-        serviceResult.data = await postService.updateOneView({
+        serviceResult.data = await PostService.updateOneView({
             ...reqData.params,
             ...reqData.body
         });
@@ -144,12 +144,12 @@ const updateOneView = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaPutManyStatusDocument;
 
-        serviceResult.data = await postService.updateManyStatus({
+        serviceResult.data = await PostService.updateManyStatus({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
@@ -159,12 +159,12 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostSchemaDeleteManyDocument;
 
-        serviceResult.data = await postService.deleteMany({
+        serviceResult.data = await PostService.deleteMany({
             ...reqData.body
         });
 

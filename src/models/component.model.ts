@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import {IComponentModel, IComponentTypeContentModel, IComponentTypeModel} from "../types/models/component.model";
-import languageModel from "./language.model";
-import userModel from "./user.model";
+import {languageModel} from "./language.model";
+import {userModel} from "./user.model";
 import {ComponentInputTypeId} from "../constants/componentInputTypes";
 
 const schemaTypeContent = new mongoose.Schema<IComponentTypeContentModel>(
@@ -34,4 +34,4 @@ const schema = new mongoose.Schema<IComponentModel>(
     {timestamps: true}
 ).index({authorId: 1});
 
-export default mongoose.model<IComponentModel, mongoose.Model<IComponentModel>>("components", schema)
+export const componentModel = mongoose.model<IComponentModel, mongoose.Model<IComponentModel>>("components", schema)

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import userModel from "./user.model";
+import {userModel} from "./user.model";
 import {UserRoleId} from "../constants/userRoles";
 import {ISessionAuthModel, ISessionAuthUserModel} from "../types/models/sessionAuth.model";
 
@@ -23,4 +23,4 @@ const schema = new mongoose.Schema<ISessionAuthModel>(
     {timestamps: true}
 )
 
-export default mongoose.model<ISessionAuthModel, mongoose.Model<ISessionAuthModel>>("sessionAuth", schema);
+export const sessionAuthModel = mongoose.model<ISessionAuthModel, mongoose.Model<ISessionAuthModel>>("sessionAuth", schema);

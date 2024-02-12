@@ -1,4 +1,4 @@
-export const SettingObjectIdKeys = [
+export const settingObjectIdKeys = [
     "_id",
     "defaultLangId",
     "langId"

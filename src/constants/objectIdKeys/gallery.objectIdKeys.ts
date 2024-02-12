@@ -1,3 +1,3 @@
-export const GalleryObjectIdKeys = [
+export const galleryObjectIdKeys = [
     "_id",
 ]

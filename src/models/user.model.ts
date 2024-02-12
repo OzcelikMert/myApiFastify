@@ -24,4 +24,4 @@ const schema = new mongoose.Schema<IUserModel>(
     {timestamps: true}
 ).index({roleId: 1, statusId: 1});
 
-export default mongoose.model<IUserModel, mongoose.Model<IUserModel>>("users", schema)
+export const userModel = mongoose.model<IUserModel, mongoose.Model<IUserModel>>("users", schema)

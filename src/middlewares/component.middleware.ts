@@ -2,17 +2,17 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import componentService from "../services/component.service";
-import logMiddleware from "./log.middleware";
+import {ComponentService} from "../services/component.service";
+import {LogMiddleware} from "./log.middleware";
 import {ComponentSchemaDeleteManyDocument, ComponentSchemaPutOneDocument} from "../schemas/component.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaPutOneDocument;
 
-        let resData = await componentService.getOne({_id: reqData.params._id});
+        let resData = await ComponentService.getOne({_id: reqData.params._id});
 
         if (!resData) {
             serviceResult.status = false;
@@ -27,12 +27,12 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as ComponentSchemaDeleteManyDocument;
 
-        let resData = await componentService.getMany({_id: reqData.body._id});
+        let resData = await ComponentService.getMany({_id: reqData.body._id});
 
         if (
             resData.length == 0 ||
@@ -49,7 +49,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const ComponentMiddleware = {
     checkOne: checkOne,
     checkMany: checkMany
 };

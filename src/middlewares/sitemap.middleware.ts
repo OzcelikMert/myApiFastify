@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
-import logMiddleware from "./log.middleware";
+import {LogMiddleware} from "./log.middleware";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         if (!serviceResult.status) {
@@ -12,6 +12,6 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const SitemapMiddleware = {
     check: check,
 };

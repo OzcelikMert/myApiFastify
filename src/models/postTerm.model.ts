@@ -2,8 +2,8 @@ import * as mongoose from "mongoose";
 import {StatusId} from "../constants/status";
 import {PostTypeId} from "../constants/postTypes";
 import {PostTermTypeId} from "../constants/postTermTypes";
-import userModel from "./user.model";
-import languageModel from "./language.model";
+import {userModel} from "./user.model";
+import {languageModel} from "./language.model";
 import {IPostTermContentModel, IPostTermModel} from "../types/models/postTerm.model";
 
 const schemaContent = new mongoose.Schema<IPostTermContentModel>(
@@ -31,4 +31,4 @@ const schema = new mongoose.Schema<IPostTermModel>(
     {timestamps: true}
 ).index({typeId: 1, postTypeId: 1, statusId: 1, authorId: 1});
 
-export default mongoose.model<IPostTermModel, mongoose.Model<IPostTermModel>>("postTerms", schema)
+export const postTermModel = mongoose.model<IPostTermModel, mongoose.Model<IPostTermModel>>("postTerms", schema)

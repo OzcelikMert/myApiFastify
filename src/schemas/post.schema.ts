@@ -204,7 +204,7 @@ export type PostSchemaPutOneRankDocument = z.infer<typeof putOneRankSchema>;
 export type PostSchemaPutOneViewDocument = z.infer<typeof putOneViewSchema>;
 export type PostSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
-export default {
+export const PostSchema = {
     getOne: getOneSchema,
     getMany: getManySchema,
     getOneWithURL: getOneWithURLSchema,

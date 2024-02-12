@@ -1,4 +1,4 @@
-export const NavigationObjectIdKeys = [
+export const navigationObjectIdKeys = [
     "_id",
     "mainId",
     "authorId",

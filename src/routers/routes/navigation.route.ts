@@ -1,20 +1,20 @@
 import { FastifyInstance } from 'fastify';
-import navigationSchema from "../../schemas/navigation.schema";
+import {NavigationSchema} from "../../schemas/navigation.schema";
 import {NavigationController} from "../../controllers/navigation.controller";
-import navigationMiddleware from "../../middlewares/navigation.middleware";
-import permissionMiddleware from "../../middlewares/validates/permission.middleware";
-import sessionMiddleware from "../../middlewares/validates/sessionAuth.middleware";
-import requestMiddleware from "../../middlewares/validates/request.middleware";
+import {NavigationMiddleware} from "../../middlewares/navigation.middleware";
+import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
+import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
+import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
 import {NavigationEndPoint} from "../../constants/endPoints/navigation.endPoint";
 import {NavigationEndPointPermission} from "../../constants/endPointPermissions/navigation.endPoint.permission";
 
-export default function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(NavigationEndPoint.GET, { preHandler: [requestMiddleware.check(navigationSchema.getMany)] }, NavigationController.getMany);
-    fastify.get(NavigationEndPoint.GET_WITH_ID, { preHandler: [requestMiddleware.check(navigationSchema.getOne)] }, NavigationController.getOne);
-    fastify.post(NavigationEndPoint.ADD, { preHandler: [requestMiddleware.check(navigationSchema.post), sessionMiddleware.check, permissionMiddleware.check(NavigationEndPointPermission.ADD)] }, NavigationController.add);
-    fastify.put(NavigationEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [requestMiddleware.check(navigationSchema.putOneRank), sessionMiddleware.check, permissionMiddleware.check(NavigationEndPointPermission.UPDATE), navigationMiddleware.checkOne] }, NavigationController.updateOneRank);
-    fastify.put(NavigationEndPoint.UPDATE_STATUS, { preHandler: [requestMiddleware.check(navigationSchema.putManyStatus), sessionMiddleware.check, permissionMiddleware.check(NavigationEndPointPermission.UPDATE), navigationMiddleware.checkMany] }, NavigationController.updateManyStatus);
-    fastify.put(NavigationEndPoint.UPDATE_WITH_ID, { preHandler: [requestMiddleware.check(navigationSchema.putOne), sessionMiddleware.check, permissionMiddleware.check(NavigationEndPointPermission.UPDATE), navigationMiddleware.checkOne] }, NavigationController.updateOne);
-    fastify.delete(NavigationEndPoint.DELETE, { preHandler: [requestMiddleware.check(navigationSchema.deleteMany), sessionMiddleware.check, permissionMiddleware.check(NavigationEndPointPermission.DELETE), navigationMiddleware.checkMany] }, NavigationController.deleteMany);
+export const navigationRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
+    fastify.get(NavigationEndPoint.GET, { preHandler: [RequestMiddleware.check(NavigationSchema.getMany)] }, NavigationController.getMany);
+    fastify.get(NavigationEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(NavigationSchema.getOne)] }, NavigationController.getOne);
+    fastify.post(NavigationEndPoint.ADD, { preHandler: [RequestMiddleware.check(NavigationSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(NavigationEndPointPermission.ADD)] }, NavigationController.add);
+    fastify.put(NavigationEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [RequestMiddleware.check(NavigationSchema.putOneRank), SessionAuthMiddleware.check, PermissionMiddleware.check(NavigationEndPointPermission.UPDATE), NavigationMiddleware.checkOne] }, NavigationController.updateOneRank);
+    fastify.put(NavigationEndPoint.UPDATE_STATUS, { preHandler: [RequestMiddleware.check(NavigationSchema.putManyStatus), SessionAuthMiddleware.check, PermissionMiddleware.check(NavigationEndPointPermission.UPDATE), NavigationMiddleware.checkMany] }, NavigationController.updateManyStatus);
+    fastify.put(NavigationEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(NavigationSchema.putOne), SessionAuthMiddleware.check, PermissionMiddleware.check(NavigationEndPointPermission.UPDATE), NavigationMiddleware.checkOne] }, NavigationController.updateOne);
+    fastify.delete(NavigationEndPoint.DELETE, { preHandler: [RequestMiddleware.check(NavigationSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(NavigationEndPointPermission.DELETE), NavigationMiddleware.checkMany] }, NavigationController.deleteMany);
     done();
 }

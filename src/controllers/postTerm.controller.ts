@@ -9,21 +9,21 @@ import {
     PostTermSchemaPutManyStatusDocument,
     PostTermSchemaPutOneRankDocument, PostTermSchemaGetOneWithURLDocument
 } from "../schemas/postTerm.schema";
-import postTermService from "../services/postTerm.service";
-import logMiddleware from "../middlewares/log.middleware";
-import permissionUtil from "../utils/permission.util";
+import {PostTermService} from "../services/postTerm.service";
+import {LogMiddleware} from "../middlewares/log.middleware";
+import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaGetOneDocument;
 
-        serviceResult.data = await postTermService.getOne({
+        serviceResult.data = await PostTermService.getOne({
             ...reqData.params,
             ...reqData.query,
-            ...(!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -31,14 +31,14 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaGetManyDocument;
 
-        serviceResult.data = await postTermService.getMany({
+        serviceResult.data = await PostTermService.getMany({
             ...reqData.query,
-            ...(req.isFromAdminPanel && !permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -46,12 +46,12 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaGetOneWithURLDocument;
 
-        serviceResult.data = await postTermService.getOne({
+        serviceResult.data = await PostTermService.getOne({
             ...reqData.params,
             ...reqData.query
         });
@@ -61,12 +61,12 @@ const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaPostDocument;
 
-        let insertData = await postTermService.add({
+        let insertData = await PostTermService.add({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
             authorId: req.sessionAuth!.user!.userId.toString(),
@@ -79,12 +79,12 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaPutOneDocument;
 
-        serviceResult.data = await postTermService.updateOne({
+        serviceResult.data = await PostTermService.updateOne({
             ...reqData.body,
             ...reqData.params,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -95,12 +95,12 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaPutOneRankDocument;
 
-        serviceResult.data = await postTermService.updateOneRank({
+        serviceResult.data = await PostTermService.updateOneRank({
             ...reqData.body,
             ...reqData.params,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -111,12 +111,12 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaPutManyStatusDocument;
 
-        serviceResult.data = await postTermService.updateManyStatus({
+        serviceResult.data = await PostTermService.updateManyStatus({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
@@ -126,12 +126,12 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as PostTermSchemaDeleteManyDocument;
 
-        serviceResult.data = await postTermService.deleteMany({
+        serviceResult.data = await PostTermService.deleteMany({
             ...reqData.body
         });
 

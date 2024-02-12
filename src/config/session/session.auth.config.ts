@@ -1,6 +1,6 @@
 import config from "config";
 import mongoose from 'mongoose';
-import sessionAuthModel from "../../models/sessionAuth.model";
+import {sessionAuthModel} from "../../models/sessionAuth.model";
 import crypto from "crypto";
 
 const serverProtocol = config.get("serverProtocol") as string;

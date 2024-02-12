@@ -7,11 +7,11 @@ import https from "https";
 import sessionAuthConfig from "./session/session.auth.config";
 import {IConfig} from "../types/config";
 import dbConnect from "./db";
-import userService from "../services/user.service";
+import {UserService} from "../services/user.service";
 import {UserRoleId} from "../constants/userRoles";
 import {StatusId} from "../constants/status";
-import languageService from "../services/language.service";
-import settingService from "../services/setting.service";
+import {LanguageService} from "../services/language.service";
+import {SettingService} from "../services/setting.service";
 import * as path from "path"
 import {generate} from "generate-password";
 import chalk from "chalk";
@@ -123,11 +123,11 @@ class InitConfig {
     }
 
     private async checkSuperAdminUser() {
-        if (!(await userService.getOne({roleId: UserRoleId.SuperAdmin}))) {
+        if (!(await UserService.getOne({roleId: UserRoleId.SuperAdmin}))) {
             let password = generate({
                 length: 10
             })
-            await userService.add({
+            await UserService.add({
                 name: "Super Admin",
                 email: "admin@admin.com",
                 statusId: StatusId.Active,
@@ -142,8 +142,8 @@ class InitConfig {
     }
 
     private async checkLanguages() {
-        if (!(await languageService.getOne({}))) {
-            await languageService.add({
+        if (!(await LanguageService.getOne({}))) {
+            await LanguageService.add({
                 title: "English",
                 image: "gb.webp",
                 shortKey: "en",
@@ -157,10 +157,10 @@ class InitConfig {
     }
 
     private async checkSettings() {
-        let settings = await settingService.get({});
+        let settings = await SettingService.get({});
         if (!settings) {
-            let lang = await languageService.getOne({});
-            await settingService.add({
+            let lang = await LanguageService.getOne({});
+            await SettingService.add({
                 contactForms: [],
                 staticLanguages: [],
                 socialMedia: [],

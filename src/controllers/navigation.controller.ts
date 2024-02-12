@@ -1,7 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
-import logMiddleware from "../middlewares/log.middleware";
-import navigationService from "../services/navigation.service";
+import {LogMiddleware} from "../middlewares/log.middleware";
+import {NavigationService} from "../services/navigation.service";
 import {
     NavigationSchemaDeleteManyDocument,
     NavigationSchemaGetOneDocument,
@@ -13,12 +13,12 @@ import {
 } from "../schemas/navigation.schema";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaGetOneDocument;
 
-        serviceResult.data = await navigationService.getOne({
+        serviceResult.data = await NavigationService.getOne({
             ...reqData.params,
             ...reqData.query
         });
@@ -28,12 +28,12 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaGetManyDocument;
 
-        serviceResult.data = await navigationService.getMany({
+        serviceResult.data = await NavigationService.getMany({
             ...reqData.query
         });
 
@@ -42,12 +42,12 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPostDocument;
 
-        let insertData = await navigationService.add({
+        let insertData = await NavigationService.add({
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -60,12 +60,12 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPutOneDocument;
 
-        serviceResult.data = await navigationService.updateOne({
+        serviceResult.data = await NavigationService.updateOne({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -76,12 +76,12 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPutOneRankDocument;
 
-        serviceResult.data = await navigationService.updateOneRank({
+        serviceResult.data = await NavigationService.updateOneRank({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -92,12 +92,12 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaPutManyStatusDocument;
 
-        serviceResult.data = await navigationService.updateManyStatus({
+        serviceResult.data = await NavigationService.updateManyStatus({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString()
         });
@@ -107,12 +107,12 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as NavigationSchemaDeleteManyDocument;
 
-        serviceResult.data = await navigationService.deleteMany({
+        serviceResult.data = await NavigationService.deleteMany({
             ...reqData.body
         });
 

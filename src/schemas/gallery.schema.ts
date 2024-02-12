@@ -18,7 +18,7 @@ const deleteManySchema = object({
 export type GallerySchemaGetManyDocument = z.infer<typeof getManySchema>;
 export type GallerySchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
 
-export default {
+export const GallerySchema = {
     getMany: getManySchema,
     deleteMany: deleteManySchema
 };

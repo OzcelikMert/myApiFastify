@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import {Config} from "../../config";
-import logMiddleware from "../log.middleware";
+import {LogMiddleware} from "../log.middleware";
 
 const set = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let ip = req.ip;
         let date = new Date();
         let _id = (req.session && req.sessionAuth.data() && req.sessionAuth.user) ? req.sessionAuth.user.userId.toString() : "";
@@ -25,6 +25,6 @@ const set = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-export default {
+export const ViewInitMiddleware = {
     set: set
 };

@@ -9,9 +9,9 @@ import path from "path";
 import sharp from "sharp";
 import multer from "fastify-multer";
 import {GallerySchemaDeleteManyDocument, GallerySchemaGetManyDocument} from "../schemas/gallery.schema";
-import logMiddleware from "../middlewares/log.middleware";
-import galleryService from "../services/gallery.service";
-import permissionUtil from "../utils/permission.util";
+import {LogMiddleware} from "../middlewares/log.middleware";
+import {GalleryService} from "../services/gallery.service";
+import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 import {GalleryTypeId} from "../constants/galleryTypeId";
 
@@ -25,14 +25,14 @@ function getImageResult(name: string, stats: Stats) {
 }
 
 const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as GallerySchemaGetManyDocument;
 
-        let gallery = await galleryService.getMany({
+        let gallery = await GalleryService.getMany({
             ...reqData.query,
-            ...(!permissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         const fileType = [".jpg", ".png", ".webp", ".gif", ".jpeg"];
@@ -53,7 +53,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         function newName() {
@@ -101,14 +101,14 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                             });
                         })
 
-                        let insertedData = await galleryService.add({
+                        let insertedData = await GalleryService.add({
                             oldName: file.filename,
                             name: name,
                             authorId: req.sessionAuth.user!.userId,
                             typeId: GalleryTypeId.Image
                         });
 
-                        let galleryItem = await galleryService.getOne({
+                        let galleryItem = await GalleryService.getOne({
                             _id: insertedData._id.toString()
                         });
 
@@ -137,12 +137,12 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         const reqData = req as GallerySchemaDeleteManyDocument;
 
-        let galleryItems = await galleryService.getMany({
+        let galleryItems = await GalleryService.getMany({
             _id: reqData.body._id
         });
 
@@ -157,7 +157,7 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
             resolve(0);
         });
 
-        await galleryService.deleteMany({
+        await GalleryService.deleteMany({
             ...reqData.body
         });
 

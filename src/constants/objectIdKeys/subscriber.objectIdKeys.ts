@@ -1,3 +1,3 @@
-export const SubscriberObjectIdKeys = [
+export const subscriberObjectIdKeys = [
     "_id"
 ]

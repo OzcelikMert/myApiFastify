@@ -6,7 +6,7 @@ export enum UserRoleId {
     SuperAdmin
 }
 
-export const UserRoles = [
+export const userRoles = [
     {id: UserRoleId.User, rank: 1},
     {id: UserRoleId.Author, rank: 2},
     {id: UserRoleId.Editor, rank: 3},

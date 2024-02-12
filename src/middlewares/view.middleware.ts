@@ -2,13 +2,13 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import viewService from "../services/view.service";
+import {ViewService} from "../services/view.service";
 import Variable, {DateMask} from "../library/variable";
-import logMiddleware from "./log.middleware";
+import {LogMiddleware} from "./log.middleware";
 import {ViewSchemaPostDocument} from "../schemas/view.schema";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
         let reqData = req as ViewSchemaPostDocument;
@@ -19,7 +19,7 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
             dateEnd = new Date(new Date().getStringWithMask(DateMask.DATE));
         dateEnd.addDays(1);
 
-        let resData = await viewService.getOne({
+        let resData = await ViewService.getOne({
             ip: req.ip,
             url: url,
             dateStart: dateStart,
@@ -38,19 +38,19 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 const checkAndDeleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await logMiddleware.error(req, reply, async () => {
+    await LogMiddleware.error(req, reply, async () => {
         let dateEnd = new Date();
         dateEnd.addDays(-7);
 
-        let resData = await viewService.getOne({dateEnd: dateEnd});
+        let resData = await ViewService.getOne({dateEnd: dateEnd});
 
         if (resData) {
-            await viewService.deleteMany({dateEnd: dateEnd})
+            await ViewService.deleteMany({dateEnd: dateEnd})
         }
     });
 }
 
-export default {
+export const ViewMiddleware = {
     check: check,
     checkAndDeleteMany: checkAndDeleteMany
 };

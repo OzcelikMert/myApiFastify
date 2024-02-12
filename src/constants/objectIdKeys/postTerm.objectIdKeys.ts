@@ -1,4 +1,4 @@
-export const PostTermObjectIdKeys = [
+export const postTermObjectIdKeys = [
     "_id",
     "mainId",
     "authorId",
