@@ -3,7 +3,7 @@ import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import {
     ISubscriberDeleteManyParamService,
-    ISubscriberAddService,
+    ISubscriberAddParamService,
     ISubscriberGetManyParamService,
     ISubscriberGetResultService,
     ISubscriberGetOneParamService,
@@ -61,7 +61,7 @@ const getMany = async (params: ISubscriberGetManyParamService) => {
     return (await query.lean<ISubscriberGetResultService[]>().exec());
 }
 
-const add = async (params: ISubscriberAddService) => {
+const add = async (params: ISubscriberAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
 

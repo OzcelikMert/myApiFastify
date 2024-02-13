@@ -12,7 +12,7 @@ export interface ISubscriberGetManyParamService {
     email?: string[]
 }
 
-export type ISubscriberAddService = {} & Omit<ISubscriberModel, "_id">
+export type ISubscriberAddParamService = {} & Omit<ISubscriberModel, "_id">
 
 export interface ISubscriberDeleteOneParamService {
     email?: string
