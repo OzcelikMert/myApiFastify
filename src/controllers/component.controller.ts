@@ -1,10 +1,10 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {
-    ComponentSchemaDeleteManyDocument,
-    ComponentSchemaGetOneDocument,
-    ComponentSchemaGetManyDocument,
-    ComponentSchemaPostDocument, ComponentSchemaPutOneDocument
+    IComponentDeleteManySchema,
+    IComponentGetOneSchema,
+    IComponentGetManySchema,
+    IComponentPostSchema, IComponentPutOneSchema
 } from "../schemas/component.schema";
 import {ComponentService} from "../services/component.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -13,7 +13,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ComponentSchemaGetOneDocument;
+        let reqData = req as IComponentGetOneSchema;
 
         serviceResult.data = await ComponentService.getOne({
             ...reqData.params,
@@ -28,7 +28,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ComponentSchemaGetManyDocument;
+        let reqData = req as IComponentGetManySchema;
 
         serviceResult.data = await ComponentService.getMany({
             ...reqData.query
@@ -42,7 +42,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ComponentSchemaPostDocument;
+        let reqData = req as IComponentPostSchema;
 
         let insertData = await ComponentService.add({
             ...reqData.body,
@@ -60,7 +60,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ComponentSchemaPutOneDocument;
+        let reqData = req as IComponentPutOneSchema;
 
         serviceResult.data = await ComponentService.updateOne({
             ...reqData.params,
@@ -76,7 +76,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ComponentSchemaDeleteManyDocument;
+        let reqData = req as IComponentDeleteManySchema;
 
         serviceResult.data = await ComponentService.deleteMany({
             ...reqData.body

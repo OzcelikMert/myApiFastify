@@ -4,13 +4,13 @@ import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {SettingService} from "../services/setting.service";
 import {LogMiddleware} from "./log.middleware";
-import {MailerSchemaPostDocument} from "../schemas/mailer.schema";
+import {IMailerPostSchema} from "../schemas/mailer.schema";
 
 const checkContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as MailerSchemaPostDocument;
+        let reqData = req as IMailerPostSchema;
 
         let setting = (await SettingService.get({}));
 

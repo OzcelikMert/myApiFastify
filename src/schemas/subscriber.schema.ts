@@ -43,13 +43,13 @@ const deleteManySchema = object({
     })
 });
 
-export type SubscriberSchemaGetOneDocument = z.infer<typeof getOneSchema>;
-export type SubscriberSchemaGetManyDocument = z.infer<typeof getManySchema>;
-export type SubscriberSchemaGetOneWithEmailDocument = z.infer<typeof getOneWithEmailSchema>;
-export type SubscriberSchemaPostDocument = z.infer<typeof postSchema>;
-export type SubscriberSchemaDeleteOneDocument = z.infer<typeof deleteOneSchema>;
-export type SubscriberSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
-export type SubscriberSchemaDeleteOneWithEmailDocument = z.infer<typeof deleteOneWithEmailSchema>;
+export type ISubscriberGetOneSchema = z.infer<typeof getOneSchema>;
+export type ISubscriberGetManySchema = z.infer<typeof getManySchema>;
+export type ISubscriberGetOneWithEmailSchema = z.infer<typeof getOneWithEmailSchema>;
+export type ISubscriberPostSchema = z.infer<typeof postSchema>;
+export type ISubscriberDeleteOneSchema = z.infer<typeof deleteOneSchema>;
+export type ISubscriberDeleteManySchema = z.infer<typeof deleteManySchema>;
+export type ISubscriberDeleteOneWithEmailSchema = z.infer<typeof deleteOneWithEmailSchema>;
 
 export const SubscriberSchema = {
     getOne: getOneSchema,

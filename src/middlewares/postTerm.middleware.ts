@@ -4,7 +4,7 @@ import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {PostTermService} from "../services/postTerm.service";
 import {LogMiddleware} from "./log.middleware";
-import {PostTermSchemaDeleteManyDocument, PostTermSchemaPutOneDocument} from "../schemas/postTerm.schema";
+import {IPostTermDeleteManySchema, IPostTermPutOneSchema} from "../schemas/postTerm.schema";
 import {UserRoleId} from "../constants/userRoles";
 import {PermissionUtil} from "../utils/permission.util";
 
@@ -12,7 +12,7 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaPutOneDocument;
+        let reqData = req as IPostTermPutOneSchema;
 
         let resData = await PostTermService.getOne({
             _id: reqData.params._id,
@@ -36,7 +36,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaDeleteManyDocument;
+        let reqData = req as IPostTermDeleteManySchema;
 
         let resData = await PostTermService.getMany({
             _id: reqData.body._id,
@@ -63,7 +63,7 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaPutOneDocument;
+        let reqData = req as IPostTermPutOneSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
             let postTerm = await PostTermService.getOne({
@@ -91,7 +91,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaDeleteManyDocument;
+        let reqData = req as IPostTermDeleteManySchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
             let postTerms = await PostTermService.getMany({

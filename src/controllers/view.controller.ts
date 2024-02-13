@@ -4,7 +4,7 @@ import {lookup} from "geoip-lite";
 import {ViewService} from "../services/view.service";
 import {Config} from "../config";
 import {LogMiddleware} from "../middlewares/log.middleware";
-import {ViewSchemaPostDocument} from "../schemas/view.schema";
+import {IViewPostSchema} from "../schemas/view.schema";
 import Variable from "../library/variable";
 
 const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -57,7 +57,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as ViewSchemaPostDocument;
+        const reqData = req as IViewPostSchema;
 
         let ip = req.ip;
         let ipDetail = lookup(req.ip);

@@ -7,7 +7,7 @@ const postSchema = object({
     })
 });
 
-export type ViewSchemaPostDocument = z.infer<typeof postSchema>;
+export type IViewPostSchema = z.infer<typeof postSchema>;
 
 export const ViewSchema = {
     post: postSchema

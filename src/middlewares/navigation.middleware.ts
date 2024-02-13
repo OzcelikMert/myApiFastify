@@ -4,13 +4,13 @@ import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {LogMiddleware} from "./log.middleware";
 import {NavigationService} from "../services/navigation.service";
-import {NavigationSchemaPutOneDocument, NavigationSchemaPutManyStatusDocument} from "../schemas/navigation.schema";
+import {INavigationPutOneSchema, INavigationPutManyStatusSchema} from "../schemas/navigation.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaPutOneDocument;
+        let reqData = req as INavigationPutOneSchema;
 
         let resData = await NavigationService.getOne({_id: reqData.params._id});
 
@@ -30,7 +30,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaPutManyStatusDocument;
+        let reqData = req as INavigationPutManyStatusSchema;
 
         let resData = await NavigationService.getMany({_id: reqData.body._id});
 

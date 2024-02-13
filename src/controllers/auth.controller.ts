@@ -1,4 +1,4 @@
-import { AuthSchemaPostDocument } from "../schemas/auth.schema";
+import { IAuthPostSchema } from "../schemas/auth.schema";
 import {UserService} from "../services/user.service";
 import {StatusId} from "../constants/status";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -21,7 +21,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as AuthSchemaPostDocument;
+        let reqData = req as IAuthPostSchema;
 
         let user = await UserService.getOne({
             ...reqData.body

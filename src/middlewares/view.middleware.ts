@@ -5,13 +5,13 @@ import {ApiStatusCodes} from "../library/api/statusCodes";
 import {ViewService} from "../services/view.service";
 import Variable, {DateMask} from "../library/variable";
 import {LogMiddleware} from "./log.middleware";
-import {ViewSchemaPostDocument} from "../schemas/view.schema";
+import {IViewPostSchema} from "../schemas/view.schema";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ViewSchemaPostDocument;
+        let reqData = req as IViewPostSchema;
 
         let url = Variable.isEmpty(reqData.body.url) ? "/" : reqData.body.url;
 

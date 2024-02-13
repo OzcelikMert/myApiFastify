@@ -8,7 +8,7 @@ import {Config} from "../config";
 import path from "path";
 import sharp from "sharp";
 import multer from "fastify-multer";
-import {GallerySchemaDeleteManyDocument, GallerySchemaGetManyDocument} from "../schemas/gallery.schema";
+import {IGalleryDeleteManySchema, IGalleryGetManySchema} from "../schemas/gallery.schema";
 import {LogMiddleware} from "../middlewares/log.middleware";
 import {GalleryService} from "../services/gallery.service";
 import {PermissionUtil} from "../utils/permission.util";
@@ -28,7 +28,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as GallerySchemaGetManyDocument;
+        const reqData = req as IGalleryGetManySchema;
 
         let gallery = await GalleryService.getMany({
             ...reqData.query,
@@ -140,7 +140,7 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as GallerySchemaDeleteManyDocument;
+        const reqData = req as IGalleryDeleteManySchema;
 
         let galleryItems = await GalleryService.getMany({
             _id: reqData.body._id

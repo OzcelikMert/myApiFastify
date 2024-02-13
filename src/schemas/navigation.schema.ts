@@ -64,13 +64,13 @@ const deleteManySchema = object({
     })
 });
 
-export type NavigationSchemaGetOneDocument = z.infer<typeof getOneSchema>;
-export type NavigationSchemaGetManyDocument = z.infer<typeof getManySchema>;
-export type NavigationSchemaPostDocument = z.infer<typeof postSchema>;
-export type NavigationSchemaPutOneDocument = z.infer<typeof putOneSchema>;
-export type NavigationSchemaPutManyStatusDocument = z.infer<typeof putManyStatusSchema>;
-export type NavigationSchemaPutOneRankDocument = z.infer<typeof putOneRankSchema>;
-export type NavigationSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
+export type INavigationGetOneSchema = z.infer<typeof getOneSchema>;
+export type INavigationGetManySchema = z.infer<typeof getManySchema>;
+export type INavigationPostSchema = z.infer<typeof postSchema>;
+export type INavigationPutOneSchema = z.infer<typeof putOneSchema>;
+export type INavigationPutManyStatusSchema = z.infer<typeof putManyStatusSchema>;
+export type INavigationPutOneRankSchema = z.infer<typeof putOneRankSchema>;
+export type INavigationDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const NavigationSchema = {
     getOne: getOneSchema,

@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import {MailerSchemaPostDocument} from "../schemas/mailer.schema";
+import {IMailerPostSchema} from "../schemas/mailer.schema";
 import * as NodeMailer from "nodemailer";
 import {SettingService} from "../services/setting.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
@@ -12,7 +12,7 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as MailerSchemaPostDocument;
+        let reqData = req as IMailerPostSchema;
 
         let setting = (await SettingService.get({}, true));
 

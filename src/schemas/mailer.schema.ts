@@ -9,7 +9,7 @@ const postSchema = object({
     })
 });
 
-export type MailerSchemaPostDocument = z.infer<typeof postSchema>;
+export type IMailerPostSchema = z.infer<typeof postSchema>;
 
 export const MailerSchema = {
     post: postSchema

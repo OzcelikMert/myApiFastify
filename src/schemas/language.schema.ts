@@ -47,11 +47,11 @@ const putOneRankSchema = object({
     })
 });
 
-export type LanguageSchemaGetOneDocument = z.infer<typeof getOneSchema>;
-export type LanguageSchemaGetManyDocument = z.infer<typeof getManySchema>;
-export type LanguageSchemaPostDocument = z.infer<typeof postSchema>;
-export type LanguageSchemaPutOneDocument = z.infer<typeof putOneSchema>;
-export type LanguageSchemaPutOneRankDocument = z.infer<typeof putOneRankSchema>;
+export type ILanguageGetOneSchema = z.infer<typeof getOneSchema>;
+export type ILanguageGetManySchema = z.infer<typeof getManySchema>;
+export type ILanguagePostSchema = z.infer<typeof postSchema>;
+export type ILanguagePutOneSchema = z.infer<typeof putOneSchema>;
+export type ILanguagePutOneRankSchema = z.infer<typeof putOneRankSchema>;
 
 export const LanguageSchema = {
     getOne: getOneSchema,

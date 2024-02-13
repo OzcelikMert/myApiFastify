@@ -1,14 +1,14 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {
-    UserSchemaDeleteOneDocument,
-    UserSchemaGetOneDocument,
-    UserSchemaGetManyDocument,
-    UserSchemaPostDocument,
-    UserSchemaPutOneDocument,
-    UserSchemaPutPasswordDocument,
-    UserSchemaPutProfileDocument,
-    UserSchemaGetOneWithURLDocument
+    IUserDeleteOneSchema,
+    IUserGetOneSchema,
+    IUserGetManySchema,
+    IUserPostSchema,
+    IUserPutOneSchema,
+    IUserPutPasswordSchema,
+    IUserPutProfileSchema,
+    IUserGetOneWithURLSchema
 } from "../schemas/user.schema";
 import {UserService} from "../services/user.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -17,7 +17,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as UserSchemaGetOneDocument;
+        const reqData = req as IUserGetOneSchema;
 
         serviceResult.data = await UserService.getOne({
             ...reqData.params,
@@ -32,7 +32,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as UserSchemaGetManyDocument;
+        const reqData = req as IUserGetManySchema;
 
         serviceResult.data = await UserService.getMany({
             ...reqData.query,
@@ -46,7 +46,7 @@ const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as UserSchemaGetOneWithURLDocument;
+        const reqData = req as IUserGetOneWithURLSchema;
 
         serviceResult.data = await UserService.getOne({
             ...reqData.params,
@@ -61,7 +61,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as UserSchemaPostDocument;
+        const reqData = req as IUserPostSchema;
 
         let insertData = await UserService.add({
             ...reqData.body,
@@ -78,7 +78,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as UserSchemaPutOneDocument
+        const reqData = req as IUserPutOneSchema
 
         serviceResult.data = await UserService.updateOne({
             ...reqData.params,
@@ -94,7 +94,7 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as UserSchemaPutProfileDocument;
+        const reqData = req as IUserPutProfileSchema;
 
         serviceResult.data = await UserService.updateOne({
             ...reqData.body,
@@ -109,7 +109,7 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as UserSchemaPutPasswordDocument;
+        const reqData = req as IUserPutPasswordSchema;
 
         serviceResult.data = await UserService.updateOne({
             _id: req.sessionAuth!.user!.userId.toString(),
@@ -124,7 +124,7 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as UserSchemaDeleteOneDocument;
+        const reqData = req as IUserDeleteOneSchema;
 
         serviceResult.data = await UserService.deleteOne(reqData.params);
 

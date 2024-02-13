@@ -55,11 +55,11 @@ const deleteManySchema = object({
     })
 });
 
-export type ComponentSchemaGetOneDocument = z.infer<typeof getOneSchema>;
-export type ComponentSchemaGetManyDocument = z.infer<typeof getManySchema>;
-export type ComponentSchemaPostDocument = z.infer<typeof postSchema>;
-export type ComponentSchemaPutOneDocument = z.infer<typeof putOneSchema>;
-export type ComponentSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
+export type IComponentGetOneSchema = z.infer<typeof getOneSchema>;
+export type IComponentGetManySchema = z.infer<typeof getManySchema>;
+export type IComponentPostSchema = z.infer<typeof postSchema>;
+export type IComponentPutOneSchema = z.infer<typeof putOneSchema>;
+export type IComponentDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const ComponentSchema = {
     getOne: getOneSchema,

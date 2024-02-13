@@ -92,13 +92,13 @@ const putECommerceSchema = object({
     })
 });
 
-export type SettingSchemaGetDocument = z.infer<typeof getSchema>;
-export type SettingSchemaPutGeneralDocument = z.infer<typeof putGeneralSchema>;
-export type SettingSchemaPutSEODocument = z.infer<typeof putSeoSchema>;
-export type SettingSchemaPutContactFormDocument = z.infer<typeof putContactFormSchema>;
-export type SettingSchemaPutSocialMediaDocument = z.infer<typeof putSocialMediaSchema>;
-export type SettingSchemaPutStaticLanguageDocument = z.infer<typeof putStaticLanguageSchema>;
-export type SettingSchemaPutECommerceDocument = z.infer<typeof putECommerceSchema>;
+export type ISettingGetSchema = z.infer<typeof getSchema>;
+export type ISettingPutGeneralSchema = z.infer<typeof putGeneralSchema>;
+export type ISettingPutSEOSchema = z.infer<typeof putSeoSchema>;
+export type ISettingPutContactFormSchema = z.infer<typeof putContactFormSchema>;
+export type ISettingPutSocialMediaSchema = z.infer<typeof putSocialMediaSchema>;
+export type ISettingPutStaticLanguageSchema = z.infer<typeof putStaticLanguageSchema>;
+export type ISettingPutECommerceSchema = z.infer<typeof putECommerceSchema>;
 
 export const SettingSchema = {
     get: getSchema,

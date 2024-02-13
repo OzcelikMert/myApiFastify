@@ -5,15 +5,15 @@ import {ApiStatusCodes} from "../library/api/statusCodes";
 import {SubscriberService} from "../services/subscriber.service";
 import {LogMiddleware} from "./log.middleware";
 import {
-    SubscriberSchemaDeleteOneDocument,
-    SubscriberSchemaDeleteManyDocument
+    ISubscriberDeleteOneSchema,
+    ISubscriberDeleteManySchema
 } from "../schemas/subscriber.schema";
 
 const checkOne = (isThere: boolean) => async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as SubscriberSchemaDeleteOneDocument;
+        let reqData = req as ISubscriberDeleteOneSchema;
 
         let resData = await SubscriberService.getOne({
             ...reqData.params
@@ -35,7 +35,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as SubscriberSchemaDeleteManyDocument;
+        let reqData = req as ISubscriberDeleteManySchema;
 
         let resData = await SubscriberService.getMany({
             _id: reqData.body._id

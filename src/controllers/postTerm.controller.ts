@@ -1,13 +1,13 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {
-    PostTermSchemaDeleteManyDocument,
-    PostTermSchemaGetOneDocument,
-    PostTermSchemaGetManyDocument,
-    PostTermSchemaPostDocument,
-    PostTermSchemaPutOneDocument,
-    PostTermSchemaPutManyStatusDocument,
-    PostTermSchemaPutOneRankDocument, PostTermSchemaGetOneWithURLDocument
+    IPostTermDeleteManySchema,
+    IPostTermGetOneSchema,
+    IPostTermGetManySchema,
+    IPostTermPostSchema,
+    IPostTermPutOneSchema,
+    IPostTermPutManyStatusSchema,
+    IPostTermPutOneRankSchema, IPostTermGetOneWithURLSchema
 } from "../schemas/postTerm.schema";
 import {PostTermService} from "../services/postTerm.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -18,7 +18,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaGetOneDocument;
+        let reqData = req as IPostTermGetOneSchema;
 
         serviceResult.data = await PostTermService.getOne({
             ...reqData.params,
@@ -34,7 +34,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaGetManyDocument;
+        let reqData = req as IPostTermGetManySchema;
 
         serviceResult.data = await PostTermService.getMany({
             ...reqData.query,
@@ -49,7 +49,7 @@ const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaGetOneWithURLDocument;
+        let reqData = req as IPostTermGetOneWithURLSchema;
 
         serviceResult.data = await PostTermService.getOne({
             ...reqData.params,
@@ -64,7 +64,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaPostDocument;
+        let reqData = req as IPostTermPostSchema;
 
         let insertData = await PostTermService.add({
             ...reqData.body,
@@ -82,7 +82,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaPutOneDocument;
+        let reqData = req as IPostTermPutOneSchema;
 
         serviceResult.data = await PostTermService.updateOne({
             ...reqData.body,
@@ -98,7 +98,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaPutOneRankDocument;
+        let reqData = req as IPostTermPutOneRankSchema;
 
         serviceResult.data = await PostTermService.updateOneRank({
             ...reqData.body,
@@ -114,7 +114,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaPutManyStatusDocument;
+        let reqData = req as IPostTermPutManyStatusSchema;
 
         serviceResult.data = await PostTermService.updateManyStatus({
             ...reqData.body,
@@ -129,7 +129,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as PostTermSchemaDeleteManyDocument;
+        let reqData = req as IPostTermDeleteManySchema;
 
         serviceResult.data = await PostTermService.deleteMany({
             ...reqData.body

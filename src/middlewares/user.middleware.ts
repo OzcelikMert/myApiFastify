@@ -5,13 +5,13 @@ import {ApiStatusCodes} from "../library/api/statusCodes";
 import {UserService} from "../services/user.service";
 import {userRoles} from "../constants/userRoles";
 import {LogMiddleware} from "./log.middleware";
-import {UserSchemaPutOneDocument, UserSchemaPutPasswordDocument} from "../schemas/user.schema";
+import {IUserPutOneSchema, IUserPutPasswordSchema} from "../schemas/user.schema";
 
 const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as UserSchemaPutOneDocument;
+        let reqData = req as IUserPutOneSchema;
 
         let resData = await UserService.getOne({
             _id: reqData.params._id
@@ -33,7 +33,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as UserSchemaPutOneDocument;
+        let reqData = req as IUserPutOneSchema;
         let userRoleId = 0;
 
         if (reqData.body.roleId) {
@@ -73,7 +73,7 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as UserSchemaPutOneDocument;
+        let reqData = req as IUserPutOneSchema;
 
         if (reqData.body.email) {
             let resData = await UserService.getOne({
@@ -98,7 +98,7 @@ const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: Fastify
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as UserSchemaPutPasswordDocument;
+        let reqData = req as IUserPutPasswordSchema;
 
         let resData = await UserService.getOne({
             email: req.sessionAuth.user?.email,

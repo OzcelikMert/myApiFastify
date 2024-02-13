@@ -81,14 +81,14 @@ const deleteOneSchema = object({
     })
 });
 
-export type UserSchemaGetOneDocument = z.infer<typeof getOneSchema>;
-export type UserSchemaGetManyDocument = z.infer<typeof getManySchema>;
-export type UserSchemaGetOneWithURLDocument = z.infer<typeof getOneWithURLSchema>;
-export type UserSchemaPostDocument = z.infer<typeof postSchema>;
-export type UserSchemaPutOneDocument = z.infer<typeof putOneSchema>;
-export type UserSchemaPutProfileDocument = z.infer<typeof putProfileSchema>;
-export type UserSchemaPutPasswordDocument = z.infer<typeof putPasswordSchema>;
-export type UserSchemaDeleteOneDocument = z.infer<typeof deleteOneSchema>;
+export type IUserGetOneSchema = z.infer<typeof getOneSchema>;
+export type IUserGetManySchema = z.infer<typeof getManySchema>;
+export type IUserGetOneWithURLSchema = z.infer<typeof getOneWithURLSchema>;
+export type IUserPostSchema = z.infer<typeof postSchema>;
+export type IUserPutOneSchema = z.infer<typeof putOneSchema>;
+export type IUserPutProfileSchema = z.infer<typeof putProfileSchema>;
+export type IUserPutPasswordSchema = z.infer<typeof putPasswordSchema>;
+export type IUserDeleteOneSchema = z.infer<typeof deleteOneSchema>;
 
 export const UserSchema = {
     getOne: getOneSchema,

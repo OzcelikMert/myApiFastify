@@ -4,7 +4,7 @@ import {LogMiddleware} from "../middlewares/log.middleware";
 import {SitemapService} from "../services/sitemap.service";
 import {PostTypeId} from "../constants/postTypes";
 import {PostTermTypeId} from "../constants/postTermTypes";
-import {SitemapSchemaGetPostDocument, SitemapSchemaGetPostTermDocument} from "../schemas/sitemap.schema";
+import {ISitemapGetPostSchema, ISitemapGetPostTermSchema} from "../schemas/sitemap.schema";
 
 const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -26,7 +26,7 @@ const getPost = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as SitemapSchemaGetPostDocument;
+        const reqData = req as ISitemapGetPostSchema;
 
         serviceResult.data = await SitemapService.getPost(reqData.query);
 
@@ -38,7 +38,7 @@ const getPostTerm = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        const reqData = req as SitemapSchemaGetPostTermDocument;
+        const reqData = req as ISitemapGetPostTermSchema;
 
         serviceResult.data = await SitemapService.getPostTerm(reqData.query)
 

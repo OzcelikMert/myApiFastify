@@ -193,16 +193,16 @@ const deleteManySchema = object({
     })
 });
 
-export type PostSchemaGetOneDocument = z.infer<typeof getOneSchema>;
-export type PostSchemaGetManyDocument = z.infer<typeof getManySchema>;
-export type PostSchemaGetOneWithURLDocument = z.infer<typeof getOneWithURLSchema>;
-export type PostSchemaGetCountDocument = z.infer<typeof getCountSchema>;
-export type PostSchemaPostDocument = z.infer<typeof postSchema>;
-export type PostSchemaPutOneDocument = z.infer<typeof putOneSchema>;
-export type PostSchemaPutManyStatusDocument = z.infer<typeof putManyStatusSchema>;
-export type PostSchemaPutOneRankDocument = z.infer<typeof putOneRankSchema>;
-export type PostSchemaPutOneViewDocument = z.infer<typeof putOneViewSchema>;
-export type PostSchemaDeleteManyDocument = z.infer<typeof deleteManySchema>;
+export type IPostGetOneSchema = z.infer<typeof getOneSchema>;
+export type IPostGetManySchema = z.infer<typeof getManySchema>;
+export type IPostGetOneWithURLSchema = z.infer<typeof getOneWithURLSchema>;
+export type IPostGetCountSchema = z.infer<typeof getCountSchema>;
+export type IPostPostSchema = z.infer<typeof postSchema>;
+export type IPostPutOneSchema = z.infer<typeof putOneSchema>;
+export type IPostPutManyStatusSchema = z.infer<typeof putManyStatusSchema>;
+export type IPostPutOneRankSchema = z.infer<typeof putOneRankSchema>;
+export type IPostPutOneViewSchema = z.infer<typeof putOneViewSchema>;
+export type IPostDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const PostSchema = {
     getOne: getOneSchema,

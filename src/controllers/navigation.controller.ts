@@ -3,20 +3,20 @@ import {ApiResult} from "../library/api/result";
 import {LogMiddleware} from "../middlewares/log.middleware";
 import {NavigationService} from "../services/navigation.service";
 import {
-    NavigationSchemaDeleteManyDocument,
-    NavigationSchemaGetOneDocument,
-    NavigationSchemaGetManyDocument,
-    NavigationSchemaPostDocument,
-    NavigationSchemaPutOneDocument,
-    NavigationSchemaPutManyStatusDocument,
-    NavigationSchemaPutOneRankDocument
+    INavigationDeleteManySchema,
+    INavigationGetOneSchema,
+    INavigationGetManySchema,
+    INavigationPostSchema,
+    INavigationPutOneSchema,
+    INavigationPutManyStatusSchema,
+    INavigationPutOneRankSchema
 } from "../schemas/navigation.schema";
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaGetOneDocument;
+        let reqData = req as INavigationGetOneSchema;
 
         serviceResult.data = await NavigationService.getOne({
             ...reqData.params,
@@ -31,7 +31,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaGetManyDocument;
+        let reqData = req as INavigationGetManySchema;
 
         serviceResult.data = await NavigationService.getMany({
             ...reqData.query
@@ -45,7 +45,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaPostDocument;
+        let reqData = req as INavigationPostSchema;
 
         let insertData = await NavigationService.add({
             ...reqData.body,
@@ -63,7 +63,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaPutOneDocument;
+        let reqData = req as INavigationPutOneSchema;
 
         serviceResult.data = await NavigationService.updateOne({
             ...reqData.params,
@@ -79,7 +79,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaPutOneRankDocument;
+        let reqData = req as INavigationPutOneRankSchema;
 
         serviceResult.data = await NavigationService.updateOneRank({
             ...reqData.params,
@@ -95,7 +95,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaPutManyStatusDocument;
+        let reqData = req as INavigationPutManyStatusSchema;
 
         serviceResult.data = await NavigationService.updateManyStatus({
             ...reqData.body,
@@ -110,7 +110,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as NavigationSchemaDeleteManyDocument;
+        let reqData = req as INavigationDeleteManySchema;
 
         serviceResult.data = await NavigationService.deleteMany({
             ...reqData.body
