@@ -3,12 +3,12 @@ import { ObjectId } from "mongoose"
 
 export interface ISessionAuthUserModel {
     userId: string | ObjectId
-    roleId: UserRoleId,
-    email: string,
+    roleId: UserRoleId
+    email: string
     ip: string,
     token?: string,
     permissions: number[]
-    createAt?: string,
+    createAt?: string
     updatedAt?: string
     refreshedAt?: string
 }

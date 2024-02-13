@@ -45,22 +45,24 @@ const reload = async (req: FastifyRequest,res: FastifyReply) => {
                 req.sessionAuth.delete();
             }
         }
-        if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
-            if(Number(new Date().diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > 120) {
-                let user = await UserService.getOne({
-                    _id: req.sessionAuth.user.userId.toString()
-                });
-                if(user){
-                    let date = new Date();
-                    req.sessionAuth.set("user", {
-                        userId: user._id,
-                        email: user.email,
-                        roleId: user.roleId,
-                        ip: req.ip,
-                        permissions: user.permissions,
-                        token: UserUtil.createToken(user._id.toString(), req.ip, date.getTime()),
-                        refreshedAt: date.toString()
-                    })
+        if (req.sessionAuth && req.sessionAuth.data()) {
+            if(req.sessionAuth.user){
+                if(Number(new Date().diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > 120) {
+                    let user = await UserService.getOne({
+                        _id: req.sessionAuth.user.userId.toString()
+                    });
+                    if(user){
+                        let date = new Date();
+                        req.sessionAuth.set("user", {
+                            userId: user._id,
+                            email: user.email,
+                            roleId: user.roleId,
+                            ip: req.ip,
+                            permissions: user.permissions,
+                            token: UserUtil.createToken(user._id.toString(), req.ip, date.getTime()),
+                            refreshedAt: date.toString()
+                        })
+                    }
                 }
             }
         }

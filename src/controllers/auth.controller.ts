@@ -12,7 +12,7 @@ const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        serviceResult.data = await UserService.getOne({_id: req.sessionAuth!.user?.userId.toString()});
+        serviceResult.data = req.sessionAuth;
         reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
