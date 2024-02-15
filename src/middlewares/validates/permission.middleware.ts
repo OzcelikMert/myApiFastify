@@ -5,6 +5,7 @@ import {ApiStatusCodes} from "../../library/api/statusCodes";
 import {LogMiddleware} from "../log.middleware";
 import {IEndPointPermissionFunc, IEndPointPermission} from "../../types/constants/endPoint.permissions";
 import {PermissionUtil} from "../../utils/permission.util";
+import {UserService} from "../../services/user.service";
 
 const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => async (
     req: FastifyRequest,
@@ -15,10 +16,12 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
-        if(req.sessionAuth.user){
+        let user = await UserService.getOne({_id: req.sessionAuth.user!.userId.toString()});
+
+        if(user){
             if (
-                !PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, permissionData.userRoleId) ||
-                !PermissionUtil.checkPermissionId(req.sessionAuth.user!.permissions, permissionData.permissionId)
+                !PermissionUtil.checkPermissionRoleRank(user.roleId, permissionData.userRoleId) ||
+                !PermissionUtil.checkPermissionId(user.permissions, permissionData.permissionId)
             ) {
                 serviceResult.status = false;
                 serviceResult.errorCode = ApiErrorCodes.noPerm;

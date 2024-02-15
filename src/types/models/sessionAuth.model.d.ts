@@ -5,6 +5,8 @@ export interface ISessionAuthUserModel {
     userId: string | ObjectId
     roleId: UserRoleId
     email: string
+    name: string
+    image: string
     ip: string,
     token?: string,
     permissions: number[]
