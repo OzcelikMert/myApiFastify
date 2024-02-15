@@ -4,7 +4,7 @@ import {EndPoints} from "./index";
 export class MailerEndPoint {
     private mainPath: string;
 
-    constructor({mainPath = EndPoints.MAILER}: { mainPath?: string }) {
+    constructor(mainPath = EndPoints.MAILER) {
         this.mainPath = mainPath;
     }
 
