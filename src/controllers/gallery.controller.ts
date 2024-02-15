@@ -32,7 +32,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let gallery = await GalleryService.getMany({
             ...reqData.query,
-            ...(!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         const fileType = [".jpg", ".png", ".webp", ".gif", ".jpeg"];

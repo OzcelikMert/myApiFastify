@@ -4,137 +4,137 @@ import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
 
 const addSlider: IEndPointPermission = {
     permissionId: [PermissionId.SliderAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updateSlider: IEndPointPermission = {
     permissionId: [PermissionId.SliderEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removeSlider: IEndPointPermission = {
     permissionId: [PermissionId.SliderDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const addPage: IEndPointPermission = {
     permissionId: [PermissionId.PageAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updatePage: IEndPointPermission = {
     permissionId: [PermissionId.PageEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removePage: IEndPointPermission = {
     permissionId: [PermissionId.PageDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const addBlog: IEndPointPermission = {
     permissionId: [PermissionId.BlogAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updateBlog: IEndPointPermission = {
     permissionId: [PermissionId.BlogEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removeBlog: IEndPointPermission = {
     permissionId: [PermissionId.BlogDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const addReference: IEndPointPermission = {
     permissionId: [PermissionId.ReferenceAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updateReference: IEndPointPermission = {
     permissionId: [PermissionId.ReferenceEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removeReference: IEndPointPermission = {
     permissionId: [PermissionId.ReferenceDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const addPortfolio: IEndPointPermission = {
     permissionId: [PermissionId.PortfolioAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updatePortfolio: IEndPointPermission = {
     permissionId: [PermissionId.PortfolioEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removePortfolio: IEndPointPermission = {
     permissionId: [PermissionId.PortfolioDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const addTestimonial: IEndPointPermission = {
     permissionId: [PermissionId.TestimonialAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updateTestimonial: IEndPointPermission = {
     permissionId: [PermissionId.TestimonialEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removeTestimonial: IEndPointPermission = {
     permissionId: [PermissionId.TestimonialDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const addService: IEndPointPermission = {
     permissionId: [PermissionId.ServiceAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updateService: IEndPointPermission = {
     permissionId: [PermissionId.ServiceEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removeService: IEndPointPermission = {
     permissionId: [PermissionId.ServiceDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const addProduct: IEndPointPermission = {
     permissionId: [PermissionId.ProductAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updateProduct: IEndPointPermission = {
     permissionId: [PermissionId.ProductEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removeProduct: IEndPointPermission = {
     permissionId: [PermissionId.ProductDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const addBeforeAndAfter: IEndPointPermission = {
     permissionId: [PermissionId.BeforeAndAfterAdd],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const updateBeforeAndAfter: IEndPointPermission = {
     permissionId: [PermissionId.BeforeAndAfterEdit],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 const removeBeforeAndAfter: IEndPointPermission = {
     permissionId: [PermissionId.BeforeAndAfterDelete],
-    minUserRoleId: UserRoleId.Author
+    userRoleId: UserRoleId.Author
 }
 
 export const PostEndPointPermission = {

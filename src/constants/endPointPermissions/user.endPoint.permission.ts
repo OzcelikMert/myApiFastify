@@ -4,17 +4,17 @@ import {UserRoleId} from "../userRoles";
 
 const add: IEndPointPermission = {
     permissionId: [PermissionId.UserAdd],
-    minUserRoleId: UserRoleId.Editor
+    userRoleId: UserRoleId.Editor
 }
 
 const update: IEndPointPermission = {
     permissionId: [PermissionId.UserEdit],
-    minUserRoleId: UserRoleId.Editor
+    userRoleId: UserRoleId.Editor
 }
 
 const remove: IEndPointPermission = {
     permissionId: [PermissionId.UserDelete],
-    minUserRoleId: UserRoleId.Editor
+    userRoleId: UserRoleId.Editor
 }
 
 export const UserEndPointPermission = {

@@ -4,17 +4,17 @@ import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
 
 const add: IEndPointPermission = {
     permissionId: [],
-    minUserRoleId: UserRoleId.SuperAdmin
+    userRoleId: UserRoleId.SuperAdmin
 }
 
 const update: IEndPointPermission = {
     permissionId: [PermissionId.ComponentEdit],
-    minUserRoleId: UserRoleId.Editor
+    userRoleId: UserRoleId.Editor
 }
 
 const remove: IEndPointPermission = {
     permissionId: [],
-    minUserRoleId: UserRoleId.SuperAdmin
+    userRoleId: UserRoleId.SuperAdmin
 }
 
 export const ComponentEndPointPermission = {

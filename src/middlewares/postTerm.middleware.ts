@@ -65,7 +65,7 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermPutOneSchema;
 
-        if (!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor)) {
             let postTerm = await PostTermService.getOne({
                 _id: reqData.params._id,
                 postTypeId: reqData.body.postTypeId,
@@ -93,7 +93,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermDeleteManySchema;
 
-        if (!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor)) {
             let postTerms = await PostTermService.getMany({
                 _id: reqData.body._id,
                 postTypeId: reqData.body.postTypeId,

@@ -14,7 +14,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IGalleryDeleteManySchema;
 
-        if (!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId)) {
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor)) {
             let gallery = await GalleryService.getMany({
                 name: reqData.body._id
             });

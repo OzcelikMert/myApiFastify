@@ -4,32 +4,32 @@ import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
 
 const updateGeneral: IEndPointPermission = {
     permissionId: [PermissionId.SettingEdit],
-    minUserRoleId: UserRoleId.Admin
+    userRoleId: UserRoleId.Admin
 }
 
 const updateSEO: IEndPointPermission = {
     permissionId: [PermissionId.SEOEdit],
-    minUserRoleId: UserRoleId.Admin
+    userRoleId: UserRoleId.Admin
 }
 
 const updateContactForm: IEndPointPermission = {
     permissionId: [],
-    minUserRoleId: UserRoleId.Admin
+    userRoleId: UserRoleId.Admin
 }
 
 const updateStaticLanguage: IEndPointPermission = {
     permissionId: [PermissionId.StaticLanguage],
-    minUserRoleId: UserRoleId.Admin
+    userRoleId: UserRoleId.Admin
 }
 
 const updateSocialMedia: IEndPointPermission = {
     permissionId: [PermissionId.SettingEdit],
-    minUserRoleId: UserRoleId.Admin
+    userRoleId: UserRoleId.Admin
 }
 
 const updateECommerce: IEndPointPermission = {
     permissionId: [],
-    minUserRoleId: UserRoleId.Admin
+    userRoleId: UserRoleId.Admin
 }
 
 export const SettingEndPointPermission = {

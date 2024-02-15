@@ -17,8 +17,8 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
 
         if(req.sessionAuth.user){
             if (
-                !PermissionUtil.checkPermissionRoleRank(permissionData.minUserRoleId, req.sessionAuth.user!.roleId) ||
-                !PermissionUtil.checkPermissionId(permissionData.permissionId, req.sessionAuth.user!.permissions)
+                !PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, permissionData.userRoleId) ||
+                !PermissionUtil.checkPermissionId(req.sessionAuth.user!.permissions, permissionData.permissionId)
             ) {
                 serviceResult.status = false;
                 serviceResult.errorCode = ApiErrorCodes.noPerm;

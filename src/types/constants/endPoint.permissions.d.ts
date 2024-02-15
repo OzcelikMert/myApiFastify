@@ -4,7 +4,7 @@ import {UserRoleId} from "../../constants/userRoles";
 
 export interface IEndPointPermission {
     permissionId: PermissionId[],
-    minUserRoleId: UserRoleId
+    userRoleId: UserRoleId
 }
 
 export type IEndPointPermissionFunc = (req: FastifyRequest) => IEndPointPermission;

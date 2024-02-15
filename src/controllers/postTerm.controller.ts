@@ -23,7 +23,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await PostTermService.getOne({
             ...reqData.params,
             ...reqData.query,
-            ...(!PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -38,7 +38,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await PostTermService.getMany({
             ...reqData.query,
-            ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(UserRoleId.Editor, req.sessionAuth.user!.roleId) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)

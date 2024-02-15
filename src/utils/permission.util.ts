@@ -28,17 +28,17 @@ const getPostPermission = (req: FastifyRequest) : IEndPointPermission => {
     let permissionKeyPrefix = getPermissionKeyPrefix(method);
     const postTypeIdKey = Object.keys(PostTypeId).find(key => PostTypeId[key as keyof typeof PostTypeId] === typeId) ?? "";
 
-    return (PostEndPointPermission as any)[`${permissionKeyPrefix}${postTypeIdKey.toUpperCase()}`] ?? {permissionId: [], minUserRoleId: 0};
+    return (PostEndPointPermission as any)[`${permissionKeyPrefix}${postTypeIdKey.toUpperCase()}`] ?? {permissionId: [], userRoleId: 0};
 }
 
-const checkPermissionRoleRank = (minRoleId: UserRoleId, targetRoleId: UserRoleId) => {
+const checkPermissionRoleRank = (targetRoleId: UserRoleId, minRoleId: UserRoleId) => {
     let userRole = userRoles.findSingle("id", targetRoleId);
     let minRole = userRoles.findSingle("id", UserRoleId.Editor);
 
     return (userRole && minRole) && (userRole.rank >= minRole.rank);
 }
 
-const checkPermissionId = (minPermissionId: PermissionId[], targetPermissionId: PermissionId[]) => {
+const checkPermissionId = (targetPermissionId: PermissionId[], minPermissionId: PermissionId[]) => {
     return (minPermissionId.every(permissionId => targetPermissionId.some(userPermissionId => permissionId == userPermissionId)));
 }
 

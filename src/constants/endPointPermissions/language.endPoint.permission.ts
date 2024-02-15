@@ -3,22 +3,22 @@ import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
 
 const getFlags: IEndPointPermission = {
     permissionId: [],
-    minUserRoleId: UserRoleId.SuperAdmin
+    userRoleId: UserRoleId.SuperAdmin
 }
 
 const add: IEndPointPermission = {
     permissionId: [],
-    minUserRoleId: UserRoleId.SuperAdmin
+    userRoleId: UserRoleId.SuperAdmin
 }
 
 const update: IEndPointPermission = {
     permissionId: [],
-    minUserRoleId: UserRoleId.SuperAdmin
+    userRoleId: UserRoleId.SuperAdmin
 }
 
 const remove: IEndPointPermission = {
     permissionId: [],
-    minUserRoleId: UserRoleId.SuperAdmin
+    userRoleId: UserRoleId.SuperAdmin
 }
 
 export const LanguageEndPointPermission = {
