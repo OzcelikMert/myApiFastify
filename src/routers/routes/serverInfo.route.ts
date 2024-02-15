@@ -6,6 +6,7 @@ import {ServerInfoEndPoint} from "../../constants/endPoints/serverInfo.endPoint"
 import {ServerInfoEndPointPermission} from "../../constants/endPointPermissions/serverInfo.endPoint.permission";
 
 export const serverInfoRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(ServerInfoEndPoint.GET, { preHandler: [SessionAuthMiddleware.check, PermissionMiddleware.check(ServerInfoEndPointPermission.GET)] }, ServerInfoController.get);
+    const serverInfoEndPoint = new ServerInfoEndPoint("");
+    fastify.get(serverInfoEndPoint.GET, { preHandler: [SessionAuthMiddleware.check, PermissionMiddleware.check(ServerInfoEndPointPermission.GET)] }, ServerInfoController.get);
     done();
 }

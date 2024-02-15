@@ -1,7 +1,16 @@
-export const ComponentEndPoint = {
-    GET: "/get",
-    GET_WITH_ID: "/get/:_id",
-    ADD: "/add",
-    UPDATE_WITH_ID: "/update/:_id",
-    DELETE: "/delete"
+import {PathUtil} from "../../utils/path.util";
+import {EndPoints} from "./index";
+
+export class ComponentEndPoint {
+    private mainPath: string;
+
+    constructor(mainPath = EndPoints.COMPONENT) {
+        this.mainPath = mainPath;
+    }
+
+    get GET() { return PathUtil.createPath(this.mainPath, "/get"); }
+    get GET_WITH_ID() { return PathUtil.createPath(this.mainPath, `/get/:_id`); }
+    get ADD() { return PathUtil.createPath(this.mainPath, "/add"); }
+    get UPDATE_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/:_id`); }
+    get DELETE() { return PathUtil.createPath(this.mainPath, "/delete"); }
 }

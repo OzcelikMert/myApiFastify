@@ -6,8 +6,9 @@ import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.mid
 import {AuthEndPoint} from "../../constants/endPoints/auth.endPoint";
 
 export const authRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(AuthEndPoint.GET, { preHandler: [SessionAuthMiddleware.check] }, AuthController.getSession);
-    fastify.post(AuthEndPoint.LOGIN, { preHandler: [RequestMiddleware.check(AuthSchema.post)]}, AuthController.login);
-    fastify.delete(AuthEndPoint.LOGOUT, { preHandler: [SessionAuthMiddleware.check] }, AuthController.logOut);
+    const authEndPoint = new AuthEndPoint("");
+    fastify.get(authEndPoint.GET, { preHandler: [SessionAuthMiddleware.check] }, AuthController.getSession);
+    fastify.post(authEndPoint.LOGIN, { preHandler: [RequestMiddleware.check(AuthSchema.post)]}, AuthController.login);
+    fastify.delete(authEndPoint.LOGOUT, { preHandler: [SessionAuthMiddleware.check] }, AuthController.logOut);
     done();
 }

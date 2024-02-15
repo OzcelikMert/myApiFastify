@@ -6,6 +6,7 @@ import {RequestMiddleware} from "../../middlewares/validates/request.middleware"
 import {MailerEndPoint} from "../../constants/endPoints/mailer.endPoint";
 
 export const mailerRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.post(MailerEndPoint.SEND, { preHandler: [RequestMiddleware.check(MailerSchema.post), MailerMiddleware.checkContactForm] }, MailerController.send);
+    const mailerEndPoint = new MailerEndPoint("");
+    fastify.post(mailerEndPoint.SEND, { preHandler: [RequestMiddleware.check(MailerSchema.post), MailerMiddleware.checkContactForm] }, MailerController.send);
     done();
 }

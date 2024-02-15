@@ -9,13 +9,14 @@ import {PermissionUtil} from '../../utils/permission.util';
 import {PostTermEndPoint} from "../../constants/endPoints/postTerm.endPoint";
 
 export const postTermRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(PostTermEndPoint.GET, { preHandler: [RequestMiddleware.check(PostTermSchema.getMany)] }, PostTermController.getMany);
-    fastify.get(PostTermEndPoint.GET_WITH_URL, { preHandler: [RequestMiddleware.check(PostTermSchema.getOneWithURL)] }, PostTermController.getOneWithURL);
-    fastify.get(PostTermEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(PostTermSchema.getOne), SessionAuthMiddleware.check] }, PostTermController.getOne);
-    fastify.post(PostTermEndPoint.ADD, { preHandler: [RequestMiddleware.check(PostTermSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission)] }, PostTermController.add);
-    fastify.put(PostTermEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [RequestMiddleware.check(PostTermSchema.putOneRank), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostTermMiddleware.checkOne, PostTermMiddleware.checkOneIsAuthor] }, PostTermController.updateOneRank);
-    fastify.put(PostTermEndPoint.UPDATE_STATUS, { preHandler: [RequestMiddleware.check(PostTermSchema.putManyStatus), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostTermMiddleware.checkMany, PostTermMiddleware.checkManyIsAuthor] }, PostTermController.updateManyStatus);
-    fastify.put(PostTermEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(PostTermSchema.putOne), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostTermMiddleware.checkOne, PostTermMiddleware.checkOneIsAuthor] }, PostTermController.updateOne);
-    fastify.delete(PostTermEndPoint.DELETE, { preHandler: [RequestMiddleware.check(PostTermSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostTermMiddleware.checkMany, PostTermMiddleware.checkManyIsAuthor] }, PostTermController.deleteMany);
+    const postTermEndPoint = new PostTermEndPoint("");
+    fastify.get(postTermEndPoint.GET, { preHandler: [RequestMiddleware.check(PostTermSchema.getMany)] }, PostTermController.getMany);
+    fastify.get(postTermEndPoint.GET_WITH_URL, { preHandler: [RequestMiddleware.check(PostTermSchema.getOneWithURL)] }, PostTermController.getOneWithURL);
+    fastify.get(postTermEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(PostTermSchema.getOne), SessionAuthMiddleware.check] }, PostTermController.getOne);
+    fastify.post(postTermEndPoint.ADD, { preHandler: [RequestMiddleware.check(PostTermSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission)] }, PostTermController.add);
+    fastify.put(postTermEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [RequestMiddleware.check(PostTermSchema.putOneRank), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostTermMiddleware.checkOne, PostTermMiddleware.checkOneIsAuthor] }, PostTermController.updateOneRank);
+    fastify.put(postTermEndPoint.UPDATE_STATUS, { preHandler: [RequestMiddleware.check(PostTermSchema.putManyStatus), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostTermMiddleware.checkMany, PostTermMiddleware.checkManyIsAuthor] }, PostTermController.updateManyStatus);
+    fastify.put(postTermEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(PostTermSchema.putOne), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostTermMiddleware.checkOne, PostTermMiddleware.checkOneIsAuthor] }, PostTermController.updateOne);
+    fastify.delete(postTermEndPoint.DELETE, { preHandler: [RequestMiddleware.check(PostTermSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostTermMiddleware.checkMany, PostTermMiddleware.checkManyIsAuthor] }, PostTermController.deleteMany);
     done();
 }

@@ -7,8 +7,9 @@ import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.mid
 import {ViewEndPoint} from "../../constants/endPoints/view.endPoint";
 
 export const viewRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
-    fastify.get(ViewEndPoint.GET_NUMBER, { preHandler: [SessionAuthMiddleware.check] }, ViewController.getNumber);
-    fastify.get(ViewEndPoint.GET_STATISTICS, { preHandler: [SessionAuthMiddleware.check] }, ViewController.getStatistics);
-    fastify.post(ViewEndPoint.ADD, { preHandler: [RequestMiddleware.check(ViewSchema.post), ViewMiddleware.check, ViewMiddleware.checkAndDeleteMany] }, ViewController.add);
+    const viewEndPoint = new ViewEndPoint("");
+    fastify.get(viewEndPoint.GET_NUMBER, { preHandler: [SessionAuthMiddleware.check] }, ViewController.getNumber);
+    fastify.get(viewEndPoint.GET_STATISTICS, { preHandler: [SessionAuthMiddleware.check] }, ViewController.getStatistics);
+    fastify.post(viewEndPoint.ADD, { preHandler: [RequestMiddleware.check(ViewSchema.post), ViewMiddleware.check, ViewMiddleware.checkAndDeleteMany] }, ViewController.add);
     done();
 }
