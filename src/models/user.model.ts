@@ -2,6 +2,7 @@ import * as mongoose from "mongoose";
 import {StatusId} from "../constants/status";
 import {UserRoleId} from "../constants/userRoles";
 import {IUserModel} from "../types/models/user.model";
+import {PermissionId} from "../constants/permissions";
 
 const schema = new mongoose.Schema<IUserModel>(
     {
@@ -14,7 +15,7 @@ const schema = new mongoose.Schema<IUserModel>(
         phone: {type: String, default: ""},
         email: {type: String, required: true},
         password: {type: String, required: true},
-        permissions: {type: [Number], default: []},
+        permissions: {type: [Number], default: [], enum: PermissionId},
         banDateEnd: {type: Date, default: new Date()},
         banComment: {type: String, default: ""},
         facebook: {type: String, default: ""},

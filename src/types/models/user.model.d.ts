@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose"
 import {UserRoleId} from "../../constants/userRoles";
 import {StatusId} from "../../constants/status";
+import {PermissionId} from "../../constants/permissions";
 
 export interface IUserModel {
     _id: string | ObjectId
@@ -13,7 +14,7 @@ export interface IUserModel {
     comment?: string,
     phone?: string,
     password: string,
-    permissions: number[],
+    permissions: PermissionId[],
     banDateEnd?: Date,
     banComment?: string,
     facebook?: string,
