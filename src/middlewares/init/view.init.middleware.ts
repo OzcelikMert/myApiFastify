@@ -6,7 +6,7 @@ const set = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let ip = req.ip;
         let date = new Date();
-        let _id = (req.session && req.sessionAuth.data() && req.sessionAuth.user) ? req.sessionAuth.user.userId.toString() : "";
+        let _id = (req.session && req.sessionAuth && req.sessionAuth.user) ? req.sessionAuth.user.userId.toString() : "";
 
         Config.onlineUsers = Config.onlineUsers.filter(onlineUser => Number(date.diffMinutes(onlineUser.updatedAt)) < 10);
 

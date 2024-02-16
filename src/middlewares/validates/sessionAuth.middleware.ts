@@ -12,8 +12,8 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         let serviceResult = new ApiResult();
 
-        if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
-            if (req.sessionAuth.user?.ip != req.ip) {
+        if (req.sessionAuth && req.sessionAuth&& req.sessionAuth.user) {
+            if (req.sessionAuth.user.ip != req.ip) {
                 await new Promise(resolve => {
                     req.sessionAuth!.delete();
                     resolve(1);
@@ -56,6 +56,8 @@ const reload = async (req: FastifyRequest,res: FastifyReply) => {
                         req.sessionAuth.set("user", {
                             userId: user._id,
                             email: user.email,
+                            name: user.name,
+                            image: user.image,
                             roleId: user.roleId,
                             ip: req.ip,
                             permissions: user.permissions,

@@ -32,7 +32,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let gallery = await GalleryService.getMany({
             ...reqData.query,
-            ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
 
         const fileType = [".jpg", ".png", ".webp", ".gif", ".jpeg"];
@@ -104,7 +104,7 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                         let insertedData = await GalleryService.add({
                             oldName: file.filename,
                             name: name,
-                            authorId: req.sessionAuth.user!.userId,
+                            authorId: req.sessionAuth!.user!.userId,
                             typeId: GalleryTypeId.Image
                         });
 

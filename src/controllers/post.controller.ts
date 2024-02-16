@@ -25,7 +25,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
         serviceResult.data = await PostService.getOne({
             ...reqData.params,
             ...reqData.query,
-            ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult);
@@ -40,7 +40,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await PostService.getMany({
             ...reqData.query,
-            ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth.user!.userId.toString()} : {})
+            ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult);

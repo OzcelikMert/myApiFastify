@@ -17,7 +17,7 @@ const error = async (req: FastifyRequest, reply: FastifyReply, func: () => Promi
             params: req.params,
             query: req.query,
             body: req.body,
-            ...(req.sessionAuth.data() && req.sessionAuth.user?.userId ? {userId: req.sessionAuth.user?.userId} : {})
+            ...(req.sessionAuth && req.sessionAuth.user && req.sessionAuth.user.userId ? {userId: req.sessionAuth!.user?.userId} : {})
         });
         let serviceResult = new ApiResult();
         serviceResult.statusCode = ApiStatusCodes.badRequest;

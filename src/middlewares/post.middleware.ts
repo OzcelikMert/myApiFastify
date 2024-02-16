@@ -66,14 +66,14 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostPutOneSchema;
 
-        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor)) {
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
             let post = await PostService.getOne({
                 _id: reqData.params._id,
                 typeId: reqData.body.typeId
             });
 
             if (post) {
-                if (post.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
+                if (post.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                     serviceResult.status = false;
                     serviceResult.errorCode = ApiErrorCodes.noPerm;
                     serviceResult.statusCode = ApiStatusCodes.forbidden;
@@ -93,7 +93,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostDeleteManySchema;
 
-        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor)) {
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
             let posts = await PostService.getMany({
                 _id: reqData.body._id,
                 typeId: [reqData.body.typeId]
@@ -101,7 +101,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
             if (posts) {
                 for (const post of posts) {
-                    if (post.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
+                    if (post.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                         serviceResult.status = false;
                         serviceResult.errorCode = ApiErrorCodes.noPerm;
                         serviceResult.statusCode = ApiStatusCodes.forbidden;

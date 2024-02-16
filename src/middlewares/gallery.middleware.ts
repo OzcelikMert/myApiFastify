@@ -14,14 +14,14 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IGalleryDeleteManySchema;
 
-        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user!.roleId, UserRoleId.Editor)) {
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
             let gallery = await GalleryService.getMany({
                 name: reqData.body._id
             });
 
             if (gallery) {
                 for (const item of gallery) {
-                    if (item.authorId.toString() != req.sessionAuth.user?.userId.toString()) {
+                    if (item.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                         serviceResult.status = false;
                         serviceResult.errorCode = ApiErrorCodes.noPerm;
                         serviceResult.statusCode = ApiStatusCodes.forbidden;

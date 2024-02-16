@@ -16,7 +16,7 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
-        let user = await UserService.getOne({_id: req.sessionAuth.user!.userId.toString()});
+        let user = await UserService.getOne({_id: req.sessionAuth!.user!.userId.toString()});
 
         if(user){
             if (

@@ -48,7 +48,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (userRoleId > 0) {
-            if (req.sessionAuth.user) {
+            if (req.sessionAuth && req.sessionAuth.user) {
                 let sessionUserRole = userRoles.findSingle("id", req.sessionAuth.user.roleId);
                 let userRole = userRoles.findSingle("id", userRoleId);
 

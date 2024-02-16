@@ -34,8 +34,8 @@ export interface IUserGetManyParamService {
 }
 
 export type IUserAddParamService = {
-    password: string
-} & Omit<IUserModel, "_id"|"password">
+    image?: string
+} & Omit<IUserModel, "_id"|"image">
 
 export type IUserUpdateOneParamService = {
     _id: string
@@ -44,7 +44,8 @@ export type IUserUpdateOneParamService = {
     name?: string
     email?: string
     permissions?: number[]
-} & Omit<IUserModel, "_id"|"roleId"|"statusId"|"name"|"email"|"permissions">
+    password?: string
+} & Omit<IUserAddParamService, "_id"|"roleId"|"statusId"|"name"|"email"|"permissions"|"password">
 
 export type IUserDeleteOneParamService = {
     _id: string

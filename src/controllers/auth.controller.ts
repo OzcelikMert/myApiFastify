@@ -30,14 +30,16 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
         if(user){
             if(user.statusId == StatusId.Active) {
                 let time = new Date().getTime();
-                req.sessionAuth.set("user", {
+                req.sessionAuth!.set("user", {
                     userId: user._id,
                     email: user.email,
+                    name: user.name,
+                    image: user.image,
                     roleId: user.roleId,
                     ip: req.ip,
                     permissions: user.permissions,
                     token: UserUtil.createToken(user._id.toString(), req.ip, time),
-                    refreshedAt: (new Date()).toString()
+                    refreshedAt: (new Date()).toString(),
                 });
             }else {
                 serviceResult.status = false;

@@ -101,6 +101,12 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
             _id: req.sessionAuth!.user!.userId.toString(),
         });
 
+        req.sessionAuth!.set("user", {
+            ...req.sessionAuth!.user!,
+            image: reqData.body.image ?? req.sessionAuth!.user!.image,
+            name: reqData.body.name
+        })
+
         reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }

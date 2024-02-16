@@ -8,7 +8,7 @@ declare module "*.jpg";
 
 declare module 'fastify' {
     export interface FastifyRequest {
-        sessionAuth: Session<ISessionAuthModel>
+        sessionAuth?: Session<ISessionAuthModel>
         isFromAdminPanel: boolean
     }
 }
