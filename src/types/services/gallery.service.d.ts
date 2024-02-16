@@ -4,7 +4,7 @@ import {GalleryTypeId} from "../../constants/galleryTypeId";
 
 export type IGalleryGetResultService = {
     authorId: IUserPopulateService
-} & IGalleryModel
+} & Omit<IGalleryModel, "authorId">
 
 export interface IGalleryGetOneParamService {
     _id?: string
