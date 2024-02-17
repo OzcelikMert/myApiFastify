@@ -15,6 +15,19 @@ import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 import {GalleryTypeId} from "../constants/galleryTypeId";
 
+const upload: any = multer({
+    storage: multer.memoryStorage(),
+    fileFilter: (req, file, cb: any) => {
+        let ext = path.extname(file.originalname)?.replace(".", "");
+        let filter = ["jpg", "jpeg", "png", "gif"];
+        if (filter.includes(ext)) {
+            cb(null, true);
+        } else {
+            cb('Only Images Are Allow', false);
+        }
+    }
+}).single("image");
+
 function getImageResult(name: string, stats: Stats) {
     return {
         name: name,
@@ -35,17 +48,16 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
 
-        const fileType = [".jpg", ".png", ".webp", ".gif", ".jpeg"];
-
         for (const item of gallery) {
-            if(fileType.includes(path.extname(item.name))){
+            await new Promise(resolve => {
                 fs.stat(path.resolve(Config.paths.uploads.images, item.name), (err, stats) => {
                     serviceResult.data.push({
                         ...item,
                         ...getImageResult(item.name, stats)
                     });
+                    resolve(1);
                 })
-            }
+            })
         }
 
         reply.status(serviceResult.statusCode).send(serviceResult)
@@ -61,75 +73,62 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
             return `${timestamp}-${Math.randomCustom(1, 999999)}.webp`;
         }
 
-        const upload: any = multer({
-            storage: multer.memoryStorage(),
-            fileFilter: (req, file, cb: any)=> {
-                let ext = path.extname(file.originalname)?.replace(".", "");
-                let filter = ["jpg", "jpeg", "png", "gif"];
-                if(filter.includes(ext)) {
-                    cb(null,true);
-                } else {
-                    cb('Only Images Are Allow', false);
-                }
+        upload(req, reply, async function (err: any) {
+            if (err) {
+                console.log(err);
+                serviceResult.status = false;
+                serviceResult.errorCode = ApiErrorCodes.uploadError;
+                serviceResult.statusCode = ApiStatusCodes.badRequest;
+                serviceResult.message = JSON.stringify(err);
             }
-        }).single("file");
 
-        await new Promise<number>(resolve => {
-            upload(req, reply, async function (err: any) {
-                if(err) {
-                    serviceResult.status = false;
-                    serviceResult.errorCode = ApiErrorCodes.uploadError;
-                    serviceResult.statusCode = ApiStatusCodes.badRequest;
+            try {
+                let name = newName();
+                while (fs.existsSync(path.resolve(Config.paths.uploads.images, newName()))) {
+                    name = newName();
                 }
 
-                try {
-                    let name = newName();
-                    while(fs.existsSync(path.resolve(Config.paths.uploads.images, newName()))) {
-                        name = newName();
-                    }
+                const file = (req as any).file;
+                if (file) {
+                    const buffer = file.buffer;
+                    let data = await sharp(buffer, {animated: true})
+                        .webp({quality: 80, force: true, loop: 0})
+                        .toBuffer();
 
-                    const file = await req.file();
-                    if(file){
-                        const buffer = await file.toBuffer();
-                        let data = await sharp(buffer, {animated: true})
-                            .webp({quality: 80, force: true, loop: 0})
-                            .toBuffer();
+                    await new Promise<number>(resolveCreate => {
+                        fs.createWriteStream(path.resolve(Config.paths.uploads.images, name)).write(data, (error: any) => {
+                            resolveCreate(0);
+                        });
+                    })
 
-                        await new Promise<number>(resolveCreate => {
-                            fs.createWriteStream(path.resolve(Config.paths.uploads.images, name)).write(data, (error: any) => {
-                                resolveCreate(0);
+                    let insertedData = await GalleryService.add({
+                        oldName: file.originalname,
+                        name: name,
+                        authorId: req.sessionAuth!.user!.userId,
+                        typeId: GalleryTypeId.Image
+                    });
+
+                    let galleryItem = await GalleryService.getOne({
+                        _id: insertedData._id.toString()
+                    });
+
+                    if (galleryItem) {
+                        fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
+                            serviceResult.data.push({
+                                ...galleryItem,
+                                ...getImageResult(galleryItem!.name, stats)
                             });
                         })
-
-                        let insertedData = await GalleryService.add({
-                            oldName: file.filename,
-                            name: name,
-                            authorId: req.sessionAuth!.user!.userId,
-                            typeId: GalleryTypeId.Image
-                        });
-
-                        let galleryItem = await GalleryService.getOne({
-                            _id: insertedData._id.toString()
-                        });
-
-                        if(galleryItem){
-                            fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
-                                serviceResult.data.push({
-                                    ...galleryItem,
-                                    ...getImageResult(galleryItem!.name, stats)
-                                });
-                            })
-                        }
                     }
-
-                } catch (e) {
-                    serviceResult.status = false;
-                    serviceResult.errorCode = ApiErrorCodes.uploadError;
-                    serviceResult.statusCode = ApiStatusCodes.badRequest;
-                } finally {
-                    resolve(0);
                 }
-            });
+
+            } catch (e) {
+                serviceResult.status = false;
+                serviceResult.errorCode = ApiErrorCodes.uploadError;
+                serviceResult.statusCode = ApiStatusCodes.badRequest;
+                serviceResult.message = JSON.stringify(e);
+                console.log(e)
+            }
         });
 
         reply.status(serviceResult.statusCode).send(serviceResult)

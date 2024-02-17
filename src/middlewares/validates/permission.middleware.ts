@@ -21,7 +21,7 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
         if(user){
             if (
                 !PermissionUtil.checkPermissionRoleRank(user.roleId, permissionData.userRoleId) ||
-                !PermissionUtil.checkPermissionId(user.permissions, permissionData.permissionId)
+                !PermissionUtil.checkPermissionId(user.roleId, user.permissions, permissionData.permissionId)
             ) {
                 serviceResult.status = false;
                 serviceResult.errorCode = ApiErrorCodes.noPerm;

@@ -33,13 +33,13 @@ const getPostPermission = (req: FastifyRequest) : IEndPointPermission => {
 
 const checkPermissionRoleRank = (targetRoleId: UserRoleId, minRoleId: UserRoleId) => {
     let userRole = userRoles.findSingle("id", targetRoleId);
-    let minRole = userRoles.findSingle("id", UserRoleId.Editor);
+    let minRole = userRoles.findSingle("id", minRoleId);
 
-    return (userRole && minRole) && (userRole.rank >= minRole.rank);
+    return targetRoleId == UserRoleId.SuperAdmin || (userRole && minRole) && (userRole.rank >= minRole.rank);
 }
 
-const checkPermissionId = (targetPermissionId: PermissionId[], minPermissionId: PermissionId[]) => {
-    return (minPermissionId.every(permissionId => targetPermissionId.some(userPermissionId => permissionId == userPermissionId)));
+const checkPermissionId = (targetRoleId: UserRoleId, targetPermissionId: PermissionId[], minPermissionId: PermissionId[]) => {
+    return targetRoleId == UserRoleId.SuperAdmin || (minPermissionId.every(permissionId => targetPermissionId.some(userPermissionId => permissionId == userPermissionId)));
 }
 
 export const PermissionUtil = {

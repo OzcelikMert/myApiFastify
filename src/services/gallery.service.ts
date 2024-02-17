@@ -14,7 +14,7 @@ const getOne = async (params: IGalleryGetOneParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
-    if (params.name) filters = {
+    if (params._id) filters = {
         ...filters,
         _id: params._id
     }
@@ -45,7 +45,7 @@ const getMany = async (params: IGalleryGetManyParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
-    if (params.name) filters = {
+    if (params._id) filters = {
         ...filters,
         _id: { $in: params._id }
     }

@@ -10,7 +10,7 @@ const check = (schema: ZodSchema) => async (
 ) => {
     let serviceResult = new ApiResult();
     try {
-        let validatedData = await schema.parse({
+        let validatedData = await schema.safeParse({
             body: req.body,
             query: req.query,
             params: req.params
