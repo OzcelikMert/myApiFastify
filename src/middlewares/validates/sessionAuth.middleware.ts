@@ -12,8 +12,11 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         let serviceResult = new ApiResult();
 
-        if (req.sessionAuth && req.sessionAuth&& req.sessionAuth.user) {
-            if (req.sessionAuth.user.ip != req.ip) {
+        if (req.sessionAuth && req.sessionAuth.user) {
+            if (
+                req.sessionAuth.user.ip != req.ip ||
+                !(await UserService.getOne({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}))
+            ) {
                 await new Promise(resolve => {
                     req.sessionAuth!.delete();
                     resolve(1);
@@ -21,10 +24,9 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
             }
         }
 
-        if (
-            (typeof req.sessionAuth === "undefined" || typeof req.sessionAuth.user === "undefined") ||
-            !(await UserService.getOne({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}))
-        ) {
+
+
+        if ((typeof req.sessionAuth === "undefined" || typeof req.sessionAuth.user === "undefined")) {
             serviceResult.status = false;
             serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
             serviceResult.statusCode = ApiStatusCodes.unauthorized;
