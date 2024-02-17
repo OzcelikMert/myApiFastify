@@ -11,7 +11,8 @@ export interface IUserPopulateService {
 
 export type IUserGetResultService = {
     isOnline?: boolean
-} & IUserModel
+    password?: string
+} & Omit<IUserModel, "password">
 
 export interface IUserGetOneParamService {
     _id?: string

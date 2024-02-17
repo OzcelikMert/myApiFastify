@@ -55,6 +55,8 @@ const reload = async (req: FastifyRequest,res: FastifyReply) => {
                     });
                     if(user){
                         let date = new Date();
+                        req.sessionAuth?.set("_id", UserUtil.createToken(user._id.toString(), req.ip, date.getTime()));
+
                         req.sessionAuth.set("user", {
                             userId: user._id,
                             email: user.email,
@@ -63,7 +65,6 @@ const reload = async (req: FastifyRequest,res: FastifyReply) => {
                             roleId: user.roleId,
                             ip: req.ip,
                             permissions: user.permissions,
-                            token: UserUtil.createToken(user._id.toString(), req.ip, date.getTime()),
                             refreshedAt: date.toString()
                         })
                     }

@@ -101,7 +101,7 @@ const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: Fastify
         let reqData = req as IUserPutPasswordSchema;
 
         let resData = await UserService.getOne({
-            email: req.sessionAuth.user?.email,
+            email: req.sessionAuth!.user?.email,
             password: reqData.body.password
         });
 

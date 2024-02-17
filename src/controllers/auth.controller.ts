@@ -7,12 +7,16 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
+import {ISessionAuthModel} from "../types/models/sessionAuth.model";
 
 const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        serviceResult.data = req.sessionAuth;
+        serviceResult.data = {
+            _id: req.sessionAuth?._id,
+            user: req.sessionAuth?.user
+        } as ISessionAuthModel;
         reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
@@ -29,7 +33,9 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if(user){
             if(user.statusId == StatusId.Active) {
-                let time = new Date().getTime();
+                let date = new Date();
+                req.sessionAuth?.set("_id", UserUtil.createToken(user._id.toString(), req.ip, date.getTime()));
+
                 req.sessionAuth!.set("user", {
                     userId: user._id,
                     email: user.email,
@@ -38,8 +44,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
                     roleId: user.roleId,
                     ip: req.ip,
                     permissions: user.permissions,
-                    token: UserUtil.createToken(user._id.toString(), req.ip, time),
-                    refreshedAt: (new Date()).toString(),
+                    refreshedAt: date.toString(),
                 });
             }else {
                 serviceResult.status = false;
