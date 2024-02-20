@@ -33,7 +33,7 @@ const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
             weeklyTotal: weeklyTotal
         };
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -49,7 +49,7 @@ const getStatistics = async (req: FastifyRequest, reply: FastifyReply) => {
             country: await ViewService.getTotalWithCountry({dateStart: dateStart}),
         };
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -71,7 +71,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = {_id: insertData._id};
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 

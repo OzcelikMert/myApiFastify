@@ -82,7 +82,7 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
             }
         }
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 

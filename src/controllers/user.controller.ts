@@ -12,6 +12,8 @@ import {
 } from "../schemas/user.schema";
 import {UserService} from "../services/user.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
+import { EndPoints } from '../constants/endPoints';
+import { UserEndPoint } from '../constants/endPoints/user.endPoint';
 
 const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -24,7 +26,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -38,7 +40,10 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query,
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        console.log(serviceResult.data);
+        
+        
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -53,7 +58,7 @@ const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -70,7 +75,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = {_id: insertData._id};
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -86,7 +91,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -107,7 +112,7 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
             name: reqData.body.name
         })
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -122,7 +127,7 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
             password: reqData.body.newPassword
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -134,7 +139,7 @@ const deleteOne = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await UserService.deleteOne(reqData.params);
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 

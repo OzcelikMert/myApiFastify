@@ -31,11 +31,11 @@ const getOneSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)).default([]),
-        typeId: array(z.nativeEnum(PostTermTypeId)).default([]),
+        _id: array(string().min(1)).optional(),
+        typeId: array(z.nativeEnum(PostTermTypeId)).optional(),
         postTypeId: z.nativeEnum(PostTypeId),
         statusId: z.nativeEnum(StatusId).optional(),
-        withPostCount: boolean().default(false),
+        withPostCount: boolean().optional(),
         langId: string().optional(),
         title: string().optional(),
         count: number().optional(),

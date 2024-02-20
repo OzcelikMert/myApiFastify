@@ -32,8 +32,8 @@ const getOneSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)),
-        elementId: array(string().min(1)).default([]),
+        _id: array(string().min(1)).optional(),
+        elementId: array(string().min(1)).optional(),
         langId: string().optional()
     })
 });

@@ -27,7 +27,7 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 }
@@ -54,7 +54,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 }
@@ -82,7 +82,7 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 }
@@ -113,7 +113,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 }

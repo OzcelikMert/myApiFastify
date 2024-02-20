@@ -32,9 +32,7 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
             serviceResult.statusCode = ApiStatusCodes.unauthorized;
         }
 
-        if (serviceResult.status) {
-            return;
-        } else {
+        if (!serviceResult.status) {
             res.status(serviceResult.statusCode).send(serviceResult)
         }
     });

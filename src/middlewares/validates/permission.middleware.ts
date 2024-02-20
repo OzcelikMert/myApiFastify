@@ -35,7 +35,7 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
 
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 };

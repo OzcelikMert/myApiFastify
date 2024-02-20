@@ -24,7 +24,7 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 }
@@ -64,7 +64,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 }
@@ -89,7 +89,7 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 }
@@ -112,7 +112,7 @@ const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: Fastify
         }
 
         if (!serviceResult.status) {
-            reply.status(serviceResult.statusCode).send(serviceResult)
+            await reply.status(serviceResult.statusCode).send(serviceResult)
         }
     });
 }

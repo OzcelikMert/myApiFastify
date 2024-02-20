@@ -60,7 +60,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
             })
         }
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -131,7 +131,7 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
             }
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -160,7 +160,7 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 

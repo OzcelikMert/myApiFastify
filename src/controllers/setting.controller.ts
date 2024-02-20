@@ -18,7 +18,7 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         }, false);
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -30,7 +30,7 @@ const updateGeneral = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await SettingService.updateGeneral(reqData.body)
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -42,7 +42,7 @@ const updateSEO = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await SettingService.updateSEO(reqData.body)
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -54,7 +54,7 @@ const updateContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await SettingService.updateContactForm(reqData.body)
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -66,7 +66,7 @@ const updateStaticLanguage = async (req: FastifyRequest, reply: FastifyReply) =>
 
         serviceResult.data = await SettingService.updateStaticLanguage(reqData.body)
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -78,7 +78,7 @@ const updateSocialMedia = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await SettingService.updateSocialMedia(reqData.body)
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -90,7 +90,7 @@ const updateECommerce = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = await SettingService.updateECommerce(reqData.body)
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 

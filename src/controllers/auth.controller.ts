@@ -17,7 +17,7 @@ const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
             _id: req.sessionAuth?._id,
             user: req.sessionAuth?.user
         } as ISessionAuthModel;
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
 
@@ -58,7 +58,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
             serviceResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
 
@@ -67,7 +67,7 @@ const logOut = async (req: FastifyRequest, reply: FastifyReply) => {
         let serviceResult = new ApiResult();
 
         req.sessionAuth!.delete();
-        reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(serviceResult.statusCode).send(serviceResult);
     })
 };
 

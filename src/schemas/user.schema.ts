@@ -34,7 +34,7 @@ const getOneWithURLSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)),
+        _id: array(string().min(1)).optional(),
         statusId: z.nativeEnum(StatusId).optional(),
         email: string().optional(),
         count: number().optional(),

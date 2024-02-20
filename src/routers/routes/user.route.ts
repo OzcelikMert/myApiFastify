@@ -10,7 +10,7 @@ import {UserEndPoint} from "../../constants/endPoints/user.endPoint";
 
 export const userRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const userEndPoint = new UserEndPoint("");
-    fastify.get(userEndPoint.GET, { preHandler: [SessionAuthMiddleware.check] }, UserController.getMany);
+    fastify.get(userEndPoint.GET, { preHandler: [RequestMiddleware.check(UserSchema.getMany), SessionAuthMiddleware.check] }, UserController.getMany);
     fastify.get(userEndPoint.GET_WITH_URL, { preHandler: [RequestMiddleware.check(UserSchema.getOneWithURL)] }, UserController.getOneWithURL);
     fastify.get(userEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(UserSchema.getOne), SessionAuthMiddleware.check] }, UserController.getOne);
     fastify.post(userEndPoint.ADD, { preHandler: [RequestMiddleware.check(UserSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(UserEndPointPermission.ADD), UserMiddleware.checkRoleRank, UserMiddleware.checkAlreadyEmail] }, UserController.add);

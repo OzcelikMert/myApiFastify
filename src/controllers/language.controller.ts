@@ -22,7 +22,7 @@ const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query,
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -36,7 +36,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -60,7 +60,7 @@ const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
             });
         })
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -76,7 +76,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         serviceResult.data = {_id: insertData._id};
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -91,7 +91,7 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 
@@ -106,7 +106,7 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
         });
 
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
 

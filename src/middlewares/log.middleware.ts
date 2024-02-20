@@ -23,7 +23,7 @@ const error = async (req: FastifyRequest, reply: FastifyReply, func: () => Promi
         serviceResult.statusCode = ApiStatusCodes.badRequest;
         serviceResult.errorCode = ApiErrorCodes.incorrectData;
         serviceResult.status = false;
-        reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(serviceResult.statusCode).send(serviceResult)
     }
 }
 

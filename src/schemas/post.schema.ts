@@ -112,9 +112,9 @@ const getOneSchema = object({
 
 const getManySchema = object({
     query: object({
-        typeId: array(z.nativeEnum(PostTypeId)).default([]),
-        _id: array(string().min(1)).default([]),
-        pageTypeId: array(z.nativeEnum(PageTypeId)).default([]),
+        typeId: array(z.nativeEnum(PostTypeId)).optional(),
+        _id: array(string().min(1)).optional(),
+        pageTypeId: array(z.nativeEnum(PageTypeId)).optional(),
         langId: string().optional(),
         title: string().optional(),
         statusId: z.nativeEnum(StatusId).optional(),
@@ -122,7 +122,7 @@ const getManySchema = object({
         page: number().optional(),
         ignoreDefaultLanguage: boolean().optional(),
         isRecent: boolean().optional(),
-        categories: array(string().min(1)).default([])
+        categories: array(string().min(1)).optional()
     })
 });
 
