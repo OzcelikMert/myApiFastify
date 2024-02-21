@@ -4,11 +4,11 @@ import {ApiErrorCodes} from "../../library/api/errorCodes";
 import {ApiStatusCodes} from "../../library/api/statusCodes";
 import {UserService} from "../../services/user.service";
 import {StatusId} from "../../constants/status";
-import {sessionAuthTTL} from "../../config/session/session.auth.config";
+import {sessionAuthRefreshSecond, sessionAuthTTL} from "../../config/session/session.auth.config";
 import {LogMiddleware} from "../log.middleware";
 import {UserUtil} from "../../utils/user.util";
 
-const check = async (req: FastifyRequest,res: FastifyReply) => {
+const check = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         let serviceResult = new ApiResult();
 
@@ -25,7 +25,6 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
         }
 
 
-
         if ((typeof req.sessionAuth === "undefined" || typeof req.sessionAuth.user === "undefined")) {
             serviceResult.status = false;
             serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
@@ -38,34 +37,33 @@ const check = async (req: FastifyRequest,res: FastifyReply) => {
     });
 };
 
-const reload = async (req: FastifyRequest,res: FastifyReply) => {
+const reload = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
-        if (req.sessionAuth && req.sessionAuth.data() && req.sessionAuth.user) {
+        if (req.sessionAuth && req.sessionAuth.user) {
             if (Number(new Date().diffSeconds(new Date(req.sessionAuth.user.updatedAt ?? ""))) > sessionAuthTTL) {
                 req.sessionAuth.delete();
             }
         }
-        if (req.sessionAuth && req.sessionAuth.data()) {
-            if(req.sessionAuth.user){
-                if(Number(new Date().diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > 120) {
-                    let user = await UserService.getOne({
-                        _id: req.sessionAuth.user.userId.toString()
-                    });
-                    if(user){
-                        let date = new Date();
-                        req.sessionAuth?.set("_id", UserUtil.createToken(user._id.toString(), req.ip, date.getTime()));
 
-                        req.sessionAuth.set("user", {
-                            userId: user._id,
-                            email: user.email,
-                            name: user.name,
-                            image: user.image,
-                            roleId: user.roleId,
-                            ip: req.ip,
-                            permissions: user.permissions,
-                            refreshedAt: date.toString()
-                        })
-                    }
+        if (req.sessionAuth && req.sessionAuth.user) {
+            if (Number(new Date().diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshSecond) {
+                let user = await UserService.getOne({
+                    _id: req.sessionAuth.user.userId.toString()
+                });
+                if (user) {
+                    let date = new Date();
+                    req.sessionAuth?.set("_id", UserUtil.createToken(user._id.toString(), req.ip, date.getTime()));
+
+                    req.sessionAuth.set("user", {
+                        userId: user._id,
+                        email: user.email,
+                        name: user.name,
+                        image: user.image,
+                        roleId: user.roleId,
+                        ip: req.ip,
+                        permissions: user.permissions,
+                        refreshedAt: date.toString()
+                    })
                 }
             }
         }

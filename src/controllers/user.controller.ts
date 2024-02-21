@@ -40,9 +40,6 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query,
         });
 
-        console.log(serviceResult.data);
-        
-        
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
