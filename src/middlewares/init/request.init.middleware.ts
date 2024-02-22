@@ -3,9 +3,9 @@ import {LogMiddleware} from "../log.middleware";
 
 const set = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        const host = req.headers.host || '';
+        const requestURL = req.headers.origin || '';
 
-        req.isFromAdminPanel = host.includes('admin.');
+        req.isFromAdminPanel = requestURL.includes('admin.') || requestURL.includes('localhost:3001');
     });
 }
 

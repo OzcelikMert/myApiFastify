@@ -7,7 +7,7 @@ const serverProtocol = config.get("serverProtocol") as string;
 
 export const sessionAuthTTL = 60 * 60;
 export const sessionAuthKey = crypto.randomBytes(32);
-export const sessionAuthRefreshSecond = 15;
+export const sessionAuthRefreshSeconds = 120;
 
 const sessionAuthConfig = {
     key: sessionAuthKey,

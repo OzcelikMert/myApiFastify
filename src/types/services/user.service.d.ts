@@ -1,6 +1,7 @@
 import {IUserModel} from "../models/user.model";
 import {StatusId} from "../../constants/status";
 import {UserRoleId} from "../../constants/userRoles";
+import {PermissionId} from "../../constants/permissions";
 
 export interface IUserPopulateService {
     _id: string
@@ -44,7 +45,7 @@ export type IUserUpdateOneParamService = {
     statusId?: StatusId
     name?: string
     email?: string
-    permissions?: number[]
+    permissions?: PermissionId[]
     password?: string
 } & Omit<IUserAddParamService, "_id"|"roleId"|"statusId"|"name"|"email"|"permissions"|"password">
 

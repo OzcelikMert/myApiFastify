@@ -21,7 +21,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
             if (gallery) {
                 for (const item of gallery) {
-                    if (item.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
+                    if (item.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
                         serviceResult.status = false;
                         serviceResult.errorCode = ApiErrorCodes.noPerm;
                         serviceResult.statusCode = ApiStatusCodes.forbidden;

@@ -4,7 +4,7 @@ import {ApiErrorCodes} from "../../library/api/errorCodes";
 import {ApiStatusCodes} from "../../library/api/statusCodes";
 import {UserService} from "../../services/user.service";
 import {StatusId} from "../../constants/status";
-import {sessionAuthRefreshSecond, sessionAuthTTL} from "../../config/session/session.auth.config";
+import {sessionAuthRefreshSeconds, sessionAuthTTL} from "../../config/session/session.auth.config";
 import {LogMiddleware} from "../log.middleware";
 import {UserUtil} from "../../utils/user.util";
 
@@ -46,12 +46,13 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
         }
 
         if (req.sessionAuth && req.sessionAuth.user) {
-            if (Number(new Date().diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshSecond) {
+            let date = new Date();
+            console.log(date, req.sessionAuth.user.refreshedAt, Number(date.diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))), sessionAuthRefreshSeconds)
+            if (Number(date.diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshSeconds) {
                 let user = await UserService.getOne({
                     _id: req.sessionAuth.user.userId.toString()
                 });
                 if (user) {
-                    let date = new Date();
                     req.sessionAuth?.set("_id", UserUtil.createToken(user._id.toString(), req.ip, date.getTime()));
 
                     req.sessionAuth.set("user", {

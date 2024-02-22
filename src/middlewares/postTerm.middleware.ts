@@ -73,7 +73,7 @@ const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
             });
 
             if (postTerm) {
-                if (postTerm.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
+                if (postTerm.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
                     serviceResult.status = false;
                     serviceResult.errorCode = ApiErrorCodes.noPerm;
                     serviceResult.statusCode = ApiStatusCodes.forbidden;
@@ -102,7 +102,7 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 
             if (postTerms) {
                 for (const postTerm of postTerms) {
-                    if (postTerm.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
+                    if (postTerm.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
                         serviceResult.status = false;
                         serviceResult.errorCode = ApiErrorCodes.noPerm;
                         serviceResult.statusCode = ApiStatusCodes.forbidden;

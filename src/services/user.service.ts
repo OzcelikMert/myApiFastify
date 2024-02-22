@@ -14,6 +14,7 @@ import {Config} from "../config";
 import Variable from "../library/variable";
 import {userObjectIdKeys} from "../constants/objectIdKeys/user.objectIdKeys";
 import {IUserModel} from "../types/models/user.model";
+import {PermissionUtil} from "../utils/permission.util";
 
 const createURL = async (_id: string | null, name: string) => {
     let urlAlreadyCount = 2;
@@ -155,6 +156,7 @@ const add = async (params: IUserAddParamService) => {
 
     return await userModel.create({
         ...params,
+        permissions: PermissionUtil.filterPermissionId(params.roleId, params.permissions),
         password: UserUtil.encodePassword(params.password)
     })
 }
@@ -185,6 +187,10 @@ const updateOne = async (params: IUserUpdateOneParamService) => {
 
         if(params.name && doc.name != params.name){
             params.url = await createURL(doc._id.toString(), params.name);
+        }
+
+        if(params.roleId && params.permissions){
+            params.permissions = PermissionUtil.filterPermissionId(params.roleId, params.permissions);
         }
 
         doc = Object.assign(doc, params);

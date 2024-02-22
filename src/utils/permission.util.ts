@@ -4,7 +4,7 @@ import {PostTypeId} from "../constants/postTypes";
 import {PostEndPointPermission} from "../constants/endPointPermissions/post.endPoint.permission";
 import {EndPoints} from "../constants/endPoints";
 import {userRoles, UserRoleId} from "../constants/userRoles";
-import {PermissionId} from "../constants/permissions";
+import {PermissionId, permissions} from "../constants/permissions";
 
 const getPermissionKeyPrefix = (method: string) => {
     let prefix = "";
@@ -39,11 +39,29 @@ const checkPermissionRoleRank = (targetRoleId: UserRoleId, minRoleId: UserRoleId
 }
 
 const checkPermissionId = (targetRoleId: UserRoleId, targetPermissionId: PermissionId[], minPermissionId: PermissionId[]) => {
-    return targetRoleId == UserRoleId.SuperAdmin || (minPermissionId.every(permissionId => targetPermissionId.some(userPermissionId => permissionId == userPermissionId)));
+    return targetRoleId == UserRoleId.SuperAdmin ||
+        (minPermissionId.some(permissionId => {
+            let foundPermission = permissions.findSingle("id", permissionId);
+            if(foundPermission){
+                return checkPermissionRoleRank(targetRoleId, foundPermission.minUserRoleId) && targetPermissionId.some(userPermissionId => permissionId == userPermissionId);
+            }
+            return false;
+        }));
+}
+
+const filterPermissionId = (targetRoleId: UserRoleId, targetPermissionId: PermissionId[]) => {
+    return targetPermissionId.filter(userPermissionId => {
+            let foundPermission = permissions.findSingle("id", userPermissionId);
+            if(foundPermission){
+                return targetRoleId == UserRoleId.SuperAdmin || checkPermissionRoleRank(targetRoleId, foundPermission.minUserRoleId);
+            }
+            return false;
+        });
 }
 
 export const PermissionUtil = {
     getPostPermission: getPostPermission,
     checkPermissionRoleRank: checkPermissionRoleRank,
-    checkPermissionId: checkPermissionId
+    checkPermissionId: checkPermissionId,
+    filterPermissionId: filterPermissionId
 }

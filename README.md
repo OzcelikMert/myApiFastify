@@ -4,10 +4,10 @@ Api for My Admin Panel
 Things to do:
 - service disindaki get one lerin hepsini get with Id falan yap
 - permissions lar icin minRoleId yap ve kontrol et (ornek min rol id yetiyormu yetiyorsada permisison id si varmi gibi)
-- postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
-- sessiona duzen var sayfayi kapatinca falan bozulmasin gitmesin
-- tum dosyalarinda export defaultlari export olarak duzenle ve artik constlar gibi degerleri buyuk harflerle baslatarak cekme zorunlulugu yap (opsiyonel)
 
++ sessiona duzen var sayfayi kapatinca falan bozulmasin gitmesin
++ tum dosyalarinda export defaultlari export olarak duzenle ve artik constlar gibi degerleri buyuk harflerle baslatarak cekme zorunlulugu yap (opsiyonel)
++ postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
 + Yup'u Zod'a cevir
 + Express.js'i Fastify'a cevir
 + route nun sonunda One varsa ve id cekiyorsa update get delete vs. route'a :_id paramtersi ekle
