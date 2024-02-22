@@ -3,8 +3,8 @@ Api for My Admin Panel
 
 Things to do:
 - service disindaki get one lerin hepsini get with Id falan yap
-- permissions lar icin minRoleId yap ve kontrol et (ornek min rol id yetiyormu yetiyorsada permisison id si varmi gibi)
 
++ permissions lar icin minRoleId yap ve kontrol et (ornek min rol id yetiyormu yetiyorsada permisison id si varmi gibi)
 + sessiona duzen var sayfayi kapatinca falan bozulmasin gitmesin
 + tum dosyalarinda export defaultlari export olarak duzenle ve artik constlar gibi degerleri buyuk harflerle baslatarak cekme zorunlulugu yap (opsiyonel)
 + postlardaki url ve post termdeki urllere bak ayni urlden eklenince diger urli url-2 olarak guncelliyor mu
