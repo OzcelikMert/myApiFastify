@@ -4,13 +4,13 @@ import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {ComponentService} from "../services/component.service";
 import {LogMiddleware} from "./log.middleware";
-import {IComponentDeleteManySchema, IComponentPutOneSchema} from "../schemas/component.schema";
+import {IComponentDeleteManySchema, IComponentPutWithIdSchema} from "../schemas/component.schema";
 
-const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IComponentPutOneSchema;
+        let reqData = req as IComponentPutWithIdSchema;
 
         let resData = await ComponentService.getOne({_id: reqData.params._id});
 
@@ -50,6 +50,6 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const ComponentMiddleware = {
-    checkOne: checkOne,
+    checkWithId: checkWithId,
     checkMany: checkMany
 };

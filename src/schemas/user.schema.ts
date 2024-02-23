@@ -14,7 +14,7 @@ const postBody = {
     banComment: string().optional(),
 };
 
-const getOneSchema = object({
+const getWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -23,7 +23,7 @@ const getOneSchema = object({
     })
 });
 
-const getOneWithURLSchema = object({
+const getWithURLSchema = object({
     params: object({
         url: string().min(1),
     }),
@@ -46,7 +46,7 @@ const postSchema = object({
     body: object(postBody)
 });
 
-const putOneSchema = object({
+const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -75,28 +75,28 @@ const putPasswordSchema = object({
     })
 });
 
-const deleteOneSchema = object({
+const deleteWithIdSchema = object({
     params: object({
         _id: string().min(1),
     })
 });
 
-export type IUserGetOneSchema = z.infer<typeof getOneSchema>;
+export type IUserGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type IUserGetManySchema = z.infer<typeof getManySchema>;
-export type IUserGetOneWithURLSchema = z.infer<typeof getOneWithURLSchema>;
+export type IUserGetWithURLSchema = z.infer<typeof getWithURLSchema>;
 export type IUserPostSchema = z.infer<typeof postSchema>;
-export type IUserPutOneSchema = z.infer<typeof putOneSchema>;
+export type IUserPutWithIdSchema = z.infer<typeof putWithIdSchema>;
 export type IUserPutProfileSchema = z.infer<typeof putProfileSchema>;
 export type IUserPutPasswordSchema = z.infer<typeof putPasswordSchema>;
-export type IUserDeleteOneSchema = z.infer<typeof deleteOneSchema>;
+export type IUserDeleteWithIdSchema = z.infer<typeof deleteWithIdSchema>;
 
 export const UserSchema = {
-    getOne: getOneSchema,
-    getOneWithURL: getOneWithURLSchema,
+    getWithId: getWithIdSchema,
+    getWithURL: getWithURLSchema,
     getMany: getManySchema,
     post: postSchema,
-    putOne: putOneSchema,
+    putWithId: putWithIdSchema,
     putProfile: putProfileSchema,
     putPassword: putPasswordSchema,
-    deleteOne: deleteOneSchema
+    deleteWithId: deleteWithIdSchema
 };

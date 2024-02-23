@@ -12,9 +12,9 @@ export const languageRoute = function (fastify: FastifyInstance, opts: any, done
     const languageEndPoint = new LanguageEndPoint("");
     fastify.get(languageEndPoint.GET, { preHandler: [RequestMiddleware.check(LanguageSchema.getMany)] }, LanguageController.getMany);
     fastify.get(languageEndPoint.GET_FLAGS, { preHandler: [SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.GET_FLAGS)] }, LanguageController.getFlags);
-    fastify.get(languageEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.getOne)] }, LanguageController.getOne);
+    fastify.get(languageEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.getWithId)] }, LanguageController.getWithId);
     fastify.post(languageEndPoint.ADD, { preHandler: [RequestMiddleware.check(LanguageSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.ADD)] }, LanguageController.add);
-    fastify.put(languageEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.putOneRank), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.UPDATE), LanguageMiddleware.checkOne] }, LanguageController.updateOneRank);
-    fastify.put(languageEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.putOne), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.UPDATE), LanguageMiddleware.checkOne] }, LanguageController.updateOne);
+    fastify.put(languageEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.putWithIdRank), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.UPDATE), LanguageMiddleware.checkWithId] }, LanguageController.updateWithIdRank);
+    fastify.put(languageEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.putWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.UPDATE), LanguageMiddleware.checkWithId] }, LanguageController.updateWithId);
     done();
 }

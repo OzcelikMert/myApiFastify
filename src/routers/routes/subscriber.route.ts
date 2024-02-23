@@ -11,11 +11,11 @@ import {SubscriberEndPointPermission} from "../../constants/endPointPermissions/
 export const subscriberRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const subscriberEndPoint = new SubscriberEndPoint("");
     fastify.get(subscriberEndPoint.GET, { preHandler: [RequestMiddleware.check(SubscriberSchema.getMany), SessionAuthMiddleware.check, PermissionMiddleware.check(SubscriberEndPointPermission.GET)] }, SubscriberController.getMany);
-    fastify.get(subscriberEndPoint.GET_WITH_EMAIL, { preHandler: [RequestMiddleware.check(SubscriberSchema.getOneWithEmail)] }, SubscriberController.getOneWithEmail);
-    fastify.get(subscriberEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(SubscriberSchema.getOne), SessionAuthMiddleware.check] }, SubscriberController.getOne);
-    fastify.post(subscriberEndPoint.ADD, { preHandler: [RequestMiddleware.check(SubscriberSchema.post), SubscribeMiddleware.checkOne(true)] }, SubscriberController.add);
+    fastify.get(subscriberEndPoint.GET_WITH_EMAIL, { preHandler: [RequestMiddleware.check(SubscriberSchema.getWithEmail)] }, SubscriberController.getWithEmail);
+    fastify.get(subscriberEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(SubscriberSchema.getWithId), SessionAuthMiddleware.check] }, SubscriberController.getWithId);
+    fastify.post(subscriberEndPoint.ADD, { preHandler: [RequestMiddleware.check(SubscriberSchema.post), SubscribeMiddleware.checkWithId(true)] }, SubscriberController.add);
     fastify.delete(subscriberEndPoint.DELETE, { preHandler: [RequestMiddleware.check(SubscriberSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(SubscriberEndPointPermission.DELETE), SubscribeMiddleware.checkMany]}, SubscriberController.deleteMany);
-    fastify.delete(subscriberEndPoint.DELETE_WITH_EMAIL, { preHandler: [RequestMiddleware.check(SubscriberSchema.deleteOneWithEmail), SubscribeMiddleware.checkOne(false)] }, SubscriberController.deleteOneWithEmail);
-    fastify.delete(subscriberEndPoint.DELETE_WITH_ID, { preHandler: [RequestMiddleware.check(SubscriberSchema.deleteOne), SubscribeMiddleware.checkOne(false)] }, SubscriberController.deleteOne);
+    fastify.delete(subscriberEndPoint.DELETE_WITH_EMAIL, { preHandler: [RequestMiddleware.check(SubscriberSchema.deleteWithEmail), SubscribeMiddleware.checkWithId(false)] }, SubscriberController.deleteWithEmail);
+    fastify.delete(subscriberEndPoint.DELETE_WITH_ID, { preHandler: [RequestMiddleware.check(SubscriberSchema.deleteWithId), SubscribeMiddleware.checkWithId(false)] }, SubscriberController.deleteWithId);
     done();
 }

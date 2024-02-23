@@ -2,23 +2,23 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {
     IPostTermDeleteManySchema,
-    IPostTermGetOneSchema,
+    IPostTermGetWithIdSchema,
     IPostTermGetManySchema,
     IPostTermPostSchema,
-    IPostTermPutOneSchema,
+    IPostTermPutWithIdSchema,
     IPostTermPutManyStatusSchema,
-    IPostTermPutOneRankSchema, IPostTermGetOneWithURLSchema
+    IPostTermPutWithIdRankSchema, IPostTermGetWithURLSchema
 } from "../schemas/postTerm.schema";
 import {PostTermService} from "../services/postTerm.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 
-const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostTermGetOneSchema;
+        let reqData = req as IPostTermGetWithIdSchema;
 
         serviceResult.data = await PostTermService.getOne({
             ...reqData.params,
@@ -45,11 +45,11 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
+const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostTermGetOneWithURLSchema;
+        let reqData = req as IPostTermGetWithURLSchema;
 
         serviceResult.data = await PostTermService.getOne({
             ...reqData.params,
@@ -78,11 +78,11 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostTermPutOneSchema;
+        let reqData = req as IPostTermPutWithIdSchema;
 
         serviceResult.data = await PostTermService.updateOne({
             ...reqData.body,
@@ -94,11 +94,11 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostTermPutOneRankSchema;
+        let reqData = req as IPostTermPutWithIdRankSchema;
 
         serviceResult.data = await PostTermService.updateOneRank({
             ...reqData.body,
@@ -140,12 +140,12 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const PostTermController = {
-    getOne: getOne,
+    getWithId: getWithId,
     getMany: getMany,
-    getOneWithURL: getOneWithURL,
+    getWithURL: getWithURL,
     add: add,
-    updateOne: updateOne,
-    updateOneRank: updateOneRank,
+    updateWithId: updateWithId,
+    updateWithIdRank: updateWithIdRank,
     updateManyStatus: updateManyStatus,
     deleteMany: deleteMany
 };

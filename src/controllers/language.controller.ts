@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {
-    ILanguageGetOneSchema,
+    ILanguageGetWithIdSchema,
     ILanguageGetManySchema,
-    ILanguagePostSchema, ILanguagePutOneSchema, ILanguagePutOneRankSchema
+    ILanguagePostSchema, ILanguagePutWithIdSchema, ILanguagePutWithIdRankSchema
 } from "../schemas/language.schema";
 import {LanguageService} from "../services/language.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -11,11 +11,11 @@ import fs from "fs";
 import {Config} from "../config";
 import path from "path";
 
-const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ILanguageGetOneSchema;
+        let reqData = req as ILanguageGetWithIdSchema;
 
         serviceResult.data = await LanguageService.getOne({
             ...reqData.params,
@@ -80,11 +80,11 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ILanguagePutOneSchema;
+        let reqData = req as ILanguagePutWithIdSchema;
 
         serviceResult.data = await LanguageService.updateOne({
             ...reqData.params,
@@ -95,11 +95,11 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ILanguagePutOneRankSchema;
+        let reqData = req as ILanguagePutWithIdRankSchema;
 
         serviceResult.data = await LanguageService.updateOneRank({
             ...reqData.params,
@@ -111,10 +111,10 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const LanguageController = {
-    getOne: getOne,
+    getWithId: getWithId,
     getMany: getMany,
     getFlags: getFlags,
     add: add,
-    updateOne: updateOne,
-    updateOneRank: updateOneRank,
+    updateWithId: updateWithId,
+    updateWithIdRank: updateWithIdRank,
 };

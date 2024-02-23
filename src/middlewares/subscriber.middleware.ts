@@ -5,15 +5,15 @@ import {ApiStatusCodes} from "../library/api/statusCodes";
 import {SubscriberService} from "../services/subscriber.service";
 import {LogMiddleware} from "./log.middleware";
 import {
-    ISubscriberDeleteOneSchema,
+    ISubscriberDeleteWithIdSchema,
     ISubscriberDeleteManySchema
 } from "../schemas/subscriber.schema";
 
-const checkOne = (isThere: boolean) => async (req: FastifyRequest, reply: FastifyReply) => {
+const checkWithId = (isThere: boolean) => async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ISubscriberDeleteOneSchema;
+        let reqData = req as ISubscriberDeleteWithIdSchema;
 
         let resData = await SubscriberService.getOne({
             ...reqData.params
@@ -57,6 +57,6 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const SubscribeMiddleware = {
-    checkOne: checkOne,
+    checkWithId: checkWithId,
     checkMany: checkMany
 };

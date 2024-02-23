@@ -1,6 +1,6 @@
 import {object, string, array, z} from 'zod';
 
-const getOneSchema = object({
+const getWithIdSchema = object({
     params: object({
         _id: string().min(1),
     })
@@ -13,7 +13,7 @@ const getManySchema = object({
     }),
 });
 
-const getOneWithEmailSchema = object({
+const getWithEmailSchema = object({
     params: object({
         email: string().min(1).email(),
     })
@@ -25,13 +25,13 @@ const postSchema = object({
     })
 });
 
-const deleteOneSchema = object({
+const deleteWithIdSchema = object({
     params: object({
         _id: string().min(1),
     })
 });
 
-const deleteOneWithEmailSchema = object({
+const deleteWithEmailSchema = object({
     params: object({
         email: string().min(1).email(),
     })
@@ -43,20 +43,20 @@ const deleteManySchema = object({
     })
 });
 
-export type ISubscriberGetOneSchema = z.infer<typeof getOneSchema>;
+export type ISubscriberGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type ISubscriberGetManySchema = z.infer<typeof getManySchema>;
-export type ISubscriberGetOneWithEmailSchema = z.infer<typeof getOneWithEmailSchema>;
+export type ISubscriberGetWithEmailSchema = z.infer<typeof getWithEmailSchema>;
 export type ISubscriberPostSchema = z.infer<typeof postSchema>;
-export type ISubscriberDeleteOneSchema = z.infer<typeof deleteOneSchema>;
+export type ISubscriberDeleteWithIdSchema = z.infer<typeof deleteWithIdSchema>;
 export type ISubscriberDeleteManySchema = z.infer<typeof deleteManySchema>;
-export type ISubscriberDeleteOneWithEmailSchema = z.infer<typeof deleteOneWithEmailSchema>;
+export type ISubscriberDeleteWithEmailSchema = z.infer<typeof deleteWithEmailSchema>;
 
 export const SubscriberSchema = {
-    getOne: getOneSchema,
+    getWithId: getWithIdSchema,
     getMany: getManySchema,
-    getOneWithEmail: getOneWithEmailSchema,
+    getWithEmail: getWithEmailSchema,
     post: postSchema,
-    deleteOne: deleteOneSchema,
+    deleteWithId: deleteWithIdSchema,
     deleteMany: deleteManySchema,
-    deleteOneWithEmail: deleteOneWithEmailSchema
+    deleteWithEmail: deleteWithEmailSchema
 };

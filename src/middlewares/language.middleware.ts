@@ -4,13 +4,13 @@ import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {LogMiddleware} from "./log.middleware";
 import {LanguageService} from "../services/language.service";
-import {ILanguagePutOneSchema} from "../schemas/language.schema";
+import {ILanguagePutWithIdSchema} from "../schemas/language.schema";
 
-const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ILanguagePutOneSchema;
+        let reqData = req as ILanguagePutWithIdSchema;
 
         let resData = await LanguageService.getOne({_id: reqData.params._id});
 
@@ -27,5 +27,5 @@ const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const LanguageMiddleware = {
-    checkOne: checkOne
+    checkWithId: checkWithId
 };

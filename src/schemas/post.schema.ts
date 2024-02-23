@@ -98,7 +98,7 @@ const postBody = object({
     }).optional()
 });
 
-const getOneSchema = object({
+const getWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -126,7 +126,7 @@ const getManySchema = object({
     })
 });
 
-const getOneWithURLSchema = object({
+const getWithURLSchema = object({
     params: object({
         url: string().min(1),
     }),
@@ -151,7 +151,7 @@ const postSchema = object({
     body: postBody
 });
 
-const putOneSchema = object({
+const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -166,7 +166,7 @@ const putManyStatusSchema = object({
     }),
 });
 
-const putOneRankSchema = object({
+const putWithIdRankSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -176,7 +176,7 @@ const putOneRankSchema = object({
     }),
 });
 
-const putOneViewSchema = object({
+const putWithIdViewSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -193,26 +193,26 @@ const deleteManySchema = object({
     })
 });
 
-export type IPostGetOneSchema = z.infer<typeof getOneSchema>;
+export type IPostGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type IPostGetManySchema = z.infer<typeof getManySchema>;
-export type IPostGetOneWithURLSchema = z.infer<typeof getOneWithURLSchema>;
+export type IPostGetWithURLSchema = z.infer<typeof getWithURLSchema>;
 export type IPostGetCountSchema = z.infer<typeof getCountSchema>;
 export type IPostPostSchema = z.infer<typeof postSchema>;
-export type IPostPutOneSchema = z.infer<typeof putOneSchema>;
+export type IPostPutWithIdSchema = z.infer<typeof putWithIdSchema>;
 export type IPostPutManyStatusSchema = z.infer<typeof putManyStatusSchema>;
-export type IPostPutOneRankSchema = z.infer<typeof putOneRankSchema>;
-export type IPostPutOneViewSchema = z.infer<typeof putOneViewSchema>;
+export type IPostPutWithIdRankSchema = z.infer<typeof putWithIdRankSchema>;
+export type IPostPutWithIdViewSchema = z.infer<typeof putWithIdViewSchema>;
 export type IPostDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const PostSchema = {
-    getOne: getOneSchema,
+    getWithId: getWithIdSchema,
     getMany: getManySchema,
-    getOneWithURL: getOneWithURLSchema,
+    getWithURL: getWithURLSchema,
     getCount: getCountSchema,
     post: postSchema,
-    putOne: putOneSchema,
+    putWithId: putWithIdSchema,
     putManyStatus: putManyStatusSchema,
-    putOneRank: putOneRankSchema,
-    putOneView: putOneViewSchema,
+    putWithIdRank: putWithIdRankSchema,
+    putWithIdView: putWithIdViewSchema,
     deleteMany: deleteManySchema
 };

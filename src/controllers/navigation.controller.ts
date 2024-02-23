@@ -4,19 +4,19 @@ import {LogMiddleware} from "../middlewares/log.middleware";
 import {NavigationService} from "../services/navigation.service";
 import {
     INavigationDeleteManySchema,
-    INavigationGetOneSchema,
+    INavigationGetWithIdSchema,
     INavigationGetManySchema,
     INavigationPostSchema,
-    INavigationPutOneSchema,
+    INavigationPutWithIdSchema,
     INavigationPutManyStatusSchema,
-    INavigationPutOneRankSchema
+    INavigationPutWithIdRankSchema
 } from "../schemas/navigation.schema";
 
-const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as INavigationGetOneSchema;
+        let reqData = req as INavigationGetWithIdSchema;
 
         serviceResult.data = await NavigationService.getOne({
             ...reqData.params,
@@ -59,11 +59,11 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as INavigationPutOneSchema;
+        let reqData = req as INavigationPutWithIdSchema;
 
         serviceResult.data = await NavigationService.updateOne({
             ...reqData.params,
@@ -75,11 +75,11 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as INavigationPutOneRankSchema;
+        let reqData = req as INavigationPutWithIdRankSchema;
 
         serviceResult.data = await NavigationService.updateOneRank({
             ...reqData.params,
@@ -121,11 +121,11 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const NavigationController = {
-    getOne: getOne,
+    getWithId: getWithId,
     getMany: getMany,
     add: add,
-    updateOne: updateOne,
-    updateOneRank: updateOneRank,
+    updateWithId: updateWithId,
+    updateWithIdRank: updateWithIdRank,
     updateManyStatus: updateManyStatus,
     deleteMany: deleteMany
 };

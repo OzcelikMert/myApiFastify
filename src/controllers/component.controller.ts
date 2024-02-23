@@ -2,18 +2,18 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {
     IComponentDeleteManySchema,
-    IComponentGetOneSchema,
+    IComponentGetWithIdSchema,
     IComponentGetManySchema,
-    IComponentPostSchema, IComponentPutOneSchema
+    IComponentPostSchema, IComponentPutWithIdSchema
 } from "../schemas/component.schema";
 import {ComponentService} from "../services/component.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
 
-const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IComponentGetOneSchema;
+        let reqData = req as IComponentGetWithIdSchema;
 
         serviceResult.data = await ComponentService.getOne({
             ...reqData.params,
@@ -56,11 +56,11 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IComponentPutOneSchema;
+        let reqData = req as IComponentPutWithIdSchema;
 
         serviceResult.data = await ComponentService.updateOne({
             ...reqData.params,
@@ -87,9 +87,9 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const ComponentController = {
-    getOne: getOne,
+    getWithId: getWithId,
     getMany: getMany,
     add: add,
-    updateOne: updateOne,
+    updateWithId: updateWithId,
     deleteMany: deleteMany
 };

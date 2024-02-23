@@ -17,7 +17,7 @@ const postBody = object({
     })
 })
 
-const getOneSchema = object({
+const getWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -44,7 +44,7 @@ const getManySchema = object({
     })
 });
 
-const getOneWithURLSchema = object({
+const getWithURLSchema = object({
     params: object({
         url: string().min(1),
     }),
@@ -60,7 +60,7 @@ const postSchema = object({
     body: postBody
 });
 
-const putOneSchema = object({
+const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -76,7 +76,7 @@ const putManyStatusSchema = object({
     })
 });
 
-const putOneRankSchema = object({
+const putWithIdRankSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -95,22 +95,22 @@ const deleteManySchema = object({
     })
 });
 
-export type IPostTermGetOneSchema = z.infer<typeof getOneSchema>;
+export type IPostTermGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type IPostTermGetManySchema = z.infer<typeof getManySchema>;
-export type IPostTermGetOneWithURLSchema = z.infer<typeof getOneWithURLSchema>;
+export type IPostTermGetWithURLSchema = z.infer<typeof getWithURLSchema>;
 export type IPostTermPostSchema = z.infer<typeof postSchema>;
-export type IPostTermPutOneSchema = z.infer<typeof putOneSchema>;
+export type IPostTermPutWithIdSchema = z.infer<typeof putWithIdSchema>;
 export type IPostTermPutManyStatusSchema = z.infer<typeof putManyStatusSchema>;
-export type IPostTermPutOneRankSchema = z.infer<typeof putOneRankSchema>;
+export type IPostTermPutWithIdRankSchema = z.infer<typeof putWithIdRankSchema>;
 export type IPostTermDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const PostTermSchema = {
-    getOne: getOneSchema,
+    getWithId: getWithIdSchema,
     getMany: getManySchema,
-    getOneWithURL: getOneWithURLSchema,
+    getWithURL: getWithURLSchema,
     post: postSchema,
-    putOne: putOneSchema,
+    putWithId: putWithIdSchema,
     putManyStatus: putManyStatusSchema,
-    putOneRank: putOneRankSchema,
+    putWithIdRank: putWithIdRankSchema,
     deleteMany: deleteManySchema
 };

@@ -12,7 +12,7 @@ const postBody = object({
     }),
 })
 
-const getOneSchema = object({
+const getWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -35,7 +35,7 @@ const postSchema = object({
     body: postBody
 });
 
-const putOneSchema = object({
+const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -49,7 +49,7 @@ const putManyStatusSchema = object({
     })
 });
 
-const putOneRankSchema = object({
+const putWithIdRankSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -64,20 +64,20 @@ const deleteManySchema = object({
     })
 });
 
-export type INavigationGetOneSchema = z.infer<typeof getOneSchema>;
+export type INavigationGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type INavigationGetManySchema = z.infer<typeof getManySchema>;
 export type INavigationPostSchema = z.infer<typeof postSchema>;
-export type INavigationPutOneSchema = z.infer<typeof putOneSchema>;
+export type INavigationPutWithIdSchema = z.infer<typeof putWithIdSchema>;
 export type INavigationPutManyStatusSchema = z.infer<typeof putManyStatusSchema>;
-export type INavigationPutOneRankSchema = z.infer<typeof putOneRankSchema>;
+export type INavigationPutWithIdRankSchema = z.infer<typeof putWithIdRankSchema>;
 export type INavigationDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const NavigationSchema = {
-    getOne: getOneSchema,
+    getWithId: getWithIdSchema,
     getMany: getManySchema,
     post: postSchema,
-    putOne: putOneSchema,
+    putWithId: putWithIdSchema,
     putManyStatus: putManyStatusSchema,
-    putOneRank: putOneRankSchema,
+    putWithIdRank: putWithIdRankSchema,
     deleteMany: deleteManySchema
 };

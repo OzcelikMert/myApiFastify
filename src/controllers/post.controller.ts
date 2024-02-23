@@ -5,22 +5,22 @@ import {LogMiddleware} from "../middlewares/log.middleware";
 import {
     IPostDeleteManySchema,
     IPostGetCountSchema,
-    IPostGetOneSchema,
+    IPostGetWithIdSchema,
     IPostGetManySchema,
     IPostPostSchema,
-    IPostPutOneSchema,
+    IPostPutWithIdSchema,
     IPostPutManyStatusSchema,
-    IPostPutOneRankSchema,
-    IPostPutOneViewSchema, IPostGetOneWithURLSchema
+    IPostPutWithIdRankSchema,
+    IPostPutWithIdViewSchema, IPostGetWithURLSchema
 } from "../schemas/post.schema";
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 
-const getOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostGetOneSchema;
+        let reqData = req as IPostGetWithIdSchema;
 
         serviceResult.data = await PostService.getOne({
             ...reqData.params,
@@ -47,11 +47,11 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     })
 }
 
-const getOneWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
+const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostGetOneWithURLSchema;
+        let reqData = req as IPostGetWithURLSchema;
 
         serviceResult.data = await PostService.getOne({
             ...reqData.params,
@@ -95,11 +95,11 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostPutOneSchema;
+        let reqData = req as IPostPutWithIdSchema;
 
         serviceResult.data = await PostService.updateOne({
             ...reqData.params,
@@ -112,11 +112,11 @@ const updateOne = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostPutOneRankSchema;
+        let reqData = req as IPostPutWithIdRankSchema;
 
         serviceResult.data = await PostService.updateOneRank({
             ...reqData.body,
@@ -128,11 +128,11 @@ const updateOneRank = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateOneView = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateWithIdView = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostPutOneViewSchema;
+        let reqData = req as IPostPutWithIdViewSchema;
 
         serviceResult.data = await PostService.updateOneView({
             ...reqData.params,
@@ -173,14 +173,14 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const PostController = {
-    getOne: getOne,
+    getWithId: getWithId,
     getMany: getMany,
-    getOneWithURL: getOneWithURL,
+    getWithURL: getWithURL,
     getCount: getCount,
     add: add,
-    updateOne: updateOne,
-    updateOneRank: updateOneRank,
-    updateOneView: updateOneView,
+    updateWithId: updateWithId,
+    updateWithIdRank: updateWithIdRank,
+    updateWithIdView: updateWithIdView,
     updateManyStatus: updateManyStatus,
     deleteMany: deleteMany
 };

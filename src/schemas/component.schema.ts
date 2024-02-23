@@ -20,7 +20,7 @@ const postBody = object({
     }).required()).default([])
 });
 
-const getOneSchema = object({
+const getWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -42,7 +42,7 @@ const postSchema = object({
     body: postBody
 });
 
-const putOneSchema = object({
+const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -55,16 +55,16 @@ const deleteManySchema = object({
     })
 });
 
-export type IComponentGetOneSchema = z.infer<typeof getOneSchema>;
+export type IComponentGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type IComponentGetManySchema = z.infer<typeof getManySchema>;
 export type IComponentPostSchema = z.infer<typeof postSchema>;
-export type IComponentPutOneSchema = z.infer<typeof putOneSchema>;
+export type IComponentPutWithIdSchema = z.infer<typeof putWithIdSchema>;
 export type IComponentDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const ComponentSchema = {
-    getOne: getOneSchema,
+    getWithId: getWithIdSchema,
     getMany: getManySchema,
     post: postSchema,
-    putOne: putOneSchema,
+    putWithId: putWithIdSchema,
     deleteMany: deleteManySchema
 };

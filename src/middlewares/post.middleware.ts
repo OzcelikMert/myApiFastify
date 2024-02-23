@@ -6,16 +6,16 @@ import {PostService} from "../services/post.service";
 import {LogMiddleware} from "./log.middleware";
 import {
     IPostDeleteManySchema,
-    IPostPutOneSchema
+    IPostPutWithIdSchema
 } from "../schemas/post.schema";
 import {UserRoleId} from "../constants/userRoles";
 import {PermissionUtil} from "../utils/permission.util";
 
-const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostPutOneSchema;
+        let reqData = req as IPostPutWithIdSchema;
 
         let post = await PostService.getOne({
             _id: reqData.params._id,
@@ -60,11 +60,11 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const checkOneIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkWithIdIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IPostPutOneSchema;
+        let reqData = req as IPostPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
             let post = await PostService.getOne({
@@ -118,8 +118,8 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const PostMiddleware = {
-    checkOne: checkOne,
+    checkWithId: checkWithId,
     checkMany: checkMany,
-    checkOneIsAuthor: checkOneIsAuthor,
+    checkWithIdIsAuthor: checkWithIdIsAuthor,
     checkManyIsAuthor: checkManyIsAuthor,
 };

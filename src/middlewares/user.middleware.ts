@@ -5,13 +5,14 @@ import {ApiStatusCodes} from "../library/api/statusCodes";
 import {UserService} from "../services/user.service";
 import {userRoles} from "../constants/userRoles";
 import {LogMiddleware} from "./log.middleware";
-import {IUserPutOneSchema, IUserPutPasswordSchema} from "../schemas/user.schema";
+import {IUserPutWithIdSchema, IUserPutPasswordSchema} from "../schemas/user.schema";
+import {PermissionUtil} from "../utils/permission.util";
 
-const checkOne = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IUserPutOneSchema;
+        let reqData = req as IUserPutWithIdSchema;
 
         let resData = await UserService.getOne({
             _id: reqData.params._id
@@ -33,7 +34,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IUserPutOneSchema;
+        let reqData = req as IUserPutWithIdSchema;
         let userRoleId = 0;
 
         if (reqData.body.roleId) {
@@ -49,18 +50,24 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (userRoleId > 0) {
             if (req.sessionAuth && req.sessionAuth.user) {
-                let sessionUserRole = userRoles.findSingle("id", req.sessionAuth.user.roleId);
-                let userRole = userRoles.findSingle("id", userRoleId);
+                let sessionUser = await UserService.getOne({
+                    _id: req.sessionAuth.user.userId.toString()
+                });
 
-                if (
-                    (typeof sessionUserRole === "undefined" || typeof userRole === "undefined") ||
-                    (userRole.rank >= sessionUserRole.rank)
-                ) {
+                if (PermissionUtil.checkPermissionRoleRank(userRoleId, sessionUser!.roleId)) {
                     serviceResult.status = false;
                     serviceResult.errorCode = ApiErrorCodes.noPerm;
                     serviceResult.statusCode = ApiStatusCodes.notFound;
                 }
+            }else {
+                serviceResult.status = false;
+                serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
+                serviceResult.statusCode = ApiStatusCodes.unauthorized;
             }
+        } else {
+            serviceResult.status = false;
+            serviceResult.errorCode = ApiErrorCodes.incorrectData;
+            serviceResult.statusCode = ApiStatusCodes.badRequest;
         }
 
         if (!serviceResult.status) {
@@ -73,7 +80,7 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as IUserPutOneSchema;
+        let reqData = req as IUserPutWithIdSchema;
 
         if (reqData.body.email) {
             let resData = await UserService.getOne({
@@ -118,7 +125,7 @@ const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: Fastify
 }
 
 export const UserMiddleware = {
-    checkOne: checkOne,
+    checkWithId: checkWithId,
     checkRoleRank: checkRoleRank,
     checkAlreadyEmail: checkAlreadyEmail,
     checkPasswordWithSessionEmail: checkPasswordWithSessionEmail
