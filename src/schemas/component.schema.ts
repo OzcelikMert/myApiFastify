@@ -1,5 +1,5 @@
 import {object, string, array, number, z} from 'zod';
-import {ComponentInputTypeId} from "../constants/componentInputTypes";
+import {StaticContentTypeId} from "../constants/staticContentTypes";
 
 const postBody = object({
     elementId: string().min(1),
@@ -7,7 +7,7 @@ const postBody = object({
     types: array(object({
         _id: string().optional(),
         elementId: string().min(1),
-        typeId: z.nativeEnum(ComponentInputTypeId),
+        typeId: z.nativeEnum(StaticContentTypeId),
         langKey: string().min(1),
         rank: number().min(1),
         contents: object({

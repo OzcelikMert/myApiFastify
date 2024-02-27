@@ -1,5 +1,6 @@
 import { ObjectId } from "mongoose"
 import {CurrencyId} from "../../constants/currencyTypes";
+import {StaticContentTypeId} from "../../constants/staticContentTypes";
 
 export interface ISettingModel {
     _id: string | ObjectId
@@ -12,7 +13,7 @@ export interface ISettingModel {
     seoContents: ISettingSeoContentModel[],
     contact?: ISettingContactModel
     contactForms: ISettingContactFormModel[],
-    staticLanguages: ISettingStaticLanguageModel[]
+    staticContents: ISettingStaticContentModel[]
     socialMedia: ISettingSocialMediaModel[]
     eCommerce?: ISettingECommerceModel
 }
@@ -55,14 +56,16 @@ export interface ISettingSeoContentModel {
     tags?: string[]
 }
 
-export interface ISettingStaticLanguageModel {
+export interface ISettingStaticContentModel {
     _id?: string | ObjectId
-    langKey: string,
-    title: string
-    contents: ISettingStaticLanguageContentModel[]
+    typeId: StaticContentTypeId,
+    label: string
+    elementId: string
+    rank: number
+    contents: ISettingStaticContentContentModel[]
 }
 
-export interface ISettingStaticLanguageContentModel {
+export interface ISettingStaticContentContentModel {
     _id?: string | ObjectId
     langId: string | ObjectId
     content?: string,

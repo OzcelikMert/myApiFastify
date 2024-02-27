@@ -47,7 +47,6 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
 
         if (req.sessionAuth && req.sessionAuth.user) {
             let date = new Date();
-            console.log(date, req.sessionAuth.user.refreshedAt, Number(date.diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))), sessionAuthRefreshSeconds)
             if (Number(date.diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshSeconds) {
                 let user = await UserService.getOne({
                     _id: req.sessionAuth.user.userId.toString()

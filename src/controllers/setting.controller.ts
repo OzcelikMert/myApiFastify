@@ -3,7 +3,7 @@ import {ApiResult} from "../library/api/result";
 import {
     ISettingGetSchema, ISettingPutContactFormSchema, ISettingPutECommerceSchema,
     ISettingPutGeneralSchema,
-    ISettingPutSEOSchema, ISettingPutSocialMediaSchema, ISettingPutStaticLanguageSchema
+    ISettingPutSEOSchema, ISettingPutSocialMediaSchema, ISettingPutStaticContentSchema
 } from "../schemas/setting.schema";
 import {SettingService} from "../services/setting.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -58,13 +58,13 @@ const updateContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateStaticLanguage = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateStaticContent = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let serviceResult = new ApiResult();
 
-        let reqData = req as ISettingPutStaticLanguageSchema;
+        let reqData = req as ISettingPutStaticContentSchema;
 
-        serviceResult.data = await SettingService.updateStaticLanguage(reqData.body)
+        serviceResult.data = await SettingService.updateStaticContent(reqData.body)
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
@@ -99,7 +99,7 @@ export const SettingController = {
     updateGeneral: updateGeneral,
     updateSEO: updateSEO,
     updateContactForm: updateContactForm,
-    updateStaticLanguage: updateStaticLanguage,
+    updateStaticContent: updateStaticContent,
     updateSocialMedia: updateSocialMedia,
     updateECommerce: updateECommerce
 };

@@ -17,8 +17,8 @@ const updateContactForm: IEndPointPermission = {
     userRoleId: UserRoleId.Admin
 }
 
-const updateStaticLanguage: IEndPointPermission = {
-    permissionId: [PermissionId.StaticLanguage],
+const updateStaticContent: IEndPointPermission = {
+    permissionId: [PermissionId.StaticContent],
     userRoleId: UserRoleId.Admin
 }
 
@@ -36,7 +36,7 @@ export const SettingEndPointPermission = {
     UPDATE_GENERAL: updateGeneral,
     UPDATE_SEO: updateSEO,
     UPDATE_CONTACT_FORM: updateContactForm,
-    UPDATE_STATIC_LANGUAGE: updateStaticLanguage,
+    UPDATE_STATIC_CONTENT: updateStaticContent,
     UPDATE_SOCIAL_MEDIA: updateSocialMedia,
     UPDATE_ECOMMERCE: updateECommerce
 }

@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose"
-import {ComponentInputTypeId} from "../../constants/componentInputTypes";
+import {StaticContentTypeId} from "../../constants/staticContentTypes";
 
 export interface IComponentModel {
     _id?: string | ObjectId,
@@ -13,7 +13,7 @@ export interface IComponentModel {
 export interface IComponentTypeModel {
     _id?: string | ObjectId,
     elementId: string
-    typeId: ComponentInputTypeId,
+    typeId: StaticContentTypeId,
     langKey: string,
     rank: number,
     contents: IComponentTypeContentModel[]

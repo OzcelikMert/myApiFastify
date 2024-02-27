@@ -2,7 +2,6 @@
 Api for My Admin Panel
 
 Things to do:
-- servislerde gereksiz servis fonskiyonlarini sil parametre interfacelerine Partial ekleyebilrsin
 
 + service disindaki get one lerin hepsini get with Id falan yap
 + permissions lar icin minRoleId yap ve kontrol et (ornek min rol id yetiyormu yetiyorsada permisison id si varmi gibi)

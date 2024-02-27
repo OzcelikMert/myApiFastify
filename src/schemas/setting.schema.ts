@@ -1,6 +1,7 @@
 import {array, number, object, string, z} from 'zod';
 import {SettingProjectionKeys} from "../constants/settingProjections";
 import {CurrencyId} from "../constants/currencyTypes";
+import {StaticContentTypeId} from "../constants/staticContentTypes";
 
 const getSchema = object({
     query: object({
@@ -69,16 +70,19 @@ const putSocialMediaSchema = object({
     })
 });
 
-const putStaticLanguageSchema = object({
+const putStaticContentSchema = object({
     body: object({
-        staticLanguages: array(object({
+        staticContents: array(object({
             _id: string().optional(),
-            langKey: string().min(1),
-            title: string().default(""),
+            typeId: z.nativeEnum(StaticContentTypeId),
+            label: string().min(1),
+            elementId: string().default(""),
+            rank: number().min(1),
             contents: object({
                 _id: string().optional(),
                 langId: string().min(1),
-                content: string().default(""),
+                content: string().min(1),
+                url: string().optional(),
             })
         })).min(1),
     })
@@ -97,7 +101,7 @@ export type ISettingPutGeneralSchema = z.infer<typeof putGeneralSchema>;
 export type ISettingPutSEOSchema = z.infer<typeof putSeoSchema>;
 export type ISettingPutContactFormSchema = z.infer<typeof putContactFormSchema>;
 export type ISettingPutSocialMediaSchema = z.infer<typeof putSocialMediaSchema>;
-export type ISettingPutStaticLanguageSchema = z.infer<typeof putStaticLanguageSchema>;
+export type ISettingPutStaticContentSchema = z.infer<typeof putStaticContentSchema>;
 export type ISettingPutECommerceSchema = z.infer<typeof putECommerceSchema>;
 
 export const SettingSchema = {
@@ -106,6 +110,6 @@ export const SettingSchema = {
     putSeo: putSeoSchema,
     putContactForm: putContactFormSchema,
     putSocialMedia: putSocialMediaSchema,
-    putStaticLanguage: putStaticLanguageSchema,
+    putStaticContent: putStaticContentSchema,
     putECommerce: putECommerceSchema,
 };

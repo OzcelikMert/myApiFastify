@@ -5,26 +5,28 @@ import {
     ISettingContactFormModel,
     ISettingModel,
     ISettingSeoContentModel,
-    ISettingStaticLanguageModel,
-    ISettingStaticLanguageContentModel, ISettingSocialMediaModel, ISettingECommerceModel
+    ISettingStaticContentModel,
+    ISettingStaticContentContentModel, ISettingSocialMediaModel, ISettingECommerceModel
 } from "../types/models/setting.model";
 import {CurrencyId} from "../constants/currencyTypes";
+import {StaticContentTypeId} from "../constants/staticContentTypes";
 
-const schemaStaticLanguageContent = new mongoose.Schema<ISettingStaticLanguageContentModel>(
+const schemaStaticContentContent = new mongoose.Schema<ISettingStaticContentContentModel>(
     {
         langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
-        content: {type: String, default: ""}
-    },
-    {timestamps: true}
+        content: {type: String, default: ""},
+        url: {type: String}
+    }
 ).index({langId: 1});
 
-const schemaStaticLanguage = new mongoose.Schema<ISettingStaticLanguageModel>(
+const schemaStaticContent = new mongoose.Schema<ISettingStaticContentModel>(
     {
-        langKey: {type: String, default: "", required: true},
-        title: {type: String, default: ""},
-        contents: {type: [schemaStaticLanguageContent], default: []}
-    },
-    {timestamps: true}
+        typeId: {type: Number, required: true, enum: StaticContentTypeId},
+        label: {type: String, required: true},
+        elementId: {type: String, required: true},
+        rank: {type: Number, default: 0},
+        contents: {type: [schemaStaticContentContent], default: []}
+    }
 );
 
 const schemaContactForm = new mongoose.Schema<ISettingContactFormModel>(
@@ -37,8 +39,7 @@ const schemaContactForm = new mongoose.Schema<ISettingContactFormModel>(
         inComingServer: {type: String, default: ""},
         outGoingServer: {type: String, default: ""},
         port: {type: Number, default: 465}
-    },
-    {timestamps: true}
+    }
 );
 
 const schemaSocialMedia = new mongoose.Schema<ISettingSocialMediaModel>(
@@ -85,7 +86,7 @@ const schema = new mongoose.Schema<ISettingModel>(
         seoContents: {type: [schemaSEOContent], default: []},
         contact: {type: schemaContact},
         contactForms: {type: [schemaContactForm], default: []},
-        staticLanguages: {type: [schemaStaticLanguage], default: []},
+        staticContents: {type: [schemaStaticContent], default: []},
         socialMedia: {type: [schemaSocialMedia], default: []},
         eCommerce: {type: schemaECommerce},
     },

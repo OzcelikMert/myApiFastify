@@ -4,7 +4,7 @@ import {
     ISettingAddParamService,
     ISettingGetParamService,
     ISettingGetResultService,
-    ISettingUpdateStaticLanguageParamService,
+    ISettingUpdateStaticContentParamService,
     ISettingUpdateSocialMediaParamService,
     ISettingUpdateSEOParamService,
     ISettingUpdateContactFormParamService,
@@ -26,11 +26,11 @@ const get = async (params: ISettingGetParamService, withPassword: boolean = fals
 
     if(params.projection){
         switch (params.projection) {
-            case "general": projection = {eCommerce: 0, staticLanguages: 0, socialMedia: 0, contactForms: 0, seoContents: 0}; break;
+            case "general": projection = {eCommerce: 0, staticContents: 0, socialMedia: 0, contactForms: 0, seoContents: 0}; break;
             case "seo": projection = {seoContents: 1}; break;
             case "contactForm": projection = {contactForms: 1}; break;
             case "eCommerce": projection = {eCommerce: 1}; break;
-            case "staticLanguage": projection = {staticLanguages: 1}; break;
+            case "staticLanguage": projection = {staticContents: 1}; break;
             case "socialMedia": projection = {socialMedia: 1}; break;
             default: projection = {contactForms: 0}; break;
         }
@@ -45,8 +45,8 @@ const get = async (params: ISettingGetParamService, withPassword: boolean = fals
             doc.seoContents = doc.seoContents.findSingle("langId", params.langId) ?? doc.seoContents.findSingle("langId", defaultLangId);
         }
 
-        if (Array.isArray(doc.staticLanguages)) {
-            doc.staticLanguages = doc.staticLanguages.map(staticLang => {
+        if (Array.isArray(doc.staticContents)) {
+            doc.staticContents = doc.staticContents.map(staticLang => {
                 if(Array.isArray(staticLang.contents)){
                     staticLang.contents = staticLang.contents.findSingle("langId", params.langId) ?? staticLang.contents.findSingle("langId", defaultLangId);
                 }
@@ -138,38 +138,38 @@ const updateContactForm = async (params: ISettingUpdateContactFormParamService) 
     return params;
 }
 
-const updateStaticLanguage = async (params: ISettingUpdateStaticLanguageParamService) => {
+const updateStaticContent = async (params: ISettingUpdateStaticContentParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, settingObjectIdKeys);
 
     let doc = (await settingModel.findOne({}).exec());
 
     if(doc){
-        if (params.staticLanguages) {
+        if (params.staticContents) {
             // Check delete
-            doc.staticLanguages = doc.staticLanguages.filter(staticLanguage =>  params.staticLanguages && params.staticLanguages.indexOfKey("_id", staticLanguage._id) > -1)
+            doc.staticContents = doc.staticContents.filter(staticLanguage =>  params.staticContents && params.staticContents.indexOfKey("_id", staticLanguage._id) > -1)
             // Check Update
-            for (let paramStaticLanguage of params.staticLanguages) {
-                let docStaticLanguage = doc.staticLanguages.findSingle("_id", paramStaticLanguage._id);
-                if (docStaticLanguage) {
-                    let docStaticLanguageContent = docStaticLanguage.contents.findSingle("langId", paramStaticLanguage.contents.langId);
-                    if (docStaticLanguageContent) {
-                        docStaticLanguageContent = Object.assign(docStaticLanguageContent, paramStaticLanguage.contents);
+            for (let paramStaticContent of params.staticContents) {
+                let docStaticContent = doc.staticContents.findSingle("_id", paramStaticContent._id);
+                if (docStaticContent) {
+                    let docStaticContentContent = docStaticContent.contents.findSingle("langId", paramStaticContent.contents.langId);
+                    if (docStaticContentContent) {
+                        docStaticContentContent = Object.assign(docStaticContentContent, paramStaticContent.contents);
                     } else {
-                        docStaticLanguage.contents.push(paramStaticLanguage.contents)
+                        docStaticContent.contents.push(paramStaticContent.contents)
                     }
-                    docStaticLanguage = Object.assign(docStaticLanguage, {
-                        ...paramStaticLanguage,
-                        contents: docStaticLanguage.contents
+                    docStaticContent = Object.assign(docStaticContent, {
+                        ...paramStaticContent,
+                        contents: docStaticContent.contents
                     })
                 } else {
-                    doc.staticLanguages.push({
-                        ...paramStaticLanguage,
-                        contents: [paramStaticLanguage.contents]
+                    doc.staticContents.push({
+                        ...paramStaticContent,
+                        contents: [paramStaticContent.contents]
                     })
                 }
             }
-            delete params.staticLanguages;
+            delete params.staticContents;
         }
 
         doc = Object.assign(doc, params);
@@ -214,7 +214,7 @@ export const SettingService = {
     updateGeneral: updateGeneral,
     updateSEO: updateSEO,
     updateContactForm: updateContactForm,
-    updateStaticLanguage: updateStaticLanguage,
+    updateStaticContent: updateStaticContent,
     updateSocialMedia: updateSocialMedia,
     updateECommerce: updateECommerce,
 };

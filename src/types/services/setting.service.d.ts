@@ -2,15 +2,15 @@ import {
     ISettingContactFormModel,
     ISettingModel, ISettingECommerceModel,
     ISettingSeoContentModel, ISettingSocialMediaModel,
-    ISettingStaticLanguageContentModel,
-    ISettingStaticLanguageModel
+    ISettingStaticContentContentModel,
+    ISettingStaticContentModel
 } from "../models/setting.model";
 import {SettingProjectionKeys} from "../../constants/settingProjections";
 
 export type ISettingGetResultService = {
     seoContents?: ISettingSeoContentModel | ISettingSeoContentModel[]
-    staticLanguages?: (Omit<ISettingStaticLanguageModel, "contents"> & { contents?: ISettingStaticLanguageContentModel | ISettingStaticLanguageContentModel[] })[]
-} & Omit<ISettingModel, "seoContents" | "staticLanguages">
+    staticContents?: (Omit<ISettingStaticContentModel, "contents"> & { contents?: ISettingStaticContentContentModel | ISettingStaticContentContentModel[] })[]
+} & Omit<ISettingModel, "seoContents" | "staticContents">
 
 export type ISettingGetParamService = {
     langId?: string
@@ -19,12 +19,12 @@ export type ISettingGetParamService = {
 
 export type ISettingAddParamService = {
     seoContents?: ISettingSeoContentModel
-    staticLanguages?: (Omit<ISettingStaticLanguageModel, "contents"> & { contents: ISettingStaticLanguageContentModel})[]
-} & Omit<ISettingModel, "_id" | "seoContents" | "staticLanguages">
+    staticContents?: (Omit<ISettingStaticContentModel, "contents"> & { contents: ISettingStaticContentContentModel})[]
+} & Omit<ISettingModel, "_id" | "seoContents" | "staticContents">
 
 export type ISettingUpdateGeneralParamService = {
 
-} & Omit<ISettingAddParamService, "seoContents"|"contactForms"|"staticLanguages"|"socialMedia">
+} & Omit<ISettingAddParamService, "seoContents"|"contactForms"|"staticContents"|"socialMedia">
 
 export type ISettingUpdateSEOParamService = {
     seoContents?: ISettingSeoContentModel
@@ -42,6 +42,6 @@ export type ISettingUpdateSocialMediaParamService = {
     socialMedia: ISettingSocialMediaModel[]
 }
 
-export type ISettingUpdateStaticLanguageParamService = {
-    staticLanguages?: (Omit<ISettingStaticLanguageModel, "contents"> & { contents: ISettingStaticLanguageContentModel})[]
+export type ISettingUpdateStaticContentParamService = {
+    staticContents?: (Omit<ISettingStaticContentModel, "contents"> & { contents: ISettingStaticContentContentModel})[]
 }

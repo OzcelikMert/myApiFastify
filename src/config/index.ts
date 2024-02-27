@@ -162,7 +162,7 @@ class InitConfig {
             let lang = await LanguageService.getOne({});
             await SettingService.add({
                 contactForms: [],
-                staticLanguages: [],
+                staticContents: [],
                 socialMedia: [],
                 defaultLangId: lang?._id?.toString() || "",
             });

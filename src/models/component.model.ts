@@ -2,7 +2,7 @@ import * as mongoose from "mongoose";
 import {IComponentModel, IComponentTypeContentModel, IComponentTypeModel} from "../types/models/component.model";
 import {languageModel} from "./language.model";
 import {userModel} from "./user.model";
-import {ComponentInputTypeId} from "../constants/componentInputTypes";
+import {StaticContentTypeId} from "../constants/staticContentTypes";
 
 const schemaTypeContent = new mongoose.Schema<IComponentTypeContentModel>(
     {
@@ -15,7 +15,7 @@ const schemaTypeContent = new mongoose.Schema<IComponentTypeContentModel>(
 
 const schemaType = new mongoose.Schema<IComponentTypeModel>(
     {
-            typeId: {type: Number, required: true, enum: ComponentInputTypeId},
+            typeId: {type: Number, required: true, enum: StaticContentTypeId},
             langKey: {type: String, required: true},
             elementId: {type: String, required: true},
             rank: {type: Number, default: 0},
