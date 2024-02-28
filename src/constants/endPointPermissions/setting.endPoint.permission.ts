@@ -19,7 +19,7 @@ const updateContactForm: IEndPointPermission = {
 
 const updateStaticContent: IEndPointPermission = {
     permissionId: [PermissionId.StaticContent],
-    userRoleId: UserRoleId.Admin
+    userRoleId: UserRoleId.Editor
 }
 
 const updateSocialMedia: IEndPointPermission = {

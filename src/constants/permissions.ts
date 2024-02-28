@@ -78,7 +78,7 @@ export const permissions: Array<IPermission> = [
     {id: PermissionId.NavigationDelete, minUserRoleId: UserRoleId.Editor},
     {id: PermissionId.SettingEdit, minUserRoleId: UserRoleId.Admin},
     {id: PermissionId.SEOEdit, minUserRoleId: UserRoleId.Admin},
-    {id: PermissionId.StaticContent, minUserRoleId: UserRoleId.Admin},
+    {id: PermissionId.StaticContent, minUserRoleId: UserRoleId.Editor},
     {id: PermissionId.SubscriberEdit, minUserRoleId: UserRoleId.Admin},
     {id: PermissionId.ComponentEdit, minUserRoleId: UserRoleId.Editor},
     {id: PermissionId.ECommerce, minUserRoleId: UserRoleId.Admin},

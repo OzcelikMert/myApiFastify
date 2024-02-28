@@ -69,4 +69,5 @@ export interface ISettingStaticContentContentModel {
     _id?: string | ObjectId
     langId: string | ObjectId
     content?: string,
+    url?: string
 }
