@@ -74,57 +74,63 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
             return `${timestamp}-${Math.randomCustom(1, 999999)}.webp`;
         }
 
-        upload(req, reply, async function (err: any) {
-            if (err) {
-                console.log(err);
-                apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.uploadError;
-                apiResult.statusCode = ApiStatusCodes.badRequest;
-                apiResult.message = JSON.stringify(err);
-            }
-
-            try {
-                let name = newName();
-                while (fs.existsSync(path.resolve(Config.paths.uploads.images, newName()))) {
-                    name = newName();
+        await new Promise(resolve => {
+            upload(req, reply, async function (err: any) {
+                if (err) {
+                    console.log(err);
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.uploadError;
+                    apiResult.statusCode = ApiStatusCodes.badRequest;
+                    apiResult.message = JSON.stringify(err);
+                    resolve(1);
+                    return;
                 }
 
-                const file = (req as any).file;
-                if (file) {
-                    const buffer = file.buffer;
-                    let data = await sharp(buffer, {animated: true})
-                        .webp({quality: 80, force: true, loop: 0})
-                        .toBuffer();
-
-                    await new Promise<number>(resolveCreate => {
-                        fs.createWriteStream(path.resolve(Config.paths.uploads.images, name)).write(data, (error: any) => {
-                            resolveCreate(0);
-                        });
-                    })
-
-                    let insertedData = await GalleryService.add({
-                        oldName: file.originalname,
-                        name: name,
-                        authorId: req.sessionAuth!.user!.userId,
-                        typeId: GalleryTypeId.Image
-                    });
-
-                    if(insertedData){
-                        apiResult.data?.push({
-                            ...insertedData,
-                            ...(await getImageProperties(insertedData.name))
-                        });
+                try {
+                    let name = newName();
+                    while (fs.existsSync(path.resolve(Config.paths.uploads.images, newName()))) {
+                        name = newName();
                     }
-                }
 
-            } catch (e) {
-                apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.uploadError;
-                apiResult.statusCode = ApiStatusCodes.badRequest;
-                apiResult.message = JSON.stringify(e);
-                console.log(e)
-            }
-        });
+                    const file = (req as any).file;
+                    if (file) {
+                        const buffer = file.buffer;
+                        let data = await sharp(buffer, {animated: true})
+                            .webp({quality: 80, force: true, loop: 0})
+                            .toBuffer();
+
+                        await new Promise<number>(resolveCreate => {
+                            fs.createWriteStream(path.resolve(Config.paths.uploads.images, name)).write(data, (error: any) => {
+                                resolveCreate(0);
+                            });
+                        })
+
+                        let insertedData = await GalleryService.add({
+                            oldName: file.originalname,
+                            name: name,
+                            authorId: req.sessionAuth!.user!.userId,
+                            typeId: GalleryTypeId.Image
+                        });
+
+                        if(insertedData){
+                            apiResult.data?.push({
+                                ...insertedData,
+                                ...(await getImageProperties(insertedData.name))
+                            });
+                        }
+                    }
+
+                } catch (e) {
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.uploadError;
+                    apiResult.statusCode = ApiStatusCodes.badRequest;
+                    apiResult.message = JSON.stringify(e);
+                    console.log(e)
+                }finally {
+                    resolve(1);
+                }
+            });
+        })
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });
