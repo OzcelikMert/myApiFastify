@@ -32,7 +32,6 @@ const postBody = object({
         imageAfter: string().min(1),
         images: array(string().min(1)).default([]),
     }).optional(),
-    components: array(string().min(1)).default([]),
     eCommerce: object({
         typeId: z.nativeEnum(ProductTypeId).default(ProductTypeId.SimpleProduct),
         images: array(string().min(1)).default([]),

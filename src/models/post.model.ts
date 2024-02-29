@@ -18,7 +18,6 @@ import {
     IPostECommerceVariationModel,
     IPostECommerceVariationSelectedModel
 } from "../types/models/post.model";
-import {componentModel} from "./component.model";
 import {ProductTypeId} from "../constants/productTypes";
 import {AttributeTypeId} from "../constants/attributeTypes";
 
@@ -144,7 +143,6 @@ const schema = new mongoose.Schema<IPostModel>(
         categories: {type: [mongoose.Schema.Types.ObjectId], ref: postTermModel},
         tags: {type: [mongoose.Schema.Types.ObjectId], ref: postTermModel},
         contents: {type: [schemaContent], default: []},
-        components: {type: [mongoose.Schema.Types.ObjectId], ref: componentModel},
         eCommerce: {type: schemaECommerce},
         beforeAndAfter: {type: schemaBeforeAndAfter}
     },

@@ -16,7 +16,6 @@ import MongoDBHelpers from "../library/mongodb/helpers";
 import { IPostTermGetResultService } from "../types/services/postTerm.service";
 import Variable from "../library/variable";
 import { Config } from "../config";
-import { IComponentGetResultService } from "../types/services/component.service";
 import {postObjectIdKeys} from "../constants/objectIdKeys/post.objectIdKeys";
 import { StatusId } from "../constants/status";
 import { PostTermTypeId } from "../constants/postTermTypes";
@@ -128,21 +127,6 @@ const getOne = async (params: IPostGetOneParamService) => {
     })
 
     query.populate({
-        path: "components",
-        options: { omitUndefined: true },
-        transform: (doc: IComponentGetResultService) => {
-            if (doc) {
-                doc.types.map(docType => {
-                    if (Array.isArray(docType.contents)) {
-                        docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);
-                    }
-                })
-            }
-            return doc;
-        }
-    })
-
-    query.populate({
         path: [
             "authorId",
             "lastAuthorId"
@@ -163,10 +147,6 @@ const getOne = async (params: IPostGetOneParamService) => {
 
         if (doc.tags) {
             doc.tags = doc.tags.filter(item => item);
-        }
-
-        if (doc.components) {
-            doc.components = doc.components.filter(item => item);
         }
 
         if (Array.isArray(doc.contents)) {

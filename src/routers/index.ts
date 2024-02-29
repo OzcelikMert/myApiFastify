@@ -12,7 +12,6 @@ import {serverInfoRoute} from "./routes/serverInfo.route";
 import {viewRoute} from "./routes/view.route";
 import {mailerRoute} from "./routes/mailer.route";
 import {subscriberRoute} from "./routes/subscriber.route";
-import {componentRoute} from "./routes/component.route";
 import {sitemapRoute} from "./routes/sitemap.route";
 import {navigationRoute} from "./routes/navigation.route";
 
@@ -28,7 +27,6 @@ export const routers = function (fastify: FastifyInstance, opts: any, done: () =
     fastify.register(viewRoute, { prefix: EndPoints.VIEW });
     fastify.register(mailerRoute, { prefix: EndPoints.MAILER });
     fastify.register(subscriberRoute, { prefix: EndPoints.SUBSCRIBER });
-    fastify.register(componentRoute, { prefix: EndPoints.COMPONENT });
     fastify.register(sitemapRoute, { prefix: EndPoints.SITEMAP });
     fastify.register(navigationRoute, { prefix: EndPoints.NAVIGATION });
     done();

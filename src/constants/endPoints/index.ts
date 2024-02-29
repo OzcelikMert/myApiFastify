@@ -10,7 +10,6 @@ export class EndPoints {
     static get VIEW() { return "/view"; }
     static get MAILER() { return "/mailer"; }
     static get SUBSCRIBER() { return "/subscriber"; }
-    static get COMPONENT() { return "/component"; }
     static get SITEMAP() { return "/sitemap"; }
     static get NAVIGATION() { return "/navigation"; }
 };

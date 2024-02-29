@@ -7,7 +7,6 @@ import {
     IPostECommerceVariationContentModel,
     IPostECommerceVariationModel
 } from "../models/post.model";
-import {IComponentModel} from "../models/component.model";
 import {PostTypeId} from "../../constants/postTypes";
 import {PageTypeId} from "../../constants/pageTypes";
 import {StatusId} from "../../constants/status";
@@ -25,7 +24,6 @@ export type IPostGetOneResultService = {
     categories?: IPostTermPopulateService[]
     tags?: IPostTermPopulateService[]
     contents?: IPostContentModel | IPostContentModel[]
-    components?: IComponentModel[],
     alternates?: IPostAlternateService[]
     eCommerce?: (Omit<IPostECommerceModel<IPostTermPopulateService, IPostTermPopulateService[]>, "variations"> & {
         variations?: (Omit<IPostECommerceVariationModel<IPostTermPopulateService>, "contents"> & {
@@ -35,7 +33,6 @@ export type IPostGetOneResultService = {
 } & Omit<IPostModel, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce">
 
 export type IPostGetManyResultService = {
-    components?: IPostModel["components"]
     eCommerce?: (Omit<IPostECommerceModel, "variations"> & {
         variations?: (Omit<IPostECommerceVariationModel, "contents"> & {
             contents?: IPostECommerceVariationContentModel | IPostECommerceVariationContentModel[]
