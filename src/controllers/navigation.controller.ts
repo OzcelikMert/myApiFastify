@@ -11,17 +11,22 @@ import {
     INavigationPutManyStatusSchema,
     INavigationPutWithIdRankSchema
 } from "../schemas/navigation.schema";
+import {INavigationGetResultService} from "../types/services/navigation.service";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<INavigationGetResultService>();
 
         let reqData = req as INavigationGetWithIdSchema;
 
-        serviceResult.data = await NavigationService.getOne({
+        let navigation = await NavigationService.getOne({
             ...reqData.params,
             ...reqData.query
         });
+
+        if(navigation){
+            serviceResult.data = navigation;
+        }
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     })
@@ -29,7 +34,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<INavigationGetResultService[]>();
 
         let reqData = req as INavigationGetManySchema;
 
@@ -47,13 +52,11 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationPostSchema;
 
-        let insertData = await NavigationService.add({
+        await NavigationService.add({
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
-
-        serviceResult.data = {_id: insertData._id};
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
@@ -65,7 +68,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationPutWithIdSchema;
 
-        serviceResult.data = await NavigationService.updateOne({
+        await NavigationService.updateOne({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -81,7 +84,7 @@ const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationPutWithIdRankSchema;
 
-        serviceResult.data = await NavigationService.updateOneRank({
+        await NavigationService.updateOneRank({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -97,7 +100,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationPutManyStatusSchema;
 
-        serviceResult.data = await NavigationService.updateManyStatus({
+        await NavigationService.updateManyStatus({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString()
         });
@@ -112,7 +115,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationDeleteManySchema;
 
-        serviceResult.data = await NavigationService.deleteMany({
+        await NavigationService.deleteMany({
             ...reqData.body
         });
 

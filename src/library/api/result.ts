@@ -1,9 +1,9 @@
 import {ApiErrorCodes} from "./errorCodes";
 import {ApiStatusCodes} from "./statusCodes";
 
-export class ApiResult {
+export class ApiResult<Data = null, CustomData = null> {
     constructor(
-        data: any = [],
+        data: any = null,
         customData: any = null,
         status: boolean = true,
         message: any = "",
@@ -20,8 +20,8 @@ export class ApiResult {
         this.source = source;
     }
 
-    data: any;
-    customData: any;
+    data: Data | null;
+    customData: CustomData;
     status: boolean;
     message: any;
     errorCode: ApiErrorCodes;

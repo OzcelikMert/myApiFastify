@@ -8,22 +8,24 @@ import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {ISessionAuthModel} from "../types/models/sessionAuth.model";
+import {IUserGetResultService} from "../types/services/user.service";
 
 const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<ISessionAuthModel>();
 
         serviceResult.data = {
-            _id: req.sessionAuth?._id,
-            user: req.sessionAuth?.user
-        } as ISessionAuthModel;
+            _id: req.sessionAuth!._id,
+            user: req.sessionAuth!.user!
+        };
+
         await reply.status(serviceResult.statusCode).send(serviceResult)
     })
 };
 
 const login = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IUserGetResultService>();
 
         let reqData = req as IAuthPostSchema;
 

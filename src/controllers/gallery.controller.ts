@@ -14,6 +14,7 @@ import {GalleryService} from "../services/gallery.service";
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 import {GalleryTypeId} from "../constants/galleryTypeId";
+import {IGalleryGetResultService, IGalleryImageProperties} from "../types/services/gallery.service";
 
 const upload: any = multer({
     storage: multer.memoryStorage(),
@@ -28,18 +29,21 @@ const upload: any = multer({
     }
 }).single("image");
 
-function getImageResult(name: string, stats: Stats) {
-    return {
-        name: name,
-        sizeKB: Number(stats.size) / 1024,
-        sizeMB: Number(stats.size) / (1024 * 1024),
-        createdAt: stats.ctime,
-    }
+async function getImageProperties(name: string) {
+    return new Promise<IGalleryImageProperties>(resolve => {
+        fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
+            resolve({
+                sizeKB: Number(stats.size) / 1024,
+                sizeMB: Number(stats.size) / (1024 * 1024),
+            });
+        })
+    });
 }
 
 const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<(IGalleryGetResultService & IGalleryImageProperties)[]>();
+        serviceResult.data = [];
 
         const reqData = req as IGalleryGetManySchema;
 
@@ -49,15 +53,10 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
         });
 
         for (const item of gallery) {
-            await new Promise(resolve => {
-                fs.stat(path.resolve(Config.paths.uploads.images, item.name), (err, stats) => {
-                    serviceResult.data.push({
-                        ...item,
-                        ...getImageResult(item.name, stats)
-                    });
-                    resolve(1);
-                })
-            })
+            serviceResult.data?.push({
+                ...item,
+                ...(await getImageProperties(item.name))
+            });
         }
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
@@ -66,7 +65,8 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<(IGalleryGetResultService & IGalleryImageProperties)[]>();
+        serviceResult.data = [];
 
         function newName() {
             const timestamp = new Date().getStringWithMask(DateMask.UNIFIED_ALL);
@@ -108,17 +108,15 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                         typeId: GalleryTypeId.Image
                     });
 
-                    let galleryItem = await GalleryService.getOne({
-                        _id: insertedData._id.toString()
-                    });
+                    if(insertedData){
+                        let image = await GalleryService.getOne({_id: insertedData._id.toString()});
 
-                    if (galleryItem) {
-                        fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
-                            serviceResult.data.push({
-                                ...galleryItem,
-                                ...getImageResult(galleryItem!.name, stats)
+                        if (image) {
+                            serviceResult.data?.push({
+                                ...image,
+                                ...(await getImageProperties(insertedData.name))
                             });
-                        })
+                        }
                     }
                 }
 
@@ -137,7 +135,8 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<string[]>();
+        serviceResult.data = [];
 
         const reqData = req as IGalleryDeleteManySchema;
 
@@ -150,7 +149,7 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
                 if (fs.existsSync(path.resolve(Config.paths.uploads.images, galleryItem.name))) {
                     fs.unlinkSync(path.resolve(Config.paths.uploads.images, galleryItem.name));
                     fs.close(0);
-                    serviceResult.data.push(galleryItem.name);
+                    serviceResult.data?.push(galleryItem.name);
                 }
             })
             resolve(0);

@@ -2,6 +2,11 @@ import {IGalleryModel} from "../models/gallery.model";
 import {IUserPopulateService} from "./user.service";
 import {GalleryTypeId} from "../../constants/galleryTypeId";
 
+export type IGalleryImageProperties = {
+    sizeKB: number,
+    sizeMB: number
+}
+
 export type IGalleryGetResultService = {
     authorId: IUserPopulateService
 } & Omit<IGalleryModel, "authorId">

@@ -10,7 +10,8 @@ import {LogMiddleware} from "../middlewares/log.middleware";
 
 const send = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<{_id: string, response: string}[], any>();
+        serviceResult.data = [];
 
         let reqData = req as IMailerPostSchema;
 
@@ -34,7 +35,6 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
                     });
 
                     if(await transporter.verify()){
-                        serviceResult.data = [];
 
                         let sendMail = await transporter.sendMail({
                             from: contactForm.email,
@@ -44,9 +44,9 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
                             replyTo: reqData.body.email
                         });
 
-                        serviceResult.data.push({
-                            "_id": sendMail.messageId,
-                            "response": sendMail.response
+                        serviceResult.data?.push({
+                            _id: sendMail.messageId,
+                            response: sendMail.response
                         });
 
                         if(reqData.body.replyMessage) {
@@ -57,7 +57,7 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
                                 html: reqData.body.replyMessage,
                                 replyTo: reqData.body.email
                             });
-                            serviceResult.data.push({
+                            serviceResult.data?.push({
                                 "_id": sendMailReply.messageId,
                                 "response": sendMailReply.response
                             });
@@ -69,7 +69,7 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
                         serviceResult.statusCode = ApiStatusCodes.conflict;
                         serviceResult.errorCode = ApiErrorCodes.incorrectData;
                     }
-                }catch (e) {
+                }catch (e: any) {
                     serviceResult.status = false;
                     serviceResult.statusCode = ApiStatusCodes.conflict;
                     serviceResult.errorCode = ApiErrorCodes.incorrectData;

@@ -8,10 +8,11 @@ import {
     ISubscriberGetManySchema,
     ISubscriberPostSchema, ISubscriberDeleteWithEmailSchema, ISubscriberGetWithEmailSchema
 } from "../schemas/subscriber.schema";
+import {ISubscriberGetResultService} from "../types/services/subscriber.service";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<ISubscriberGetResultService>();
 
         const reqData = req as ISubscriberGetWithIdSchema;
 
@@ -25,7 +26,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<ISubscriberGetResultService[]>();
 
         const reqData = req as ISubscriberGetManySchema;
 
@@ -39,7 +40,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<ISubscriberGetResultService>();
 
         const reqData = req as ISubscriberGetWithEmailSchema;
 
@@ -57,11 +58,9 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as ISubscriberPostSchema;
 
-        let insertData = await SubscriberService.add({
+        await SubscriberService.add({
             ...reqData.body
         });
-
-        serviceResult.data = {_id: insertData._id};
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
@@ -73,7 +72,7 @@ const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as ISubscriberDeleteWithIdSchema;
 
-        serviceResult.data = await SubscriberService.deleteOne({
+        await SubscriberService.deleteOne({
             ...reqData.params
         })
 
@@ -87,7 +86,7 @@ const deleteWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as ISubscriberDeleteWithEmailSchema;
 
-        serviceResult.data = await SubscriberService.deleteOne({
+        await SubscriberService.deleteOne({
             ...reqData.params
         })
 
@@ -101,7 +100,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as ISubscriberDeleteManySchema;
 
-        serviceResult.data = await SubscriberService.deleteMany({
+        await SubscriberService.deleteMany({
             ...reqData.body
         })
 

@@ -13,10 +13,11 @@ import {PostTermService} from "../services/postTerm.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
+import {IPostTermGetResultService} from "../types/services/postTerm.service";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IPostTermGetResultService>();
 
         let reqData = req as IPostTermGetWithIdSchema;
 
@@ -32,7 +33,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IPostTermGetResultService[]>();
 
         let reqData = req as IPostTermGetManySchema;
 
@@ -47,7 +48,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IPostTermGetResultService>();
 
         let reqData = req as IPostTermGetWithURLSchema;
 
@@ -66,13 +67,11 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermPostSchema;
 
-        let insertData = await PostTermService.add({
+        await PostTermService.add({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
             authorId: req.sessionAuth!.user!.userId.toString(),
         });
-
-        serviceResult.data = {_id: insertData._id};
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
@@ -84,7 +83,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermPutWithIdSchema;
 
-        serviceResult.data = await PostTermService.updateOne({
+        await PostTermService.updateOne({
             ...reqData.body,
             ...reqData.params,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -100,7 +99,7 @@ const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermPutWithIdRankSchema;
 
-        serviceResult.data = await PostTermService.updateOneRank({
+        await PostTermService.updateOneRank({
             ...reqData.body,
             ...reqData.params,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -116,7 +115,7 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermPutManyStatusSchema;
 
-        serviceResult.data = await PostTermService.updateManyStatus({
+        await PostTermService.updateManyStatus({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
@@ -131,7 +130,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermDeleteManySchema;
 
-        serviceResult.data = await PostTermService.deleteMany({
+        await PostTermService.deleteMany({
             ...reqData.body
         });
 

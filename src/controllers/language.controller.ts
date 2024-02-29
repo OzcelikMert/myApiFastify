@@ -10,17 +10,24 @@ import {LogMiddleware} from "../middlewares/log.middleware";
 import fs from "fs";
 import {Config} from "../config";
 import path from "path";
+import {ILanguageGetResultService} from "../types/services/language.service";
+import {ILanguageModel} from "../types/models/language.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<ILanguageGetResultService>();
 
         let reqData = req as ILanguageGetWithIdSchema;
 
-        serviceResult.data = await LanguageService.getOne({
+        let language = await LanguageService.getOne({
             ...reqData.params,
             ...reqData.query,
         });
+
+        if(language){
+            serviceResult.data = language;
+        }
+
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
@@ -28,7 +35,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<ILanguageGetResultService[]>();
 
         let reqData = req as ILanguageGetManySchema;
 
@@ -42,7 +49,8 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<string[]>();
+        serviceResult.data = [];
 
         const fileType = [".jpg", ".png", ".webp", ".gif", ".jpeg"];
 
@@ -52,7 +60,7 @@ const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
                     let image = images[i];
                     if(fs.existsSync(path.resolve(Config.paths.uploads.flags, image))) {
                         if (fileType.includes(path.extname(image))){
-                            serviceResult.data.push(image)
+                            serviceResult.data?.push(image)
                         }
                     }
                 }
@@ -74,8 +82,6 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
         });
 
-        serviceResult.data = {_id: insertData._id};
-
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
 }
@@ -86,7 +92,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as ILanguagePutWithIdSchema;
 
-        serviceResult.data = await LanguageService.updateOne({
+        await LanguageService.updateOne({
             ...reqData.params,
             ...reqData.body,
         });
@@ -101,7 +107,7 @@ const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as ILanguagePutWithIdRankSchema;
 
-        serviceResult.data = await LanguageService.updateOneRank({
+        await LanguageService.updateOneRank({
             ...reqData.params,
             ...reqData.body,
         });

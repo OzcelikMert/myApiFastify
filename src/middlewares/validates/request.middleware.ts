@@ -18,7 +18,6 @@ const check = (schema: ZodSchema) => async (
         req = Object.assign(req, validatedData);
     } catch (e: any) {
         serviceResult.status = false;
-        serviceResult.data = [];
         serviceResult.message = e.errors;
         serviceResult.errorCode = ApiErrorCodes.incorrectData;
         serviceResult.statusCode = ApiStatusCodes.badRequest;

@@ -8,7 +8,7 @@ import {FastifyReply, FastifyRequest} from "fastify";
 
 const get = async (req: FastifyRequest, reply: FastifyReply) => {
     return await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<{cpu: string, memory: string, storage: string}>();
         let cpu = await osu.cpu.usage();
         let diskSpace = await checkDiskSpace(Config.paths.root);
 

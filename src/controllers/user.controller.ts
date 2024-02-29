@@ -12,10 +12,11 @@ import {
 } from "../schemas/user.schema";
 import {UserService} from "../services/user.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
+import {IUserGetResultService} from "../types/services/user.service";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IUserGetResultService>();
 
         const reqData = req as IUserGetWithIdSchema;
 
@@ -30,7 +31,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IUserGetResultService[]>();
 
         const reqData = req as IUserGetManySchema;
 
@@ -44,7 +45,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IUserGetResultService>();
 
         const reqData = req as IUserGetWithURLSchema;
 
@@ -63,12 +64,10 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserPostSchema;
 
-        let insertData = await UserService.add({
+        await UserService.add({
             ...reqData.body,
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
         });
-
-        serviceResult.data = {_id: insertData._id};
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
@@ -80,7 +79,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserPutWithIdSchema
 
-        serviceResult.data = await UserService.updateOne({
+        await UserService.updateOne({
             ...reqData.params,
             ...reqData.body,
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
@@ -96,7 +95,7 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserPutProfileSchema;
 
-        serviceResult.data = await UserService.updateOne({
+        await UserService.updateOne({
             ...reqData.body,
             _id: req.sessionAuth!.user!.userId.toString(),
         });
@@ -117,7 +116,7 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserPutPasswordSchema;
 
-        serviceResult.data = await UserService.updateOne({
+        await UserService.updateOne({
             _id: req.sessionAuth!.user!.userId.toString(),
             password: reqData.body.newPassword
         });
@@ -132,7 +131,7 @@ const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserDeleteWithIdSchema;
 
-        serviceResult.data = await UserService.deleteOne(reqData.params);
+        await UserService.deleteOne(reqData.params);
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });

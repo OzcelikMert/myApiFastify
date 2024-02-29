@@ -6,10 +6,11 @@ import {Config} from "../config";
 import {LogMiddleware} from "../middlewares/log.middleware";
 import {IViewPostSchema} from "../schemas/view.schema";
 import Variable from "../library/variable";
+import {IViewGetTotalResultService} from "../types/services/view.service";
 
 const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<{liveTotal: number, averageTotal: number, weeklyTotal: number}>();
 
         let dateStart = new Date();
         dateStart.addDays(-7);
@@ -39,7 +40,7 @@ const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getStatistics = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<{day: IViewGetTotalResultService[], country: IViewGetTotalResultService[]}>();
 
         let dateStart = new Date();
         dateStart.addDays(-7);
@@ -62,14 +63,12 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
         let ip = req.ip;
         let ipDetail = lookup(req.ip);
 
-        let insertData = await ViewService.add({
+        await ViewService.add({
             ...reqData.body,
             ip: ip,
             url: Variable.isEmpty(reqData.body.url) ? "/" : reqData.body.url,
             ...ipDetail
         })
-
-        serviceResult.data = {_id: insertData._id};
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
