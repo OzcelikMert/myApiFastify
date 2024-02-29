@@ -12,7 +12,7 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
     reply: FastifyReply
 ) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
@@ -23,19 +23,19 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
                 !PermissionUtil.checkPermissionRoleRank(user.roleId, permissionData.userRoleId) ||
                 !PermissionUtil.checkPermissionId(user.roleId, user.permissions, permissionData.permissionId)
             ) {
-                serviceResult.status = false;
-                serviceResult.errorCode = ApiErrorCodes.noPerm;
-                serviceResult.statusCode = ApiStatusCodes.forbidden;
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.noPerm;
+                apiResult.statusCode = ApiStatusCodes.forbidden;
             }
         }else {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
-            serviceResult.statusCode = ApiStatusCodes.unauthorized;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notLoggedIn;
+            apiResult.statusCode = ApiStatusCodes.unauthorized;
         }
 
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 };

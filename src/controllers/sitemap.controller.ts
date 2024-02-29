@@ -13,9 +13,9 @@ import {
 
 const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<{post: ISitemapMapPostCountService[], postTerm: ISitemapMapPostTermCountService[]}>();
+        let apiResult = new ApiResult<{post: ISitemapMapPostCountService[], postTerm: ISitemapMapPostTermCountService[]}>();
 
-        serviceResult.data = {
+        apiResult.data = {
             post: await SitemapService.getPostCount({typeId: [PostTypeId.Page, PostTypeId.Portfolio, PostTypeId.Blog]}),
             postTerm: await SitemapService.getPostTermCount({
                 postTypeId: [PostTypeId.Page, PostTypeId.Portfolio, PostTypeId.Blog],
@@ -23,31 +23,31 @@ const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
             })
         };
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const getPost = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ISitemapPostService[]>();
+        let apiResult = new ApiResult<ISitemapPostService[]>();
 
         const reqData = req as ISitemapGetPostSchema;
 
-        serviceResult.data = await SitemapService.getPost(reqData.query);
+        apiResult.data = await SitemapService.getPost(reqData.query);
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const getPostTerm = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ISitemapPostTermService[]>();
+        let apiResult = new ApiResult<ISitemapPostTermService[]>();
 
         const reqData = req as ISitemapGetPostTermSchema;
 
-        serviceResult.data = await SitemapService.getPostTerm(reqData.query)
+        apiResult.data = await SitemapService.getPostTerm(reqData.query)
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 

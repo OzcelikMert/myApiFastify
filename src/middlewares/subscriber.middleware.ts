@@ -11,47 +11,47 @@ import {
 
 const checkWithId = (isThere: boolean) => async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as ISubscriberDeleteWithIdSchema;
 
-        let resData = await SubscriberService.getOne({
+        let serviceResult = await SubscriberService.getOne({
             ...reqData.params
         });
 
-        if ((isThere && resData) || (!isThere && !resData)) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.alreadyData;
-            serviceResult.statusCode = ApiStatusCodes.conflict;
+        if ((isThere && serviceResult) || (!isThere && !serviceResult)) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.alreadyData;
+            apiResult.statusCode = ApiStatusCodes.conflict;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as ISubscriberDeleteManySchema;
 
-        let resData = await SubscriberService.getMany({
+        let serviceResult = await SubscriberService.getMany({
             _id: reqData.body._id
         });
 
         if (
-            resData.length == 0 ||
-            (resData.length != reqData.body._id.length)
+            serviceResult.length == 0 ||
+            (serviceResult.length != reqData.body._id.length)
         ) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.alreadyData;
-            serviceResult.statusCode = ApiStatusCodes.conflict;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.alreadyData;
+            apiResult.statusCode = ApiStatusCodes.conflict;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }

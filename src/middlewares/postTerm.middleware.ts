@@ -10,58 +10,58 @@ import {PermissionUtil} from "../utils/permission.util";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostTermPutWithIdSchema;
 
-        let resData = await PostTermService.getOne({
+        let serviceResult = await PostTermService.getOne({
             _id: reqData.params._id,
             postTypeId: reqData.body.postTypeId,
             typeId: reqData.body.typeId,
         });
 
-        if (!resData) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+        if (!serviceResult) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostTermDeleteManySchema;
 
-        let resData = await PostTermService.getMany({
+        let serviceResult = await PostTermService.getMany({
             _id: reqData.body._id,
             postTypeId: reqData.body.postTypeId,
             typeId: [reqData.body.typeId],
         });
 
         if (
-            resData.length === 0 ||
-            (resData.length != reqData.body._id.length)
+            serviceResult.length === 0 ||
+            (serviceResult.length != reqData.body._id.length)
         ) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkWithIdIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostTermPutWithIdSchema;
 
@@ -74,22 +74,22 @@ const checkWithIdIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => 
 
             if (postTerm) {
                 if (postTerm.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
-                    serviceResult.status = false;
-                    serviceResult.errorCode = ApiErrorCodes.noPerm;
-                    serviceResult.statusCode = ApiStatusCodes.forbidden;
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.noPerm;
+                    apiResult.statusCode = ApiStatusCodes.forbidden;
                 }
             }
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostTermDeleteManySchema;
 
@@ -103,17 +103,17 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
             if (postTerms) {
                 for (const postTerm of postTerms) {
                     if (postTerm.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
-                        serviceResult.status = false;
-                        serviceResult.errorCode = ApiErrorCodes.noPerm;
-                        serviceResult.statusCode = ApiStatusCodes.forbidden;
+                        apiResult.status = false;
+                        apiResult.errorCode = ApiErrorCodes.noPerm;
+                        apiResult.statusCode = ApiStatusCodes.forbidden;
                         break;
                     }
                 }
             }
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }

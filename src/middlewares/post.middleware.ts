@@ -13,7 +13,7 @@ import {PermissionUtil} from "../utils/permission.util";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostPutWithIdSchema;
 
@@ -23,20 +23,20 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
         });
 
         if (!post) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostDeleteManySchema;
 
@@ -49,20 +49,20 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
             posts.length == 0 ||
             (posts.length != reqData.body._id.length)
         ) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkWithIdIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostPutWithIdSchema;
 
@@ -74,22 +74,22 @@ const checkWithIdIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => 
 
             if (post) {
                 if (post.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
-                    serviceResult.status = false;
-                    serviceResult.errorCode = ApiErrorCodes.noPerm;
-                    serviceResult.statusCode = ApiStatusCodes.forbidden;
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.noPerm;
+                    apiResult.statusCode = ApiStatusCodes.forbidden;
                 }
             }
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostDeleteManySchema;
 
@@ -102,17 +102,17 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
             if (posts) {
                 for (const post of posts) {
                     if (post.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
-                        serviceResult.status = false;
-                        serviceResult.errorCode = ApiErrorCodes.noPerm;
-                        serviceResult.statusCode = ApiStatusCodes.forbidden;
+                        apiResult.status = false;
+                        apiResult.errorCode = ApiErrorCodes.noPerm;
+                        apiResult.statusCode = ApiStatusCodes.forbidden;
                         break;
                     }
                 }
             }
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }

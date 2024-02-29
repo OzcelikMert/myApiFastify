@@ -12,20 +12,20 @@ import {IUserGetResultService} from "../types/services/user.service";
 
 const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ISessionAuthModel>();
+        let apiResult = new ApiResult<ISessionAuthModel>();
 
-        serviceResult.data = {
+        apiResult.data = {
             _id: req.sessionAuth!._id,
             user: req.sessionAuth!.user!
         };
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     })
 };
 
 const login = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IUserGetResultService>();
+        let apiResult = new ApiResult<IUserGetResultService>();
 
         let reqData = req as IAuthPostSchema;
 
@@ -49,27 +49,27 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
                     refreshedAt: date.toString(),
                 });
             }else {
-                serviceResult.status = false;
-                serviceResult.errorCode = ApiErrorCodes.noPerm;
-                serviceResult.statusCode = ApiStatusCodes.notFound;
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.noPerm;
+                apiResult.statusCode = ApiStatusCodes.notFound;
             }
-            serviceResult.data = user;
+            apiResult.data = user;
         }else {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     })
 };
 
 const logOut = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         req.sessionAuth!.delete();
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     })
 };
 

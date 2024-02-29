@@ -20,84 +20,84 @@ import {IPostModel} from "../types/models/post.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IPostGetOneResultService>();
+        let apiResult = new ApiResult<IPostGetOneResultService>();
 
         let reqData = req as IPostGetWithIdSchema;
 
-        serviceResult.data = await PostService.getOne({
+        apiResult.data = await PostService.getOne({
             ...reqData.params,
             ...reqData.query,
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     })
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IPostGetManyResultService[]>();
+        let apiResult = new ApiResult<IPostGetManyResultService[]>();
 
         let reqData = req as IPostGetManySchema;
 
-        serviceResult.data = await PostService.getMany({
+        apiResult.data = await PostService.getMany({
             ...reqData.query,
             ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     })
 }
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IPostGetOneResultService>();
+        let apiResult = new ApiResult<IPostGetOneResultService>();
 
         let reqData = req as IPostGetWithURLSchema;
 
-        serviceResult.data = await PostService.getOne({
+        apiResult.data = await PostService.getOne({
             ...reqData.params,
             ...reqData.query
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     })
 }
 
 const getCount = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<number>();
+        let apiResult = new ApiResult<number>();
 
         let reqData = req as IPostGetCountSchema;
 
-        serviceResult.data = await PostService.getCount({
+        apiResult.data = await PostService.getCount({
             ...reqData.query
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     });
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IPostModel>();
+        let apiResult = new ApiResult<IPostModel>();
 
         let reqData = req as IPostPostSchema;
 
-        serviceResult.data = await PostService.add({
+        apiResult.data = await PostService.add({
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
             dateStart: new Date(reqData.body.dateStart)
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     });
 }
 
 const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostPutWithIdSchema;
 
@@ -108,13 +108,13 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             dateStart: new Date(reqData.body.dateStart)
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     });
 }
 
 const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostPutWithIdRankSchema;
 
@@ -124,13 +124,13 @@ const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     });
 }
 
 const updateWithIdView = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostPutWithIdViewSchema;
 
@@ -139,13 +139,13 @@ const updateWithIdView = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     });
 }
 
 const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostPutManyStatusSchema;
 
@@ -154,13 +154,13 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     });
 }
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IPostDeleteManySchema;
 
@@ -168,7 +168,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult);
+        await reply.status(apiResult.statusCode).send(apiResult);
     });
 }
 

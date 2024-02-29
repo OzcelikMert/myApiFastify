@@ -10,7 +10,7 @@ import {UserUtil} from "../../utils/user.util";
 
 const check = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         if (req.sessionAuth && req.sessionAuth.user) {
             if (
@@ -26,13 +26,13 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
 
 
         if ((typeof req.sessionAuth === "undefined" || typeof req.sessionAuth.user === "undefined")) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
-            serviceResult.statusCode = ApiStatusCodes.unauthorized;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notLoggedIn;
+            apiResult.statusCode = ApiStatusCodes.unauthorized;
         }
 
-        if (!serviceResult.status) {
-            res.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            res.status(apiResult.statusCode).send(apiResult)
         }
     });
 };

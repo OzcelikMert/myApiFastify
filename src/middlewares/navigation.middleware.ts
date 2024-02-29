@@ -8,43 +8,43 @@ import {INavigationPutWithIdSchema, INavigationPutManyStatusSchema} from "../sch
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as INavigationPutWithIdSchema;
 
-        let resData = await NavigationService.getOne({_id: reqData.params._id});
+        let serviceResult = await NavigationService.getOne({_id: reqData.params._id});
 
-        if (!resData) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+        if (!serviceResult) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as INavigationPutManyStatusSchema;
 
-        let resData = await NavigationService.getMany({_id: reqData.body._id});
+        let serviceResult = await NavigationService.getMany({_id: reqData.body._id});
 
         if (
-            resData.length == 0 ||
-            (resData.length !=  reqData.body._id.length)
+            serviceResult.length == 0 ||
+            (serviceResult.length !=  reqData.body._id.length)
         ) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }

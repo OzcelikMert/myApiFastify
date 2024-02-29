@@ -16,52 +16,52 @@ import {INavigationModel} from "../types/models/navigation.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<INavigationGetResultService>();
+        let apiResult = new ApiResult<INavigationGetResultService>();
 
         let reqData = req as INavigationGetWithIdSchema;
 
-        serviceResult.data = await NavigationService.getOne({
+        apiResult.data = await NavigationService.getOne({
             ...reqData.params,
             ...reqData.query
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     })
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<INavigationGetResultService[]>();
+        let apiResult = new ApiResult<INavigationGetResultService[]>();
 
         let reqData = req as INavigationGetManySchema;
 
-        serviceResult.data = await NavigationService.getMany({
+        apiResult.data = await NavigationService.getMany({
             ...reqData.query
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     })
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<INavigationModel>();
+        let apiResult = new ApiResult<INavigationModel>();
 
         let reqData = req as INavigationPostSchema;
 
-        serviceResult.data = await NavigationService.add({
+        apiResult.data = await NavigationService.add({
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as INavigationPutWithIdSchema;
 
@@ -71,13 +71,13 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as INavigationPutWithIdRankSchema;
 
@@ -87,13 +87,13 @@ const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as INavigationPutManyStatusSchema;
 
@@ -102,13 +102,13 @@ const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString()
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as INavigationDeleteManySchema;
 
@@ -116,7 +116,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 

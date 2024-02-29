@@ -9,7 +9,7 @@ import {IViewPostSchema} from "../schemas/view.schema";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IViewPostSchema;
 
@@ -19,21 +19,21 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
             dateEnd = new Date(new Date().getStringWithMask(DateMask.DATE));
         dateEnd.addDays(1);
 
-        let resData = await ViewService.getOne({
+        let serviceResult = await ViewService.getOne({
             ip: req.ip,
             url: url,
             dateStart: dateStart,
             dateEnd: dateEnd
         });
 
-        if (resData) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.alreadyData;
-            serviceResult.statusCode = ApiStatusCodes.conflict;
+        if (serviceResult) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.alreadyData;
+            apiResult.statusCode = ApiStatusCodes.conflict;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
@@ -42,9 +42,9 @@ const checkAndDeleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let dateEnd = new Date();
         dateEnd.addDays(-7);
 
-        let resData = await ViewService.getOne({dateEnd: dateEnd});
+        let serviceResult = await ViewService.getOne({dateEnd: dateEnd});
 
-        if (resData) {
+        if (serviceResult) {
             await ViewService.deleteMany({dateEnd: dateEnd})
         }
     });

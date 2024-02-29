@@ -10,29 +10,29 @@ import {PermissionUtil} from "../utils/permission.util";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IUserPutWithIdSchema;
 
-        let resData = await UserService.getOne({
+        let serviceResult = await UserService.getOne({
             _id: reqData.params._id
         });
 
-        if (!resData) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+        if (!serviceResult) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IUserPutWithIdSchema;
         let userRoleId = 0;
@@ -55,71 +55,71 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
                 });
 
                 if (PermissionUtil.checkPermissionRoleRank(userRoleId, sessionUser!.roleId)) {
-                    serviceResult.status = false;
-                    serviceResult.errorCode = ApiErrorCodes.noPerm;
-                    serviceResult.statusCode = ApiStatusCodes.notFound;
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.noPerm;
+                    apiResult.statusCode = ApiStatusCodes.notFound;
                 }
             }else {
-                serviceResult.status = false;
-                serviceResult.errorCode = ApiErrorCodes.notLoggedIn;
-                serviceResult.statusCode = ApiStatusCodes.unauthorized;
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.notLoggedIn;
+                apiResult.statusCode = ApiStatusCodes.unauthorized;
             }
         } else {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.incorrectData;
-            serviceResult.statusCode = ApiStatusCodes.badRequest;
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.incorrectData;
+            apiResult.statusCode = ApiStatusCodes.badRequest;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IUserPutWithIdSchema;
 
         if (reqData.body.email) {
-            let resData = await UserService.getOne({
+            let serviceResult = await UserService.getOne({
                 email: reqData.body.email,
                 ignoreUserId: reqData.params._id ? [reqData.params._id] : undefined
             });
 
-            if (resData) {
-                serviceResult.status = false;
-                serviceResult.errorCode = ApiErrorCodes.alreadyData;
-                serviceResult.statusCode = ApiStatusCodes.conflict;
+            if (serviceResult) {
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.alreadyData;
+                apiResult.statusCode = ApiStatusCodes.conflict;
             }
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }
 
 const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IUserPutPasswordSchema;
 
-        let resData = await UserService.getOne({
+        let serviceResult = await UserService.getOne({
             email: req.sessionAuth!.user?.email,
             password: reqData.body.password
         });
 
-        if (!resData) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+        if (!serviceResult) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }

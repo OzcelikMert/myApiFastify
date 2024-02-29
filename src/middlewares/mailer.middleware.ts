@@ -8,7 +8,7 @@ import {IMailerPostSchema} from "../schemas/mailer.schema";
 
 const checkContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IMailerPostSchema;
 
@@ -16,13 +16,13 @@ const checkContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if(setting){
             if((typeof setting.contactForms === "undefined") || (setting.contactForms && setting.contactForms?.indexOfKey("_id", reqData.body.contactFormId) < 0)){
-                serviceResult.status = false;
-                serviceResult.errorCode = ApiErrorCodes.notFound;
-                serviceResult.statusCode = ApiStatusCodes.notFound;
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.notFound;
+                apiResult.statusCode = ApiStatusCodes.notFound;
             }
 
-            if (!serviceResult.status) {
-                await reply.status(serviceResult.statusCode).send(serviceResult)
+            if (!apiResult.status) {
+                await reply.status(apiResult.statusCode).send(apiResult)
             }
         }
     });

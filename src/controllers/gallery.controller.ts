@@ -43,8 +43,8 @@ async function getImageProperties(name: string) {
 
 const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<(IGalleryGetResultService & IGalleryImageProperties)[]>();
-        serviceResult.data = [];
+        let apiResult = new ApiResult<(IGalleryGetResultService & IGalleryImageProperties)[]>();
+        apiResult.data = [];
 
         const reqData = req as IGalleryGetManySchema;
 
@@ -54,20 +54,20 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
         });
 
         for (const item of gallery) {
-            serviceResult.data?.push({
+            apiResult.data?.push({
                 ...item,
                 ...(await getImageProperties(item.name))
             });
         }
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<(IGalleryModel & IGalleryImageProperties)[]>();
-        serviceResult.data = [];
+        let apiResult = new ApiResult<(IGalleryModel & IGalleryImageProperties)[]>();
+        apiResult.data = [];
 
         function newName() {
             const timestamp = new Date().getStringWithMask(DateMask.UNIFIED_ALL);
@@ -77,10 +77,10 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
         upload(req, reply, async function (err: any) {
             if (err) {
                 console.log(err);
-                serviceResult.status = false;
-                serviceResult.errorCode = ApiErrorCodes.uploadError;
-                serviceResult.statusCode = ApiStatusCodes.badRequest;
-                serviceResult.message = JSON.stringify(err);
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.uploadError;
+                apiResult.statusCode = ApiStatusCodes.badRequest;
+                apiResult.message = JSON.stringify(err);
             }
 
             try {
@@ -110,7 +110,7 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                     });
 
                     if(insertedData){
-                        serviceResult.data?.push({
+                        apiResult.data?.push({
                             ...insertedData,
                             ...(await getImageProperties(insertedData.name))
                         });
@@ -118,22 +118,22 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                 }
 
             } catch (e) {
-                serviceResult.status = false;
-                serviceResult.errorCode = ApiErrorCodes.uploadError;
-                serviceResult.statusCode = ApiStatusCodes.badRequest;
-                serviceResult.message = JSON.stringify(e);
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.uploadError;
+                apiResult.statusCode = ApiStatusCodes.badRequest;
+                apiResult.message = JSON.stringify(e);
                 console.log(e)
             }
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<string[]>();
-        serviceResult.data = [];
+        let apiResult = new ApiResult<string[]>();
+        apiResult.data = [];
 
         const reqData = req as IGalleryDeleteManySchema;
 
@@ -146,7 +146,7 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
                 if (fs.existsSync(path.resolve(Config.paths.uploads.images, galleryItem.name))) {
                     fs.unlinkSync(path.resolve(Config.paths.uploads.images, galleryItem.name));
                     fs.close(0);
-                    serviceResult.data?.push(galleryItem.name);
+                    apiResult.data?.push(galleryItem.name);
                 }
             })
             resolve(0);
@@ -156,7 +156,7 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 

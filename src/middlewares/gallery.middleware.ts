@@ -10,7 +10,7 @@ import {PermissionUtil} from "../utils/permission.util";
 
 const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as IGalleryDeleteManySchema;
 
@@ -22,17 +22,17 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
             if (gallery) {
                 for (const item of gallery) {
                     if (item.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
-                        serviceResult.status = false;
-                        serviceResult.errorCode = ApiErrorCodes.noPerm;
-                        serviceResult.statusCode = ApiStatusCodes.forbidden;
+                        apiResult.status = false;
+                        apiResult.errorCode = ApiErrorCodes.noPerm;
+                        apiResult.statusCode = ApiStatusCodes.forbidden;
                         break;
                     }
                 }
             }
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }

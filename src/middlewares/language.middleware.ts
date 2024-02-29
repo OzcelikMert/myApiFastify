@@ -8,20 +8,20 @@ import {ILanguagePutWithIdSchema} from "../schemas/language.schema";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as ILanguagePutWithIdSchema;
 
-        let resData = await LanguageService.getOne({_id: reqData.params._id});
+        let serviceResult = await LanguageService.getOne({_id: reqData.params._id});
 
-        if (!resData) {
-            serviceResult.status = false;
-            serviceResult.errorCode = ApiErrorCodes.notFound;
-            serviceResult.statusCode = ApiStatusCodes.notFound;
+        if (!serviceResult) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
-        if (!serviceResult.status) {
-            await reply.status(serviceResult.statusCode).send(serviceResult)
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
         }
     });
 }

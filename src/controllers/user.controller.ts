@@ -17,66 +17,66 @@ import {IUserModel} from "../types/models/user.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IUserGetResultService>();
+        let apiResult = new ApiResult<IUserGetResultService>();
 
         const reqData = req as IUserGetWithIdSchema;
 
-        serviceResult.data = await UserService.getOne({
+        apiResult.data = await UserService.getOne({
             ...reqData.params,
             ...reqData.query
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IUserGetResultService[]>();
+        let apiResult = new ApiResult<IUserGetResultService[]>();
 
         const reqData = req as IUserGetManySchema;
 
-        serviceResult.data = await UserService.getMany({
+        apiResult.data = await UserService.getMany({
             ...reqData.query,
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IUserGetResultService>();
+        let apiResult = new ApiResult<IUserGetResultService>();
 
         const reqData = req as IUserGetWithURLSchema;
 
-        serviceResult.data = await UserService.getOne({
+        apiResult.data = await UserService.getOne({
             ...reqData.params,
             ...reqData.query
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<IUserModel>();
+        let apiResult = new ApiResult<IUserModel>();
 
         const reqData = req as IUserPostSchema;
 
-        serviceResult.data = await UserService.add({
+        apiResult.data = await UserService.add({
             ...reqData.body,
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         const reqData = req as IUserPutWithIdSchema
 
@@ -86,13 +86,13 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         const reqData = req as IUserPutProfileSchema;
 
@@ -107,13 +107,13 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
             name: reqData.body.name
         })
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         const reqData = req as IUserPutPasswordSchema;
 
@@ -122,19 +122,19 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
             password: reqData.body.newPassword
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         const reqData = req as IUserDeleteWithIdSchema;
 
         await UserService.deleteOne(reqData.params);
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 

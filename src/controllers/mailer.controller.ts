@@ -10,8 +10,8 @@ import {LogMiddleware} from "../middlewares/log.middleware";
 
 const send = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<{_id: string, response: string}[], any>();
-        serviceResult.data = [];
+        let apiResult = new ApiResult<{_id: string, response: string}[], any>();
+        apiResult.data = [];
 
         let reqData = req as IMailerPostSchema;
 
@@ -44,7 +44,7 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
                             replyTo: reqData.body.email
                         });
 
-                        serviceResult.data?.push({
+                        apiResult.data?.push({
                             _id: sendMail.messageId,
                             response: sendMail.response
                         });
@@ -57,7 +57,7 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
                                 html: reqData.body.replyMessage,
                                 replyTo: reqData.body.email
                             });
-                            serviceResult.data?.push({
+                            apiResult.data?.push({
                                 "_id": sendMailReply.messageId,
                                 "response": sendMailReply.response
                             });
@@ -65,24 +65,24 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
 
 
                     }else {
-                        serviceResult.status = false;
-                        serviceResult.statusCode = ApiStatusCodes.conflict;
-                        serviceResult.errorCode = ApiErrorCodes.incorrectData;
+                        apiResult.status = false;
+                        apiResult.statusCode = ApiStatusCodes.conflict;
+                        apiResult.errorCode = ApiErrorCodes.incorrectData;
                     }
                 }catch (e: any) {
-                    serviceResult.status = false;
-                    serviceResult.statusCode = ApiStatusCodes.conflict;
-                    serviceResult.errorCode = ApiErrorCodes.incorrectData;
-                    serviceResult.customData = e;
+                    apiResult.status = false;
+                    apiResult.statusCode = ApiStatusCodes.conflict;
+                    apiResult.errorCode = ApiErrorCodes.incorrectData;
+                    apiResult.customData = e;
                 }
             }else {
-                serviceResult.status = false;
-                serviceResult.statusCode = ApiStatusCodes.conflict;
-                serviceResult.errorCode = ApiErrorCodes.incorrectData;
+                apiResult.status = false;
+                apiResult.statusCode = ApiStatusCodes.conflict;
+                apiResult.errorCode = ApiErrorCodes.incorrectData;
             }
         }
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 

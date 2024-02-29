@@ -13,63 +13,63 @@ import {ISubscriberModel} from "../types/models/subscriber.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ISubscriberGetResultService>();
+        let apiResult = new ApiResult<ISubscriberGetResultService>();
 
         const reqData = req as ISubscriberGetWithIdSchema;
 
-        serviceResult.data = await SubscriberService.getOne({
+        apiResult.data = await SubscriberService.getOne({
             ...reqData.params
         })
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ISubscriberGetResultService[]>();
+        let apiResult = new ApiResult<ISubscriberGetResultService[]>();
 
         const reqData = req as ISubscriberGetManySchema;
 
-        serviceResult.data = await SubscriberService.getMany({
+        apiResult.data = await SubscriberService.getMany({
             ...reqData.query
         })
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const getWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ISubscriberGetResultService>();
+        let apiResult = new ApiResult<ISubscriberGetResultService>();
 
         const reqData = req as ISubscriberGetWithEmailSchema;
 
-        serviceResult.data = await SubscriberService.getOne({
+        apiResult.data = await SubscriberService.getOne({
             ...reqData.params
         })
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ISubscriberModel>();
+        let apiResult = new ApiResult<ISubscriberModel>();
 
         const reqData = req as ISubscriberPostSchema;
 
-        serviceResult.data = await SubscriberService.add({
+        apiResult.data = await SubscriberService.add({
             ...reqData.body
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         const reqData = req as ISubscriberDeleteWithIdSchema;
 
@@ -77,13 +77,13 @@ const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params
         })
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const deleteWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         const reqData = req as ISubscriberDeleteWithEmailSchema;
 
@@ -91,13 +91,13 @@ const deleteWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params
         })
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         const reqData = req as ISubscriberDeleteManySchema;
 
@@ -105,7 +105,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         })
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 

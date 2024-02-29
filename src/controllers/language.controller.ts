@@ -15,37 +15,37 @@ import {ILanguageModel} from "../types/models/language.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ILanguageGetResultService>();
+        let apiResult = new ApiResult<ILanguageGetResultService>();
 
         let reqData = req as ILanguageGetWithIdSchema;
 
-        serviceResult.data = await LanguageService.getOne({
+        apiResult.data = await LanguageService.getOne({
             ...reqData.params,
             ...reqData.query,
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ILanguageGetResultService[]>();
+        let apiResult = new ApiResult<ILanguageGetResultService[]>();
 
         let reqData = req as ILanguageGetManySchema;
 
-        serviceResult.data = await LanguageService.getMany({
+        apiResult.data = await LanguageService.getMany({
             ...reqData.query
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<string[]>();
-        serviceResult.data = [];
+        let apiResult = new ApiResult<string[]>();
+        apiResult.data = [];
 
         const fileType = [".jpg", ".png", ".webp", ".gif", ".jpeg"];
 
@@ -55,7 +55,7 @@ const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
                     let image = images[i];
                     if(fs.existsSync(path.resolve(Config.paths.uploads.flags, image))) {
                         if (fileType.includes(path.extname(image))){
-                            serviceResult.data?.push(image)
+                            apiResult.data?.push(image)
                         }
                     }
                 }
@@ -63,27 +63,27 @@ const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
             });
         })
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<ILanguageModel>();
+        let apiResult = new ApiResult<ILanguageModel>();
 
         let reqData = req as ILanguagePostSchema;
 
-        serviceResult.data = await LanguageService.add({
+        apiResult.data = await LanguageService.add({
             ...reqData.body,
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as ILanguagePutWithIdSchema;
 
@@ -92,13 +92,13 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
 const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let apiResult = new ApiResult();
 
         let reqData = req as ILanguagePutWithIdRankSchema;
 
@@ -107,7 +107,7 @@ const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
         });
 
-        await reply.status(serviceResult.statusCode).send(serviceResult)
+        await reply.status(apiResult.statusCode).send(apiResult)
     });
 }
 
