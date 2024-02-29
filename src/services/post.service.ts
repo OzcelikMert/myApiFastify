@@ -385,7 +385,7 @@ const add = async (params: IPostAddParamService) => {
         params.contents.url = await createURL(null, params.contents.title ?? "", params.typeId);
     }
 
-    return await postModel.create(params);
+    return (await postModel.create(params)).toObject();
 }
 
 const updateOne = async (params: IPostUpdateOneParamService) => {

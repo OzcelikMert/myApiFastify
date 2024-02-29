@@ -7,6 +7,7 @@ import {LogMiddleware} from "../middlewares/log.middleware";
 import {IViewPostSchema} from "../schemas/view.schema";
 import Variable from "../library/variable";
 import {IViewGetTotalResultService} from "../types/services/view.service";
+import {IViewModel} from "../types/models/view.model";
 
 const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -56,14 +57,14 @@ const getStatistics = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IViewModel>();
 
         const reqData = req as IViewPostSchema;
 
         let ip = req.ip;
         let ipDetail = lookup(req.ip);
 
-        await ViewService.add({
+        serviceResult.data = await ViewService.add({
             ...reqData.body,
             ip: ip,
             url: Variable.isEmpty(reqData.body.url) ? "/" : reqData.body.url,

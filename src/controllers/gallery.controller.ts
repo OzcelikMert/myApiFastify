@@ -15,6 +15,7 @@ import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 import {GalleryTypeId} from "../constants/galleryTypeId";
 import {IGalleryGetResultService, IGalleryImageProperties} from "../types/services/gallery.service";
+import {IGalleryModel} from "../types/models/gallery.model";
 
 const upload: any = multer({
     storage: multer.memoryStorage(),
@@ -65,7 +66,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult<(IGalleryGetResultService & IGalleryImageProperties)[]>();
+        let serviceResult = new ApiResult<(IGalleryModel & IGalleryImageProperties)[]>();
         serviceResult.data = [];
 
         function newName() {
@@ -109,14 +110,10 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                     });
 
                     if(insertedData){
-                        let image = await GalleryService.getOne({_id: insertedData._id.toString()});
-
-                        if (image) {
-                            serviceResult.data?.push({
-                                ...image,
-                                ...(await getImageProperties(insertedData.name))
-                            });
-                        }
+                        serviceResult.data?.push({
+                            ...insertedData,
+                            ...(await getImageProperties(insertedData.name))
+                        });
                     }
                 }
 

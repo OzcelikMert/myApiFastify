@@ -70,7 +70,7 @@ const add = async (params: ILanguageAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
 
-    return await languageModel.create(params)
+    return (await languageModel.create(params)).toObject()
 }
 
 const updateOne = async (params: ILanguageUpdateOneParamService) => {

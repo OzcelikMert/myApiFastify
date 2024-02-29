@@ -127,7 +127,7 @@ const add = async (params: IViewAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
 
-    return await viewModel.create(params)
+    return (await viewModel.create(params)).toObject()
 }
 
 const deleteMany = async (params: IViewDeleteManyParamService) => {

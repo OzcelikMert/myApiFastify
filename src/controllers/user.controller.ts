@@ -13,6 +13,7 @@ import {
 import {UserService} from "../services/user.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
 import {IUserGetResultService} from "../types/services/user.service";
+import {IUserModel} from "../types/models/user.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -60,11 +61,11 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IUserModel>();
 
         const reqData = req as IUserPostSchema;
 
-        await UserService.add({
+        serviceResult.data = await UserService.add({
             ...reqData.body,
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
         });

@@ -65,7 +65,7 @@ const add = async (params: ISubscriberAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
 
-    return await subscriberModel.create(params)
+    return (await subscriberModel.create(params)).toObject()
 }
 
 const deleteOne = async (params: ISubscriberDeleteOneParamService) => {

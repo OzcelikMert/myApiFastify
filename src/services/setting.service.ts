@@ -69,7 +69,7 @@ const add = async (params: ISettingAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, settingObjectIdKeys);
 
-    return await settingModel.create(params)
+    return (await settingModel.create(params)).toObject()
 }
 
 const updateGeneral = async (params: ISettingUpdateGeneralParamService) => {

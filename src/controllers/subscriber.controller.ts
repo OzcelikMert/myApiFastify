@@ -9,6 +9,7 @@ import {
     ISubscriberPostSchema, ISubscriberDeleteWithEmailSchema, ISubscriberGetWithEmailSchema
 } from "../schemas/subscriber.schema";
 import {ISubscriberGetResultService} from "../types/services/subscriber.service";
+import {ISubscriberModel} from "../types/models/subscriber.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -54,11 +55,11 @@ const getWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<ISubscriberModel>();
 
         const reqData = req as ISubscriberPostSchema;
 
-        await SubscriberService.add({
+        serviceResult.data = await SubscriberService.add({
             ...reqData.body
         });
 

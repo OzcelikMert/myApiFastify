@@ -16,6 +16,7 @@ import {
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 import {IPostGetManyResultService, IPostGetOneResultService} from "../types/services/post.service";
+import {IPostModel} from "../types/models/post.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -23,15 +24,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostGetWithIdSchema;
 
-        let post = await PostService.getOne({
+        serviceResult.data = await PostService.getOne({
             ...reqData.params,
             ...reqData.query,
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
-
-        if(post){
-            serviceResult.data = post;
-        }
 
         await reply.status(serviceResult.statusCode).send(serviceResult);
     })
@@ -58,14 +55,10 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostGetWithURLSchema;
 
-        let post = await PostService.getOne({
+        serviceResult.data = await PostService.getOne({
             ...reqData.params,
             ...reqData.query
         });
-
-        if(post){
-            serviceResult.data = post;
-        }
 
         await reply.status(serviceResult.statusCode).send(serviceResult);
     })
@@ -77,13 +70,9 @@ const getCount = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostGetCountSchema;
 
-        let postCount = await PostService.getCount({
+        serviceResult.data = await PostService.getCount({
             ...reqData.query
         });
-
-        if(postCount){
-            serviceResult.data = postCount;
-        }
 
         await reply.status(serviceResult.statusCode).send(serviceResult);
     });
@@ -91,11 +80,11 @@ const getCount = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IPostModel>();
 
         let reqData = req as IPostPostSchema;
 
-        await PostService.add({
+        serviceResult.data = await PostService.add({
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),

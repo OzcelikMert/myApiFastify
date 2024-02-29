@@ -12,6 +12,7 @@ import {
     INavigationPutWithIdRankSchema
 } from "../schemas/navigation.schema";
 import {INavigationGetResultService} from "../types/services/navigation.service";
+import {INavigationModel} from "../types/models/navigation.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -19,14 +20,10 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationGetWithIdSchema;
 
-        let navigation = await NavigationService.getOne({
+        serviceResult.data = await NavigationService.getOne({
             ...reqData.params,
             ...reqData.query
         });
-
-        if(navigation){
-            serviceResult.data = navigation;
-        }
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     })
@@ -48,11 +45,11 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<INavigationModel>();
 
         let reqData = req as INavigationPostSchema;
 
-        await NavigationService.add({
+        serviceResult.data = await NavigationService.add({
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),

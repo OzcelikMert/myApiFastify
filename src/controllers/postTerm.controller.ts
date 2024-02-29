@@ -14,6 +14,7 @@ import {LogMiddleware} from "../middlewares/log.middleware";
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 import {IPostTermGetResultService} from "../types/services/postTerm.service";
+import {IPostTermModel} from "../types/models/postTerm.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -63,11 +64,11 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<IPostTermModel>();
 
         let reqData = req as IPostTermPostSchema;
 
-        await PostTermService.add({
+        serviceResult.data = await PostTermService.add({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
             authorId: req.sessionAuth!.user!.userId.toString(),

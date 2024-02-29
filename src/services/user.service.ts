@@ -154,11 +154,11 @@ const add = async (params: IUserAddParamService) => {
 
     params.url = await createURL(null, params.name);
 
-    return await userModel.create({
+    return (await userModel.create({
         ...params,
         permissions: PermissionUtil.filterPermissionId(params.roleId, params.permissions),
         password: UserUtil.encodePassword(params.password)
-    })
+    })).toObject()
 }
 
 const updateOne = async (params: IUserUpdateOneParamService) => {

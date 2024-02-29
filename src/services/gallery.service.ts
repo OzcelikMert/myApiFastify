@@ -80,7 +80,7 @@ const add = async (params: IGalleryAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
-    return await galleryModel.create(params);
+    return (await galleryModel.create(params)).toObject();
 }
 
 const deleteMany = async (params: IGalleryDeleteManyParamService) => {

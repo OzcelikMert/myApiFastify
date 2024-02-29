@@ -136,7 +136,7 @@ const add = async (params: INavigationAddParamService) => {
         delete params.mainId;
     }
 
-    return await navigationModel.create(params);
+    return (await navigationModel.create(params)).toObject();
 }
 
 const updateOne = async (params: INavigationUpdateOneParamService) => {

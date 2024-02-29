@@ -19,15 +19,10 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as ILanguageGetWithIdSchema;
 
-        let language = await LanguageService.getOne({
+        serviceResult.data = await LanguageService.getOne({
             ...reqData.params,
             ...reqData.query,
         });
-
-        if(language){
-            serviceResult.data = language;
-        }
-
 
         await reply.status(serviceResult.statusCode).send(serviceResult)
     });
@@ -74,11 +69,11 @@ const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const add = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let serviceResult = new ApiResult();
+        let serviceResult = new ApiResult<ILanguageModel>();
 
         let reqData = req as ILanguagePostSchema;
 
-        let insertData = await LanguageService.add({
+        serviceResult.data = await LanguageService.add({
             ...reqData.body,
         });
 
