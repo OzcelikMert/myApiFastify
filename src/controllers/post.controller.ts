@@ -1,22 +1,24 @@
-import {FastifyRequest, FastifyReply} from 'fastify';
+import {FastifyReply, FastifyRequest} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {PostService} from "../services/post.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
 import {
     IPostDeleteManySchema,
     IPostGetCountSchema,
-    IPostGetWithIdSchema,
     IPostGetManySchema,
+    IPostGetWithIdSchema,
+    IPostGetWithURLSchema,
     IPostPostSchema,
-    IPostPutWithIdSchema,
     IPostPutManyStatusSchema,
     IPostPutWithIdRankSchema,
-    IPostPutWithIdViewSchema, IPostGetWithURLSchema
+    IPostPutWithIdSchema,
+    IPostPutWithIdViewSchema
 } from "../schemas/post.schema";
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 import {IPostGetManyResultService, IPostGetOneResultService} from "../types/services/post.service";
 import {IPostModel} from "../types/models/post.model";
+import {PageTypeId} from "../constants/pageTypes";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -54,6 +56,10 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
         let apiResult = new ApiResult<IPostGetOneResultService>();
 
         let reqData = req as IPostGetWithURLSchema;
+
+        if(reqData.query.pageTypeId == PageTypeId.HomePage){
+            delete reqData.params.url;
+        }
 
         apiResult.data = await PostService.getOne({
             ...reqData.params,
