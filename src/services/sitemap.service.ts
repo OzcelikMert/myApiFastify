@@ -9,14 +9,10 @@ import {StatusId} from "../constants/status";
 import {postTermObjectIdKeys} from "../constants/objectIdKeys/postTerm.objectIdKeys";
 import {postTermModel} from "../models/postTerm.model";
 import {
-    ISitemapGetPostCountParamService,
-    ISitemapGetPostParamService,
-    ISitemapGetPostTermCountParamService,
-    ISitemapGetPostTermParamService,
-    ISitemapMapPostCountService,
-    ISitemapMapPostTermCountService,
-    ISitemapPostService,
-    ISitemapPostTermService
+    ISitemapGetPostCountParamService, ISitemapGetPostCountResultService,
+    ISitemapGetPostParamService, ISitemapGetPostResultService,
+    ISitemapGetPostTermCountParamService, ISitemapGetPostTermCountResultService,
+    ISitemapGetPostTermParamService, ISitemapGetPostTermResultService
 } from "../types/services/sitemap.service";
 
 export const sitemapLimit = 500;
@@ -39,7 +35,7 @@ const getPost = async (params: ISitemapGetPostParamService) => {
     query.skip(sitemapLimit * (params.page && params.page > 0 ? params.page - 1 : 0));
     query.limit(sitemapLimit);
 
-    return (await query.lean<ISitemapPostService[]>().exec()).map(doc => {
+    return (await query.lean<ISitemapGetPostResultService[]>().exec()).map(doc => {
         return {
             updatedAt: doc.updatedAt,
             createdAt: doc.createdAt,
@@ -84,7 +80,7 @@ const getPostCount = async (params: ISitemapGetPostCountParamService) => {
             typeId: doc._id,
             total: doc.total
         }
-    }) as ISitemapMapPostCountService[];
+    }) as ISitemapGetPostCountResultService[];
 }
 
 const getPostTerm = async (params: ISitemapGetPostTermParamService) => {
@@ -112,7 +108,7 @@ const getPostTerm = async (params: ISitemapGetPostTermParamService) => {
     query.skip(sitemapLimit * (params.page && params.page > 0 ? params.page - 1 : 0));
     query.limit(sitemapLimit);
 
-    return (await query.lean<ISitemapPostTermService[]>().exec()).map(doc => {
+    return (await query.lean<ISitemapGetPostTermResultService[]>().exec()).map(doc => {
         return {
             updatedAt: doc.updatedAt,
             createdAt: doc.createdAt,
@@ -164,7 +160,7 @@ const getPostTermCount = async (params: ISitemapGetPostTermCountParamService) =>
             postTypeId: doc._id.postTypeId,
             total: doc.total
         }
-    }) as ISitemapMapPostTermCountService[];
+    }) as ISitemapGetPostTermCountResultService[];
 }
 
 export const SitemapService = {

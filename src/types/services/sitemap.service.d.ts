@@ -1,32 +1,36 @@
-export interface ISitemapMapPostTermCountService {
-    typeId: number
-    postTypeId: number
+import {PostTermTypeId} from "../../constants/postTermTypes";
+import {PostTypeId} from "../../constants/postTypes";
+import {PageTypeId} from "../../constants/pageTypes";
+
+export interface ISitemapGetPostTermCountResultService {
+    typeId: PostTermTypeId
+    postTypeId: PostTypeId
     total: number
 }
 
-export interface ISitemapMapPostCountService {
-    typeId: number
+export interface ISitemapGetPostCountResultService {
+    typeId: PostTypeId
     total: number
 }
 
-export interface ISitemapMapsService {
-    post: ISitemapMapPostCountService[]
-    postTerm: ISitemapMapPostTermCountService[]
+export interface ISitemapGetMapsResultService {
+    post: ISitemapGetPostCountResultService[]
+    postTerm: ISitemapGetPostTermCountResultService[]
 }
 
-export interface ISitemapPostTermService {
+export interface ISitemapGetPostTermResultService {
     updatedAt: string
     createdAt: string
-    typeId: number
-    postTypeId: number
+    typeId: PostTermTypeId
+    postTypeId: PostTypeId
     contents: ISitemapContentService[]
 }
 
-export interface ISitemapPostService {
+export interface ISitemapGetPostResultService {
     updatedAt: string
     createdAt: string
-    typeId: number
-    pageTypeId?: number
+    typeId: PostTypeId
+    pageTypeId?: PageTypeId
     contents: ISitemapContentService[]
 }
 
@@ -37,21 +41,21 @@ export interface ISitemapContentService {
 }
 
 export interface ISitemapGetPostTermParamService {
-    typeId: number
-    postTypeId: number
+    typeId: PostTermTypeId
+    postTypeId: PostTypeId
     page?: number
 }
 
 export interface ISitemapGetPostParamService {
-    typeId: number
+    typeId: PostTypeId
     page?: number
 }
 
 export interface ISitemapGetPostTermCountParamService {
-    typeId: number[]
-    postTypeId: number[]
+    typeId: PostTermTypeId[]
+    postTypeId: PostTypeId[]
 }
 
 export interface ISitemapGetPostCountParamService {
-    typeId: number[]
+    typeId: PostTypeId[]
 }

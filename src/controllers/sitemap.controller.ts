@@ -6,14 +6,14 @@ import {PostTypeId} from "../constants/postTypes";
 import {PostTermTypeId} from "../constants/postTermTypes";
 import {ISitemapGetPostSchema, ISitemapGetPostTermSchema} from "../schemas/sitemap.schema";
 import {
-    ISitemapMapPostCountService,
-    ISitemapMapPostTermCountService,
-    ISitemapPostService, ISitemapPostTermService
+    ISitemapGetMapsResultService,
+    ISitemapGetPostResultService,
+    ISitemapGetPostTermResultService
 } from "../types/services/sitemap.service";
 
 const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<{post: ISitemapMapPostCountService[], postTerm: ISitemapMapPostTermCountService[]}>();
+        let apiResult = new ApiResult<ISitemapGetMapsResultService>();
 
         apiResult.data = {
             post: await SitemapService.getPostCount({typeId: [PostTypeId.Page, PostTypeId.Portfolio, PostTypeId.Blog]}),
@@ -29,7 +29,7 @@ const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getPost = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<ISitemapPostService[]>();
+        let apiResult = new ApiResult<ISitemapGetPostResultService[]>();
 
         const reqData = req as ISitemapGetPostSchema;
 
@@ -41,7 +41,7 @@ const getPost = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getPostTerm = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<ISitemapPostTermService[]>();
+        let apiResult = new ApiResult<ISitemapGetPostTermResultService[]>();
 
         const reqData = req as ISitemapGetPostTermSchema;
 
