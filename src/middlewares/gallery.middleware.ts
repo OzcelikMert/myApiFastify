@@ -8,7 +8,7 @@ import {GalleryService} from "../services/gallery.service";
 import {IGalleryDeleteManySchema} from "../schemas/gallery.schema";
 import {PermissionUtil} from "../utils/permission.util";
 
-const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
@@ -38,5 +38,5 @@ const checkManyIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const GalleryMiddleware = {
-    checkManyIsAuthor: checkManyIsAuthor,
+    checkIsAuthorMany: checkIsAuthorMany,
 };

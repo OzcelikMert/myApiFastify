@@ -10,6 +10,6 @@ export const galleryRoute = function (fastify: FastifyInstance, opts: any, done:
     const galleryEndPoint = new GalleryEndPoint("");
     fastify.get(galleryEndPoint.GET_IMAGE, { preHandler: [RequestMiddleware.check(GallerySchema.getMany), SessionAuthMiddleware.check] }, GalleryController.getManyImage);
     fastify.post(galleryEndPoint.ADD_IMAGE, { preHandler: [SessionAuthMiddleware.check] }, GalleryController.addImage);
-    fastify.delete(galleryEndPoint.DELETE_IMAGE, { preHandler: [RequestMiddleware.check(GallerySchema.deleteMany), SessionAuthMiddleware.check, GalleryMiddleware.checkManyIsAuthor] }, GalleryController.deleteManyImage);
+    fastify.delete(galleryEndPoint.DELETE_IMAGE, { preHandler: [RequestMiddleware.check(GallerySchema.deleteMany), SessionAuthMiddleware.check, GalleryMiddleware.checkIsAuthorMany] }, GalleryController.deleteManyImage);
     done();
 }
