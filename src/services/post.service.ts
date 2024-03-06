@@ -3,13 +3,13 @@ import {postModel} from "../models/post.model";
 import {
     IPostDeleteManyParamService,
     IPostAddParamService,
-    IPostGetOneParamService,
-    IPostGetOneResultService,
+    IPostGetParamService,
+    IPostGetResultService,
     IPostGetManyParamService,
-    IPostUpdateOneParamService,
-    IPostUpdateOneRankParamService,
-    IPostUpdateManyStatusIdParamService,
-    IPostUpdateOneViewParamService, IPostGetManyResultService, IPostGetCountParamService
+    IPostUpdateParamService,
+    IPostUpdateRankParamService,
+    IPostUpdateStatusManyParamService,
+    IPostUpdateViewParamService, IPostGetManyResultService, IPostGetCountParamService
 } from "../types/services/post.service";
 import { IPostModel } from "../types/models/post.model";
 import MongoDBHelpers from "../library/mongodb/helpers";
@@ -26,7 +26,7 @@ const createURL = async (_id: string | null, title: string, typeId: PostTypeId) 
     let url = title.convertSEOUrl();
 
     let oldUrl = url;
-    while ((await getOne({
+    while ((await get({
         ignorePostId: _id ? [_id] : undefined,
         url: url,
         typeId: typeId
@@ -38,7 +38,7 @@ const createURL = async (_id: string | null, title: string, typeId: PostTypeId) 
     return url;
 }
 
-const getOne = async (params: IPostGetOneParamService) => {
+const get = async (params: IPostGetParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, [...postObjectIdKeys, "ignorePostId"]);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
@@ -136,7 +136,7 @@ const getOne = async (params: IPostGetOneParamService) => {
 
     query.sort({ isFixed: -1, rank: 1, createdAt: -1 });
 
-    let doc = (await query.lean<IPostGetOneResultService>().exec());
+    let doc = (await query.lean<IPostGetResultService>().exec());
 
     if (doc) {
         let views = 0;
@@ -388,7 +388,7 @@ const add = async (params: IPostAddParamService) => {
     return (await postModel.create(params)).toObject();
 }
 
-const updateOne = async (params: IPostUpdateOneParamService) => {
+const update = async (params: IPostUpdateParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
@@ -437,7 +437,7 @@ const updateOne = async (params: IPostUpdateOneParamService) => {
     }
 }
 
-const updateOneRank = async (params: IPostUpdateOneRankParamService) => {
+const updateRank = async (params: IPostUpdateRankParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
@@ -472,7 +472,7 @@ const updateOneRank = async (params: IPostUpdateOneRankParamService) => {
     };
 }
 
-const updateOneView = async (params: IPostUpdateOneViewParamService) => {
+const updateView = async (params: IPostUpdateViewParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
@@ -523,7 +523,7 @@ const updateOneView = async (params: IPostUpdateOneViewParamService) => {
     };
 }
 
-const updateManyStatus = async (params: IPostUpdateManyStatusIdParamService) => {
+const updateStatusMany = async (params: IPostUpdateStatusManyParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
 
@@ -576,13 +576,13 @@ const deleteMany = async (params: IPostDeleteManyParamService) => {
 }
 
 export const PostService = {
-    getOne: getOne,
+    get: get,
     getMany: getMany,
     getCount: getCount,
     add: add,
-    updateOne: updateOne,
-    updateOneRank: updateOneRank,
-    updateOneView: updateOneView,
-    updateManyStatus: updateManyStatus,
+    update: update,
+    updateRank: updateRank,
+    updateView: updateView,
+    updateStatusMany: updateStatusMany,
     deleteMany: deleteMany
 };

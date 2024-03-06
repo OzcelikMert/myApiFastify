@@ -3,7 +3,7 @@ import {StatusId} from "../../constants/status";
 
 export type ILanguageGetResultService = {} & ILanguageModel
 
-export interface ILanguageGetOneParamService {
+export interface ILanguageGetParamService {
     _id?: string
     shortKey?: string
     locale?: string
@@ -17,11 +17,11 @@ export interface ILanguageGetManyParamService {
 
 export type ILanguageAddParamService = {} & Omit<ILanguageModel, "_id">
 
-export type ILanguageUpdateOneParamService = {
+export type ILanguageUpdateParamService = {
     _id: string
 } & ILanguageAddParamService
 
-export type ILanguageUpdateOneRankParamService = {
+export type ILanguageUpdateRankParamService = {
     _id: string
     rank: number
 }

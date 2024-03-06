@@ -21,7 +21,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermGetWithIdSchema;
 
-        apiResult.data = await PostTermService.getOne({
+        apiResult.data = await PostTermService.get({
             ...reqData.params,
             ...reqData.query,
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
@@ -52,7 +52,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermGetWithURLSchema;
 
-        apiResult.data = await PostTermService.getOne({
+        apiResult.data = await PostTermService.get({
             ...reqData.params,
             ...reqData.query
         });
@@ -83,7 +83,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermPutWithIdSchema;
 
-        await PostTermService.updateOne({
+        await PostTermService.update({
             ...reqData.body,
             ...reqData.params,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -99,7 +99,7 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermPutRankWithIdSchema;
 
-        await PostTermService.updateOneRank({
+        await PostTermService.updateRank({
             ...reqData.body,
             ...reqData.params,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -115,7 +115,7 @@ const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostTermPutStatusManySchema;
 
-        await PostTermService.updateManyStatus({
+        await PostTermService.updateStatusMany({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });

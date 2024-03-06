@@ -4,9 +4,9 @@ import {
     ILanguageGetResultService,
     ILanguageGetManyParamService,
     ILanguageAddParamService,
-    ILanguageGetOneParamService,
-    ILanguageUpdateOneParamService,
-    ILanguageUpdateOneRankParamService,
+    ILanguageGetParamService,
+    ILanguageUpdateParamService,
+    ILanguageUpdateRankParamService,
     ILanguageUpdateIsDefaultManyParamService
 } from "../types/services/language.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
@@ -14,7 +14,7 @@ import Variable from "../library/variable";
 import {languageObjectIdKeys} from "../constants/objectIdKeys/language.objectIdKeys";
 import { ILanguageModel } from "../types/models/language.model";
 
-const getOne = async (params: ILanguageGetOneParamService) => {
+const get = async (params: ILanguageGetParamService) => {
     let filters: mongoose.FilterQuery<ILanguageModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
 
@@ -82,7 +82,7 @@ const add = async (params: ILanguageAddParamService) => {
     return (await languageModel.create(params)).toObject()
 }
 
-const updateOne = async (params: ILanguageUpdateOneParamService) => {
+const update = async (params: ILanguageUpdateParamService) => {
     let filters: mongoose.FilterQuery<ILanguageModel> = {}
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
@@ -107,7 +107,7 @@ const updateOne = async (params: ILanguageUpdateOneParamService) => {
     };
 }
 
-const updateOneRank = async (params: ILanguageUpdateOneRankParamService) => {
+const updateRank = async (params: ILanguageUpdateRankParamService) => {
     let filters: mongoose.FilterQuery<ILanguageModel> = {}
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
@@ -158,10 +158,10 @@ const updateIsDefaultMany = async (params: ILanguageUpdateIsDefaultManyParamServ
 }
 
 export const LanguageService = {
-    getOne: getOne,
+    get: get,
     getMany: getMany,
     add: add,
-    updateOne: updateOne,
-    updateOneRank: updateOneRank,
+    update: update,
+    updateRank: updateRank,
     updateIsDefaultMany: updateIsDefaultMany
 };

@@ -123,7 +123,7 @@ class InitConfig {
     }
 
     private async checkSuperAdminUser() {
-        if (!(await UserService.getOne({roleId: UserRoleId.SuperAdmin}))) {
+        if (!(await UserService.get({roleId: UserRoleId.SuperAdmin}))) {
             let password = generate({
                 length: 10
             })
@@ -142,7 +142,7 @@ class InitConfig {
     }
 
     private async checkLanguages() {
-        if (!(await LanguageService.getOne({isDefault: true}))) {
+        if (!(await LanguageService.get({isDefault: true}))) {
             let serviceResult = await LanguageService.add({
                 title: "English",
                 image: "gb.webp",

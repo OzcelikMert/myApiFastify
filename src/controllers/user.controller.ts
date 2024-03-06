@@ -21,7 +21,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserGetWithIdSchema;
 
-        apiResult.data = await UserService.getOne({
+        apiResult.data = await UserService.get({
             ...reqData.params,
             ...reqData.query
         });
@@ -50,7 +50,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserGetWithURLSchema;
 
-        apiResult.data = await UserService.getOne({
+        apiResult.data = await UserService.get({
             ...reqData.params,
             ...reqData.query
         });
@@ -80,7 +80,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserPutWithIdSchema
 
-        await UserService.updateOne({
+        await UserService.update({
             ...reqData.params,
             ...reqData.body,
             ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
@@ -96,7 +96,7 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserPutProfileSchema;
 
-        await UserService.updateOne({
+        await UserService.update({
             ...reqData.body,
             _id: req.sessionAuth!.user!.userId.toString(),
         });
@@ -117,7 +117,7 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserPutPasswordSchema;
 
-        await UserService.updateOne({
+        await UserService.update({
             _id: req.sessionAuth!.user!.userId.toString(),
             password: reqData.body.newPassword
         });
@@ -132,7 +132,7 @@ const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserDeleteWithIdSchema;
 
-        await UserService.deleteOne(reqData.params);
+        await UserService.delete(reqData.params);
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });

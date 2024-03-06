@@ -5,12 +5,12 @@ import {galleryObjectIdKeys} from "../constants/objectIdKeys/gallery.objectIdKey
 import {IGalleryModel} from "../types/models/gallery.model";
 import {
     IGalleryAddParamService, IGalleryDeleteManyParamService,
-    IGalleryGetManyParamService, IGalleryGetOneParamService,
+    IGalleryGetManyParamService, IGalleryGetParamService,
     IGalleryGetResultService
 } from "../types/services/gallery.service";
 import {galleryModel} from "../models/gallery.model";
 
-const getOne = async (params: IGalleryGetOneParamService) => {
+const get = async (params: IGalleryGetParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, galleryObjectIdKeys);
 
@@ -100,7 +100,7 @@ const deleteMany = async (params: IGalleryDeleteManyParamService) => {
 }
 
 export const GalleryService = {
-    getOne: getOne,
+    get: get,
     getMany: getMany,
     add: add,
     deleteMany: deleteMany

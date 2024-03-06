@@ -1,10 +1,10 @@
 import * as mongoose from "mongoose";
 import {userModel} from "../models/user.model";
 import {
-    IUserDeleteOneParamService,
+    IUserDeleteParamService,
     IUserAddParamService,
-    IUserGetOneParamService, IUserGetResultService,
-    IUserUpdateOneParamService,
+    IUserGetParamService, IUserGetResultService,
+    IUserUpdateParamService,
     IUserGetManyParamService
 } from "../types/services/user.service";
 import {StatusId} from "../constants/status";
@@ -21,7 +21,7 @@ const createURL = async (_id: string | null, name: string) => {
     let url = name.convertSEOUrl();
 
     let oldUrl = url;
-    while ((await getOne({
+    while ((await get({
         ignoreUserId: _id ? [_id] : undefined,
         url: url
     }))) {
@@ -32,7 +32,7 @@ const createURL = async (_id: string | null, name: string) => {
     return url;
 }
 
-const getOne = async (params: IUserGetOneParamService) => {
+const get = async (params: IUserGetParamService) => {
     params = MongoDBHelpers.convertObjectIdInData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
@@ -161,7 +161,7 @@ const add = async (params: IUserAddParamService) => {
     })).toObject()
 }
 
-const updateOne = async (params: IUserUpdateOneParamService) => {
+const update = async (params: IUserUpdateParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
 
@@ -200,7 +200,7 @@ const updateOne = async (params: IUserUpdateOneParamService) => {
     return params;
 }
 
-const deleteOne = async (params: IUserDeleteOneParamService) => {
+const delete_ = async (params: IUserDeleteParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
 
@@ -225,9 +225,9 @@ const deleteOne = async (params: IUserDeleteOneParamService) => {
 }
 
 export const UserService = {
-    getOne: getOne,
+    get: get,
     getMany: getMany,
     add: add,
-    updateOne: updateOne,
-    deleteOne: deleteOne
+    update: update,
+    delete: delete_
 };

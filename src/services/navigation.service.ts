@@ -6,17 +6,17 @@ import {navigationObjectIdKeys} from "../constants/objectIdKeys/navigation.objec
 import {
     INavigationDeleteManyParamService,
     INavigationAddParamService,
-    INavigationGetOneParamService,
+    INavigationGetParamService,
     INavigationGetResultService,
-    INavigationUpdateOneParamService,
-    INavigationUpdateOneRankParamService,
-    INavigationUpdateManyStatusIdParamService, INavigationGetManyParamService
+    INavigationUpdateParamService,
+    INavigationUpdateRankParamService,
+    INavigationUpdateStatusManyParamService, INavigationGetManyParamService
 } from "../types/services/navigation.service";
 import {navigationModel} from "../models/navigation.model";
 import { StatusId } from "../constants/status";
 import { INavigationModel } from "../types/models/navigation.model";
 
-const getOne = async (params: INavigationGetOneParamService) => {
+const get = async (params: INavigationGetParamService) => {
     let filters: mongoose.FilterQuery<INavigationModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
@@ -139,7 +139,7 @@ const add = async (params: INavigationAddParamService) => {
     return (await navigationModel.create(params)).toObject();
 }
 
-const updateOne = async (params: INavigationUpdateOneParamService) => {
+const update = async (params: INavigationUpdateParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
 
@@ -183,7 +183,7 @@ const updateOne = async (params: INavigationUpdateOneParamService) => {
     }
 }
 
-const updateOneRank = async (params: INavigationUpdateOneRankParamService) => {
+const updateRank = async (params: INavigationUpdateRankParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
 
@@ -212,7 +212,7 @@ const updateOneRank = async (params: INavigationUpdateOneRankParamService) => {
     };
 }
 
-const updateManyStatus = async (params: INavigationUpdateManyStatusIdParamService) => {
+const updateStatusMany = async (params: INavigationUpdateStatusManyParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, navigationObjectIdKeys);
 
@@ -253,11 +253,11 @@ const deleteMany = async (params: INavigationDeleteManyParamService) => {
 }
 
 export const NavigationService = {
-    getOne: getOne,
+    get: get,
     getMany: getMany,
     add: add,
-    updateOne: updateOne,
-    updateOneRank: updateOneRank,
-    updateManyStatus: updateManyStatus,
+    update: update,
+    updateRank: updateRank,
+    updateStatusMany: updateStatusMany,
     deleteMany: deleteMany
 };

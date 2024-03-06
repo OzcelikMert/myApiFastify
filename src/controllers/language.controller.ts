@@ -19,7 +19,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as ILanguageGetWithIdSchema;
 
-        apiResult.data = await LanguageService.getOne({
+        apiResult.data = await LanguageService.get({
             ...reqData.params,
             ...reqData.query,
         });
@@ -87,7 +87,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as ILanguagePutWithIdSchema;
 
-        await LanguageService.updateOne({
+        await LanguageService.update({
             ...reqData.params,
             ...reqData.body,
         });
@@ -102,7 +102,7 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as ILanguagePutRankWithIdSchema;
 
-        await LanguageService.updateOneRank({
+        await LanguageService.updateRank({
             ...reqData.params,
             ...reqData.body,
         });

@@ -17,7 +17,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as ISubscriberGetWithIdSchema;
 
-        apiResult.data = await SubscriberService.getOne({
+        apiResult.data = await SubscriberService.get({
             ...reqData.params
         })
 
@@ -45,7 +45,7 @@ const getWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as ISubscriberGetWithEmailSchema;
 
-        apiResult.data = await SubscriberService.getOne({
+        apiResult.data = await SubscriberService.get({
             ...reqData.params
         })
 
@@ -73,7 +73,7 @@ const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as ISubscriberDeleteWithIdSchema;
 
-        await SubscriberService.deleteOne({
+        await SubscriberService.delete({
             ...reqData.params
         })
 
@@ -87,7 +87,7 @@ const deleteWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as ISubscriberDeleteWithEmailSchema;
 
-        await SubscriberService.deleteOne({
+        await SubscriberService.delete({
             ...reqData.params
         })
 

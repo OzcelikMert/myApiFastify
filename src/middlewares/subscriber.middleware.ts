@@ -15,7 +15,7 @@ const checkWithId = (isThere: boolean) => async (req: FastifyRequest, reply: Fas
 
         let reqData = req as ISubscriberDeleteWithIdSchema;
 
-        let serviceResult = await SubscriberService.getOne({
+        let serviceResult = await SubscriberService.get({
             ...reqData.params
         });
 

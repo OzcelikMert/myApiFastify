@@ -14,7 +14,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IUserPutWithIdSchema;
 
-        let serviceResult = await UserService.getOne({
+        let serviceResult = await UserService.get({
             _id: reqData.params._id
         });
 
@@ -40,7 +40,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
         if (reqData.body.roleId) {
             userRoleId = reqData.body.roleId;
         } else if (reqData.params._id) {
-            let user = await UserService.getOne({
+            let user = await UserService.get({
                 _id: reqData.params._id
             });
             if (user) {
@@ -50,7 +50,7 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (userRoleId > 0) {
             if (req.sessionAuth && req.sessionAuth.user) {
-                let sessionUser = await UserService.getOne({
+                let sessionUser = await UserService.get({
                     _id: req.sessionAuth.user.userId.toString()
                 });
 
@@ -83,7 +83,7 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IUserPutWithIdSchema;
 
         if (reqData.body.email) {
-            let serviceResult = await UserService.getOne({
+            let serviceResult = await UserService.get({
                 email: reqData.body.email,
                 ignoreUserId: reqData.params._id ? [reqData.params._id] : undefined
             });
@@ -107,7 +107,7 @@ const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: Fastify
 
         let reqData = req as IUserPutPasswordSchema;
 
-        let serviceResult = await UserService.getOne({
+        let serviceResult = await UserService.get({
             email: req.sessionAuth!.user?.email,
             password: reqData.body.password
         });

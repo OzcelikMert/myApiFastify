@@ -12,7 +12,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as ILanguagePutWithIdSchema;
 
-        let serviceResult = await LanguageService.getOne({_id: reqData.params._id});
+        let serviceResult = await LanguageService.get({_id: reqData.params._id});
 
         if (!serviceResult) {
             apiResult.status = false;
@@ -32,7 +32,7 @@ const checkIsDefaultWithId = async (req: FastifyRequest, reply: FastifyReply) =>
 
         let reqData = req as ILanguagePutWithIdSchema;
 
-        let serviceResult = await LanguageService.getOne({isDefault: true});
+        let serviceResult = await LanguageService.get({isDefault: true});
 
         if(serviceResult){
             if(reqData.body.isDefault){

@@ -12,7 +12,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationPutWithIdSchema;
 
-        let serviceResult = await NavigationService.getOne({_id: reqData.params._id});
+        let serviceResult = await NavigationService.get({_id: reqData.params._id});
 
         if (!serviceResult) {
             apiResult.status = false;

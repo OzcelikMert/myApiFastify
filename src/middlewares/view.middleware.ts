@@ -19,7 +19,7 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
             dateEnd = new Date(new Date().getStringWithMask(DateMask.DATE));
         dateEnd.addDays(1);
 
-        let serviceResult = await ViewService.getOne({
+        let serviceResult = await ViewService.get({
             ip: req.ip,
             url: url,
             dateStart: dateStart,
@@ -42,7 +42,7 @@ const checkAndDeleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let dateEnd = new Date();
         dateEnd.addDays(-7);
 
-        let serviceResult = await ViewService.getOne({dateEnd: dateEnd});
+        let serviceResult = await ViewService.get({dateEnd: dateEnd});
 
         if (serviceResult) {
             await ViewService.deleteMany({dateEnd: dateEnd})

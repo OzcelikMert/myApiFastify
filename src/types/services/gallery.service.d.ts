@@ -11,7 +11,7 @@ export type IGalleryGetResultService = {
     authorId: IUserPopulateService
 } & Omit<IGalleryModel, "authorId">
 
-export interface IGalleryGetOneParamService {
+export interface IGalleryGetParamService {
     _id?: string
     name?: string
     authorId?: string

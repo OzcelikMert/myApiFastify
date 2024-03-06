@@ -17,7 +17,7 @@ export interface IPostAlternateService {
     url?: string
 }
 
-export type IPostGetOneResultService = {
+export type IPostGetResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     views?: number,
@@ -38,9 +38,9 @@ export type IPostGetManyResultService = {
             contents?: IPostECommerceVariationContentModel | IPostECommerceVariationContentModel[]
         })[]
     })
-} & Omit<IPostGetOneResultService, "eCommerce"|"components">
+} & Omit<IPostGetResultService, "eCommerce"|"components">
 
-export interface IPostGetOneParamService {
+export interface IPostGetParamService {
     typeId: PostTypeId,
     _id?: string
     pageTypeId?: PageTypeId
@@ -83,25 +83,25 @@ export type IPostAddParamService = {
     })
 } & Omit<IPostModel, "_id"|"views"|"contents"|"eCommerce">
 
-export type IPostUpdateOneParamService = {
+export type IPostUpdateParamService = {
     _id: string
     contents?: IPostContentModel
 } & Omit<IPostAddParamService, "authorId"|"contents">
 
-export type IPostUpdateOneRankParamService = {
+export type IPostUpdateRankParamService = {
     _id: string
     typeId: PostTypeId
     rank: number
     lastAuthorId: string
 }
 
-export type IPostUpdateOneViewParamService = {
+export type IPostUpdateViewParamService = {
     _id: string,
     typeId: PostTypeId
     langId: string
 }
 
-export type IPostUpdateManyStatusIdParamService = {
+export type IPostUpdateStatusManyParamService = {
     _id: string[],
     typeId: PostTypeId
     statusId: StatusId,

@@ -3,8 +3,8 @@ import {postTermModel} from "../models/postTerm.model";
 import {
     IPostTermDeleteManyParamService,
     IPostTermAddParamService,
-    IPostTermGetOneParamService, IPostTermGetResultService,
-    IPostTermUpdateOneParamService, IPostTermUpdateOneRankParamService, IPostTermUpdateManyStatusIdParamService,
+    IPostTermGetParamService, IPostTermGetResultService,
+    IPostTermUpdateParamService, IPostTermUpdateRankParamService, IPostTermUpdateStatusManyParamService,
     IPostTermGetManyParamService
 } from "../types/services/postTerm.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
@@ -22,7 +22,7 @@ const createURL = async (_id: string | null, title: string, typeId: PostTermType
     let url = title.convertSEOUrl();
 
     let oldUrl = url;
-    while ((await getOne({
+    while ((await get({
         ignoreTermId: _id ? [_id] : undefined,
         url: url,
         postTypeId: postTypeId,
@@ -35,7 +35,7 @@ const createURL = async (_id: string | null, title: string, typeId: PostTermType
     return url;
 }
 
-const getOne = async (params: IPostTermGetOneParamService) => {
+const get = async (params: IPostTermGetParamService) => {
     let filters: mongoose.FilterQuery<IPostTermModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, [...postTermObjectIdKeys, "ignoreTermId"]);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
@@ -224,7 +224,7 @@ const add = async (params: IPostTermAddParamService) => {
     return (await postTermModel.create(params)).toObject()
 }
 
-const updateOne = async (params: IPostTermUpdateOneParamService) => {
+const update = async (params: IPostTermUpdateParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
 
@@ -282,7 +282,7 @@ const updateOne = async (params: IPostTermUpdateOneParamService) => {
     };
 }
 
-const updateOneRank = async (params: IPostTermUpdateOneRankParamService) => {
+const updateRank = async (params: IPostTermUpdateRankParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
 
@@ -321,7 +321,7 @@ const updateOneRank = async (params: IPostTermUpdateOneRankParamService) => {
     };
 }
 
-const updateManyStatus = async (params: IPostTermUpdateManyStatusIdParamService) => {
+const updateStatusMany = async (params: IPostTermUpdateStatusManyParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, postTermObjectIdKeys);
 
@@ -383,11 +383,11 @@ const deleteMany = async (params: IPostTermDeleteManyParamService) => {
 }
 
 export const PostTermService = {
-    getOne: getOne,
+    get: get,
     getMany: getMany,
     add: add,
-    updateOne: updateOne,
-    updateOneRank: updateOneRank,
-    updateManyStatus: updateManyStatus,
+    update: update,
+    updateRank: updateRank,
+    updateStatusMany: updateStatusMany,
     deleteMany: deleteMany
 };

@@ -2,7 +2,7 @@ import {ISubscriberModel} from "../models/subscriber.model";
 
 export type ISubscriberGetResultService = {} & ISubscriberModel
 
-export interface ISubscriberGetOneParamService {
+export interface ISubscriberGetParamService {
     _id?: string
     email?: string
 }
@@ -14,7 +14,7 @@ export interface ISubscriberGetManyParamService {
 
 export type ISubscriberAddParamService = {} & Omit<ISubscriberModel, "_id">
 
-export interface ISubscriberDeleteOneParamService {
+export interface ISubscriberDeleteParamService {
     email?: string
     _id?: string
 }

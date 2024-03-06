@@ -15,7 +15,7 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
         if (req.sessionAuth && req.sessionAuth.user) {
             if (
                 req.sessionAuth.user.ip != req.ip ||
-                !(await UserService.getOne({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}))
+                !(await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}))
             ) {
                 await new Promise(resolve => {
                     req.sessionAuth!.delete();
@@ -48,7 +48,7 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
         if (req.sessionAuth && req.sessionAuth.user) {
             let date = new Date();
             if (Number(date.diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshSeconds) {
-                let user = await UserService.getOne({
+                let user = await UserService.get({
                     _id: req.sessionAuth.user.userId.toString()
                 });
                 if (user) {

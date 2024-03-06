@@ -10,7 +10,7 @@ import Variable from "../library/variable";
 import {viewObjectIdKeys} from "../constants/objectIdKeys/view.objectIdKeys";
 import {IViewModel} from "../types/models/view.model";
 
-const getOne = async (params: IViewGetParamService) => {
+const get = async (params: IViewGetParamService) => {
     let filters: mongoose.FilterQuery<IViewModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, viewObjectIdKeys);
 
@@ -147,7 +147,7 @@ const deleteMany = async (params: IViewDeleteManyParamService) => {
 }
 
 export const ViewService = {
-    getOne: getOne,
+    get: get,
     getTotalWithDate: getTotalWithDate,
     getTotalWithCountry: getTotalWithCountry,
     add: add,

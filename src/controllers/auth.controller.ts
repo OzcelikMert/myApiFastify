@@ -29,7 +29,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IAuthPostSchema;
 
-        let user = await UserService.getOne({
+        let user = await UserService.get({
             ...reqData.body
         });
 

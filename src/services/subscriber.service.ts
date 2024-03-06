@@ -6,14 +6,14 @@ import {
     ISubscriberAddParamService,
     ISubscriberGetManyParamService,
     ISubscriberGetResultService,
-    ISubscriberGetOneParamService,
-    ISubscriberDeleteOneParamService
+    ISubscriberGetParamService,
+    ISubscriberDeleteParamService
 } from "../types/services/subscriber.service";
 import {subscriberModel} from "../models/subscriber.model";
 import {ISubscriberModel} from "../types/models/subscriber.model";
 import {subscriberObjectIdKeys} from "../constants/objectIdKeys/subscriber.objectIdKeys";
 
-const getOne = async (params: ISubscriberGetOneParamService) => {
+const get = async (params: ISubscriberGetParamService) => {
     let filters: mongoose.FilterQuery<ISubscriberModel> = {}
     params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
 
@@ -68,7 +68,7 @@ const add = async (params: ISubscriberAddParamService) => {
     return (await subscriberModel.create(params)).toObject()
 }
 
-const deleteOne = async (params: ISubscriberDeleteOneParamService) => {
+const delete_ = async (params: ISubscriberDeleteParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
 
@@ -107,9 +107,9 @@ const deleteMany = async (params: ISubscriberDeleteManyParamService) => {
 }
 
 export const SubscriberService = {
-    getOne: getOne,
+    get: get,
     getMany: getMany,
     add: add,
-    deleteOne: deleteOne,
+    delete: delete_,
     deleteMany: deleteMany
 };

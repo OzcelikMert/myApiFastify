@@ -13,17 +13,17 @@ import {
 } from "../schemas/post.schema";
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
-import {IPostGetManyResultService, IPostGetOneResultService} from "../types/services/post.service";
+import {IPostGetManyResultService, IPostGetResultService} from "../types/services/post.service";
 import {IPostModel} from "../types/models/post.model";
 import {PageTypeId} from "../constants/pageTypes";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostGetOneResultService>();
+        let apiResult = new ApiResult<IPostGetResultService>();
 
         let reqData = req as IPostGetWithIdSchema;
 
-        apiResult.data = await PostService.getOne({
+        apiResult.data = await PostService.get({
             ...reqData.params,
             ...reqData.query,
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
@@ -50,7 +50,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostGetOneResultService>();
+        let apiResult = new ApiResult<IPostGetResultService>();
 
         let reqData = req as IPostGetWithURLSchema;
 
@@ -58,7 +58,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
             reqData.params.url = "";
         }
 
-        apiResult.data = await PostService.getOne({
+        apiResult.data = await PostService.get({
             ...reqData.params,
             ...reqData.query
         });
@@ -104,7 +104,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostPutWithIdSchema;
 
-        await PostService.updateOne({
+        await PostService.update({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -121,7 +121,7 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostPutRankWithIdSchema;
 
-        await PostService.updateOneRank({
+        await PostService.updateRank({
             ...reqData.body,
             ...reqData.params,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -137,7 +137,7 @@ const updateViewWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostPutViewWithIdSchema;
 
-        await PostService.updateOneView({
+        await PostService.updateView({
             ...reqData.params,
             ...reqData.body
         });
@@ -152,7 +152,7 @@ const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostPutStatusManySchema;
 
-        await PostService.updateManyStatus({
+        await PostService.updateStatusMany({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });

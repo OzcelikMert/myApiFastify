@@ -32,7 +32,7 @@ const sessionAuthConfig = {
             return session ? session : undefined;
         },
         delete: async (key: any) => {
-            await sessionAuthModel.deleteOne({ key });
+            await sessionAuthModel.delete({ key });
         },
     },*/
     /*storage: {

@@ -17,7 +17,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostPutWithIdSchema;
 
-        let post = await PostService.getOne({
+        let post = await PostService.get({
             _id: reqData.params._id,
             typeId: reqData.body.typeId
         });
@@ -67,7 +67,7 @@ const checkWithIdIsAuthor = async (req: FastifyRequest, reply: FastifyReply) => 
         let reqData = req as IPostPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let post = await PostService.getOne({
+            let post = await PostService.get({
                 _id: reqData.params._id,
                 typeId: reqData.body.typeId
             });

@@ -18,7 +18,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationGetWithIdSchema;
 
-        apiResult.data = await NavigationService.getOne({
+        apiResult.data = await NavigationService.get({
             ...reqData.params,
             ...reqData.query
         });
@@ -63,7 +63,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationPutWithIdSchema;
 
-        await NavigationService.updateOne({
+        await NavigationService.update({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -79,7 +79,7 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationPutRankWithIdSchema;
 
-        await NavigationService.updateOneRank({
+        await NavigationService.updateRank({
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -95,7 +95,7 @@ const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as INavigationPutStatusManySchema;
 
-        await NavigationService.updateManyStatus({
+        await NavigationService.updateStatusMany({
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString()
         });

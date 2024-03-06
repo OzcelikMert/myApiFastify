@@ -30,7 +30,7 @@ export type IPostTermGetResultService = {
     postCount?: number
 } & Omit<IPostTermModel, "contents">
 
-export interface IPostTermGetOneParamService {
+export interface IPostTermGetParamService {
     langId?: string
     _id?: string
     typeId: PostTermTypeId,
@@ -61,11 +61,11 @@ export type IPostTermAddParamService = {
     contents?: IPostTermContentModel
 } & Omit<IPostTermModel, "_id"|"contents">
 
-export type IPostTermUpdateOneParamService = {
+export type IPostTermUpdateParamService = {
     _id: string,
 } & Omit<IPostTermAddParamService, "authorId">
 
-export type IPostTermUpdateOneRankParamService = {
+export type IPostTermUpdateRankParamService = {
     _id: string,
     postTypeId: PostTypeId,
     typeId: PostTermTypeId
@@ -73,7 +73,7 @@ export type IPostTermUpdateOneRankParamService = {
     lastAuthorId: string
 }
 
-export type IPostTermUpdateManyStatusIdParamService = {
+export type IPostTermUpdateStatusManyParamService = {
     _id: string[],
     postTypeId: PostTypeId,
     typeId: PostTermTypeId

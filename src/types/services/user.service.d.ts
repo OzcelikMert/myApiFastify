@@ -15,7 +15,7 @@ export type IUserGetResultService = {
     password?: string
 } & Omit<IUserModel, "password">
 
-export interface IUserGetOneParamService {
+export interface IUserGetParamService {
     _id?: string
     email?: string
     password?: string
@@ -39,7 +39,7 @@ export type IUserAddParamService = {
     image?: string
 } & Omit<IUserModel, "_id"|"image">
 
-export type IUserUpdateOneParamService = {
+export type IUserUpdateParamService = {
     _id: string
     roleId?: UserRoleId
     statusId?: StatusId
@@ -49,6 +49,6 @@ export type IUserUpdateOneParamService = {
     password?: string
 } & Omit<IUserAddParamService, "_id"|"roleId"|"statusId"|"name"|"email"|"permissions"|"password">
 
-export type IUserDeleteOneParamService = {
+export type IUserDeleteParamService = {
     _id: string
 }
