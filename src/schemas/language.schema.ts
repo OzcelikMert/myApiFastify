@@ -39,7 +39,7 @@ const putWithIdSchema = object({
     body: postBody
 });
 
-const putWithIdRankSchema = object({
+const putRankWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -52,12 +52,12 @@ export type ILanguageGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type ILanguageGetManySchema = z.infer<typeof getManySchema>;
 export type ILanguagePostSchema = z.infer<typeof postSchema>;
 export type ILanguagePutWithIdSchema = z.infer<typeof putWithIdSchema>;
-export type ILanguagePutWithIdRankSchema = z.infer<typeof putWithIdRankSchema>;
+export type ILanguagePutRankWithIdSchema = z.infer<typeof putRankWithIdSchema>;
 
 export const LanguageSchema = {
     getWithId: getWithIdSchema,
     getMany: getManySchema,
     post: postSchema,
     putWithId: putWithIdSchema,
-    putWithIdRank: putWithIdRankSchema,
+    putRankWithId: putRankWithIdSchema,
 };

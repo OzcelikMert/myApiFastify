@@ -157,7 +157,7 @@ const putWithIdSchema = object({
     body: postBody
 });
 
-const putManyStatusSchema = object({
+const putStatusManySchema = object({
     body: object({
         typeId: z.nativeEnum(PostTypeId),
         _id: array(string().min(1)).min(1),
@@ -165,7 +165,7 @@ const putManyStatusSchema = object({
     }),
 });
 
-const putWithIdRankSchema = object({
+const putRankWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -175,7 +175,7 @@ const putWithIdRankSchema = object({
     }),
 });
 
-const putWithIdViewSchema = object({
+const putViewWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -198,9 +198,9 @@ export type IPostGetWithURLSchema = z.infer<typeof getWithURLSchema>;
 export type IPostGetCountSchema = z.infer<typeof getCountSchema>;
 export type IPostPostSchema = z.infer<typeof postSchema>;
 export type IPostPutWithIdSchema = z.infer<typeof putWithIdSchema>;
-export type IPostPutManyStatusSchema = z.infer<typeof putManyStatusSchema>;
-export type IPostPutWithIdRankSchema = z.infer<typeof putWithIdRankSchema>;
-export type IPostPutWithIdViewSchema = z.infer<typeof putWithIdViewSchema>;
+export type IPostPutStatusManySchema = z.infer<typeof putStatusManySchema>;
+export type IPostPutRankWithIdSchema = z.infer<typeof putRankWithIdSchema>;
+export type IPostPutViewWithIdSchema = z.infer<typeof putViewWithIdSchema>;
 export type IPostDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const PostSchema = {
@@ -210,8 +210,8 @@ export const PostSchema = {
     getCount: getCountSchema,
     post: postSchema,
     putWithId: putWithIdSchema,
-    putManyStatus: putManyStatusSchema,
-    putWithIdRank: putWithIdRankSchema,
-    putWithIdView: putWithIdViewSchema,
+    putStatusMany: putStatusManySchema,
+    putRankWithId: putRankWithIdSchema,
+    putViewWithId: putViewWithIdSchema,
     deleteMany: deleteManySchema
 };

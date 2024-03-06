@@ -4,7 +4,7 @@ import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {LogMiddleware} from "./log.middleware";
 import {NavigationService} from "../services/navigation.service";
-import {INavigationPutWithIdSchema, INavigationPutManyStatusSchema} from "../schemas/navigation.schema";
+import {INavigationPutStatusManySchema, INavigationPutWithIdSchema} from "../schemas/navigation.schema";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -30,7 +30,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
-        let reqData = req as INavigationPutManyStatusSchema;
+        let reqData = req as INavigationPutStatusManySchema;
 
         let serviceResult = await NavigationService.getMany({_id: reqData.body._id});
 

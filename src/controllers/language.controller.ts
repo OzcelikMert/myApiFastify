@@ -3,7 +3,7 @@ import {ApiResult} from "../library/api/result";
 import {
     ILanguageGetWithIdSchema,
     ILanguageGetManySchema,
-    ILanguagePostSchema, ILanguagePutWithIdSchema, ILanguagePutWithIdRankSchema
+    ILanguagePostSchema, ILanguagePutWithIdSchema, ILanguagePutRankWithIdSchema
 } from "../schemas/language.schema";
 import {LanguageService} from "../services/language.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -96,11 +96,11 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
-        let reqData = req as ILanguagePutWithIdRankSchema;
+        let reqData = req as ILanguagePutRankWithIdSchema;
 
         await LanguageService.updateOneRank({
             ...reqData.params,
@@ -117,5 +117,5 @@ export const LanguageController = {
     getFlags: getFlags,
     add: add,
     updateWithId: updateWithId,
-    updateWithIdRank: updateWithIdRank,
+    updateRankWithId: updateRankWithId,
 };

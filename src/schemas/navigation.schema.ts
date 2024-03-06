@@ -42,14 +42,14 @@ const putWithIdSchema = object({
     body: postBody
 });
 
-const putManyStatusSchema = object({
+const putStatusManySchema = object({
     body: object({
         _id: array(string().min(1)).min(1),
         statusId: z.nativeEnum(StatusId)
     })
 });
 
-const putWithIdRankSchema = object({
+const putRankWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -68,8 +68,8 @@ export type INavigationGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type INavigationGetManySchema = z.infer<typeof getManySchema>;
 export type INavigationPostSchema = z.infer<typeof postSchema>;
 export type INavigationPutWithIdSchema = z.infer<typeof putWithIdSchema>;
-export type INavigationPutManyStatusSchema = z.infer<typeof putManyStatusSchema>;
-export type INavigationPutWithIdRankSchema = z.infer<typeof putWithIdRankSchema>;
+export type INavigationPutStatusManySchema = z.infer<typeof putStatusManySchema>;
+export type INavigationPutRankWithIdSchema = z.infer<typeof putRankWithIdSchema>;
 export type INavigationDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const NavigationSchema = {
@@ -77,7 +77,7 @@ export const NavigationSchema = {
     getMany: getManySchema,
     post: postSchema,
     putWithId: putWithIdSchema,
-    putManyStatus: putManyStatusSchema,
-    putWithIdRank: putWithIdRankSchema,
+    putStatusMany: putStatusManySchema,
+    putRankWithId: putRankWithIdSchema,
     deleteMany: deleteManySchema
 };

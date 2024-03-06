@@ -67,7 +67,7 @@ const putWithIdSchema = object({
     body: postBody
 });
 
-const putManyStatusSchema = object({
+const putStatusManySchema = object({
     body: object({
         postTypeId: z.nativeEnum(PostTypeId),
         typeId: z.nativeEnum(PostTermTypeId),
@@ -76,7 +76,7 @@ const putManyStatusSchema = object({
     })
 });
 
-const putWithIdRankSchema = object({
+const putRankWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
@@ -100,8 +100,8 @@ export type IPostTermGetManySchema = z.infer<typeof getManySchema>;
 export type IPostTermGetWithURLSchema = z.infer<typeof getWithURLSchema>;
 export type IPostTermPostSchema = z.infer<typeof postSchema>;
 export type IPostTermPutWithIdSchema = z.infer<typeof putWithIdSchema>;
-export type IPostTermPutManyStatusSchema = z.infer<typeof putManyStatusSchema>;
-export type IPostTermPutWithIdRankSchema = z.infer<typeof putWithIdRankSchema>;
+export type IPostTermPutStatusManySchema = z.infer<typeof putStatusManySchema>;
+export type IPostTermPutRankWithIdSchema = z.infer<typeof putRankWithIdSchema>;
 export type IPostTermDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const PostTermSchema = {
@@ -110,7 +110,7 @@ export const PostTermSchema = {
     getWithURL: getWithURLSchema,
     post: postSchema,
     putWithId: putWithIdSchema,
-    putManyStatus: putManyStatusSchema,
-    putWithIdRank: putWithIdRankSchema,
+    putStatusMany: putStatusManySchema,
+    putRankWithId: putRankWithIdSchema,
     deleteMany: deleteManySchema
 };

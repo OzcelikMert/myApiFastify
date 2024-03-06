@@ -7,9 +7,7 @@ import {
     INavigationGetWithIdSchema,
     INavigationGetManySchema,
     INavigationPostSchema,
-    INavigationPutWithIdSchema,
-    INavigationPutManyStatusSchema,
-    INavigationPutWithIdRankSchema
+    INavigationPutWithIdSchema, INavigationPutRankWithIdSchema, INavigationPutStatusManySchema
 } from "../schemas/navigation.schema";
 import {INavigationGetResultService} from "../types/services/navigation.service";
 import {INavigationModel} from "../types/models/navigation.model";
@@ -75,11 +73,11 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
-        let reqData = req as INavigationPutWithIdRankSchema;
+        let reqData = req as INavigationPutRankWithIdSchema;
 
         await NavigationService.updateOneRank({
             ...reqData.params,
@@ -91,11 +89,11 @@ const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
-        let reqData = req as INavigationPutManyStatusSchema;
+        let reqData = req as INavigationPutStatusManySchema;
 
         await NavigationService.updateManyStatus({
             ...reqData.body,
@@ -125,7 +123,7 @@ export const NavigationController = {
     getMany: getMany,
     add: add,
     updateWithId: updateWithId,
-    updateWithIdRank: updateWithIdRank,
-    updateManyStatus: updateManyStatus,
+    updateRankWithId: updateRankWithId,
+    updateStatusMany: updateStatusMany,
     deleteMany: deleteMany
 };

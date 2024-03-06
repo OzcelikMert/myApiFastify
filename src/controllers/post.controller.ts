@@ -8,11 +8,8 @@ import {
     IPostGetManySchema,
     IPostGetWithIdSchema,
     IPostGetWithURLSchema,
-    IPostPostSchema,
-    IPostPutManyStatusSchema,
-    IPostPutWithIdRankSchema,
+    IPostPostSchema, IPostPutRankWithIdSchema, IPostPutStatusManySchema, IPostPutViewWithIdSchema,
     IPostPutWithIdSchema,
-    IPostPutWithIdViewSchema
 } from "../schemas/post.schema";
 import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
@@ -118,11 +115,11 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
-        let reqData = req as IPostPutWithIdRankSchema;
+        let reqData = req as IPostPutRankWithIdSchema;
 
         await PostService.updateOneRank({
             ...reqData.body,
@@ -134,11 +131,11 @@ const updateWithIdRank = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateWithIdView = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateViewWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
-        let reqData = req as IPostPutWithIdViewSchema;
+        let reqData = req as IPostPutViewWithIdSchema;
 
         await PostService.updateOneView({
             ...reqData.params,
@@ -149,11 +146,11 @@ const updateWithIdView = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateManyStatus = async (req: FastifyRequest, reply: FastifyReply) => {
+const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
-        let reqData = req as IPostPutManyStatusSchema;
+        let reqData = req as IPostPutStatusManySchema;
 
         await PostService.updateManyStatus({
             ...reqData.body,
@@ -185,8 +182,8 @@ export const PostController = {
     getCount: getCount,
     add: add,
     updateWithId: updateWithId,
-    updateWithIdRank: updateWithIdRank,
-    updateWithIdView: updateWithIdView,
-    updateManyStatus: updateManyStatus,
+    updateRankWithId: updateRankWithId,
+    updateViewWithId: updateViewWithId,
+    updateStatusMany: updateStatusMany,
     deleteMany: deleteMany
 };
