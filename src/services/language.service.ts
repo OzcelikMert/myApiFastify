@@ -4,7 +4,10 @@ import {
     ILanguageGetResultService,
     ILanguageGetManyParamService,
     ILanguageAddParamService,
-    ILanguageGetOneParamService, ILanguageUpdateOneParamService, ILanguageUpdateOneRankParamService
+    ILanguageGetOneParamService,
+    ILanguageUpdateOneParamService,
+    ILanguageUpdateOneRankParamService,
+    ILanguageUpdateIsDefaultManyParamService
 } from "../types/services/language.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
@@ -31,6 +34,12 @@ const getOne = async (params: ILanguageGetOneParamService) => {
         filters = {
             ...filters,
             locale: params.locale
+        }
+    }
+    if (params.isDefault) {
+        filters = {
+            ...filters,
+            isDefault: params.isDefault
         }
     }
 
@@ -124,10 +133,35 @@ const updateOneRank = async (params: ILanguageUpdateOneRankParamService) => {
     };
 }
 
+const updateIsDefaultMany = async (params: ILanguageUpdateIsDefaultManyParamService) => {
+    let filters: mongoose.FilterQuery<ILanguageModel> = {}
+    params = Variable.clearAllScriptTags(params);
+    params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
+
+    if (params._id) {
+        filters = {
+            _id: params._id
+        };
+    }
+
+    let docs = (await languageModel.find(filters).exec());
+
+    if (docs) {
+       for (const doc of docs) {
+           doc.isDefault = params.isDefault;
+           await doc.save();
+       }
+       return true;
+    }
+
+    return false;
+}
+
 export const LanguageService = {
     getOne: getOne,
     getMany: getMany,
     add: add,
     updateOne: updateOne,
-    updateOneRank: updateOneRank
+    updateOneRank: updateOneRank,
+    updateIsDefaultMany: updateIsDefaultMany
 };

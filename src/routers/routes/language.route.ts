@@ -15,6 +15,6 @@ export const languageRoute = function (fastify: FastifyInstance, opts: any, done
     fastify.get(languageEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.getWithId)] }, LanguageController.getWithId);
     fastify.post(languageEndPoint.ADD, { preHandler: [RequestMiddleware.check(LanguageSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.ADD)] }, LanguageController.add);
     fastify.put(languageEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.putWithIdRank), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.UPDATE), LanguageMiddleware.checkWithId] }, LanguageController.updateWithIdRank);
-    fastify.put(languageEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.putWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.UPDATE), LanguageMiddleware.checkWithId] }, LanguageController.updateWithId);
+    fastify.put(languageEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(LanguageSchema.putWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(LanguageEndPointPermission.UPDATE), LanguageMiddleware.checkWithId, LanguageMiddleware.checkIsDefaultWithId] }, LanguageController.updateWithId);
     done();
 }

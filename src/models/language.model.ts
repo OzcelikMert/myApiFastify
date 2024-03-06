@@ -9,7 +9,8 @@ const schema = new mongoose.Schema<ILanguageModel>(
         shortKey: {type: String, required: true},
         locale: {type: String, required: true},
         statusId: {type: Number, required: true, enum: StatusId},
-        rank: {type: Number, default: 0}
+        rank: {type: Number, default: 0},
+        isDefault: {type: Boolean, required: true, default: false}
     },
     {timestamps: true}
 )

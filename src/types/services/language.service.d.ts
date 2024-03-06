@@ -25,3 +25,8 @@ export type ILanguageUpdateOneRankParamService = {
     _id: string
     rank: number
 }
+
+export type ILanguageUpdateIsDefaultManyParamService = {
+    _id?: string[]
+    isDefault: boolean
+}
