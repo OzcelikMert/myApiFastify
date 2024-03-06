@@ -8,7 +8,7 @@ const postBody = object({
     locale: string().min(1),
     statusId: z.nativeEnum(StatusId),
     rank: number().default(0),
-    isDefault: boolean().optional()
+    isDefault: boolean().default(false)
 });
 
 const getWithIdSchema = object({
