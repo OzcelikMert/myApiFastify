@@ -9,4 +9,5 @@ export interface ILanguageModel {
     locale: string
     statusId: StatusId
     rank: number
+    isDefault: boolean
 }

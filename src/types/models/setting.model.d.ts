@@ -4,7 +4,6 @@ import {StaticContentTypeId} from "../../constants/staticContentTypes";
 
 export interface ISettingModel {
     _id: string | ObjectId
-    defaultLangId: string | ObjectId
     icon?: string
     logo?: string
     logoTwo?: string

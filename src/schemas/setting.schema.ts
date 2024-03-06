@@ -12,7 +12,6 @@ const getSchema = object({
 
 const putGeneralSchema = object({
     body: object({
-        defaultLangId: string().min(1),
         icon: string().optional(),
         logo: string().optional(),
         logoTwo: string().optional(),

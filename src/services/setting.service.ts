@@ -19,7 +19,7 @@ import {ISettingModel} from "../types/models/setting.model";
 
 const get = async (params: ISettingGetParamService, withPassword: boolean = false) => {
     let filters: mongoose.FilterQuery<ISettingModel> = {}
-    let projection: mongoose.ProjectionType<ISettingModel> = {};
+    let projection: mongoose.ProjectionType<ISettingModel> = {contactForms: 0};
 
     params = MongoDBHelpers.convertObjectIdInData(params, settingObjectIdKeys);
     let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
@@ -30,9 +30,8 @@ const get = async (params: ISettingGetParamService, withPassword: boolean = fals
             case "seo": projection = {seoContents: 1}; break;
             case "contactForm": projection = {contactForms: 1}; break;
             case "eCommerce": projection = {eCommerce: 1}; break;
-            case "staticLanguage": projection = {staticContents: 1}; break;
+            case "staticContent": projection = {staticContents: 1}; break;
             case "socialMedia": projection = {socialMedia: 1}; break;
-            default: projection = {contactForms: 0}; break;
         }
     }
 
@@ -46,16 +45,16 @@ const get = async (params: ISettingGetParamService, withPassword: boolean = fals
         }
 
         if (Array.isArray(doc.staticContents)) {
-            doc.staticContents = doc.staticContents.map(staticLang => {
-                if(Array.isArray(staticLang.contents)){
-                    staticLang.contents = staticLang.contents.findSingle("langId", params.langId) ?? staticLang.contents.findSingle("langId", defaultLangId);
+            doc.staticContents = doc.staticContents.map(staticContent => {
+                if(Array.isArray(staticContent.contents)){
+                    staticContent.contents = staticContent.contents.findSingle("langId", params.langId) ?? staticContent.contents.findSingle("langId", defaultLangId);
                 }
-                return staticLang;
+                return staticContent;
             })
         }
 
-        if (!withPassword) {
-            doc.contactForms?.map(contactForm => {
+        if (!withPassword && doc.contactForms) {
+            doc.contactForms.map(contactForm => {
                 delete contactForm.password;
                 return contactForm;
             })
@@ -75,10 +74,6 @@ const add = async (params: ISettingAddParamService) => {
 const updateGeneral = async (params: ISettingUpdateGeneralParamService) => {
     params = Variable.clearAllScriptTags(params, ["head", "script"]);
     params = MongoDBHelpers.convertObjectIdInData(params, settingObjectIdKeys);
-
-    if (params.defaultLangId) {
-        Config.defaultLangId = params.defaultLangId.toString();
-    }
 
     let doc = (await settingModel.findOne({}).exec());
 

@@ -142,15 +142,17 @@ class InitConfig {
     }
 
     private async checkLanguages() {
-        if (!(await LanguageService.getOne({}))) {
-            await LanguageService.add({
+        if (!(await LanguageService.getOne({isDefault: true}))) {
+            let serviceResult = await LanguageService.add({
                 title: "English",
                 image: "gb.webp",
                 shortKey: "en",
                 locale: "us",
                 statusId: StatusId.Active,
-                rank: -1
-            })
+                rank: -1,
+                isDefault: true
+            });
+            Config.defaultLangId = serviceResult._id.toString();
             console.log(chalk.green(`#Language`))
             console.log(chalk.blue(`- Created`))
         }
@@ -159,18 +161,13 @@ class InitConfig {
     private async checkSettings() {
         let settings = await SettingService.get({});
         if (!settings) {
-            let lang = await LanguageService.getOne({});
             await SettingService.add({
                 contactForms: [],
                 staticContents: [],
                 socialMedia: [],
-                defaultLangId: lang?._id?.toString() || "",
             });
-            Config.defaultLangId = lang?._id?.toString() || "";
             console.log(chalk.green(`#Setting`))
             console.log(chalk.blue(`- Created`))
-        } else {
-            Config.defaultLangId = settings.defaultLangId.toString();
         }
     }
 }

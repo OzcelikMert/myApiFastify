@@ -1,4 +1,4 @@
-import {object, string, array, number, z} from 'zod';
+import {object, string, array, number, z, boolean} from 'zod';
 import {StatusId} from "../constants/status";
 
 const postBody = object({
@@ -7,7 +7,8 @@ const postBody = object({
     shortKey: string().min(1),
     locale: string().min(1),
     statusId: z.nativeEnum(StatusId),
-    rank: number().default(0)
+    rank: number().default(0),
+    isDefault: boolean().optional()
 });
 
 const getWithIdSchema = object({

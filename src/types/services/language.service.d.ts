@@ -7,6 +7,7 @@ export interface ILanguageGetOneParamService {
     _id?: string
     shortKey?: string
     locale?: string
+    isDefault?: boolean
 }
 
 export interface ILanguageGetManyParamService {
