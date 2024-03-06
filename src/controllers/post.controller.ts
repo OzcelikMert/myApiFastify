@@ -58,7 +58,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IPostGetWithURLSchema;
 
         if(reqData.query.pageTypeId == PageTypeId.HomePage){
-            delete reqData.params.url;
+            reqData.params.url = "";
         }
 
         apiResult.data = await PostService.getOne({
