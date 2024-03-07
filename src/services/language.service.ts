@@ -104,6 +104,14 @@ const update = async (params: ILanguageUpdateParamService) => {
     let doc = (await languageModel.findOne(filters).exec());
 
     if (doc) {
+        if(params.locale){
+            params.locale = params.locale.toLowerCase();
+        }
+
+        if(params.shortKey){
+            params.shortKey = params.shortKey.toLowerCase();
+        }
+
         doc = Object.assign(doc, params);
 
         await doc.save();
