@@ -3,7 +3,7 @@ import {ApiResult} from "../library/api/result";
 import {
     ILanguageGetWithIdSchema,
     ILanguageGetManySchema,
-    ILanguagePostSchema, ILanguagePutWithIdSchema, ILanguagePutRankWithIdSchema
+    ILanguagePostSchema, ILanguagePutWithIdSchema, ILanguagePutRankWithIdSchema, ILanguageGetDefaultSchema
 } from "../schemas/language.schema";
 import {LanguageService} from "../services/language.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -23,6 +23,18 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params,
             ...reqData.query,
         });
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    });
+}
+
+const getDefault = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult<ILanguageGetResultService>();
+
+        let reqData = req as ILanguageGetDefaultSchema;
+
+        apiResult.data = await LanguageService.get({isDefault: true});
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });
@@ -113,6 +125,7 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 export const LanguageController = {
     getWithId: getWithId,
+    getDefault: getDefault,
     getMany: getMany,
     getFlags: getFlags,
     add: add,

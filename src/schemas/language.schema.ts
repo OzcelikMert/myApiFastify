@@ -28,6 +28,11 @@ const getManySchema = object({
     })
 });
 
+const getDefaultSchema = object({
+    query: object({
+    })
+});
+
 const postSchema = object({
     body: postBody,
 });
@@ -49,6 +54,7 @@ const putRankWithIdSchema = object({
 });
 
 export type ILanguageGetWithIdSchema = z.infer<typeof getWithIdSchema>;
+export type ILanguageGetDefaultSchema = z.infer<typeof getDefaultSchema>;
 export type ILanguageGetManySchema = z.infer<typeof getManySchema>;
 export type ILanguagePostSchema = z.infer<typeof postSchema>;
 export type ILanguagePutWithIdSchema = z.infer<typeof putWithIdSchema>;
@@ -56,6 +62,7 @@ export type ILanguagePutRankWithIdSchema = z.infer<typeof putRankWithIdSchema>;
 
 export const LanguageSchema = {
     getWithId: getWithIdSchema,
+    getDefault: getDefaultSchema,
     getMany: getManySchema,
     post: postSchema,
     putWithId: putWithIdSchema,
