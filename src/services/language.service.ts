@@ -79,6 +79,14 @@ const add = async (params: ILanguageAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertObjectIdInData(params, languageObjectIdKeys);
 
+    if(params.locale){
+        params.locale = params.locale.toLowerCase();
+    }
+
+    if(params.shortKey){
+        params.shortKey = params.shortKey.toLowerCase();
+    }
+
     return (await languageModel.create(params)).toObject()
 }
 
