@@ -20,8 +20,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as ILanguageGetWithIdSchema;
 
         apiResult.data = await LanguageService.get({
-            ...reqData.params,
-            ...reqData.query,
+            ...reqData.params
         });
 
         await reply.status(apiResult.statusCode).send(apiResult)

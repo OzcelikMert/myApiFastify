@@ -2,7 +2,7 @@ import { ObjectId } from "mongoose"
 import {StatusId} from "../../constants/status";
 
 export interface ILanguageModel {
-    _id?: string | ObjectId
+    _id: string | ObjectId
     title: string
     image: string
     shortKey: string

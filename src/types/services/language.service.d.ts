@@ -12,6 +12,8 @@ export interface ILanguageGetParamService {
 
 export interface ILanguageGetManyParamService {
     _id?: string[]
+    shortKey?: string
+    locale?: string
     statusId?: StatusId
 }
 

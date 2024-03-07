@@ -54,13 +54,10 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostGetWithURLSchema;
 
-        if(reqData.query.pageTypeId == PageTypeId.HomePage){
-            reqData.params.url = "";
-        }
-
         apiResult.data = await PostService.get({
             ...reqData.params,
-            ...reqData.query
+            ...reqData.query,
+            url: reqData.query.pageTypeId == PageTypeId.HomePage ? undefined : reqData.params.url
         });
 
         await reply.status(apiResult.statusCode).send(apiResult);

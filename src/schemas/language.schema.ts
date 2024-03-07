@@ -14,17 +14,15 @@ const postBody = object({
 const getWithIdSchema = object({
     params: object({
         _id: string().min(1),
-    }),
-    query: object({
-        shortKey: string().optional(),
-        locale: string().optional(),
-    }),
+    })
 });
 
 const getManySchema = object({
     query: object({
         _id: array(string().min(1)).optional(),
-        statusId: z.nativeEnum(StatusId).optional()
+        statusId: z.nativeEnum(StatusId).optional(),
+        shortKey: string().optional(),
+        locale: string().optional(),
     })
 });
 

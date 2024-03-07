@@ -24,18 +24,6 @@ const get = async (params: ILanguageGetParamService) => {
             _id: params._id
         }
     }
-    if (params.shortKey) {
-        filters = {
-            ...filters,
-            shortKey: params.shortKey
-        }
-    }
-    if (params.locale) {
-        filters = {
-            ...filters,
-            locale: params.locale
-        }
-    }
     if (params.isDefault) {
         filters = {
             ...filters,
@@ -60,11 +48,22 @@ const getMany = async (params: ILanguageGetManyParamService) => {
             _id: { $in: params._id }
         }
     }
-
     if (params.statusId) {
         filters = {
             ...filters,
             statusId: params.statusId
+        }
+    }
+    if (params.shortKey) {
+        filters = {
+            ...filters,
+            shortKey: params.shortKey
+        }
+    }
+    if (params.locale) {
+        filters = {
+            ...filters,
+            locale: params.locale
         }
     }
 

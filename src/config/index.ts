@@ -142,17 +142,20 @@ class InitConfig {
     }
 
     private async checkLanguages() {
-        if (!(await LanguageService.get({isDefault: true}))) {
-            let serviceResult = await LanguageService.add({
+        let serviceResultGet = await LanguageService.get({isDefault: true});
+        if(serviceResultGet){
+            Config.defaultLangId = serviceResultGet._id.toString();
+        }else {
+            let serviceResultAdd = await LanguageService.add({
                 title: "English",
                 image: "gb.webp",
                 shortKey: "en",
-                locale: "us",
+                locale: "gb",
                 statusId: StatusId.Active,
                 rank: -1,
                 isDefault: true
             });
-            Config.defaultLangId = serviceResult._id.toString();
+            Config.defaultLangId = serviceResultAdd._id.toString();
             console.log(chalk.green(`#Language`))
             console.log(chalk.blue(`- Created`))
         }
