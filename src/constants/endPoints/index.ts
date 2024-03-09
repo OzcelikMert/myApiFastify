@@ -12,4 +12,5 @@ export class EndPoints {
     static get SUBSCRIBER() { return "/subscriber"; }
     static get SITEMAP() { return "/sitemap"; }
     static get NAVIGATION() { return "/navigation"; }
+    static get COMPONENT() { return "/component"; }
 };

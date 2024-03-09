@@ -1,0 +1,111 @@
+import {FastifyRequest, FastifyReply} from 'fastify';
+import {ApiResult} from "../library/api/result";
+import {LogMiddleware} from "../middlewares/log.middleware";
+import {IComponentGetResultService} from "../types/services/component.service";
+import {
+    IComponentDeleteManySchema,
+    IComponentGetManySchema,
+    IComponentGetWithElementIdSchema,
+    IComponentGetWithIdSchema, IComponentPostSchema, IComponentPutWithIdSchema
+} from "../schemas/component.schema";
+import {ComponentService} from "../services/component.service";
+import {IComponentModel} from "../types/models/component.model";
+
+const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult<IComponentGetResultService>();
+
+        let reqData = req as IComponentGetWithIdSchema;
+
+        apiResult.data = await ComponentService.get({
+            ...reqData.params,
+            ...reqData.query
+        });
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    })
+}
+
+const getWithElementId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult<IComponentGetResultService>();
+
+        let reqData = req as IComponentGetWithElementIdSchema;
+
+        apiResult.data = await ComponentService.get({
+            ...reqData.params,
+            ...reqData.query
+        });
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    })
+}
+
+const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult<IComponentGetResultService[]>();
+
+        let reqData = req as IComponentGetManySchema;
+
+        apiResult.data = await ComponentService.getMany({
+            ...reqData.query
+        });
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    })
+}
+
+const add = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult<IComponentModel>();
+
+        let reqData = req as IComponentPostSchema;
+
+        apiResult.data = await ComponentService.add({
+            ...reqData.body,
+            authorId: req.sessionAuth!.user!.userId.toString(),
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+        });
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    });
+}
+
+const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IComponentPutWithIdSchema;
+
+        await ComponentService.update({
+            ...reqData.params,
+            ...reqData.body,
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+        });
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    });
+}
+
+const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IComponentDeleteManySchema;
+
+        await ComponentService.deleteMany({
+            ...reqData.body
+        });
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    });
+}
+
+export const ComponentController = {
+    getWithId: getWithId,
+    getWithElementId: getWithElementId,
+    getMany: getMany,
+    add: add,
+    updateWithId: updateWithId,
+    deleteMany: deleteMany
+};

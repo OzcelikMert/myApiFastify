@@ -15,8 +15,9 @@ export interface IPostModel {
     dateStart: Date,
     rank: number,
     isFixed?: boolean,
-    categories?: string[]
-    tags?: string[]
+    categories?: string[] | ObjectId[]
+    components?: string[] | ObjectId[]
+    tags?: string[] | ObjectId[]
     contents: IPostContentModel[]
     beforeAndAfter?: IPostBeforeAndAfterModel
     eCommerce?: IPostECommerceModel

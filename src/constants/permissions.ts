@@ -40,6 +40,7 @@ export enum PermissionId {
     BeforeAndAfterAdd,
     BeforeAndAfterEdit,
     BeforeAndAfterDelete,
+    ComponentEdit
 }
 
 export const permissions: Array<IPermission> = [

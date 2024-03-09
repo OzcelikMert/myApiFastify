@@ -10,6 +10,7 @@ import {
 import {PostTypeId} from "../../constants/postTypes";
 import {PageTypeId} from "../../constants/pageTypes";
 import {StatusId} from "../../constants/status";
+import {IComponentModel} from "../models/component.model";
 
 export interface IPostAlternateService {
     langId: string
@@ -20,6 +21,7 @@ export interface IPostAlternateService {
 export type IPostGetResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
+    components?: IComponentModel[]
     views?: number,
     categories?: IPostTermPopulateService[]
     tags?: IPostTermPopulateService[]
@@ -38,6 +40,7 @@ export type IPostGetManyResultService = {
             contents?: IPostECommerceVariationContentModel | IPostECommerceVariationContentModel[]
         })[]
     })
+    components?: string[]
 } & Omit<IPostGetResultService, "eCommerce"|"components">
 
 export interface IPostGetParamService {

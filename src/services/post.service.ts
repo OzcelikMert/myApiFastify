@@ -20,6 +20,7 @@ import {postObjectIdKeys} from "../constants/objectIdKeys/post.objectIdKeys";
 import { StatusId } from "../constants/status";
 import { PostTermTypeId } from "../constants/postTermTypes";
 import { PostTypeId } from "../constants/postTypes";
+import {IComponentGetResultService} from "../types/services/component.service";
 
 const createURL = async (_id: string | null, title: string, typeId: PostTypeId) => {
     let urlAlreadyCount = 2;
@@ -98,7 +99,7 @@ const get = async (params: IPostGetParamService) => {
             }
             return doc;
         }
-    })
+    });
 
     query.populate({
         path: [
@@ -124,7 +125,22 @@ const get = async (params: IPostGetParamService) => {
             }
             return doc;
         }
-    })
+    });
+
+    query.populate({
+            path: "components",
+            options: { omitUndefined: true },
+            transform: (doc: IComponentGetResultService) => {
+                if (doc) {
+                    doc.elements.map(docType => {
+                        if (Array.isArray(docType.contents)) {
+                            docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);
+                        }
+                    })
+                }
+                return doc;
+            }
+    });
 
     query.populate({
         path: [
@@ -162,12 +178,9 @@ const get = async (params: IPostGetParamService) => {
                 }
             }
 
-            let docContent = doc.contents.findSingle("langId", params.langId);
-            if (!docContent) {
-                docContent = doc.contents.findSingle("langId", defaultLangId);
-                if (docContent) {
-                    docContent.views = 0;
-                }
+            let docContent = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+            if (docContent) {
+                docContent.views = 0;
             }
 
             doc.contents = docContent;

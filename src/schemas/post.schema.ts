@@ -11,6 +11,7 @@ const postBody = object({
     pageTypeId: z.nativeEnum(PageTypeId).optional(),
     categories: array(string().min(1)).default([]),
     tags: array(string().min(1)).default([]),
+    components: array(string().min(1)).optional().default([]),
     dateStart: string().min(1),
     rank: number().min(1),
     isFixed: boolean().default(false),

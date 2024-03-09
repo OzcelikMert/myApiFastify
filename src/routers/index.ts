@@ -14,6 +14,7 @@ import {mailerRoute} from "./routes/mailer.route";
 import {subscriberRoute} from "./routes/subscriber.route";
 import {sitemapRoute} from "./routes/sitemap.route";
 import {navigationRoute} from "./routes/navigation.route";
+import {componentRoute} from "./routes/component.route";
 
 export const routers = function (fastify: FastifyInstance, opts: any, done: () => void) {
     fastify.register(userRoute, { prefix: EndPoints.USER });
@@ -29,5 +30,6 @@ export const routers = function (fastify: FastifyInstance, opts: any, done: () =
     fastify.register(subscriberRoute, { prefix: EndPoints.SUBSCRIBER });
     fastify.register(sitemapRoute, { prefix: EndPoints.SITEMAP });
     fastify.register(navigationRoute, { prefix: EndPoints.NAVIGATION });
+    fastify.register(componentRoute, { prefix: EndPoints.COMPONENT });
     done();
 }
