@@ -82,4 +82,5 @@ export const permissions: Array<IPermission> = [
     {id: PermissionId.ProductAdd, minUserRoleId: UserRoleId.Author},
     {id: PermissionId.ProductEdit, minUserRoleId: UserRoleId.Author},
     {id: PermissionId.ProductDelete, minUserRoleId: UserRoleId.Author},
+    {id: PermissionId.ComponentEdit, minUserRoleId: UserRoleId.Editor},
 ]

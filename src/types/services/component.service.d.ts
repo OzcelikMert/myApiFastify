@@ -22,7 +22,7 @@ export interface IComponentGetManyParamService {
 }
 
 export type IComponentAddParamService = {
-    elements: (Omit<IComponentElementModel, "contents"> & {
+    elements?: (Omit<IComponentElementModel, "contents"> & {
         contents: IComponentElementContentModel
     })[]
 } & Omit<IComponentModel, "_id"|"elements">
