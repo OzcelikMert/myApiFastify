@@ -39,8 +39,7 @@ const getManySchema = object({
         langId: string().optional(),
         title: string().optional(),
         count: number().optional(),
-        page: number().optional(),
-        ignoreDefaultLanguage: boolean().optional()
+        page: number().optional()
     })
 });
 

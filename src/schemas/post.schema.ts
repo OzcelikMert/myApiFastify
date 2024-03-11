@@ -120,7 +120,6 @@ const getManySchema = object({
         statusId: z.nativeEnum(StatusId).optional(),
         count: number().optional(),
         page: number().optional(),
-        ignoreDefaultLanguage: boolean().optional(),
         isRecent: boolean().optional(),
         categories: array(string().min(1)).optional()
     })

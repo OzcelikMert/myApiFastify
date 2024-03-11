@@ -61,6 +61,10 @@ const get = async (params: INavigationGetParamService) => {
 
     if (doc) {
         if (Array.isArray(doc.contents)) {
+            doc.alternates = doc.contents.map(content => ({
+                langId: content.langId.toString()
+            }));
+
             let docContent = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
             if (docContent) {
                 doc.contents = docContent;
@@ -114,8 +118,12 @@ const getMany = async (params: INavigationGetManyParamService) => {
 
     return (await query.lean<INavigationGetResultService[]>().exec()).map((doc) => {
         if (Array.isArray(doc.contents)) {
+            doc.alternates = doc.contents.map(content => ({
+                langId: content.langId.toString()
+            }));
+
             let docContent = doc.contents.findSingle("langId", params.langId);
-            if (!docContent && !params.ignoreDefaultLanguage) {
+            if (!docContent) {
                 docContent = doc.contents.findSingle("langId", defaultLangId);
             }
 

@@ -193,7 +193,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
             }));
 
             let docContent = doc.contents.findSingle("langId", params.langId);
-            if (!docContent && !params.ignoreDefaultLanguage) {
+            if (!docContent) {
                 docContent = doc.contents.findSingle("langId", defaultLangId);
             }
 

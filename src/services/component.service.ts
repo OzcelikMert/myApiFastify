@@ -43,6 +43,10 @@ const get = async (params: IComponentGetParamService) => {
     if (doc) {
         for (let docElement of doc.elements) {
             if (Array.isArray(docElement.contents)) {
+                docElement.alternates = docElement.contents.map(content => ({
+                    langId: content.langId.toString()
+                }));
+
                 docElement.contents = docElement.contents.findSingle("langId", params.langId) ?? docElement.contents.findSingle("langId", defaultLangId);
             }
         }
@@ -81,6 +85,10 @@ const getMany = async (params: IComponentGetManyParamService) => {
     return (await query.lean<IComponentGetResultService[]>().exec()).map(doc => {
         for (let docElement of doc.elements) {
             if (Array.isArray(docElement.contents)) {
+                docElement.alternates = docElement.contents.map(content => ({
+                    langId: content.langId.toString()
+                }));
+
                 docElement.contents = docElement.contents.findSingle("langId", params.langId) ?? docElement.contents.findSingle("langId", defaultLangId);
                 if(docElement.contents){
                     delete docElement.contents?.content;

@@ -191,6 +191,9 @@ const get = async (params: IPostGetParamService) => {
                 for (let docECommerceVariation of doc.eCommerce.variations) {
                     docECommerceVariation.selectedVariations = docECommerceVariation.selectedVariations.filter(item => item.attributeId);
                     if (Array.isArray(docECommerceVariation.contents)) {
+                        docECommerceVariation.alternates = docECommerceVariation.contents.map(content => ({
+                            langId: content.langId.toString(),
+                        }));
                         docECommerceVariation.contents = docECommerceVariation.contents.findSingle("langId", params.langId) ?? docECommerceVariation.contents.findSingle("langId", defaultLangId);
                     }
                 }
@@ -321,7 +324,7 @@ const getMany = async (params: IPostGetManyParamService) => {
             }
 
             let docContent = doc.contents.findSingle("langId", params.langId);
-            if (!docContent && !params.ignoreDefaultLanguage) {
+            if (!docContent) {
                 docContent = doc.contents.findSingle("langId", defaultLangId);
                 if (docContent) {
                     docContent.views = 0;
@@ -345,6 +348,9 @@ const getMany = async (params: IPostGetManyParamService) => {
 
                 for (let docECommerceVariation of doc.eCommerce.variations) {
                     if (Array.isArray(docECommerceVariation.contents)) {
+                        docECommerceVariation.alternates = docECommerceVariation.contents.map(content => ({
+                            langId: content.langId.toString(),
+                        }));
                         docECommerceVariation.contents = docECommerceVariation.contents.findSingle("langId", params.langId) ?? docECommerceVariation.contents.findSingle("langId", defaultLangId);
                         delete docECommerceVariation.contents?.content;
                     }
@@ -436,6 +442,10 @@ const update = async (params: IPostUpdateParamService) => {
                 }
             }
             delete params.contents;
+        }
+
+        if (params.eCommerce) {
+
         }
 
         doc = Object.assign(doc, params);

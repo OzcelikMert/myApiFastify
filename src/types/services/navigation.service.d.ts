@@ -11,11 +11,16 @@ export interface INavigationPopulateService {
     }
 }
 
+export interface INavigationAlternateService {
+    langId: string
+}
+
 export type INavigationGetResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     mainId?: INavigationPopulateService,
     contents?: INavigationContentModel | INavigationContentModel[]
+    alternates?: INavigationAlternateService[]
 } & Omit<INavigationModel, "contents">
 
 export interface INavigationGetParamService {
@@ -28,7 +33,6 @@ export interface INavigationGetManyParamService {
     _id?: string[]
     langId?: string
     statusId?: StatusId
-    ignoreDefaultLanguage?: boolean
 }
 
 export type INavigationAddParamService = {

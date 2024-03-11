@@ -53,7 +53,6 @@ export interface IPostTermGetManyParamService {
     count?: number
     page?: number
     withPostCount?: boolean
-    ignoreDefaultLanguage?: boolean
     authorId?: string
 }
 
