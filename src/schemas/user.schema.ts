@@ -37,8 +37,8 @@ const getManySchema = object({
         _id: array(string().min(1)).optional(),
         statusId: z.nativeEnum(StatusId).optional(),
         email: string().optional(),
-        count: number().optional(),
-        page: number().optional(),
+        count: z.coerce.number().optional(),
+        page: z.coerce.number().optional(),
     })
 });
 

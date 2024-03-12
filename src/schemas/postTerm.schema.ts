@@ -35,11 +35,11 @@ const getManySchema = object({
         typeId: array(z.nativeEnum(PostTermTypeId)).optional(),
         postTypeId: z.nativeEnum(PostTypeId),
         statusId: z.nativeEnum(StatusId).optional(),
-        withPostCount: boolean().optional(),
+        withPostCount: z.coerce.boolean().optional(),
         langId: string().optional(),
         title: string().optional(),
-        count: number().optional(),
-        page: number().optional()
+        count: z.coerce.number().optional(),
+        page: z.coerce.number().optional()
     })
 });
 

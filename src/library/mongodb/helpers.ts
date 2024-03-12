@@ -31,7 +31,9 @@ class MongoDBHelpers {
                 if(Array.isArray(anyData[dataKey])){
                     anyData[dataKey] = MongoDBHelpers.createObjectIdArray(anyData[dataKey]);
                 }else{
-                    anyData[dataKey] = MongoDBHelpers.createObjectId(anyData[dataKey]);
+                    if(anyData[dataKey]){
+                        anyData[dataKey] = MongoDBHelpers.createObjectId(anyData[dataKey]);
+                    }
                 }
             }else {
                 if(typeof anyData[dataKey] === "object"){

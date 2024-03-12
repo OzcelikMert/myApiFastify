@@ -2,7 +2,7 @@ import {object, string, number, array, boolean, z} from 'zod';
 import {StatusId} from "../constants/status";
 
 const postBody = object({
-    mainId: string().optional(),
+    mainId: string().optional().default(""),
     statusId: z.nativeEnum(StatusId),
     rank: number().min(1),
     contents: object({

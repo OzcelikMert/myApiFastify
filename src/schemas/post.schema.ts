@@ -118,9 +118,9 @@ const getManySchema = object({
         langId: string().optional(),
         title: string().optional(),
         statusId: z.nativeEnum(StatusId).optional(),
-        count: number().optional(),
-        page: number().optional(),
-        isRecent: boolean().optional(),
+        count: z.coerce.number().optional(),
+        page: z.coerce.number().optional(),
+        isRecent: z.coerce.boolean().optional(),
         categories: array(string().min(1)).optional()
     })
 });

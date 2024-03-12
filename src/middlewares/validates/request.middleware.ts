@@ -8,14 +8,23 @@ const check = (schema: ZodSchema) => async (
     req: FastifyRequest,
     reply: FastifyReply
 ) => {
-    let apiResult = new ApiResult();
+    let apiResult = new ApiResult<any>();
     try {
-        let validatedData = await schema.safeParse({
+        let validatedData = await schema.safeParseAsync({
             body: req.body,
             query: req.query,
             params: req.params
         });
-        req = Object.assign(req, validatedData);
+        console.log(req.url, validatedData)
+        if(validatedData.success){
+            req = Object.assign(req, validatedData.data);
+        }else {
+            apiResult.status = false;
+            apiResult.message = validatedData.error.errors;
+            apiResult.data = req.query;
+            apiResult.errorCode = ApiErrorCodes.incorrectData;
+            apiResult.statusCode = ApiStatusCodes.badRequest;
+        }
     } catch (e: any) {
         apiResult.status = false;
         apiResult.message = e.errors;

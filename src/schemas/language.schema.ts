@@ -1,5 +1,6 @@
-import {object, string, array, number, z, boolean} from 'zod';
+import {array, boolean, number, object, string, z} from 'zod';
 import {StatusId} from "../constants/status";
+import {ZodUtil, ZodUtilVariableType} from "../utils/zod.util";
 
 const postBody = object({
     title: string().min(1),
@@ -20,7 +21,8 @@ const getWithIdSchema = object({
 const getManySchema = object({
     query: object({
         _id: array(string().min(1)).optional(),
-        statusId: z.nativeEnum(StatusId).optional(),
+        statusId: ZodUtil.enumValidator(StatusId, ZodUtilVariableType.Number).optional(),
+        //statusId2: z.nativeEnum(StatusId).optional(),
         shortKey: string().optional(),
         locale: string().optional(),
     })

@@ -6,14 +6,14 @@ const getPostTermSchema = object({
     query: object({
         typeId: z.nativeEnum(PostTermTypeId),
         postTypeId: z.nativeEnum(PostTypeId),
-        page: number().optional(),
+        page: z.coerce.number().optional(),
     })
 });
 
 const getPostSchema = object({
     query: object({
         typeId: z.nativeEnum(PostTypeId),
-        page: number().optional(),
+        page: z.coerce.number().optional(),
     })
 });
 
