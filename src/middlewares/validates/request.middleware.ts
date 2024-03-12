@@ -20,14 +20,14 @@ const check = (schema: ZodSchema) => async (
             req = Object.assign(req, validatedData.data);
         }else {
             apiResult.status = false;
-            apiResult.message = validatedData.error.errors;
+            apiResult.message = validatedData.error.format();
             apiResult.data = req.query;
             apiResult.errorCode = ApiErrorCodes.incorrectData;
             apiResult.statusCode = ApiStatusCodes.badRequest;
         }
     } catch (e: any) {
         apiResult.status = false;
-        apiResult.message = e.errors;
+        apiResult.message = e.format ? e.format() : e.errors ?? "";
         apiResult.errorCode = ApiErrorCodes.incorrectData;
         apiResult.statusCode = ApiStatusCodes.badRequest;
     } finally {
