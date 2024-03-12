@@ -3,6 +3,7 @@ import {IComponentElementContentModel, IComponentElementModel, IComponentModel} 
 import {userModel} from "./user.model";
 import {ElementTypeId} from "../constants/elementTypes";
 import {languageModel} from "./language.model";
+import {ComponentTypeId} from "../constants/componentTypes";
 
 const schemaElementContent = new mongoose.Schema<IComponentElementContentModel>(
     {
@@ -28,7 +29,8 @@ const schema = new mongoose.Schema<IComponentModel>(
             lastAuthorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
             title: {type: String, required: true},
             elementId: {type: String, required: true},
-            elements: {type: [schemaElement], default: []}
+            elements: {type: [schemaElement], default: []},
+            typeId: {type: Number, required: true, enum: ComponentTypeId},
     },
     {timestamps: true}
 ).index({authorId: 1});

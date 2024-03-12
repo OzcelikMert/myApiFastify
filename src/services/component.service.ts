@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import MongoDBHelpers from "../library/mongodb/helpers";
-import { Config } from "../config";
+import {Config} from "../config";
 import Variable from "../library/variable";
 import {
     IComponentAddParamService, IComponentDeleteManyParamService,
@@ -36,7 +36,7 @@ const get = async (params: IComponentGetParamService) => {
         select: "_id name url"
     });
 
-    query.sort({ rank: 1, createdAt: -1 });
+    query.sort({rank: 1, createdAt: -1});
 
     let doc = (await query.lean<IComponentGetResultService>().exec());
 
@@ -64,10 +64,13 @@ const getMany = async (params: IComponentGetManyParamService) => {
         ...filters,
         _id: params._id
     }
-
     if (params.elementId) filters = {
         ...filters,
-        elementId: { $in: params.elementId }
+        elementId: {$in: params.elementId}
+    }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: {$in: params.typeId}
     }
 
     let query = componentModel.find(filters);
@@ -80,7 +83,7 @@ const getMany = async (params: IComponentGetManyParamService) => {
         select: "_id name url"
     })
 
-    query.sort({ rank: 1, createdAt: -1 });
+    query.sort({rank: 1, createdAt: -1});
 
     return (await query.lean<IComponentGetResultService[]>().exec()).map(doc => {
         for (let docElement of doc.elements) {
@@ -90,7 +93,7 @@ const getMany = async (params: IComponentGetManyParamService) => {
                 }));
 
                 docElement.contents = docElement.contents.findSingle("langId", params.langId) ?? docElement.contents.findSingle("langId", defaultLangId);
-                if(docElement.contents){
+                if (docElement.contents) {
                     delete docElement.contents?.content;
                 }
             }
@@ -164,7 +167,7 @@ const deleteMany = async (params: IComponentDeleteManyParamService) => {
 
     filters = {
         ...filters,
-        _id: { $in: params._id }
+        _id: {$in: params._id}
     }
 
     return (await componentModel.deleteMany(filters).exec()).deletedCount;

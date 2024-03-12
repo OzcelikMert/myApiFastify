@@ -1,5 +1,6 @@
 import {IUserPopulateService} from "./user.service";
 import {IComponentElementModel, IComponentModel, IComponentElementContentModel} from "../models/component.model";
+import {ComponentTypeId} from "../../constants/componentTypes";
 
 export interface IComponentAlternateService {
     langId: string
@@ -24,6 +25,7 @@ export interface IComponentGetManyParamService {
     _id?: string[]
     elementId?: string[]
     langId?: string,
+    typeId?: ComponentTypeId
 }
 
 export type IComponentAddParamService = {

@@ -1,9 +1,11 @@
 import {object, string, number, array, boolean, z} from 'zod';
 import {ElementTypeId} from "../constants/elementTypes";
+import {ComponentTypeId} from "../constants/componentTypes";
 
 const postBody = object({
     elementId: string().min(1),
     title: string().min(1),
+    typeId: z.nativeEnum(ComponentTypeId),
     elements: (array(object({
         _id: string().optional(),
         elementId: string().min(1),
@@ -41,7 +43,8 @@ const getManySchema = object({
         _id: array(string().min(1)).optional(),
         langId: string().optional(),
         elementId: array(string().min(1)).optional(),
-    })
+        typeId: z.nativeEnum(ComponentTypeId).optional(),
+})
 });
 
 const postSchema = object({
