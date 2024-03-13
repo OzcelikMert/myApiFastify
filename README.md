@@ -2,8 +2,9 @@
 Api for My Admin Panel
 
 Things to do:
--zoddan enumlari kontrol ederken enum degerler string donuyor 
+- component element, social media ve baska bu tip arraylar varsa bunlarin izinlerini kontorl et super admin harici ekleyemesin ama guncelleyebilsin
 
++ zoddan enumlari kontrol ederken enum degerler string donuyor 
 + service disindaki get one lerin hepsini get with Id falan yap
 + permissions lar icin minRoleId yap ve kontrol et (ornek min rol id yetiyormu yetiyorsada permisison id si varmi gibi)
 + sessiona duzen var sayfayi kapatinca falan bozulmasin gitmesin
