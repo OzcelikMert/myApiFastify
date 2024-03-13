@@ -4,6 +4,7 @@ import {StatusId} from "../constants/status";
 import {PostTypeId} from "../constants/postTypes";
 import {PageTypeId} from "../constants/pageTypes";
 import {AttributeTypeId} from "../constants/attributeTypes";
+import {ZodUtil} from "../utils/zod.util";
 
 const postBody = object({
     typeId: z.nativeEnum(PostTypeId),
@@ -103,21 +104,21 @@ const getWithIdSchema = object({
         _id: string().min(1),
     }),
     query: object({
-        typeId: z.nativeEnum(PostTypeId),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
         langId: string().optional(),
-        pageTypeId: z.nativeEnum(PageTypeId).optional(),
-        statusId: z.nativeEnum(StatusId).optional()
+        pageTypeId: ZodUtil.convertToNumber(z.nativeEnum(PageTypeId)).optional(),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional()
     })
 });
 
 const getManySchema = object({
     query: object({
-        typeId: array(z.nativeEnum(PostTypeId)).optional(),
+        typeId: array(ZodUtil.convertToNumber(z.nativeEnum(PostTypeId))).optional(),
         _id: array(string().min(1)).optional(),
-        pageTypeId: array(z.nativeEnum(PageTypeId)).optional(),
+        pageTypeId: array(ZodUtil.convertToNumber(z.nativeEnum(PageTypeId))).optional(),
         langId: string().optional(),
         title: string().optional(),
-        statusId: z.nativeEnum(StatusId).optional(),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         count: z.coerce.number().optional(),
         page: z.coerce.number().optional(),
         isRecent: z.coerce.boolean().optional(),
@@ -130,17 +131,17 @@ const getWithURLSchema = object({
         url: string().min(1),
     }),
     query: object({
-        typeId: z.nativeEnum(PostTypeId),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
         langId: string().optional(),
-        pageTypeId: z.nativeEnum(PageTypeId).optional(),
-        statusId: z.nativeEnum(StatusId).optional()
+        pageTypeId: ZodUtil.convertToNumber(z.nativeEnum(PageTypeId)).optional(),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional()
     })
 });
 
 const getCountSchema = object({
     query: object({
-        typeId: z.nativeEnum(PostTypeId),
-        statusId: z.nativeEnum(StatusId).optional(),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         categories: array(string().min(1)).default([]),
         title: string().optional(),
     })

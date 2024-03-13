@@ -2,6 +2,7 @@ import {object, string, array, boolean, number, z} from 'zod';
 import {StatusId} from "../constants/status";
 import {PostTypeId} from "../constants/postTypes";
 import {PostTermTypeId} from "../constants/postTermTypes";
+import {ZodUtil} from "../utils/zod.util";
 
 const postBody = object({
     postTypeId: z.nativeEnum(PostTypeId),
@@ -22,9 +23,9 @@ const getWithIdSchema = object({
         _id: string().min(1),
     }),
     query: object({
-        postTypeId: z.nativeEnum(PostTypeId),
-        typeId: z.nativeEnum(PostTermTypeId),
-        statusId: z.nativeEnum(StatusId).optional(),
+        postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         langId: string().optional(),
     })
 });
@@ -32,9 +33,9 @@ const getWithIdSchema = object({
 const getManySchema = object({
     query: object({
         _id: array(string().min(1)).optional(),
-        typeId: array(z.nativeEnum(PostTermTypeId)).optional(),
-        postTypeId: z.nativeEnum(PostTypeId),
-        statusId: z.nativeEnum(StatusId).optional(),
+        typeId: array(ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId))).optional(),
+        postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         withPostCount: z.coerce.boolean().optional(),
         langId: string().optional(),
         title: string().optional(),
@@ -48,9 +49,9 @@ const getWithURLSchema = object({
         url: string().min(1),
     }),
     query: object({
-        postTypeId: z.nativeEnum(PostTypeId),
-        typeId: z.nativeEnum(PostTermTypeId),
-        statusId: z.nativeEnum(StatusId).optional(),
+        postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         langId: string().optional(),
     })
 });

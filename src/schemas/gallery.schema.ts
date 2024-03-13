@@ -1,11 +1,12 @@
 import {object, string, array, z} from 'zod';
 import {GalleryTypeId} from "../constants/galleryTypeId";
+import {ZodUtil} from "../utils/zod.util";
 
 const getManySchema = object({
     query: object({
         _id: array(string().min(1)).optional(),
         name: array(string().min(1)).optional(),
-        typeId: z.nativeEnum(GalleryTypeId).optional(),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(GalleryTypeId)).optional(),
     })
 });
 

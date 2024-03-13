@@ -1,18 +1,19 @@
 import {object, number, z} from 'zod';
 import {PostTermTypeId} from "../constants/postTermTypes";
 import {PostTypeId} from "../constants/postTypes";
+import {ZodUtil} from "../utils/zod.util";
 
 const getPostTermSchema = object({
     query: object({
-        typeId: z.nativeEnum(PostTermTypeId),
-        postTypeId: z.nativeEnum(PostTypeId),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)),
+        postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
         page: z.coerce.number().optional(),
     })
 });
 
 const getPostSchema = object({
     query: object({
-        typeId: z.nativeEnum(PostTypeId),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
         page: z.coerce.number().optional(),
     })
 });

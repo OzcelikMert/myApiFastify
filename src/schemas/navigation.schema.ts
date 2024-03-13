@@ -1,5 +1,6 @@
 import {object, string, number, array, boolean, z} from 'zod';
 import {StatusId} from "../constants/status";
+import {ZodUtil} from "../utils/zod.util";
 
 const postBody = object({
     mainId: string().optional().default(""),
@@ -18,7 +19,7 @@ const getWithIdSchema = object({
     }),
     query: object({
         langId: string().optional(),
-        statusId: z.nativeEnum(StatusId).optional()
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional()
     })
 });
 
@@ -26,7 +27,7 @@ const getManySchema = object({
     query: object({
         _id: array(string().min(1)).optional(),
         langId: string().optional(),
-        statusId: z.nativeEnum(StatusId).optional()
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional()
     })
 });
 

@@ -2,6 +2,7 @@ import {object, string, array, number, z} from 'zod';
 import {UserRoleId} from "../constants/userRoles";
 import {StatusId} from "../constants/status";
 import {PermissionId} from "../constants/permissions";
+import {ZodUtil} from "../utils/zod.util";
 
 const postBody = {
     roleId: z.nativeEnum(UserRoleId),
@@ -19,7 +20,7 @@ const getWithIdSchema = object({
         _id: string().min(1),
     }),
     query: object({
-        statusId: z.nativeEnum(StatusId).optional(),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
     })
 });
 
@@ -28,14 +29,14 @@ const getWithURLSchema = object({
         url: string().min(1),
     }),
     query: object({
-        statusId: z.nativeEnum(StatusId).optional(),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
     })
 });
 
 const getManySchema = object({
     query: object({
         _id: array(string().min(1)).optional(),
-        statusId: z.nativeEnum(StatusId).optional(),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         email: string().optional(),
         count: z.coerce.number().optional(),
         page: z.coerce.number().optional(),

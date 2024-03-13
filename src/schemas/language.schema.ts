@@ -21,8 +21,7 @@ const getWithIdSchema = object({
 const getManySchema = object({
     query: object({
         _id: array(string().min(1)).optional(),
-        statusId: ZodUtil.enumValidator(StatusId, ZodUtilVariableType.Number).optional(),
-        //statusId2: z.nativeEnum(StatusId).optional(),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         shortKey: string().optional(),
         locale: string().optional(),
     })

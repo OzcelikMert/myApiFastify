@@ -15,7 +15,6 @@ const check = (schema: ZodSchema) => async (
             query: req.query,
             params: req.params
         });
-        console.log(req.url, validatedData)
         if(validatedData.success){
             req = Object.assign(req, validatedData.data);
         }else {

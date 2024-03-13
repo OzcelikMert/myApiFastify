@@ -1,21 +1,19 @@
-import {z, ZodNativeEnum} from "zod";
+import {z, ZodNativeEnum, ZodTypeAny} from "zod";
 
 export enum ZodUtilVariableType {
     Number = 1,
     String
 }
 
-const enumValidator = <T extends z.EnumLike>(enumObj: T, type?: ZodUtilVariableType) => {
-    return z.custom((value: any) => {
-        if(type){
-            switch (type) {
-                case ZodUtilVariableType.Number: value = Number(value); break;
-            }
+const convertToNumber = <T extends ZodTypeAny>(schema: T) => {
+    return z.preprocess((a) => {
+        if (typeof a === 'string') {
+            return Number(a)
         }
-        return z.nativeEnum(enumObj).safeParse(value);
-    }) as ZodNativeEnum<T>;
+        return a;
+    }, schema);
 }
 
 export const ZodUtil = {
-    enumValidator: enumValidator
+    convertToNumber: convertToNumber
 }

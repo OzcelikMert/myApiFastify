@@ -1,6 +1,7 @@
 import {object, string, number, array, boolean, z} from 'zod';
 import {ElementTypeId} from "../constants/elementTypes";
 import {ComponentTypeId} from "../constants/componentTypes";
+import {ZodUtil} from "../utils/zod.util";
 
 const postBody = object({
     elementId: string().min(1),
@@ -43,7 +44,7 @@ const getManySchema = object({
         _id: array(string().min(1)).optional(),
         langId: string().optional(),
         elementId: array(string().min(1)).optional(),
-        typeId: z.nativeEnum(ComponentTypeId).optional(),
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(ComponentTypeId)).optional(),
 })
 });
 
