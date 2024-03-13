@@ -15,7 +15,7 @@ import {subscriberObjectIdKeys} from "../constants/objectIdKeys/subscriber.objec
 
 const get = async (params: ISubscriberGetParamService) => {
     let filters: mongoose.FilterQuery<ISubscriberModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, subscriberObjectIdKeys);
 
     if (params._id) {
         filters = {
@@ -39,7 +39,7 @@ const get = async (params: ISubscriberGetParamService) => {
 
 const getMany = async (params: ISubscriberGetManyParamService) => {
     let filters: mongoose.FilterQuery<ISubscriberModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, subscriberObjectIdKeys);
 
     if (params._id) {
         filters = {
@@ -63,14 +63,14 @@ const getMany = async (params: ISubscriberGetManyParamService) => {
 
 const add = async (params: ISubscriberAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, subscriberObjectIdKeys);
 
     return (await subscriberModel.create(params)).toObject()
 }
 
 const delete_ = async (params: ISubscriberDeleteParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, subscriberObjectIdKeys);
 
     let filters: mongoose.FilterQuery<ISubscriberModel> = {}
 
@@ -92,7 +92,7 @@ const delete_ = async (params: ISubscriberDeleteParamService) => {
 
 const deleteMany = async (params: ISubscriberDeleteManyParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, subscriberObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, subscriberObjectIdKeys);
 
     let filters: mongoose.FilterQuery<ISubscriberModel> = {}
 

@@ -6,7 +6,7 @@ import {logObjectIdKeys} from "../constants/objectIdKeys/log.objectIdKeys";
 
 const add = async (params: ILogAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, logObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, logObjectIdKeys);
 
     return (await logModel.create({
         ...params,

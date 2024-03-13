@@ -1,43 +1,31 @@
 import mongoose from "mongoose";
 
 class MongoDBHelpers {
-    static createObjectId(string?: any) {
-        // @ts-ignore
-        let returnData = new mongoose.Types.ObjectId()._id;
+    static convertToObjectId(string?: any) {
         if(string){
             try {
-                returnData = new mongoose.Types.ObjectId(string)._id;
+                return new mongoose.Types.ObjectId(string)._id;
             }catch (e: any) {}
         }
-        return returnData
+        return string;
     }
-    static createObjectIdArray(strings: any[]) {
-        // @ts-ignore
+    static convertToObjectIdArray(strings: any[]) {
         return strings.map(string => {
-            // @ts-ignore
-            let returnData = new mongoose.Types.ObjectId()._id;
-            if(string){
-                try {
-                    returnData = new mongoose.Types.ObjectId(string)._id;
-                }catch (e: any) {}
-            }
-            return returnData
+            return this.convertToObjectId(string);
         });
     }
-    static convertObjectIdInData<T>(data: T, keys: string[]) : T {
+    static convertToObjectIdData<T>(data: T, keys: string[]) : T {
         let anyData = data as any;
         for(const dataKey in anyData){
             if(keys.includes(dataKey)){
                 if(Array.isArray(anyData[dataKey])){
-                    anyData[dataKey] = MongoDBHelpers.createObjectIdArray(anyData[dataKey]);
+                    anyData[dataKey] = MongoDBHelpers.convertToObjectIdArray(anyData[dataKey]);
                 }else{
-                    if(anyData[dataKey]){
-                        anyData[dataKey] = MongoDBHelpers.createObjectId(anyData[dataKey]);
-                    }
+                    anyData[dataKey] = MongoDBHelpers.convertToObjectId(anyData[dataKey]);
                 }
             }else {
                 if(typeof anyData[dataKey] === "object"){
-                    anyData[dataKey] = MongoDBHelpers.convertObjectIdInData(anyData[dataKey], keys)
+                    anyData[dataKey] = MongoDBHelpers.convertToObjectIdData(anyData[dataKey], keys)
                 }
             }
         }

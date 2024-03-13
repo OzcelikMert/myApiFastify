@@ -41,8 +41,8 @@ const createURL = async (_id: string | null, title: string, typeId: PostTypeId) 
 
 const get = async (params: IPostGetParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, [...postObjectIdKeys, "ignorePostId"]);
-    let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
+    params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
         ...filters,
@@ -216,8 +216,8 @@ const get = async (params: IPostGetParamService) => {
 
 const getMany = async (params: IPostGetManyParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, [...postObjectIdKeys, "ignorePostId"]);
-    let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
+    params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
         ...filters,
@@ -368,7 +368,7 @@ const getMany = async (params: IPostGetManyParamService) => {
 
 const getCount = async (params: IPostGetCountParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = { statusId: StatusId.Active }
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
     if (params.typeId) {
         filters = {
@@ -398,7 +398,7 @@ const getCount = async (params: IPostGetCountParamService) => {
 
 const add = async (params: IPostAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
     if(params.contents){
         params.contents.url = await createURL(null, params.contents.title ?? "", params.typeId);
@@ -409,7 +409,7 @@ const add = async (params: IPostAddParamService) => {
 
 const update = async (params: IPostUpdateParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -462,7 +462,7 @@ const update = async (params: IPostUpdateParamService) => {
 
 const updateRank = async (params: IPostUpdateRankParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -497,7 +497,7 @@ const updateRank = async (params: IPostUpdateRankParamService) => {
 
 const updateView = async (params: IPostUpdateViewParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -548,7 +548,7 @@ const updateView = async (params: IPostUpdateViewParamService) => {
 
 const updateStatusMany = async (params: IPostUpdateStatusManyParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -581,7 +581,7 @@ const updateStatusMany = async (params: IPostUpdateStatusManyParamService) => {
 
 const deleteMany = async (params: IPostDeleteManyParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, postObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
     filters = {
         ...filters,

@@ -14,8 +14,8 @@ import {componentModel} from "../models/component.model";
 
 const get = async (params: IComponentGetParamService) => {
     let filters: mongoose.FilterQuery<IComponentModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, componentObjectIdKeys);
-    let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
+    params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
         ...filters,
@@ -57,8 +57,8 @@ const get = async (params: IComponentGetParamService) => {
 
 const getMany = async (params: IComponentGetManyParamService) => {
     let filters: mongoose.FilterQuery<IComponentModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, componentObjectIdKeys);
-    let defaultLangId = MongoDBHelpers.createObjectId(Config.defaultLangId);
+    params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
 
     if (params._id) filters = {
         ...filters,
@@ -105,7 +105,7 @@ const getMany = async (params: IComponentGetManyParamService) => {
 
 const add = async (params: IComponentAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, componentObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
 
     return (await componentModel.create(params)).toObject()
 
@@ -113,7 +113,7 @@ const add = async (params: IComponentAddParamService) => {
 
 const update = async (params: IComponentUpdateParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, componentObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IComponentModel> = {}
 
@@ -163,7 +163,7 @@ const update = async (params: IComponentUpdateParamService) => {
 
 const deleteMany = async (params: IComponentDeleteManyParamService) => {
     let filters: mongoose.FilterQuery<IComponentModel> = {}
-    params = MongoDBHelpers.convertObjectIdInData(params, componentObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
 
     filters = {
         ...filters,

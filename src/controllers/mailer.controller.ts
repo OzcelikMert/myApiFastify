@@ -18,7 +18,7 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
         let setting = (await SettingService.get({}, true));
 
         if(setting){
-            let contactForm = setting.contactForms?.findSingle("_id", MongoDBHelpers.createObjectId(reqData.body.contactFormId));
+            let contactForm = setting.contactForms?.findSingle("_id", MongoDBHelpers.convertToObjectId(reqData.body.contactFormId));
             if(contactForm){
                 try {
                     let transporter = NodeMailer.createTransport({

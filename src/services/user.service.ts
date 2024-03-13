@@ -33,7 +33,7 @@ const createURL = async (_id: string | null, name: string) => {
 }
 
 const get = async (params: IUserGetParamService) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, [...userObjectIdKeys, "ignoreUserId"]);
+    params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
         statusId: { $ne: StatusId.Deleted},
@@ -97,7 +97,7 @@ const get = async (params: IUserGetParamService) => {
 }
 
 const getMany = async (params: IUserGetManyParamService) => {
-    params = MongoDBHelpers.convertObjectIdInData(params, [...userObjectIdKeys, "ignoreUserId"]);
+    params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
         statusId: { $ne: StatusId.Deleted},
@@ -150,7 +150,7 @@ const getMany = async (params: IUserGetManyParamService) => {
 
 const add = async (params: IUserAddParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, userObjectIdKeys);
 
     params.url = await createURL(null, params.name);
 
@@ -163,7 +163,7 @@ const add = async (params: IUserAddParamService) => {
 
 const update = async (params: IUserUpdateParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, userObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IUserModel> = {}
 
@@ -202,7 +202,7 @@ const update = async (params: IUserUpdateParamService) => {
 
 const delete_ = async (params: IUserDeleteParamService) => {
     params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertObjectIdInData(params, userObjectIdKeys);
+    params = MongoDBHelpers.convertToObjectIdData(params, userObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IUserModel> = {}
 
