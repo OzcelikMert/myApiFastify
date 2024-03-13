@@ -265,14 +265,6 @@ const update = async (params: IPostTermUpdateParamService) => {
 
         doc = Object.assign(doc, params);
 
-        if (Variable.isEmpty(params.mainId)) {
-            doc.mainId = undefined;
-        }
-
-        if (params.mainId) {
-            doc.mainId = params.mainId;
-        }
-
         await doc.save();
     }
 

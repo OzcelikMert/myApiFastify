@@ -146,7 +146,6 @@ const add = async (params: INavigationAddParamService) => {
 const update = async (params: INavigationUpdateParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, navigationObjectIdKeys);
-
     let filters: mongoose.FilterQuery<INavigationModel> = {}
 
     if (params._id) {
@@ -169,14 +168,6 @@ const update = async (params: INavigationUpdateParamService) => {
         }
 
         doc = Object.assign(doc, params);
-
-        if (Variable.isEmpty(params.mainId)) {
-            doc.mainId = undefined;
-        }
-
-        if (params.mainId) {
-            doc.mainId = params.mainId;
-        }
 
         await doc.save();
     }

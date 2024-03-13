@@ -7,7 +7,7 @@ class MongoDBHelpers {
                 return new mongoose.Types.ObjectId(string)._id;
             }catch (e: any) {}
         }
-        return string;
+        return undefined;
     }
     static convertToObjectIdArray(strings: any[]) {
         return strings.map(string => {
