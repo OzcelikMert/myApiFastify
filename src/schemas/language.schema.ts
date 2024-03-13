@@ -48,7 +48,7 @@ const putRankWithIdSchema = object({
         _id: string().min(1),
     }),
     body: object({
-        rank: number().min(1)
+        rank: number().min(0)
     })
 });
 

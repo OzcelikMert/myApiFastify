@@ -14,7 +14,7 @@ const postBody = object({
     tags: array(string().min(1)).default([]),
     components: array(string().min(1)).optional().default([]),
     dateStart: string().min(1),
-    rank: number().min(1),
+    rank: number().min(0),
     isFixed: boolean().default(false),
     contents: object({
         langId: string().min(1),
@@ -66,7 +66,7 @@ const postBody = object({
                 variationId: string().min(1),
             })).default([]),
             images: array(string().min(1)).default([]),
-            rank: number().min(1),
+            rank: number().min(0),
             pricing: object({
                 taxRate: number().default(0),
                 taxExcluded: number().default(0),
@@ -172,7 +172,7 @@ const putRankWithIdSchema = object({
     }),
     body: object({
         typeId: z.nativeEnum(PostTypeId),
-        rank: number().min(1)
+        rank: number().min(0)
     }),
 });
 

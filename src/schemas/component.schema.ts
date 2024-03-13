@@ -12,7 +12,7 @@ const postBody = object({
         elementId: string().min(1),
         typeId: z.nativeEnum(ElementTypeId),
         title: string().min(1),
-        rank: number().min(1),
+        rank: number().min(0),
         contents: object({
             url: string().optional(),
             langId: string().min(1),

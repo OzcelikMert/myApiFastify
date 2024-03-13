@@ -83,7 +83,7 @@ const putRankWithIdSchema = object({
     body: object({
         postTypeId: z.nativeEnum(PostTypeId),
         typeId: z.nativeEnum(PostTermTypeId),
-        rank: number().min(1)
+        rank: number().min(0)
     })
 });
 

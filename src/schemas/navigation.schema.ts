@@ -5,7 +5,7 @@ import {ZodUtil} from "../utils/zod.util";
 const postBody = object({
     mainId: string().optional().default(""),
     statusId: z.nativeEnum(StatusId),
-    rank: number().min(1),
+    rank: number().min(0),
     contents: object({
         langId: string().min(1),
         title: string().default(""),
@@ -54,7 +54,7 @@ const putRankWithIdSchema = object({
         _id: string().min(1),
     }),
     body: object({
-        rank: number().min(1)
+        rank: number().min(0)
     })
 });
 

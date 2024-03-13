@@ -76,7 +76,7 @@ const putStaticContentSchema = object({
             typeId: z.nativeEnum(StaticContentTypeId),
             label: string().min(1),
             elementId: string().default(""),
-            rank: number().min(1),
+            rank: number().min(0),
             contents: object({
                 _id: string().optional(),
                 langId: string().min(1),
