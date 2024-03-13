@@ -14,7 +14,7 @@ export const componentRoute = function (fastify: FastifyInstance, opts: any, don
     fastify.get(componentEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(ComponentSchema.getWithId)] }, ComponentController.getWithId);
     fastify.get(componentEndPoint.GET_WITH_ELEMENT_ID, { preHandler: [RequestMiddleware.check(ComponentSchema.getWithElementId)] }, ComponentController.getWithElementId);
     fastify.post(componentEndPoint.ADD, { preHandler: [RequestMiddleware.check(ComponentSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(ComponentEndPointPermission.ADD)] }, ComponentController.add);
-    fastify.put(componentEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(ComponentSchema.putWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(ComponentEndPointPermission.UPDATE), ComponentMiddleware.checkWithId] }, ComponentController.updateWithId);
+    fastify.put(componentEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(ComponentSchema.putWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(ComponentEndPointPermission.UPDATE), ComponentMiddleware.checkWithId, ComponentMiddleware.checkPermissionWithId] }, ComponentController.updateWithId);
     fastify.delete(componentEndPoint.DELETE, { preHandler: [RequestMiddleware.check(ComponentSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(ComponentEndPointPermission.DELETE), ComponentMiddleware.checkMany] }, ComponentController.deleteMany);
     done();
 }

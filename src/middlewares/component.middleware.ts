@@ -1,13 +1,12 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import {FastifyReply, FastifyRequest} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {LogMiddleware} from "./log.middleware";
-import {
-    IComponentDeleteManySchema,
-    IComponentPutWithIdSchema
-} from "../schemas/component.schema";
+import {IComponentDeleteManySchema, IComponentPutWithIdSchema} from "../schemas/component.schema";
 import {ComponentService} from "../services/component.service";
+import {PermissionUtil} from "../utils/permission.util";
+import {UserRoleId} from "../constants/userRoles";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -52,7 +51,33 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
+const checkPermissionWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IComponentPutWithIdSchema;
+
+        let serviceResult = await ComponentService.get({_id: reqData.params._id});
+
+        if (serviceResult && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
+            if(
+                reqData.body.elements.length != serviceResult.elements.length ||
+                !reqData.body.elements.every(reqElement => serviceResult?.elements.some(serviceElement => reqElement._id == serviceElement._id))
+            ){
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.noPerm;
+                apiResult.statusCode = ApiStatusCodes.forbidden;
+            }
+        }
+
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
+        }
+    });
+}
+
 export const ComponentMiddleware = {
     checkWithId: checkWithId,
-    checkMany: checkMany
+    checkMany: checkMany,
+    checkPermissionWithId: checkPermissionWithId
 };
