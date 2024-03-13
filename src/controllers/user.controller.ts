@@ -14,6 +14,7 @@ import {UserService} from "../services/user.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
 import {IUserGetResultService} from "../types/services/user.service";
 import {IUserModel} from "../types/models/user.model";
+import {SessionAuthUtil} from "../utils/sessinAuth.util";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -117,10 +118,14 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserPutPasswordSchema;
 
-        await UserService.update({
+        let serviceResult = await UserService.update({
             _id: req.sessionAuth!.user!.userId.toString(),
             password: reqData.body.newPassword
         });
+
+        if(serviceResult){
+            req.sessionAuth!.set("_id", SessionAuthUtil.createToken(serviceResult._id.toString(), serviceResult.password, req.ip))
+        }
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });

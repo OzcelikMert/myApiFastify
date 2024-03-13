@@ -199,7 +199,7 @@ const update = async (params: IUserUpdateParamService) => {
         await doc.save();
     }
 
-    return params;
+    return doc ? doc.toObject() : null;
 }
 
 const delete_ = async (params: IUserDeleteParamService) => {
