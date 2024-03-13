@@ -22,11 +22,6 @@ const putGeneralSchema = object({
             phone: string().optional(),
             address: string().optional(),
             addressMap: string().optional(),
-            facebook: string().optional(),
-            instagram: string().optional(),
-            twitter: string().optional(),
-            linkedin: string().optional(),
-            google: string().optional(),
         }),
     })
 });
