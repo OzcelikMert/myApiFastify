@@ -7,15 +7,17 @@ import {StatusId} from "../../constants/status";
 import {sessionAuthRefreshSeconds, sessionAuthTTL} from "../../config/session/session.auth.config";
 import {LogMiddleware} from "../log.middleware";
 import {UserUtil} from "../../utils/user.util";
+import {SessionAuthUtil} from "../../utils/sessinAuth.util";
 
 const check = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         let apiResult = new ApiResult();
 
         if (req.sessionAuth && req.sessionAuth.user) {
+            let user = await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}, true);
             if (
-                req.sessionAuth.user.ip != req.ip ||
-                !(await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}))
+                !user ||
+                req.sessionAuth._id != SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip)
             ) {
                 await new Promise(resolve => {
                     req.sessionAuth!.delete();
@@ -50,9 +52,9 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
             if (Number(date.diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshSeconds) {
                 let user = await UserService.get({
                     _id: req.sessionAuth.user.userId.toString()
-                });
+                }, true);
                 if (user) {
-                    req.sessionAuth?.set("_id", UserUtil.createToken(user._id.toString(), req.ip, date.getTime()));
+                    req.sessionAuth?.set("_id", SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip));
 
                     req.sessionAuth.set("user", {
                         userId: user._id,

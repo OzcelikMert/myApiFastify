@@ -59,7 +59,7 @@ class Variable{
     static setDefault(variable: any, default_value: any) : any{
         return (this.isSet(variable)) ? variable() : default_value;
     }
-    static hash(string: string, hashType: string): string { return createHash("sha256").update(string).digest("hex"); }
+    static hash(string: string, hashType: string): string { return createHash(hashType).update(string).digest("hex"); }
     private static filterVar(variable: any, filter_type: FilterTypes) : string {
         let regex;
 

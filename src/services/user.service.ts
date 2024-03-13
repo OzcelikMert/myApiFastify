@@ -32,7 +32,7 @@ const createURL = async (_id: string | null, name: string) => {
     return url;
 }
 
-const get = async (params: IUserGetParamService) => {
+const get = async (params: IUserGetParamService, withPassword: boolean = false) => {
     params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
@@ -89,7 +89,9 @@ const get = async (params: IUserGetParamService) => {
     let doc = (await query.lean<IUserGetResultService>().exec());
 
     if(doc){
-        delete doc.password;
+        if(!withPassword){
+            delete doc.password;
+        }
         doc.isOnline = Config.onlineUsers.indexOfKey("_id", doc._id.toString()) > -1;
     }
 
