@@ -144,7 +144,6 @@ const add = async (params: INavigationAddParamService) => {
 }
 
 const update = async (params: INavigationUpdateParamService) => {
-    console.log(params);
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, navigationObjectIdKeys);
 
