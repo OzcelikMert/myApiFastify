@@ -35,7 +35,7 @@ const getWithURLSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)).optional(),
+        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         email: string().optional(),
         count: z.coerce.number().optional(),

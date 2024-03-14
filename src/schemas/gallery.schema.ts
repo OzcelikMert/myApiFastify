@@ -4,8 +4,8 @@ import {ZodUtil} from "../utils/zod.util";
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)).optional(),
-        name: array(string().min(1)).optional(),
+        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
+        name: ZodUtil.convertToArray(array(string().min(1))).optional(),
         typeId: ZodUtil.convertToNumber(z.nativeEnum(GalleryTypeId)).optional(),
     })
 });

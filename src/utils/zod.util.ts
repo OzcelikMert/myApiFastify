@@ -1,4 +1,4 @@
-import {z, ZodNativeEnum, ZodTypeAny} from "zod";
+import {z, ZodNativeEnum, ZodType, ZodTypeAny} from "zod";
 
 export enum ZodUtilVariableType {
     Number = 1,
@@ -8,12 +8,22 @@ export enum ZodUtilVariableType {
 const convertToNumber = <T extends ZodTypeAny>(schema: T) => {
     return z.preprocess((a) => {
         if (typeof a === 'string') {
-            return Number(a)
+            return Number(a) || a
+        }
+        return a;
+    }, schema);
+}
+
+const convertToArray = <T extends ZodTypeAny>(schema: T) => {
+    return z.preprocess((a) => {
+        if (!Array.isArray(a)) {
+            return [a];
         }
         return a;
     }, schema);
 }
 
 export const ZodUtil = {
-    convertToNumber: convertToNumber
+    convertToNumber: convertToNumber,
+    convertToArray: convertToArray
 }

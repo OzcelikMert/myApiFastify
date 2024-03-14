@@ -113,16 +113,16 @@ const getWithIdSchema = object({
 
 const getManySchema = object({
     query: object({
-        typeId: array(ZodUtil.convertToNumber(z.nativeEnum(PostTypeId))).optional(),
-        _id: array(string().min(1)).optional(),
-        pageTypeId: array(ZodUtil.convertToNumber(z.nativeEnum(PageTypeId))).optional(),
+        typeId: ZodUtil.convertToArray(array(ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)))).optional(),
+        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
+        pageTypeId: ZodUtil.convertToArray(array(ZodUtil.convertToNumber(z.nativeEnum(PageTypeId)))).optional(),
         langId: string().optional(),
         title: string().optional(),
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         count: z.coerce.number().optional(),
         page: z.coerce.number().optional(),
         isRecent: z.coerce.boolean().optional(),
-        categories: array(string().min(1)).optional()
+        categories: ZodUtil.convertToArray(array(string().min(1))).optional()
     })
 });
 
@@ -142,7 +142,7 @@ const getCountSchema = object({
     query: object({
         typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
-        categories: array(string().min(1)).default([]),
+        categories: ZodUtil.convertToArray(array(string().min(1))).default([]),
         title: string().optional(),
     })
 });

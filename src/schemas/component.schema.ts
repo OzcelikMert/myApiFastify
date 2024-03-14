@@ -41,11 +41,11 @@ const getWithElementIdSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)).optional(),
+        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
         langId: string().optional(),
-        elementId: array(string().min(1)).optional(),
+        elementId: ZodUtil.convertToArray(array(string().min(1))).optional(),
         typeId: ZodUtil.convertToNumber(z.nativeEnum(ComponentTypeId)).optional(),
-})
+    })
 });
 
 const postSchema = object({

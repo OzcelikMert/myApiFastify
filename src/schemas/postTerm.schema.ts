@@ -32,8 +32,8 @@ const getWithIdSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)).optional(),
-        typeId: array(ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId))).optional(),
+        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
+        typeId: ZodUtil.convertToArray(array(ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)))).optional(),
         postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         withPostCount: z.coerce.boolean().optional(),

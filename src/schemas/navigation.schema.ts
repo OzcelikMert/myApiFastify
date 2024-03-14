@@ -25,7 +25,7 @@ const getWithIdSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)).optional(),
+        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
         langId: string().optional(),
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional()
     })

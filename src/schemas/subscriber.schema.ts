@@ -1,4 +1,5 @@
 import {object, string, array, z} from 'zod';
+import {ZodUtil} from "../utils/zod.util";
 
 const getWithIdSchema = object({
     params: object({
@@ -8,8 +9,8 @@ const getWithIdSchema = object({
 
 const getManySchema = object({
     query: object({
-        _id: array(string().min(1)).optional(),
-        email: array(string().min(1).email()).optional()
+        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
+        email: ZodUtil.convertToArray(array(string().min(1).email())).optional()
     }),
 });
 
