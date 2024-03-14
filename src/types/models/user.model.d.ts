@@ -8,6 +8,7 @@ export interface IUserModel {
     roleId: UserRoleId,
     statusId: StatusId,
     authorId?: string | ObjectId
+    lastAuthorId?: string | ObjectId
     name: string,
     email: string,
     image: string,

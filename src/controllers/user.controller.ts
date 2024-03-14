@@ -68,7 +68,9 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
         apiResult.data = await UserService.add({
             ...reqData.body,
-            ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
+            ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined}),
+            authorId: req.sessionAuth!.user!.userId.toString(),
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
         await reply.status(apiResult.statusCode).send(apiResult)
@@ -84,7 +86,8 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
         await UserService.update({
             ...reqData.params,
             ...reqData.body,
-            ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined})
+            ...(reqData.body.banDateEnd ? {banDateEnd: new Date(reqData.body.banDateEnd)} : {banDateEnd: undefined}),
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
         await reply.status(apiResult.statusCode).send(apiResult)
@@ -137,7 +140,10 @@ const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         const reqData = req as IUserDeleteWithIdSchema;
 
-        await UserService.delete(reqData.params);
+        await UserService.delete({
+            ...reqData.params,
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+        });
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });

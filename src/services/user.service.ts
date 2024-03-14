@@ -86,7 +86,8 @@ const get = async (params: IUserGetParamService, withPassword: boolean = false) 
 
     query.populate({
         path: [
-            "authorId"
+            "authorId",
+            "lastAuthorId"
         ].join(" "),
         select: "_id name url image"
     });
@@ -147,7 +148,8 @@ const getMany = async (params: IUserGetManyParamService) => {
 
     query.populate({
         path: [
-            "authorId"
+            "authorId",
+            "lastAuthorId"
         ].join(" "),
         select: "_id name url image"
     });
@@ -232,6 +234,7 @@ const delete_ = async (params: IUserDeleteParamService) => {
 
     if(doc){
         doc.statusId = StatusId.Deleted;
+        doc.lastAuthorId = params.lastAuthorId;
         await doc.save();
     }
 

@@ -14,7 +14,8 @@ export type IUserGetResultService = {
     isOnline?: boolean
     password?: string
     authorId?: IUserPopulateService
-} & Omit<IUserModel, "password"|"authorId">
+    lastAuthorId?: IUserPopulateService,
+} & Omit<IUserModel, "password"|"authorId"|"lastAuthorId">
 
 export interface IUserGetParamService {
     _id?: string
@@ -51,5 +52,6 @@ export type IUserUpdateParamService = {
 } & Omit<IUserAddParamService, "_id"|"roleId"|"statusId"|"name"|"email"|"permissions"|"password">
 
 export type IUserDeleteParamService = {
-    _id: string
+    _id: string,
+    lastAuthorId: string
 }
