@@ -84,6 +84,13 @@ const get = async (params: IUserGetParamService, withPassword: boolean = false) 
 
     let query = userModel.findOne(filters, {});
 
+    query.populate({
+        path: [
+            "authorId"
+        ].join(" "),
+        select: "_id name url image"
+    });
+
     query.sort({createdAt: -1});
 
     let doc = (await query.lean<IUserGetResultService>().exec());
@@ -137,6 +144,13 @@ const getMany = async (params: IUserGetManyParamService) => {
     }
 
     let query = userModel.find(filters, {});
+
+    query.populate({
+        path: [
+            "authorId"
+        ].join(" "),
+        select: "_id name url image"
+    });
 
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
     if (params.count) query.limit(params.count);

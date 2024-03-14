@@ -8,6 +8,7 @@ const schema = new mongoose.Schema<IUserModel>(
     {
         roleId: {type: Number, required: true, enum: UserRoleId},
         statusId: {type: Number, required: true, enum: StatusId},
+        authorId: {type: mongoose.Schema.Types.ObjectId, ref: "users"},
         image: {type: String, default: ""},
         name: {type: String, default: ""},
         url: {type: String, default: ""},

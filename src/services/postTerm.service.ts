@@ -93,7 +93,7 @@ const get = async (params: IPostTermGetParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url"
+        select: "_id name url image"
     });
 
     query.sort({ rank: 1, createdAt: -1 });
@@ -176,7 +176,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url"
+        select: "_id name url image"
     })
 
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));

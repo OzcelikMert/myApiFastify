@@ -147,7 +147,7 @@ const get = async (params: IPostGetParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url"
+        select: "_id name url image"
     });
 
     query.sort({ isFixed: -1, rank: 1, createdAt: -1 });
@@ -163,6 +163,10 @@ const get = async (params: IPostGetParamService) => {
 
         if (doc.tags) {
             doc.tags = doc.tags.filter(item => item);
+        }
+
+        if (doc.components) {
+            doc.components = doc.components.filter(item => item);
         }
 
         if (Array.isArray(doc.contents)) {
@@ -287,7 +291,7 @@ const getMany = async (params: IPostGetManyParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url"
+        select: "_id name url image"
     });
 
     if (params.isRecent) {

@@ -52,7 +52,7 @@ const get = async (params: INavigationGetParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url"
+        select: "_id name url image"
     })
 
     query.sort({ rank: 1, createdAt: -1 });
@@ -111,7 +111,7 @@ const getMany = async (params: INavigationGetManyParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url"
+        select: "_id name url image"
     })
 
     query.sort({ rank: 1, createdAt: -1 });

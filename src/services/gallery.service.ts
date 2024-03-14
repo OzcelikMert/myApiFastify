@@ -33,7 +33,7 @@ const get = async (params: IGalleryGetParamService) => {
         path: [
             "authorId",
         ].join(" "),
-        select: "_id name url"
+        select: "_id name url image"
     });
 
     query.sort({ createdAt: -1 });
@@ -68,7 +68,7 @@ const getMany = async (params: IGalleryGetManyParamService) => {
         path: [
             "authorId",
         ].join(" "),
-        select: "_id name url"
+        select: "_id name url image"
     });
 
     query.sort({ createdAt: -1 });

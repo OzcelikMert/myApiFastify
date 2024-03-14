@@ -13,7 +13,8 @@ export interface IUserPopulateService {
 export type IUserGetResultService = {
     isOnline?: boolean
     password?: string
-} & Omit<IUserModel, "password">
+    authorId?: IUserPopulateService
+} & Omit<IUserModel, "password"|"authorId">
 
 export interface IUserGetParamService {
     _id?: string
