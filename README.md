@@ -2,6 +2,7 @@
 Api for My Admin Panel
 
 Things to do:
+- lastAuthorId yi array olarak tut en son guncelleyen en sonuncu indexde olsun ayni id birkez daha eklenmesin
 
 + sifre degistimi degismedimi diye sessionu kotnorl et
 + component element, social media ve baska bu tip arraylar varsa bunlarin izinlerini kontorl et super admin harici ekleyemesin ama guncelleyebilsin
