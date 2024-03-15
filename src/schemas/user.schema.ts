@@ -64,9 +64,9 @@ const putProfileSchema = object({
         name: string().min(1),
         comment: string().optional(),
         phone: string().optional(),
-        facebook: string().url(),
-        instagram: string().url(),
-        twitter: string().url()
+        facebook: string().optional(),
+        instagram: string().optional(),
+        twitter: string().optional()
     })
 });
 
