@@ -40,6 +40,7 @@ const getManySchema = object({
         email: string().optional(),
         count: z.coerce.number().optional(),
         page: z.coerce.number().optional(),
+        permissions: ZodUtil.convertToArray(array(ZodUtil.convertToNumber(z.nativeEnum(PermissionId)))).optional(),
     })
 });
 

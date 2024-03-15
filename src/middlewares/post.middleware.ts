@@ -17,12 +17,12 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostPutWithIdSchema;
 
-        let post = await PostService.get({
+        let serviceResult = await PostService.get({
             _id: reqData.params._id,
             typeId: reqData.body.typeId
         });
 
-        if (!post) {
+        if (!serviceResult) {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
@@ -40,14 +40,14 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IPostDeleteManySchema;
 
-        let posts = await PostService.getMany({
+        let serviceResult = await PostService.getMany({
             _id: reqData.body._id,
             typeId: [reqData.body.typeId]
         });
 
         if (
-            posts.length == 0 ||
-            (posts.length != reqData.body._id.length)
+            serviceResult.length == 0 ||
+            (serviceResult.length != reqData.body._id.length)
         ) {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
@@ -67,15 +67,15 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
         let reqData = req as IPostPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let post = await PostService.get({
+            let serviceResult = await PostService.get({
                 _id: reqData.params._id,
                 typeId: reqData.body.typeId
             });
 
-            if (post) {
+            if (serviceResult) {
                 if (
-                    req.sessionAuth!.user?.userId.toString() != post.authorId._id.toString() &&
-                    !post.authors?.some(author => author._id == req.sessionAuth!.user?.userId.toString())
+                    req.sessionAuth!.user?.userId.toString() != serviceResult.authorId._id.toString() &&
+                    !serviceResult.authors?.some(author => author._id == req.sessionAuth!.user?.userId.toString())
                 ) {
                     apiResult.status = false;
                     apiResult.errorCode = ApiErrorCodes.noPerm;
@@ -97,13 +97,13 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IPostDeleteManySchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let posts = await PostService.getMany({
+            let serviceResult = await PostService.getMany({
                 _id: reqData.body._id,
                 typeId: [reqData.body.typeId]
             });
 
-            if (posts) {
-                for (const post of posts) {
+            if (serviceResult) {
+                for (const post of serviceResult) {
                     if (post.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
                         apiResult.status = false;
                         apiResult.errorCode = ApiErrorCodes.noPerm;

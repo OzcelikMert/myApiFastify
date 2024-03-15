@@ -143,6 +143,12 @@ const getMany = async (params: IUserGetManyParamService) => {
             _id: { $nin: params.ignoreUserId }
         }
     }
+    if(params.permissions){
+        filters = {
+            ...filters,
+            permissions: { $in: params.permissions }
+        }
+    }
 
     let query = userModel.find(filters, {});
 

@@ -2,9 +2,9 @@
 Api for My Admin Panel
 
 Things to do:
-- postlarda yetkili kullanicilar diye biryer olsun oradan eklenen kullanicilar post ona ait olmasa bile postu gorup guncelleyebilsinler
 - lastAuthorId yi array olarak tut en son guncelleyen en sonuncu indexde olsun ayni id birkez daha eklenmesin
 
++ postlarda yetkili kullanicilar diye biryer olsun oradan eklenen kullanicilar post ona ait olmasa bile postu gorup guncelleyebilsinler
 + sifre degistimi degismedimi diye sessionu kotnorl et
 + component element, social media ve baska bu tip arraylar varsa bunlarin izinlerini kontorl et super admin harici ekleyemesin ama guncelleyebilsin
 + zoddan enumlari kontrol ederken enum degerler string donuyor 
