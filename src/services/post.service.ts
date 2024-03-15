@@ -50,7 +50,7 @@ const get = async (params: IPostGetParamService) => {
     }
     if (params.authorId) filters = {
         ...filters,
-        authorId: params.authorId
+        $or: [ {authorId: params.authorId}, {authors: { $in: params.authorId} } ]
     }
     if (params.url) filters = {
         ...filters,
@@ -230,7 +230,7 @@ const getMany = async (params: IPostGetManyParamService) => {
     }
     if (params.authorId) filters = {
         ...filters,
-        authorId: params.authorId
+        $or: [ {authorId: params.authorId}, {authors: { $in: params.authorId} } ]
     }
     if (params.title) filters = {
         ...filters,
