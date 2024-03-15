@@ -145,7 +145,8 @@ const get = async (params: IPostGetParamService) => {
     query.populate({
         path: [
             "authorId",
-            "lastAuthorId"
+            "lastAuthorId",
+            "authors"
         ].join(" "),
         select: "_id name url image"
     });
@@ -289,7 +290,8 @@ const getMany = async (params: IPostGetManyParamService) => {
     query.populate({
         path: [
             "authorId",
-            "lastAuthorId"
+            "lastAuthorId",
+            "authors"
         ].join(" "),
         select: "_id name url image"
     });

@@ -73,7 +73,10 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
             });
 
             if (post) {
-                if (post.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
+                if (
+                    req.sessionAuth!.user?.userId.toString() != post.authorId._id.toString() &&
+                    !post.authors?.some(author => author._id == req.sessionAuth!.user?.userId.toString())
+                ) {
                     apiResult.status = false;
                     apiResult.errorCode = ApiErrorCodes.noPerm;
                     apiResult.statusCode = ApiStatusCodes.forbidden;
@@ -117,9 +120,47 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
+const checkUpdateAuthorsWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IPostPutWithIdSchema;
+
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
+            let serviceResult = await PostService.get({
+                _id: reqData.params._id,
+                typeId: reqData.body.typeId
+            });
+
+            if (serviceResult) {
+                if(
+                    // Check is author
+                    req.sessionAuth!.user?.userId.toString() != serviceResult.authorId._id.toString() &&
+                    // Check post is authors data
+                    reqData.body.authors &&
+                    // Check request authors are same with service result authors
+                    (
+                        reqData.body.authors.length != serviceResult.authors?.length ||
+                        !reqData.body.authors.every(reqAuthor => serviceResult?.authors?.some(serviceAuthor => serviceAuthor._id == reqAuthor))
+                    )
+                ){
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.noPerm;
+                    apiResult.statusCode = ApiStatusCodes.forbidden;
+                }
+            }
+        }
+
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
+        }
+    });
+}
+
 export const PostMiddleware = {
     checkWithId: checkWithId,
     checkMany: checkMany,
     checkIsAuthorWithId: checkIsAuthorWithId,
     checkIsAuthorMany: checkIsAuthorMany,
+    checkUpdateAuthorsWithId: checkUpdateAuthorsWithId
 };
