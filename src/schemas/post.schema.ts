@@ -143,7 +143,7 @@ const getCountSchema = object({
     query: object({
         typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
-        categories: ZodUtil.convertToArray(array(string().min(1))).default([]),
+        categories: ZodUtil.convertToArray(array(string().min(1))).optional(),
         title: string().optional(),
     })
 });

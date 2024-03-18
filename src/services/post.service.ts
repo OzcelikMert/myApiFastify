@@ -11,15 +11,15 @@ import {
     IPostUpdateStatusManyParamService,
     IPostUpdateViewParamService, IPostGetManyResultService, IPostGetCountParamService
 } from "../types/services/post.service";
-import { IPostModel } from "../types/models/post.model";
+import {IPostModel} from "../types/models/post.model";
 import MongoDBHelpers from "../library/mongodb/helpers";
-import { IPostTermGetResultService } from "../types/services/postTerm.service";
+import {IPostTermGetResultService} from "../types/services/postTerm.service";
 import Variable from "../library/variable";
-import { Config } from "../config";
+import {Config} from "../config";
 import {postObjectIdKeys} from "../constants/objectIdKeys/post.objectIdKeys";
-import { StatusId } from "../constants/status";
-import { PostTermTypeId } from "../constants/postTermTypes";
-import { PostTypeId } from "../constants/postTypes";
+import {StatusId} from "../constants/status";
+import {PostTermTypeId} from "../constants/postTermTypes";
+import {PostTypeId} from "../constants/postTypes";
 import {IComponentGetResultService} from "../types/services/component.service";
 
 const createURL = async (_id: string | null, title: string, typeId: PostTypeId) => {
@@ -50,7 +50,7 @@ const get = async (params: IPostGetParamService) => {
     }
     if (params.authorId) filters = {
         ...filters,
-        $or: [ {authorId: params.authorId}, {authors: { $in: params.authorId} } ]
+        $or: [{authorId: params.authorId}, {authors: {$in: params.authorId}}]
     }
     if (params.url) filters = {
         ...filters,
@@ -73,7 +73,7 @@ const get = async (params: IPostGetParamService) => {
     if (params.ignorePostId) {
         filters = {
             ...filters,
-            _id: { $nin: params.ignorePostId }
+            _id: {$nin: params.ignorePostId}
         }
     }
 
@@ -86,11 +86,11 @@ const get = async (params: IPostGetParamService) => {
         ].join(" "),
         select: "_id typeId contents.title contents.langId contents.url contents.image",
         match: {
-            typeId: { $in: [PostTermTypeId.Category, PostTermTypeId.Tag] },
+            typeId: {$in: [PostTermTypeId.Category, PostTermTypeId.Tag]},
             statusId: StatusId.Active,
             postTypeId: params.typeId,
         },
-        options: { omitUndefined: true },
+        options: {omitUndefined: true},
         transform: (doc: IPostTermGetResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
@@ -112,11 +112,11 @@ const get = async (params: IPostGetParamService) => {
         ].join(" "),
         select: "_id typeId contents.title contents.langId contents.url contents.image",
         match: {
-            typeId: { $in: [PostTermTypeId.Attributes, PostTermTypeId.Variations] },
+            typeId: {$in: [PostTermTypeId.Attributes, PostTermTypeId.Variations]},
             statusId: StatusId.Active,
             postTypeId: PostTypeId.Product
         },
-        options: { omitUndefined: true },
+        options: {omitUndefined: true},
         transform: (doc: IPostTermGetResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
@@ -128,18 +128,18 @@ const get = async (params: IPostGetParamService) => {
     });
 
     query.populate({
-            path: "components",
-            options: { omitUndefined: true },
-            transform: (doc: IComponentGetResultService) => {
-                if (doc) {
-                    doc.elements.map(docType => {
-                        if (Array.isArray(docType.contents)) {
-                            docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);
-                        }
-                    })
-                }
-                return doc;
+        path: "components",
+        options: {omitUndefined: true},
+        transform: (doc: IComponentGetResultService) => {
+            if (doc) {
+                doc.elements.map(docType => {
+                    if (Array.isArray(docType.contents)) {
+                        docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);
+                    }
+                })
             }
+            return doc;
+        }
     });
 
     query.populate({
@@ -151,7 +151,7 @@ const get = async (params: IPostGetParamService) => {
         select: "_id name url image"
     });
 
-    query.sort({ isFixed: -1, rank: 1, createdAt: -1 });
+    query.sort({isFixed: -1, rank: 1, createdAt: -1});
 
     let doc = (await query.lean<IPostGetResultService>().exec());
 
@@ -226,25 +226,25 @@ const getMany = async (params: IPostGetManyParamService) => {
 
     if (params._id) filters = {
         ...filters,
-        _id: { $in: params._id }
+        _id: {$in: params._id}
     }
     if (params.authorId) filters = {
         ...filters,
-        $or: [ {authorId: params.authorId}, {authors: { $in: params.authorId} } ]
+        $or: [{authorId: params.authorId}, {authors: {$in: params.authorId}}]
     }
     if (params.title) filters = {
         ...filters,
-        "contents.title": { $regex: new RegExp(params.title, "i") }
+        "contents.title": {$regex: new RegExp(params.title, "i")}
     }
     if (params.typeId) {
         filters = {
             ...filters,
-            typeId: { $in: params.typeId }
+            typeId: {$in: params.typeId}
         }
     }
     if (params.pageTypeId) filters = {
         ...filters,
-        pageTypeId: { $in: params.pageTypeId }
+        pageTypeId: {$in: params.pageTypeId}
     }
     if (params.statusId) filters = {
         ...filters,
@@ -253,13 +253,13 @@ const getMany = async (params: IPostGetManyParamService) => {
     if (params.ignorePostId) {
         filters = {
             ...filters,
-            _id: { $nin: params.ignorePostId }
+            _id: {$nin: params.ignorePostId}
         }
     }
     if (params.categories) {
         filters = {
             ...filters,
-            categories: { $in: params.categories }
+            categories: {$in: params.categories}
         }
     }
 
@@ -272,11 +272,11 @@ const getMany = async (params: IPostGetManyParamService) => {
         ].join(" "),
         select: "_id typeId contents.title contents.langId contents.url contents.image",
         match: {
-            typeId: { $in: [PostTermTypeId.Category, PostTermTypeId.Tag] },
+            typeId: {$in: [PostTermTypeId.Category, PostTermTypeId.Tag]},
             statusId: StatusId.Active,
-            postTypeId: { $in: params.typeId }
+            postTypeId: {$in: params.typeId}
         },
-        options: { omitUndefined: true },
+        options: {omitUndefined: true},
         transform: (doc: IPostTermGetResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
@@ -297,9 +297,9 @@ const getMany = async (params: IPostGetManyParamService) => {
     });
 
     if (params.isRecent) {
-        query.sort({ createdAt: -1 });
+        query.sort({createdAt: -1});
     } else {
-        query.sort({ isFixed: -1, rank: 1, createdAt: -1 });
+        query.sort({isFixed: -1, rank: 1, createdAt: -1});
     }
 
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
@@ -373,14 +373,12 @@ const getMany = async (params: IPostGetManyParamService) => {
 }
 
 const getCount = async (params: IPostGetCountParamService) => {
-    let filters: mongoose.FilterQuery<IPostModel> = { statusId: StatusId.Active }
+    let filters: mongoose.FilterQuery<IPostModel> = {statusId: StatusId.Active}
     params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
-    if (params.typeId) {
-        filters = {
-            ...filters,
-            typeId: params.typeId
-        }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: params.typeId
     }
     if (params.statusId) filters = {
         ...filters,
@@ -388,25 +386,25 @@ const getCount = async (params: IPostGetCountParamService) => {
     }
     if (params.title) filters = {
         ...filters,
-        "contents.title": { $regex: new RegExp(params.title, "i") }
+        "contents.title": {$regex: new RegExp(params.title, "i")}
     }
     if (params.categories) {
         filters = {
             ...filters,
-            categories: { $in: params.categories }
+            categories: {$in: params.categories}
         }
     }
 
     let query = postModel.find(filters);
 
-    return await query.countDocuments().exec();
+    return (await query.countDocuments().exec());
 }
 
 const add = async (params: IPostAddParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
-    if(params.contents){
+    if (params.contents) {
         params.contents.url = await createURL(null, params.contents.title ?? "", params.typeId);
     }
 
@@ -438,7 +436,7 @@ const update = async (params: IPostUpdateParamService) => {
             if (Array.isArray(doc.contents)) {
                 let docContent = doc.contents.findSingle("langId", params.contents.langId);
                 if (docContent) {
-                    if(docContent.title != params.contents.title){
+                    if (docContent.title != params.contents.title) {
                         params.contents.url = await createURL(doc._id.toString(), params.contents.title ?? "", params.typeId);
                     }
                     docContent = Object.assign(docContent, params.contents);
@@ -561,7 +559,7 @@ const updateStatusMany = async (params: IPostUpdateStatusManyParamService) => {
     if (params._id) {
         filters = {
             ...filters,
-            _id: { $in: params._id }
+            _id: {$in: params._id}
         }
     }
     if (params.typeId) {
@@ -591,7 +589,7 @@ const deleteMany = async (params: IPostDeleteManyParamService) => {
 
     filters = {
         ...filters,
-        _id: { $in: params._id }
+        _id: {$in: params._id}
     }
 
     if (params.typeId) {
