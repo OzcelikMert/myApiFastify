@@ -2,6 +2,7 @@
 Api for My Admin Panel
 
 Things to do:
+- componentlerde componentin ana elementId sini sadece super admin guncellemeli yetki kontrolu yap
 - elementId olanlari key olarak guncelle
 - lastAuthorId yi array olarak tut en son guncelleyen en sonuncu indexde olsun ayni id birkez daha eklenmesin
 
