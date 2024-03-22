@@ -15,7 +15,7 @@ const postBody = object({
     tags: array(string().min(1)).default([]),
     authors: array(string().min(1)).optional(),
     components: array(string().min(1)).optional().default([]),
-    dateStart: string().min(1),
+    dateStart: string().optional(),
     rank: number().min(0),
     isFixed: boolean().default(false),
     contents: object({

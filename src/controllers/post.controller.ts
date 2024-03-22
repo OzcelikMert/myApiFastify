@@ -88,7 +88,6 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
-            dateStart: new Date(reqData.body.dateStart)
         });
 
         await reply.status(apiResult.statusCode).send(apiResult);
@@ -105,7 +104,6 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params,
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
-            dateStart: new Date(reqData.body.dateStart)
         });
 
         await reply.status(apiResult.statusCode).send(apiResult);

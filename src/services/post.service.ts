@@ -417,6 +417,10 @@ const add = async (params: IPostAddParamService) => {
         params.contents.url = await createURL(null, params.contents.title ?? "", params.typeId);
     }
 
+    if(params.dateStart){
+        params.dateStart = (new Date(params.dateStart));
+    }
+
     return (await postModel.create(params)).toObject();
 }
 
@@ -459,6 +463,10 @@ const update = async (params: IPostUpdateParamService) => {
 
         if (params.eCommerce) {
 
+        }
+
+        if(params.dateStart){
+            params.dateStart = new Date(params.dateStart);
         }
 
         doc = Object.assign(doc, params);

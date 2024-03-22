@@ -138,7 +138,7 @@ const schema = new mongoose.Schema<IPostModel>(
         authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
         lastAuthorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
         authors: {type: [mongoose.Schema.Types.ObjectId], ref: userModel},
-        dateStart: {type: Date, default: new Date()},
+        dateStart: {type: Date},
         rank: {type: Number, default: 0},
         isFixed: {type: Boolean},
         pageTypeId: {type: Number},

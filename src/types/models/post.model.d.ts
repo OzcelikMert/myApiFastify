@@ -13,7 +13,7 @@ export interface IPostModel {
     authorId: string | ObjectId
     lastAuthorId: string | ObjectId
     authors?: string[] | ObjectId[]
-    dateStart: Date,
+    dateStart?: Date | string,
     rank: number,
     isFixed?: boolean,
     categories?: string[] | ObjectId[]
