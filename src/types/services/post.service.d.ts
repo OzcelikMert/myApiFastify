@@ -11,6 +11,7 @@ import {PostTypeId} from "../../constants/postTypes";
 import {PageTypeId} from "../../constants/pageTypes";
 import {StatusId} from "../../constants/status";
 import {IComponentModel} from "../models/component.model";
+import {PostSortTypeId} from "../../constants/postSortTypes";
 
 export interface IPostAlternateService {
     langId: string
@@ -59,7 +60,7 @@ export interface IPostGetParamService {
 
 export interface IPostGetManyParamService {
     _id?: string[]
-    isRecent?: boolean
+    sortTypeId?: PostSortTypeId
     typeId?: PostTypeId[],
     pageTypeId?: PageTypeId[]
     langId?: string

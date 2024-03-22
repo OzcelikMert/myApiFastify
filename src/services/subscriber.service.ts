@@ -32,7 +32,7 @@ const get = async (params: ISubscriberGetParamService) => {
 
     let query = subscriberModel.findOne(filters, {});
 
-    query.sort({createdAt: -1});
+    query.sort({createdAt: "desc"});
 
     return (await query.lean<ISubscriberGetResultService>().exec());
 }
@@ -56,7 +56,7 @@ const getMany = async (params: ISubscriberGetManyParamService) => {
 
     let query = subscriberModel.find(filters, {});
 
-    query.sort({createdAt: -1});
+    query.sort({createdAt: "desc"});
 
     return (await query.lean<ISubscriberGetResultService[]>().exec());
 }

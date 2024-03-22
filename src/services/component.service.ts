@@ -36,7 +36,7 @@ const get = async (params: IComponentGetParamService) => {
         select: "_id name url image"
     });
 
-    query.sort({rank: 1, createdAt: -1});
+    query.sort({rank: "asc", createdAt: "desc"});
 
     let doc = (await query.lean<IComponentGetResultService>().exec());
 
@@ -83,7 +83,7 @@ const getMany = async (params: IComponentGetManyParamService) => {
         select: "_id name url image"
     })
 
-    query.sort({rank: 1, createdAt: -1});
+    query.sort({rank: "asc", createdAt: "desc"});
 
     return (await query.lean<IComponentGetResultService[]>().exec()).map(doc => {
         for (let docElement of doc.elements) {
@@ -94,7 +94,9 @@ const getMany = async (params: IComponentGetManyParamService) => {
 
                 docElement.contents = docElement.contents.findSingle("langId", params.langId) ?? docElement.contents.findSingle("langId", defaultLangId);
                 if (docElement.contents) {
-                    delete docElement.contents?.content;
+                    if(!params.withContent){
+                        delete docElement.contents?.content;
+                    }
                 }
             }
         }

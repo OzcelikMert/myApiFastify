@@ -33,7 +33,7 @@ const get = async (params: ILanguageGetParamService) => {
 
     let query = languageModel.findOne(filters, {});
 
-    query.sort({ rank: 1, createdAt: -1 });
+    query.sort({rank: "asc", createdAt: "desc"});
 
     return (await query.lean<ILanguageGetResultService>().exec());
 }
@@ -69,7 +69,7 @@ const getMany = async (params: ILanguageGetManyParamService) => {
 
     let query = languageModel.find(filters, {});
 
-    query.sort({ rank: 1, createdAt: -1 });
+    query.sort({rank: "asc", createdAt: "desc"});
 
     return (await query.lean<ILanguageGetResultService[]>().exec());
 }

@@ -19,6 +19,8 @@ const schema = new mongoose.Schema<INavigationModel>(
         authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
         lastAuthorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
         rank: {type: Number, default: 0},
+        isPrimary: {type: Boolean, default: true},
+        isSecondary: {type: Boolean, default: false},
         contents: {type: [schemaContent], default: []},
     },
     {timestamps: true}

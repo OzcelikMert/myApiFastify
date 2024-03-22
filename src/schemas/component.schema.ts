@@ -45,6 +45,7 @@ const getManySchema = object({
         langId: string().optional(),
         elementId: ZodUtil.convertToArray(array(string().min(1))).optional(),
         typeId: ZodUtil.convertToNumber(z.nativeEnum(ComponentTypeId)).optional(),
+        withContent: z.coerce.boolean().optional()
     })
 });
 

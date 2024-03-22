@@ -8,6 +8,8 @@ export interface INavigationModel {
     authorId: string | ObjectId
     lastAuthorId: string | ObjectId
     rank: number,
+    isPrimary: boolean,
+    isSecondary: boolean
     contents: INavigationContentModel[]
 }
 

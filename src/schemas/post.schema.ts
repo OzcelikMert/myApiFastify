@@ -5,6 +5,7 @@ import {PostTypeId} from "../constants/postTypes";
 import {PageTypeId} from "../constants/pageTypes";
 import {AttributeTypeId} from "../constants/attributeTypes";
 import {ZodUtil} from "../utils/zod.util";
+import {PostSortTypeId} from "../constants/postSortTypes";
 
 const postBody = object({
     typeId: z.nativeEnum(PostTypeId),
@@ -122,7 +123,7 @@ const getManySchema = object({
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         count: z.coerce.number().optional(),
         page: z.coerce.number().optional(),
-        isRecent: z.coerce.boolean().optional(),
+        sortTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostSortTypeId)).optional(),
         categories: ZodUtil.convertToArray(array(string().min(1))).optional()
     })
 });

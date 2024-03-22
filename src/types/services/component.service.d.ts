@@ -26,6 +26,7 @@ export interface IComponentGetManyParamService {
     elementId?: string[]
     langId?: string,
     typeId?: ComponentTypeId
+    withContent?: boolean
 }
 
 export type IComponentAddParamService = {

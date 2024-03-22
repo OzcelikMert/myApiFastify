@@ -55,7 +55,7 @@ const get = async (params: INavigationGetParamService) => {
         select: "_id name url image"
     })
 
-    query.sort({ rank: 1, createdAt: -1 });
+    query.sort({rank: "asc", createdAt: "desc"});
 
     let doc = (await query.lean<INavigationGetResultService>().exec());
 
@@ -88,6 +88,14 @@ const getMany = async (params: INavigationGetManyParamService) => {
         ...filters,
         statusId: params.statusId
     }
+    if (typeof params.isPrimary !== "undefined") filters = {
+        ...filters,
+        isPrimary: params.isPrimary
+    }
+    if (typeof params.isSecondary !== "undefined") filters = {
+        ...filters,
+        isSecondary: params.isSecondary
+    }
 
     let query = navigationModel.find(filters);
 
@@ -114,7 +122,7 @@ const getMany = async (params: INavigationGetManyParamService) => {
         select: "_id name url image"
     })
 
-    query.sort({ rank: 1, createdAt: -1 });
+    query.sort({rank: "asc", createdAt: "desc"});
 
     return (await query.lean<INavigationGetResultService[]>().exec()).map((doc) => {
         if (Array.isArray(doc.contents)) {

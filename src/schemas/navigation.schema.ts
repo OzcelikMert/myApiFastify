@@ -1,4 +1,4 @@
-import {object, string, number, array, boolean, z} from 'zod';
+import {object, string, number, array, boolean, z, coerce} from 'zod';
 import {StatusId} from "../constants/status";
 import {ZodUtil} from "../utils/zod.util";
 
@@ -6,6 +6,8 @@ const postBody = object({
     mainId: string().optional().default(""),
     statusId: z.nativeEnum(StatusId),
     rank: number().min(0),
+    isPrimary: boolean().optional(),
+    isSecondary: boolean().optional(),
     contents: object({
         langId: string().min(1),
         title: string().default(""),
@@ -27,7 +29,9 @@ const getManySchema = object({
     query: object({
         _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
         langId: string().optional(),
-        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional()
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
+        isPrimary: coerce.boolean().optional(),
+        isSecondary: coerce.boolean().optional(),
     })
 });
 

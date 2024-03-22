@@ -92,7 +92,7 @@ const get = async (params: IUserGetParamService, withPassword: boolean = false) 
         select: "_id name url image"
     });
 
-    query.sort({createdAt: -1});
+    query.sort({createdAt: "desc"});
 
     let doc = (await query.lean<IUserGetResultService>().exec());
 
@@ -163,7 +163,7 @@ const getMany = async (params: IUserGetManyParamService) => {
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
     if (params.count) query.limit(params.count);
 
-    query.sort({createdAt: -1});
+    query.sort({createdAt: "desc"});
 
     return (await query.lean<IUserGetResultService[]>().exec()).map((user) => {
         delete user.password;

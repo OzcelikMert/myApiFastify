@@ -96,7 +96,7 @@ const get = async (params: IPostTermGetParamService) => {
         select: "_id name url image"
     });
 
-    query.sort({ rank: 1, createdAt: -1 });
+    query.sort({rank: "asc", createdAt: "desc"});
 
     let doc = (await query.lean<IPostTermGetResultService>().exec());
 
@@ -182,7 +182,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
     if (params.count) query.limit(params.count);
 
-    query.sort({ rank: 1, createdAt: -1 });
+    query.sort({rank: "asc", createdAt: "desc"});
 
     return Promise.all((await query.lean<IPostTermGetResultService[]>().exec()).map(async (doc) => {
         if (Array.isArray(doc.contents)) {

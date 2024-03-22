@@ -36,7 +36,7 @@ const get = async (params: IGalleryGetParamService) => {
         select: "_id name url image"
     });
 
-    query.sort({ createdAt: -1 });
+    query.sort({createdAt: "desc"});
 
     return (await query.lean<IGalleryGetResultService>().exec());
 }
@@ -71,7 +71,7 @@ const getMany = async (params: IGalleryGetManyParamService) => {
         select: "_id name url image"
     });
 
-    query.sort({ createdAt: -1 });
+    query.sort({createdAt: "desc"});
 
     return (await query.lean<IGalleryGetResultService[]>().exec());
 }

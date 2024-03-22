@@ -1,15 +1,17 @@
 import * as mongoose from "mongoose";
 import {postModel} from "../models/post.model";
 import {
-    IPostDeleteManyParamService,
     IPostAddParamService,
+    IPostDeleteManyParamService,
+    IPostGetCountParamService,
+    IPostGetManyParamService,
+    IPostGetManyResultService,
     IPostGetParamService,
     IPostGetResultService,
-    IPostGetManyParamService,
     IPostUpdateParamService,
     IPostUpdateRankParamService,
     IPostUpdateStatusManyParamService,
-    IPostUpdateViewParamService, IPostGetManyResultService, IPostGetCountParamService
+    IPostUpdateViewParamService
 } from "../types/services/post.service";
 import {IPostModel} from "../types/models/post.model";
 import MongoDBHelpers from "../library/mongodb/helpers";
@@ -21,6 +23,7 @@ import {StatusId} from "../constants/status";
 import {PostTermTypeId} from "../constants/postTermTypes";
 import {PostTypeId} from "../constants/postTypes";
 import {IComponentGetResultService} from "../types/services/component.service";
+import {PostSortTypeId} from "../constants/postSortTypes";
 
 const createURL = async (_id: string | null, title: string, typeId: PostTypeId) => {
     let urlAlreadyCount = 2;
@@ -151,7 +154,7 @@ const get = async (params: IPostGetParamService) => {
         select: "_id name url image"
     });
 
-    query.sort({isFixed: -1, rank: 1, createdAt: -1});
+    query.sort({isFixed: "desc", rank: "asc", createdAt: "desc"});
 
     let doc = (await query.lean<IPostGetResultService>().exec());
 
@@ -296,10 +299,16 @@ const getMany = async (params: IPostGetManyParamService) => {
         select: "_id name url image"
     });
 
-    if (params.isRecent) {
-        query.sort({createdAt: -1});
-    } else {
-        query.sort({isFixed: -1, rank: 1, createdAt: -1});
+    switch (params.sortTypeId) {
+        case PostSortTypeId.Newest:
+            query.sort({createdAt: "desc"});
+            break;
+        case PostSortTypeId.MostPopular:
+            query.sort({views: "desc"});
+            break;
+        default:
+            query.sort({isFixed: "desc", rank: "asc", createdAt: "desc"});
+            break;
     }
 
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
