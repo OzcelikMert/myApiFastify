@@ -60,13 +60,18 @@ const putWithIdSchema = object({
 
 const putProfileSchema = object({
     body: object({
-        image: string().optional(),
         name: string().min(1),
         comment: string().optional(),
         phone: string().optional(),
         facebook: string().optional(),
         instagram: string().optional(),
         twitter: string().optional()
+    })
+});
+
+const putProfileImageSchema = object({
+    body: object({
+        image: string().min(1),
     })
 });
 
@@ -89,6 +94,7 @@ export type IUserGetWithURLSchema = z.infer<typeof getWithURLSchema>;
 export type IUserPostSchema = z.infer<typeof postSchema>;
 export type IUserPutWithIdSchema = z.infer<typeof putWithIdSchema>;
 export type IUserPutProfileSchema = z.infer<typeof putProfileSchema>;
+export type IUserPutProfileImageSchema = z.infer<typeof putProfileImageSchema>;
 export type IUserPutPasswordSchema = z.infer<typeof putPasswordSchema>;
 export type IUserDeleteWithIdSchema = z.infer<typeof deleteWithIdSchema>;
 
@@ -99,6 +105,7 @@ export const UserSchema = {
     post: postSchema,
     putWithId: putWithIdSchema,
     putProfile: putProfileSchema,
+    putProfileImage: putProfileImageSchema,
     putPassword: putPasswordSchema,
     deleteWithId: deleteWithIdSchema
 };

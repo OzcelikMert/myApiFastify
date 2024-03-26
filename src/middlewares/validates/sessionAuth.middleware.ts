@@ -14,7 +14,7 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
         let apiResult = new ApiResult();
 
         if (req.sessionAuth && req.sessionAuth.user) {
-            let user = await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}, true);
+            let user = await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}, false);
             if (
                 !user ||
                 req.sessionAuth._id != SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip)
@@ -52,7 +52,7 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
             if (Number(date.diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshSeconds) {
                 let user = await UserService.get({
                     _id: req.sessionAuth.user.userId.toString()
-                }, true);
+                }, false);
                 if (user) {
                     req.sessionAuth?.set("_id", SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip));
 

@@ -32,7 +32,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let user = await UserService.get({
             ...reqData.body
-        }, true);
+        }, false);
 
         if(user){
             if(user.statusId == StatusId.Active) {

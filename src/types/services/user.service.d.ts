@@ -33,7 +33,6 @@ export interface IUserGetManyParamService {
     email?: string,
     count?: number,
     page?: number
-    roleId?: UserRoleId
     permissions?: PermissionId[]
     ignoreUserId?: string[]
 }

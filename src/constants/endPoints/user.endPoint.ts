@@ -14,6 +14,7 @@ export class UserEndPoint {
     get ADD() { return PathUtil.createPath(this.mainPath, "/add"); }
     get UPDATE_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/:_id`); }
     get UPDATE_PROFILE() { return PathUtil.createPath(this.mainPath, "/update/profile"); }
+    get UPDATE_PROFILE_IMAGE() { return PathUtil.createPath(this.mainPath, "/update/profile/image"); }
     get UPDATE_PASSWORD() { return PathUtil.createPath(this.mainPath, "/update/password"); }
     get DELETE() { return PathUtil.createPath(this.mainPath, "/delete"); }
     get DELETE_WITH_ID() { return PathUtil.createPath(this.mainPath, `/delete/:_id`); }

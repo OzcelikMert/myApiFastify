@@ -8,7 +8,7 @@ import {
     IUserPutWithIdSchema,
     IUserPutPasswordSchema,
     IUserPutProfileSchema,
-    IUserGetWithURLSchema
+    IUserGetWithURLSchema, IUserPutProfileImageSchema
 } from "../schemas/user.schema";
 import {UserService} from "../services/user.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -39,7 +39,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         apiResult.data = await UserService.getMany({
             ...reqData.query,
-        });
+        }, !req.isFromAdminPanel);
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });
@@ -54,7 +54,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
         apiResult.data = await UserService.get({
             ...reqData.params,
             ...reqData.query
-        });
+        }, true, true);
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });
@@ -107,8 +107,27 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
 
         req.sessionAuth!.set("user", {
             ...req.sessionAuth!.user!,
-            image: reqData.body.image ?? req.sessionAuth!.user!.image,
             name: reqData.body.name
+        })
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    });
+}
+
+const updateProfileImage = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        const reqData = req as IUserPutProfileImageSchema;
+
+        await UserService.update({
+            ...reqData.body,
+            _id: req.sessionAuth!.user!.userId.toString(),
+        });
+
+        req.sessionAuth!.set("user", {
+            ...req.sessionAuth!.user!,
+            image: reqData.body.image
         })
 
         await reply.status(apiResult.statusCode).send(apiResult)
@@ -156,6 +175,8 @@ export const UserController = {
     add: add,
     updateWithId: updateWithId,
     updateProfile: updateProfile,
+    updateProfileImage: updateProfileImage,
     updatePassword: updatePassword,
-    deleteWithId: deleteWithId
+    deleteWithId: deleteWithId,
+
 };
