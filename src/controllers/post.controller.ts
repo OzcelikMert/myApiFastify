@@ -8,7 +8,10 @@ import {
     IPostGetManySchema,
     IPostGetWithIdSchema,
     IPostGetWithURLSchema,
-    IPostPostSchema, IPostPutRankWithIdSchema, IPostPutStatusManySchema, IPostPutViewWithIdSchema,
+    IPostPostSchema,
+    IPostPutRankWithIdSchema,
+    IPostPutStatusManySchema,
+    IPostPutViewWithIdSchema,
     IPostPutWithIdSchema,
 } from "../schemas/post.schema";
 import {PermissionUtil} from "../utils/permission.util";
@@ -57,7 +60,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
         apiResult.data = await PostService.get({
             ...reqData.params,
             ...reqData.query,
-            url: reqData.query.pageTypeId == PageTypeId.HomePage ? undefined : reqData.params.url
+            url: [PageTypeId.HomePage, PageTypeId.ErrorPage404].some(pageTypeId => pageTypeId == reqData.query.pageTypeId) ? undefined : reqData.params.url
         });
 
         await reply.status(apiResult.statusCode).send(apiResult);
