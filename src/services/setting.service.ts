@@ -17,7 +17,7 @@ import {Config} from "../config";
 import {settingObjectIdKeys} from "../constants/objectIdKeys/setting.objectIdKeys";
 import {ISettingModel} from "../types/models/setting.model";
 
-const get = async (params: ISettingGetParamService, withPassword: boolean = false) => {
+const get = async (params: ISettingGetParamService, withPasswordContactForm: boolean = false) => {
     let filters: mongoose.FilterQuery<ISettingModel> = {}
     let projection: mongoose.ProjectionType<ISettingModel> = {contactForms: 0};
 
@@ -53,7 +53,7 @@ const get = async (params: ISettingGetParamService, withPassword: boolean = fals
             })
         }
 
-        if (!withPassword && doc.contactForms) {
+        if (!withPasswordContactForm && doc.contactForms) {
             doc.contactForms.map(contactForm => {
                 delete contactForm.password;
                 return contactForm;
