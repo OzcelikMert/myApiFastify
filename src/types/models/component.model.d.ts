@@ -8,13 +8,13 @@ export interface IComponentModel {
     lastAuthorId: ObjectId | string
     typeId: ComponentTypeId
     title: string,
-    elementId: string
+    key: string
     elements: IComponentElementModel[]
 }
 
 export interface IComponentElementModel {
     _id?: ObjectId | string,
-    elementId: string
+    key: string
     typeId: ElementTypeId,
     title: string,
     rank: number,

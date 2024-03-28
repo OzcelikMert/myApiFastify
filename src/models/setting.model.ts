@@ -23,7 +23,7 @@ const schemaStaticContent = new mongoose.Schema<ISettingStaticContentModel>(
     {
         typeId: {type: Number, required: true, enum: StaticContentTypeId},
         label: {type: String, required: true},
-        elementId: {type: String, required: true},
+        key: {type: String, required: true},
         rank: {type: Number, default: 0},
         contents: {type: [schemaStaticContentContent], default: []}
     }
@@ -44,7 +44,7 @@ const schemaContactForm = new mongoose.Schema<ISettingContactFormModel>(
 
 const schemaSocialMedia = new mongoose.Schema<ISettingSocialMediaModel>(
     {
-        elementId: {type: String},
+        key: {type: String},
         title: {type: String},
         url: {type: String},
     }

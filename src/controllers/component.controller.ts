@@ -5,7 +5,7 @@ import {IComponentGetResultService} from "../types/services/component.service";
 import {
     IComponentDeleteManySchema,
     IComponentGetManySchema,
-    IComponentGetWithElementIdSchema,
+    IComponentGetWithKeySchema,
     IComponentGetWithIdSchema, IComponentPostSchema, IComponentPutWithIdSchema
 } from "../schemas/component.schema";
 import {ComponentService} from "../services/component.service";
@@ -26,11 +26,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     })
 }
 
-const getWithElementId = async (req: FastifyRequest, reply: FastifyReply) => {
+const getWithKey = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult<IComponentGetResultService>();
 
-        let reqData = req as IComponentGetWithElementIdSchema;
+        let reqData = req as IComponentGetWithKeySchema;
 
         apiResult.data = await ComponentService.get({
             ...reqData.params,
@@ -103,7 +103,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 export const ComponentController = {
     getWithId: getWithId,
-    getWithElementId: getWithElementId,
+    getWithKey: getWithKey,
     getMany: getMany,
     add: add,
     updateWithId: updateWithId,

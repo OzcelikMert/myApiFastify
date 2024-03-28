@@ -57,7 +57,7 @@ const putSocialMediaSchema = object({
     body: object({
         socialMedia: array(object({
             _id: string().optional(),
-            elementId: string().default(""),
+            key: string().default(""),
             title: string().default(""),
             url: string().default(""),
         })).min(1),
@@ -70,7 +70,7 @@ const putStaticContentSchema = object({
             _id: string().optional(),
             typeId: z.nativeEnum(StaticContentTypeId),
             label: string().min(1),
-            elementId: string().default(""),
+            key: string().default(""),
             rank: number().min(0),
             contents: object({
                 _id: string().optional(),

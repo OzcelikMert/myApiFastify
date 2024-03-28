@@ -21,9 +21,9 @@ const get = async (params: IComponentGetParamService) => {
         ...filters,
         _id: params._id
     }
-    if (params.elementId) filters = {
+    if (params.key) filters = {
         ...filters,
-        elementId: params.elementId
+        key: params.key
     }
 
     let query = componentModel.findOne(filters);
@@ -64,9 +64,9 @@ const getMany = async (params: IComponentGetManyParamService) => {
         ...filters,
         _id: params._id
     }
-    if (params.elementId) filters = {
+    if (params.key) filters = {
         ...filters,
-        elementId: {$in: params.elementId}
+        key: {$in: params.key}
     }
     if (params.typeId) filters = {
         ...filters,

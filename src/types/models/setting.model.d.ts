@@ -30,7 +30,7 @@ export interface ISettingContactModel {
 
 export interface ISettingSocialMediaModel {
     _id?: string | ObjectId
-    elementId: string
+    key: string
     title: string
     url: string
 }
@@ -59,7 +59,7 @@ export interface ISettingStaticContentModel {
     _id?: string | ObjectId
     typeId: StaticContentTypeId,
     label: string
-    elementId: string
+    key: string
     rank: number
     contents: ISettingStaticContentContentModel[]
 }

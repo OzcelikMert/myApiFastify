@@ -17,7 +17,7 @@ const schemaElement = new mongoose.Schema<IComponentElementModel>(
     {
             typeId: {type: Number, required: true, enum: ElementTypeId},
             title: {type: String, required: true},
-            elementId: {type: String, required: true},
+            key: {type: String, required: true},
             rank: {type: Number, default: 0},
             contents: {type: [schemaElementContent], default: []}
     }
@@ -28,11 +28,11 @@ const schema = new mongoose.Schema<IComponentModel>(
             authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
             lastAuthorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
             title: {type: String, required: true},
-            elementId: {type: String, required: true},
+            key: {type: String, required: true},
             elements: {type: [schemaElement], default: []},
             typeId: {type: Number, required: true, enum: ComponentTypeId},
     },
     {timestamps: true}
-).index({authorId: 1, elementId: 1, typeId: 1});
+).index({authorId: 1, key: 1, typeId: 1});
 
 export const componentModel = mongoose.model<IComponentModel, mongoose.Model<IComponentModel>>("components", schema)

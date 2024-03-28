@@ -10,7 +10,7 @@ export class ComponentEndPoint {
 
     get GET() { return PathUtil.createPath(this.mainPath, "/get"); }
     get GET_WITH_ID() { return PathUtil.createPath(this.mainPath, `/get/:_id`); }
-    get GET_WITH_ELEMENT_ID() { return PathUtil.createPath(this.mainPath, `/get/element-id/:elementId`); }
+    get GET_WITH_KEY() { return PathUtil.createPath(this.mainPath, `/get/key/:key`); }
     get ADD() { return PathUtil.createPath(this.mainPath, "/add"); }
     get UPDATE_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/:_id`); }
     get DELETE() { return PathUtil.createPath(this.mainPath, "/delete"); }

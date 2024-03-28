@@ -4,12 +4,12 @@ import {ComponentTypeId} from "../constants/componentTypes";
 import {ZodUtil} from "../utils/zod.util";
 
 const postBody = object({
-    elementId: string().min(1),
+    key: string().min(1),
     title: string().min(1),
     typeId: z.nativeEnum(ComponentTypeId),
     elements: (array(object({
         _id: string().optional(),
-        elementId: string().min(1),
+        key: string().min(1),
         typeId: z.nativeEnum(ElementTypeId),
         title: string().min(1),
         rank: number().min(0),
@@ -30,9 +30,9 @@ const getWithIdSchema = object({
     })
 });
 
-const getWithElementIdSchema = object({
+const getWithKeySchema = object({
     params: object({
-        elementId: string().min(1),
+        key: string().min(1),
     }),
     query: object({
         langId: string().optional()
@@ -43,7 +43,7 @@ const getManySchema = object({
     query: object({
         _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
         langId: string().optional(),
-        elementId: ZodUtil.convertToArray(array(string().min(1))).optional(),
+        key: ZodUtil.convertToArray(array(string().min(1))).optional(),
         typeId: ZodUtil.convertToNumber(z.nativeEnum(ComponentTypeId)).optional(),
         withContent: z.coerce.boolean().optional()
     })
@@ -68,14 +68,14 @@ const deleteManySchema = object({
 
 export type IComponentGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type IComponentGetManySchema = z.infer<typeof getManySchema>;
-export type IComponentGetWithElementIdSchema = z.infer<typeof getWithElementIdSchema>;
+export type IComponentGetWithKeySchema = z.infer<typeof getWithKeySchema>;
 export type IComponentPostSchema = z.infer<typeof postSchema>;
 export type IComponentPutWithIdSchema = z.infer<typeof putWithIdSchema>;
 export type IComponentDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const ComponentSchema = {
     getWithId: getWithIdSchema,
-    getWithElementId: getWithElementIdSchema,
+    getWithKey: getWithKeySchema,
     getMany: getManySchema,
     post: postSchema,
     putWithId: putWithIdSchema,

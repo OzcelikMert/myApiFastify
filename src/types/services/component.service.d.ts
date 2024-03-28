@@ -17,13 +17,13 @@ export type IComponentGetResultService = {
 
 export interface IComponentGetParamService {
     _id?: string
-    elementId?: string
+    key?: string
     langId?: string
 }
 
 export interface IComponentGetManyParamService {
     _id?: string[]
-    elementId?: string[]
+    key?: string[]
     langId?: string,
     typeId?: ComponentTypeId
     withContent?: boolean
