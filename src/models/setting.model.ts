@@ -5,29 +5,9 @@ import {
     ISettingContactFormModel,
     ISettingModel,
     ISettingSeoContentModel,
-    ISettingStaticContentModel,
-    ISettingStaticContentContentModel, ISettingSocialMediaModel, ISettingECommerceModel
+    ISettingSocialMediaModel, ISettingECommerceModel
 } from "../types/models/setting.model";
 import {CurrencyId} from "../constants/currencyTypes";
-import {StaticContentTypeId} from "../constants/staticContentTypes";
-
-const schemaStaticContentContent = new mongoose.Schema<ISettingStaticContentContentModel>(
-    {
-        langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
-        content: {type: String, default: ""},
-        url: {type: String}
-    }
-).index({langId: 1});
-
-const schemaStaticContent = new mongoose.Schema<ISettingStaticContentModel>(
-    {
-        typeId: {type: Number, required: true, enum: StaticContentTypeId},
-        label: {type: String, required: true},
-        key: {type: String, required: true},
-        rank: {type: Number, default: 0},
-        contents: {type: [schemaStaticContentContent], default: []}
-    }
-);
 
 const schemaContactForm = new mongoose.Schema<ISettingContactFormModel>(
     {
@@ -85,7 +65,6 @@ const schema = new mongoose.Schema<ISettingModel>(
         seoContents: {type: [schemaSEOContent], default: []},
         contact: {type: schemaContact},
         contactForms: {type: [schemaContactForm], default: []},
-        staticContents: {type: [schemaStaticContent], default: []},
         socialMedia: {type: [schemaSocialMedia], default: []},
         eCommerce: {type: schemaECommerce},
     },

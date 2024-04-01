@@ -38,7 +38,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (
             serviceResult.length == 0 ||
-            (serviceResult.length !=  reqData.body._id.length)
+            (serviceResult.length != reqData.body._id.length)
         ) {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
@@ -60,10 +60,33 @@ const checkPermissionWithId = async (req: FastifyRequest, reply: FastifyReply) =
         let serviceResult = await ComponentService.get({_id: reqData.params._id});
 
         if (serviceResult && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
-            if(
-                reqData.body.elements.length != serviceResult.elements.length ||
-                !reqData.body.elements.every(reqElement => serviceResult?.elements.some(serviceElement => reqElement._id == serviceElement._id))
-            ){
+            let reqToCheck = {
+                key: reqData.body.key,
+                typeId: reqData.body.typeId,
+                title: reqData.body.title,
+                elements: reqData.body.elements.map(item => ({
+                    _id: item._id,
+                    key: item.key,
+                    rank: item.rank,
+                    title: item.title,
+                    typeId: item.typeId
+                }))
+            }
+
+            let serviceToCheck = {
+                key: serviceResult.key,
+                typeId: serviceResult.typeId,
+                title: serviceResult.title,
+                elements: serviceResult.elements.map(item => ({
+                    _id: item._id,
+                    key: item.key,
+                    rank: item.rank,
+                    title: item.title,
+                    typeId: item.typeId
+                }))
+            }
+
+            if (JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)) {
                 apiResult.status = false;
                 apiResult.errorCode = ApiErrorCodes.noPerm;
                 apiResult.statusCode = ApiStatusCodes.forbidden;

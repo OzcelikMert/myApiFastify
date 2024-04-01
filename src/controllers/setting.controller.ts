@@ -3,7 +3,7 @@ import {ApiResult} from "../library/api/result";
 import {
     ISettingGetSchema, ISettingPutContactFormSchema, ISettingPutECommerceSchema,
     ISettingPutGeneralSchema,
-    ISettingPutSEOSchema, ISettingPutSocialMediaSchema, ISettingPutStaticContentSchema
+    ISettingPutSEOSchema, ISettingPutSocialMediaSchema
 } from "../schemas/setting.schema";
 import {SettingService} from "../services/setting.service";
 import {LogMiddleware} from "../middlewares/log.middleware";
@@ -59,18 +59,6 @@ const updateContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const updateStaticContent = async (req: FastifyRequest, reply: FastifyReply) => {
-    await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult();
-
-        let reqData = req as ISettingPutStaticContentSchema;
-
-        await SettingService.updateStaticContent(reqData.body)
-
-        await reply.status(apiResult.statusCode).send(apiResult)
-    });
-}
-
 const updateSocialMedia = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
@@ -100,7 +88,6 @@ export const SettingController = {
     updateGeneral: updateGeneral,
     updateSEO: updateSEO,
     updateContactForm: updateContactForm,
-    updateStaticContent: updateStaticContent,
     updateSocialMedia: updateSocialMedia,
     updateECommerce: updateECommerce
 };

@@ -1,7 +1,6 @@
 import {array, number, object, string, z} from 'zod';
 import {SettingProjectionKeys} from "../constants/settingProjections";
 import {CurrencyId} from "../constants/currencyTypes";
-import {StaticContentTypeId} from "../constants/staticContentTypes";
 
 const getSchema = object({
     query: object({
@@ -64,24 +63,6 @@ const putSocialMediaSchema = object({
     })
 });
 
-const putStaticContentSchema = object({
-    body: object({
-        staticContents: array(object({
-            _id: string().optional(),
-            typeId: z.nativeEnum(StaticContentTypeId),
-            label: string().min(1),
-            key: string().default(""),
-            rank: number().min(0),
-            contents: object({
-                _id: string().optional(),
-                langId: string().min(1),
-                content: string().min(1),
-                url: string().optional(),
-            })
-        })).min(1),
-    })
-});
-
 const putECommerceSchema = object({
     body: object({
         eCommerce: object({
@@ -95,7 +76,6 @@ export type ISettingPutGeneralSchema = z.infer<typeof putGeneralSchema>;
 export type ISettingPutSEOSchema = z.infer<typeof putSeoSchema>;
 export type ISettingPutContactFormSchema = z.infer<typeof putContactFormSchema>;
 export type ISettingPutSocialMediaSchema = z.infer<typeof putSocialMediaSchema>;
-export type ISettingPutStaticContentSchema = z.infer<typeof putStaticContentSchema>;
 export type ISettingPutECommerceSchema = z.infer<typeof putECommerceSchema>;
 
 export const SettingSchema = {
@@ -104,6 +84,5 @@ export const SettingSchema = {
     putSeo: putSeoSchema,
     putContactForm: putContactFormSchema,
     putSocialMedia: putSocialMediaSchema,
-    putStaticContent: putStaticContentSchema,
     putECommerce: putECommerceSchema,
 };

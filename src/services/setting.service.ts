@@ -4,7 +4,6 @@ import {
     ISettingAddParamService,
     ISettingGetParamService,
     ISettingGetResultService,
-    ISettingUpdateStaticContentParamService,
     ISettingUpdateSocialMediaParamService,
     ISettingUpdateSEOParamService,
     ISettingUpdateContactFormParamService,
@@ -26,11 +25,10 @@ const get = async (params: ISettingGetParamService, withPasswordContactForm: boo
 
     if(params.projection){
         switch (params.projection) {
-            case "general": projection = {eCommerce: 0, staticContents: 0, socialMedia: 0, contactForms: 0, seoContents: 0}; break;
+            case "general": projection = {eCommerce: 0, socialMedia: 0, contactForms: 0, seoContents: 0}; break;
             case "seo": projection = {seoContents: 1}; break;
             case "contactForm": projection = {contactForms: 1}; break;
             case "eCommerce": projection = {eCommerce: 1}; break;
-            case "staticContent": projection = {staticContents: 1}; break;
             case "socialMedia": projection = {socialMedia: 1}; break;
         }
     }
@@ -42,15 +40,6 @@ const get = async (params: ISettingGetParamService, withPasswordContactForm: boo
     if(doc){
         if (Array.isArray(doc.seoContents)) {
             doc.seoContents = doc.seoContents.findSingle("langId", params.langId) ?? doc.seoContents.findSingle("langId", defaultLangId);
-        }
-
-        if (Array.isArray(doc.staticContents)) {
-            doc.staticContents = doc.staticContents.map(staticContent => {
-                if(Array.isArray(staticContent.contents)){
-                    staticContent.contents = staticContent.contents.findSingle("langId", params.langId) ?? staticContent.contents.findSingle("langId", defaultLangId);
-                }
-                return staticContent;
-            })
         }
 
         if (!withPasswordContactForm && doc.contactForms) {
@@ -133,48 +122,6 @@ const updateContactForm = async (params: ISettingUpdateContactFormParamService) 
     return params;
 }
 
-const updateStaticContent = async (params: ISettingUpdateStaticContentParamService) => {
-    params = Variable.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
-
-    let doc = (await settingModel.findOne({}).exec());
-
-    if(doc){
-        if (params.staticContents) {
-            // Check delete
-            doc.staticContents = doc.staticContents.filter(staticLanguage =>  params.staticContents && params.staticContents.indexOfKey("_id", staticLanguage._id) > -1)
-            // Check Update
-            for (let paramStaticContent of params.staticContents) {
-                let docStaticContent = doc.staticContents.findSingle("_id", paramStaticContent._id);
-                if (docStaticContent) {
-                    let docStaticContentContent = docStaticContent.contents.findSingle("langId", paramStaticContent.contents.langId);
-                    if (docStaticContentContent) {
-                        docStaticContentContent = Object.assign(docStaticContentContent, paramStaticContent.contents);
-                    } else {
-                        docStaticContent.contents.push(paramStaticContent.contents)
-                    }
-                    docStaticContent = Object.assign(docStaticContent, {
-                        ...paramStaticContent,
-                        contents: docStaticContent.contents
-                    })
-                } else {
-                    doc.staticContents.push({
-                        ...paramStaticContent,
-                        contents: [paramStaticContent.contents]
-                    })
-                }
-            }
-            delete params.staticContents;
-        }
-
-        doc = Object.assign(doc, params);
-
-        await doc.save();
-    }
-
-    return params;
-}
-
 const updateSocialMedia = async (params: ISettingUpdateSocialMediaParamService) => {
     params = Variable.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
@@ -209,7 +156,6 @@ export const SettingService = {
     updateGeneral: updateGeneral,
     updateSEO: updateSEO,
     updateContactForm: updateContactForm,
-    updateStaticContent: updateStaticContent,
     updateSocialMedia: updateSocialMedia,
     updateECommerce: updateECommerce,
 };

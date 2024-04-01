@@ -120,7 +120,7 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const checkUpdateAuthorsWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkAuthorsWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
@@ -162,5 +162,5 @@ export const PostMiddleware = {
     checkMany: checkMany,
     checkIsAuthorWithId: checkIsAuthorWithId,
     checkIsAuthorMany: checkIsAuthorMany,
-    checkUpdateAuthorsWithId: checkUpdateAuthorsWithId
+    checkAuthorsWithId: checkAuthorsWithId
 };

@@ -166,7 +166,6 @@ class InitConfig {
         if (!settings) {
             await SettingService.add({
                 contactForms: [],
-                staticContents: [],
                 socialMedia: [],
             });
             console.log(chalk.green(`#Setting`))

@@ -4,5 +4,4 @@ export enum SettingProjectionKeys {
     ECommerce = "eCommerce",
     ContactForm = "contactForm",
     SocialMedia = "socialMedia",
-    StaticContent = "staticContent"
 }

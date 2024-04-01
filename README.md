@@ -4,9 +4,10 @@ Api for My Admin Panel
 Things to do:
 - pagelerde componentsi sadece super admin ekleyebilsin.
 - componentlerde componentin ana elementId sini sadece super admin guncellemeli yetki kontrolu yap
-- elementId olanlari key olarak guncelle
 - lastAuthorId yi array olarak tut en son guncelleyen en sonuncu indexde olsun ayni id birkez daha eklenmesin
 
++ static contenti kaldir
++ elementId olanlari key olarak guncelle
 + postlarda yetkili kullanicilar diye biryer olsun oradan eklenen kullanicilar post ona ait olmasa bile postu gorup guncelleyebilsinler
 + sifre degistimi degismedimi diye sessionu kotnorl et
 + component element, social media ve baska bu tip arraylar varsa bunlarin izinlerini kontorl et super admin harici ekleyemesin ama guncelleyebilsin
