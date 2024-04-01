@@ -3,7 +3,6 @@ Api for My Admin Panel
 
 Things to do:
 - page type olarak super admin disindaki kullanicilar sadece default page typi ekleyebilsin
-- lastAuthorId yi array olarak tut en son guncelleyen en sonuncu indexde olsun ayni id birkez daha eklenmesin
 
 + componentlerde componentin ana elementId sini sadece super admin guncellemeli yetki kontrolu yap
 + static contenti kaldir
