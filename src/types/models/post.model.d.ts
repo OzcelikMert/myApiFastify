@@ -6,7 +6,7 @@ import {AttributeTypeId} from "../../constants/attributeTypes";
 import {ProductTypeId} from "../../constants/productTypes";
 
 export interface IPostModel {
-    _id?: string | ObjectId
+    _id: string | ObjectId
     typeId: PostTypeId,
     statusId: StatusId,
     pageTypeId?: PageTypeId,

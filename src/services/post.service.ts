@@ -265,6 +265,12 @@ const getMany = async (params: IPostGetManyParamService) => {
             categories: {$in: params.categories}
         }
     }
+    if (params.dateStart) {
+        filters = {
+            ...filters,
+            dateStart: {$lt: params.dateStart}
+        }
+    }
 
     let query = postModel.find(filters);
 
@@ -588,7 +594,10 @@ const updateStatusMany = async (params: IPostUpdateStatusManyParamService) => {
 
     return await Promise.all((await postModel.find(filters).exec()).map(async doc => {
         doc.statusId = params.statusId;
-        doc.lastAuthorId = params.lastAuthorId;
+
+        if(params.lastAuthorId){
+            doc.lastAuthorId = params.lastAuthorId;
+        }
 
         await doc.save();
 

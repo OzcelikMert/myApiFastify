@@ -1,15 +1,14 @@
-import {FastifyRequest, FastifyReply} from 'fastify';
+import {FastifyReply, FastifyRequest} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
 import {PostService} from "../services/post.service";
 import {LogMiddleware} from "./log.middleware";
-import {
-    IPostDeleteManySchema,
-    IPostPutWithIdSchema
-} from "../schemas/post.schema";
+import {IPostDeleteManySchema, IPostPutWithIdSchema} from "../schemas/post.schema";
 import {UserRoleId} from "../constants/userRoles";
 import {PermissionUtil} from "../utils/permission.util";
+import {PostTypeId} from "../constants/postTypes";
+import {PageTypeId} from "../constants/pageTypes";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -157,10 +156,44 @@ const checkAuthorsWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
+const checkPageTypeIdWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IPostPutWithIdSchema;
+
+        if(reqData.body.typeId == PostTypeId.Page){
+            if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
+                if(reqData.params._id){
+                    let serviceResult = await PostService.get({
+                        _id: reqData.params._id,
+                        typeId: reqData.body.typeId
+                    });
+
+                    if (serviceResult && serviceResult.pageTypeId != reqData.body.pageTypeId) {
+                        apiResult.status = false;
+                        apiResult.errorCode = ApiErrorCodes.noPerm;
+                        apiResult.statusCode = ApiStatusCodes.forbidden;
+                    }
+                }else if (reqData.body.pageTypeId != PageTypeId.Default){
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.noPerm;
+                    apiResult.statusCode = ApiStatusCodes.forbidden;
+                }
+            }
+        }
+
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
+        }
+    });
+}
+
 export const PostMiddleware = {
     checkWithId: checkWithId,
     checkMany: checkMany,
     checkIsAuthorWithId: checkIsAuthorWithId,
     checkIsAuthorMany: checkIsAuthorMany,
-    checkAuthorsWithId: checkAuthorsWithId
+    checkAuthorsWithId: checkAuthorsWithId,
+    checkPageTypeIdWithId: checkPageTypeIdWithId
 };

@@ -71,6 +71,7 @@ export interface IPostGetManyParamService {
     title?: string
     categories?: string[]
     authorId?: string
+    dateStart?: Date
 }
 
 export interface IPostGetCountParamService {
@@ -109,9 +110,9 @@ export type IPostUpdateViewParamService = {
 
 export type IPostUpdateStatusManyParamService = {
     _id: string[],
-    typeId: PostTypeId
+    typeId?: PostTypeId
     statusId: StatusId,
-    lastAuthorId: string
+    lastAuthorId?: string
 }
 
 export interface IPostDeleteManyParamService {

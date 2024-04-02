@@ -16,24 +16,8 @@ import * as path from "path"
 import {generate} from "generate-password";
 import chalk from "chalk";
 import fs from "fs";
-
-const setPath = (...paths: (number | string | undefined)[]) => {
-    let returnPath = "";
-    for (let path of paths) {
-        if (path) {
-            if (
-                typeof path === "string" &&
-                path.length > 0 &&
-                path.startsWith("/")
-            ) {
-                path = path.slice(1);
-            }
-            
-            returnPath += `/${path}`;
-        }
-    }
-    return returnPath;
-}
+import {PathUtil} from "../utils/path.util";
+import {PostService} from "../services/post.service";
 
 let Config: IConfig = {
     passwordSalt: "_@QffsDh14Q",
@@ -53,8 +37,10 @@ let Config: IConfig = {
     defaultLangId: ""
 }
 
+
 class InitConfig {
     private server: FastifyInstance;
+    private timerHour = 2;
 
     constructor(server: FastifyInstance) {
         this.server = server;
@@ -70,6 +56,7 @@ class InitConfig {
             await this.checkSuperAdminUser();
             await this.checkLanguages();
             await this.checkSettings();
+            this.initTimer();
             resolve();
         });
     }
@@ -82,11 +69,11 @@ class InitConfig {
     private async setPublicFolders() {
         console.log(chalk.green("#Public Folders"));
 
-        Config.publicFolders.forEach(async (publicFolder, index) => {
+        for (const publicFolder of Config.publicFolders) {
             let folderPath = "";
 
             publicFolder.forEach(publicFolderPath => {
-                folderPath = setPath(folderPath, publicFolderPath);
+                folderPath = PathUtil.createPath(folderPath, publicFolderPath);
             });
             folderPath = folderPath.slice(1);
 
@@ -94,14 +81,13 @@ class InitConfig {
                 fs.mkdirSync(path.resolve(Config.paths.root, folderPath));
             }
 
-            console.log(chalk.blue(` - /${folderPath}`) + ` : ${path.resolve(Config.paths.root, folderPath)}`)
-
             await this.server.register(fastifyStatic, {
                 root: path.resolve(Config.paths.root, folderPath),
                 prefix: `/${folderPath}`,
             });
-            //console.log(chalk.blue(` - /${folderPath}`) + ` : ${path.resolve(Config.paths.root, folderPath)}`)
-        });
+
+            console.log(chalk.blue(` - /${folderPath}`) + ` : ${path.resolve(Config.paths.root, folderPath)}`)
+        }
     }
 
     private async setSession() {
@@ -171,6 +157,34 @@ class InitConfig {
             console.log(chalk.green(`#Setting`))
             console.log(chalk.blue(`- Created`))
         }
+    }
+
+    private async initTimer() {
+        console.log(chalk.green(`#Timer Created ${new Date().toLocaleString()}`));
+        setTimeout(async () => {
+            console.log(chalk.blue(`- Timer Started`))
+            console.time(`configTimer`)
+            let date = new Date();
+
+            /* Check Pending Posts */
+            console.log(chalk.gray(`- Check Pending Posts`));
+            let pendingPostServiceResult = await PostService.getMany({
+                statusId: StatusId.Pending,
+                dateStart: date
+            })
+
+            if(pendingPostServiceResult.length > 0){
+                await PostService.updateStatusMany({
+                    _id: pendingPostServiceResult.map(pendingPost => pendingPost._id.toString()),
+                    statusId: StatusId.Active
+                })
+                console.log(chalk.gray(`- Found Pending Posts ${pendingPostServiceResult.length} and they have activated!`));
+            }
+
+            console.timeEnd(`configTimer`);
+            console.log(chalk.blue(`- Timer Finished`))
+            this.initTimer();
+        }, (1000 * 60 * 60) * this.timerHour)
     }
 }
 
