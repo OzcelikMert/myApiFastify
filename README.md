@@ -2,8 +2,8 @@
 Api for My Admin Panel
 
 Things to do:
-- page type olarak super admin disindaki kullanicilar sadece default page typi ekleyebilsin
 
++ page type olarak super admin disindaki kullanicilar sadece default page typi ekleyebilsin
 + componentlerde componentin ana elementId sini sadece super admin guncellemeli yetki kontrolu yap
 + static contenti kaldir
 + elementId olanlari key olarak guncelle
