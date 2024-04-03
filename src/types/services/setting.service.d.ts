@@ -1,7 +1,7 @@
 import {
     ISettingContactFormModel,
     ISettingModel, ISettingECommerceModel,
-    ISettingSeoContentModel, ISettingSocialMediaModel
+    ISettingSeoContentModel, ISettingSocialMediaModel, ISettingPathModel, ISettingPathContentModel
 } from "../models/setting.model";
 import {SettingProjectionKeys} from "../../constants/settingProjections";
 
@@ -36,4 +36,8 @@ export type ISettingUpdateContactFormParamService = {
 
 export type ISettingUpdateSocialMediaParamService = {
     socialMedia: ISettingSocialMediaModel[]
+}
+
+export type ISettingUpdatePathParamService = {
+    paths: (Omit<ISettingPathModel, "contents"> & {contents: ISettingPathContentModel})[]
 }

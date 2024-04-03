@@ -4,17 +4,18 @@ import {
     ISettingAddParamService,
     ISettingGetParamService,
     ISettingGetResultService,
-    ISettingUpdateSocialMediaParamService,
-    ISettingUpdateSEOParamService,
     ISettingUpdateContactFormParamService,
     ISettingUpdateECommerceParamService,
-    ISettingUpdateGeneralParamService
+    ISettingUpdateGeneralParamService, ISettingUpdatePathParamService,
+    ISettingUpdateSEOParamService,
+    ISettingUpdateSocialMediaParamService
 } from "../types/services/setting.service";
 import MongoDBHelpers from "../library/mongodb/helpers";
 import Variable from "../library/variable";
 import {Config} from "../config";
 import {settingObjectIdKeys} from "../constants/objectIdKeys/setting.objectIdKeys";
 import {ISettingModel} from "../types/models/setting.model";
+import {SettingProjectionKeys} from "../constants/settingProjections";
 
 const get = async (params: ISettingGetParamService, withPasswordContactForm: boolean = false) => {
     let filters: mongoose.FilterQuery<ISettingModel> = {}
@@ -25,11 +26,11 @@ const get = async (params: ISettingGetParamService, withPasswordContactForm: boo
 
     if(params.projection){
         switch (params.projection) {
-            case "general": projection = {eCommerce: 0, socialMedia: 0, contactForms: 0, seoContents: 0}; break;
-            case "seo": projection = {seoContents: 1}; break;
-            case "contactForm": projection = {contactForms: 1}; break;
-            case "eCommerce": projection = {eCommerce: 1}; break;
-            case "socialMedia": projection = {socialMedia: 1}; break;
+            case SettingProjectionKeys.General: projection = {eCommerce: 0, socialMedia: 0, contactForms: 0, seoContents: 0}; break;
+            case SettingProjectionKeys.SEO: projection = {seoContents: 1}; break;
+            case SettingProjectionKeys.ContactForm: projection = {contactForms: 1}; break;
+            case SettingProjectionKeys.ECommerce: projection = {eCommerce: 1}; break;
+            case SettingProjectionKeys.SocialMedia: projection = {socialMedia: 1}; break;
         }
     }
 
@@ -150,6 +151,48 @@ const updateECommerce = async (params: ISettingUpdateECommerceParamService) => {
     return params;
 }
 
+const updatePath = async (params: ISettingUpdatePathParamService) => {
+    params = Variable.clearAllScriptTags(params);
+    params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
+
+    let doc = (await settingModel.findOne({}).exec());
+
+    if(doc){
+        if (params.paths) {
+            // Check delete
+            doc.paths = doc.paths.filter(path => params.paths.indexOfKey("_id", path._id) > -1)
+            // Check Update
+            for (let paramPath of params.paths) {
+                let docPath = doc.paths.findSingle("_id", paramPath._id);
+                if (docPath) {
+                    let docPathContent = docPath.contents.findSingle("langId", paramPath.contents.langId);
+                    if (docPathContent) {
+                        docPathContent = Object.assign(docPathContent, paramPath.contents);
+                    } else {
+                        docPath.contents.push(paramPath.contents)
+                    }
+                    docPath = Object.assign(docPath, {
+                        ...paramPath,
+                        contents: docPath.contents
+                    })
+                } else {
+                    doc.paths.push({
+                        ...paramPath,
+                        contents: [paramPath.contents]
+                    })
+                }
+            }
+            delete params.paths;
+        }
+
+        doc = Object.assign(doc, params);
+
+        await doc.save();
+    }
+
+    return params;
+}
+
 export const SettingService = {
     get: get,
     add: add,
@@ -158,4 +201,5 @@ export const SettingService = {
     updateContactForm: updateContactForm,
     updateSocialMedia: updateSocialMedia,
     updateECommerce: updateECommerce,
+    updatePath: updatePath
 };

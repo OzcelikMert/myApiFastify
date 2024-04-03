@@ -13,6 +13,7 @@ export interface ISettingModel {
     contactForms: ISettingContactFormModel[],
     socialMedia: ISettingSocialMediaModel[]
     eCommerce?: ISettingECommerceModel
+    paths: ISettingPathModel[]
 }
 
 export interface ISettingECommerceModel {
@@ -51,4 +52,18 @@ export interface ISettingSeoContentModel {
     title?: string,
     content?: string,
     tags?: string[]
+}
+
+export interface ISettingPathModel {
+    _id?: string | ObjectId
+    title: string
+    key: string
+    path: string
+    contents: ISettingPathContentModel[]
+}
+
+export interface ISettingPathContentModel {
+    _id?: string | ObjectId
+    langId: string | ObjectId
+    asPath: string,
 }

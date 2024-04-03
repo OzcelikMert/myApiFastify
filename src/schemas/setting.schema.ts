@@ -1,11 +1,12 @@
 import {array, number, object, string, z} from 'zod';
 import {SettingProjectionKeys} from "../constants/settingProjections";
 import {CurrencyId} from "../constants/currencyTypes";
+import {ZodUtil} from "../utils/zod.util";
 
 const getSchema = object({
     query: object({
         langId: string().optional(),
-        projection: z.nativeEnum(SettingProjectionKeys).optional()
+        projection: ZodUtil.convertToNumber(z.nativeEnum(SettingProjectionKeys)).optional()
     })
 });
 
@@ -71,12 +72,29 @@ const putECommerceSchema = object({
     })
 });
 
+const putPathSchema = object({
+    body: object({
+        paths: array(object({
+            _id: string().optional(),
+            key: string().min(1),
+            title: string().min(1),
+            path: string().min(1),
+            contents: object({
+                _id: string().optional(),
+                langId: string().min(1),
+                asPath: string().min(1),
+            })
+        })).min(1),
+    })
+});
+
 export type ISettingGetSchema = z.infer<typeof getSchema>;
 export type ISettingPutGeneralSchema = z.infer<typeof putGeneralSchema>;
 export type ISettingPutSEOSchema = z.infer<typeof putSeoSchema>;
 export type ISettingPutContactFormSchema = z.infer<typeof putContactFormSchema>;
 export type ISettingPutSocialMediaSchema = z.infer<typeof putSocialMediaSchema>;
 export type ISettingPutECommerceSchema = z.infer<typeof putECommerceSchema>;
+export type ISettingPutPathSchema = z.infer<typeof putPathSchema>;
 
 export const SettingSchema = {
     get: getSchema,
@@ -85,4 +103,5 @@ export const SettingSchema = {
     putContactForm: putContactFormSchema,
     putSocialMedia: putSocialMediaSchema,
     putECommerce: putECommerceSchema,
+    putPath: putPathSchema
 };

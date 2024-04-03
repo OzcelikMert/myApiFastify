@@ -5,9 +5,28 @@ import {
     ISettingContactFormModel,
     ISettingModel,
     ISettingSeoContentModel,
-    ISettingSocialMediaModel, ISettingECommerceModel
+    ISettingSocialMediaModel, ISettingECommerceModel, ISettingPathModel, ISettingPathContentModel
 } from "../types/models/setting.model";
 import {CurrencyId} from "../constants/currencyTypes";
+
+const schemaPathContent = new mongoose.Schema<ISettingPathContentModel>(
+    {
+        langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
+        title: {type: String, default: ""},
+        asPath: {type: String, default: ""}
+    },
+    {timestamps: true}
+).index({langId: 1});
+
+const schemaPath = new mongoose.Schema<ISettingPathModel>(
+    {
+        title: {type: String, required: true},
+        key: {type: String, required: true},
+        path: {type: String, required: true},
+        contents: {type: [schemaPathContent], default: []},
+    },
+    {timestamps: true}
+);
 
 const schemaContactForm = new mongoose.Schema<ISettingContactFormModel>(
     {
@@ -67,6 +86,7 @@ const schema = new mongoose.Schema<ISettingModel>(
         contactForms: {type: [schemaContactForm], default: []},
         socialMedia: {type: [schemaSocialMedia], default: []},
         eCommerce: {type: schemaECommerce},
+        paths: {type: [schemaPath], default: []},
     },
     {timestamps: true}
 );

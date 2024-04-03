@@ -2,8 +2,8 @@
 Api for My Admin Panel
 
 Things to do:
-+ settinge dynamic pathler icin bir model ve route yap
 
++ settinge dynamic pathler icin bir model ve route yap (sadece super admin ekleyip guncelleyebilsin)
 + statusu pending olan postlari kontrol et tarihi gelenleri statuslarini active olarak guncelle (bunu timer veya farkli bir yol ile yap otomatik guncelleme yapsin)
 + page type olarak super admin disindaki kullanicilar sadece default page typi ekleyebilsin
 + componentlerde componentin ana elementId sini sadece super admin guncellemeli yetki kontrolu yap

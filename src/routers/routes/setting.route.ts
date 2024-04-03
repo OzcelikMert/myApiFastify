@@ -16,5 +16,6 @@ export const settingRoute = function (fastify: FastifyInstance, opts: any, done:
     fastify.put(settingEndPoint.UPDATE_CONTACT_FORM, { preHandler: [RequestMiddleware.check(SettingSchema.putContactForm), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_CONTACT_FORM), SettingMiddleware.checkPermissionForContactForms] }, SettingController.updateContactForm);
     fastify.put(settingEndPoint.UPDATE_SOCIAL_MEDIA, { preHandler: [RequestMiddleware.check(SettingSchema.putSocialMedia), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_SOCIAL_MEDIA), SettingMiddleware.checkPermissionForSocialMedia] }, SettingController.updateSocialMedia);
     fastify.put(settingEndPoint.UPDATE_ECOMMERCE, { preHandler: [RequestMiddleware.check(SettingSchema.putECommerce), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_ECOMMERCE)] }, SettingController.updateECommerce);
+    fastify.put(settingEndPoint.UPDATE_PATH, { preHandler: [RequestMiddleware.check(SettingSchema.putPath), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_PATH)] }, SettingController.updatePath);
     done();
 }

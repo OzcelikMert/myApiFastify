@@ -27,10 +27,16 @@ const updateECommerce: IEndPointPermission = {
     userRoleId: UserRoleId.Admin
 }
 
+const updatePath: IEndPointPermission = {
+    permissionId: [],
+    userRoleId: UserRoleId.SuperAdmin
+}
+
 export const SettingEndPointPermission = {
     UPDATE_GENERAL: updateGeneral,
     UPDATE_SEO: updateSEO,
     UPDATE_CONTACT_FORM: updateContactForm,
     UPDATE_SOCIAL_MEDIA: updateSocialMedia,
-    UPDATE_ECOMMERCE: updateECommerce
+    UPDATE_ECOMMERCE: updateECommerce,
+    UPDATE_PATH: updatePath
 }

@@ -2,7 +2,7 @@ import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "../library/api/result";
 import {
     ISettingGetSchema, ISettingPutContactFormSchema, ISettingPutECommerceSchema,
-    ISettingPutGeneralSchema,
+    ISettingPutGeneralSchema, ISettingPutPathSchema,
     ISettingPutSEOSchema, ISettingPutSocialMediaSchema
 } from "../schemas/setting.schema";
 import {SettingService} from "../services/setting.service";
@@ -83,11 +83,24 @@ const updateECommerce = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
+const updatePath = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as ISettingPutPathSchema;
+
+        await SettingService.updatePath(reqData.body)
+
+        await reply.status(apiResult.statusCode).send(apiResult)
+    });
+}
+
 export const SettingController = {
     get: get,
     updateGeneral: updateGeneral,
     updateSEO: updateSEO,
     updateContactForm: updateContactForm,
     updateSocialMedia: updateSocialMedia,
-    updateECommerce: updateECommerce
+    updateECommerce: updateECommerce,
+    updatePath: updatePath
 };

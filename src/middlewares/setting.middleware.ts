@@ -5,7 +5,10 @@ import {PermissionUtil} from "../utils/permission.util";
 import {UserRoleId} from "../constants/userRoles";
 import {ApiErrorCodes} from "../library/api/errorCodes";
 import {ApiStatusCodes} from "../library/api/statusCodes";
-import {ISettingPutContactFormSchema, ISettingPutSocialMediaSchema} from "../schemas/setting.schema";
+import {
+    ISettingPutContactFormSchema,
+    ISettingPutSocialMediaSchema
+} from "../schemas/setting.schema";
 import {SettingService} from "../services/setting.service";
 import {SettingProjectionKeys} from "../constants/settingProjections";
 
