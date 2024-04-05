@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {settingModel} from "../models/setting.model";
+import {settingModel} from "@models/setting.model";
 import {
     ISettingAddParamService,
     ISettingGetParamService,
@@ -9,13 +9,13 @@ import {
     ISettingUpdateGeneralParamService, ISettingUpdatePathParamService,
     ISettingUpdateSEOParamService,
     ISettingUpdateSocialMediaParamService
-} from "../types/services/setting.service";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import Variable from "../library/variable";
-import {Config} from "../config";
-import {settingObjectIdKeys} from "../constants/objectIdKeys/setting.objectIdKeys";
-import {ISettingModel} from "../types/models/setting.model";
-import {SettingProjectionKeys} from "../constants/settingProjections";
+} from "types/services/setting.service";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {VariableLibrary} from "@library/variable";
+import {Config} from "@configs/index";
+import {settingObjectIdKeys} from "@constants/objectIdKeys/setting.objectIdKeys";
+import {ISettingModel} from "types/models/setting.model";
+import {SettingProjectionKeys} from "@constants/settingProjections";
 
 const get = async (params: ISettingGetParamService, withPasswordContactForm: boolean = false) => {
     let filters: mongoose.FilterQuery<ISettingModel> = {}
@@ -31,6 +31,7 @@ const get = async (params: ISettingGetParamService, withPasswordContactForm: boo
             case SettingProjectionKeys.ContactForm: projection = {contactForms: 1}; break;
             case SettingProjectionKeys.ECommerce: projection = {eCommerce: 1}; break;
             case SettingProjectionKeys.SocialMedia: projection = {socialMedia: 1}; break;
+            case SettingProjectionKeys.Path: projection = {paths: 1}; break;
         }
     }
 
@@ -41,6 +42,15 @@ const get = async (params: ISettingGetParamService, withPasswordContactForm: boo
     if(doc){
         if (Array.isArray(doc.seoContents)) {
             doc.seoContents = doc.seoContents.findSingle("langId", params.langId) ?? doc.seoContents.findSingle("langId", defaultLangId);
+        }
+
+        if (Array.isArray(doc.paths)) {
+            doc.paths = doc.paths.map(path => {
+                if(Array.isArray(path.contents)){
+                    path.contents = path.contents.findSingle("langId", params.langId) ?? path.contents.findSingle("langId", defaultLangId);
+                }
+                return path;
+            })
         }
 
         if (!withPasswordContactForm && doc.contactForms) {
@@ -55,14 +65,14 @@ const get = async (params: ISettingGetParamService, withPasswordContactForm: boo
 }
 
 const add = async (params: ISettingAddParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
     return (await settingModel.create(params)).toObject()
 }
 
 const updateGeneral = async (params: ISettingUpdateGeneralParamService) => {
-    params = Variable.clearAllScriptTags(params, ["head", "script"]);
+    params = VariableLibrary.clearAllScriptTags(params, ["head", "script"]);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
     let doc = (await settingModel.findOne({}).exec());
@@ -77,7 +87,7 @@ const updateGeneral = async (params: ISettingUpdateGeneralParamService) => {
 }
 
 const updateSEO = async (params: ISettingUpdateSEOParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
     let doc = (await settingModel.findOne({}).exec());
@@ -101,12 +111,12 @@ const updateSEO = async (params: ISettingUpdateSEOParamService) => {
 }
 
 const updateContactForm = async (params: ISettingUpdateContactFormParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
     if (params.contactForms) {
         params.contactForms.map(contactForm => {
-            if (Variable.isEmpty(contactForm.password)) {
+            if (VariableLibrary.isEmpty(contactForm.password)) {
                 delete contactForm.password;
             }
             return contactForm;
@@ -124,7 +134,7 @@ const updateContactForm = async (params: ISettingUpdateContactFormParamService) 
 }
 
 const updateSocialMedia = async (params: ISettingUpdateSocialMediaParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
     let doc = (await settingModel.findOne({}).exec());
@@ -138,7 +148,7 @@ const updateSocialMedia = async (params: ISettingUpdateSocialMediaParamService) 
 }
 
 const updateECommerce = async (params: ISettingUpdateECommerceParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
     let doc = (await settingModel.findOne({}).exec());
@@ -152,7 +162,7 @@ const updateECommerce = async (params: ISettingUpdateECommerceParamService) => {
 }
 
 const updatePath = async (params: ISettingUpdatePathParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
     let doc = (await settingModel.findOne({}).exec());
@@ -182,10 +192,7 @@ const updatePath = async (params: ISettingUpdatePathParamService) => {
                     })
                 }
             }
-            delete params.paths;
         }
-
-        doc = Object.assign(doc, params);
 
         await doc.save();
     }

@@ -1,7 +1,7 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {PostService} from "../services/post.service";
-import {LogMiddleware} from "../middlewares/log.middleware";
+import {ApiResult} from "@library/api/result";
+import {PostService} from "@services/post.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
 import {
     IPostDeleteManySchema,
     IPostGetCountSchema,
@@ -13,12 +13,12 @@ import {
     IPostPutStatusManySchema,
     IPostPutViewWithIdSchema,
     IPostPutWithIdSchema,
-} from "../schemas/post.schema";
-import {PermissionUtil} from "../utils/permission.util";
-import {UserRoleId} from "../constants/userRoles";
-import {IPostGetManyResultService, IPostGetResultService} from "../types/services/post.service";
-import {IPostModel} from "../types/models/post.model";
-import {PageTypeId} from "../constants/pageTypes";
+} from "@schemas/post.schema";
+import {PermissionUtil} from "@utils/permission.util";
+import {UserRoleId} from "@constants/userRoles";
+import {IPostGetManyResultService, IPostGetResultService} from "types/services/post.service";
+import {IPostModel} from "types/models/post.model";
+import {PageTypeId} from "@constants/pageTypes";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

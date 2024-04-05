@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import {UserController} from "../../controllers/user.controller";
-import {UserSchema} from "../../schemas/user.schema";
-import {UserMiddleware} from "../../middlewares/user.middleware";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
-import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
-import {UserEndPointPermission} from '../../constants/endPointPermissions/user.endPoint.permission';
-import {UserEndPoint} from "../../constants/endPoints/user.endPoint";
+import {UserController} from "@controllers/user.controller";
+import {UserSchema} from "@schemas/user.schema";
+import {UserMiddleware} from "@middlewares/user.middleware";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {PermissionMiddleware} from "@middlewares/validates/permission.middleware";
+import {UserEndPointPermission} from 'constants/endPointPermissions/user.endPoint.permission';
+import {UserEndPoint} from "@constants/endPoints/user.endPoint";
 
 export const userRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const userEndPoint = new UserEndPoint("");

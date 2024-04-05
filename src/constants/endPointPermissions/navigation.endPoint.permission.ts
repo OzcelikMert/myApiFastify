@@ -1,6 +1,6 @@
-import {PermissionId} from "../permissions";
 import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
-import {UserRoleId} from "../userRoles";
+import {PermissionId} from "@constants/permissions";
+import {UserRoleId} from "@constants/userRoles";
 
 const add: IEndPointPermission = {
     permissionId: [PermissionId.NavigationAdd],

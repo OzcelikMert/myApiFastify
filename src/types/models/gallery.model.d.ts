@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose"
-import {GalleryTypeId} from "../../constants/galleryTypeId";
+import {GalleryTypeId} from "@constants/galleryTypeId";
 
 export interface IGalleryModel {
     _id?: string | ObjectId
@@ -7,6 +7,8 @@ export interface IGalleryModel {
     oldName: string
     typeId: GalleryTypeId
     authorId: string | ObjectId
+    sizeKB: number
+    sizeMB: number
     createdAt?: string
     updatedAt?: string
 }

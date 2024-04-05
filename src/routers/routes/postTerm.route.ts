@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import {PostTermSchema} from "../../schemas/postTerm.schema";
-import {PostTermMiddleware} from "../../middlewares/postTerm.middleware";
-import {PostTermController} from "../../controllers/postTerm.controller";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
-import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
-import {PermissionUtil} from '../../utils/permission.util';
-import {PostTermEndPoint} from "../../constants/endPoints/postTerm.endPoint";
+import {PostTermSchema} from "@schemas/postTerm.schema";
+import {PostTermMiddleware} from "@middlewares/postTerm.middleware";
+import {PostTermController} from "@controllers/postTerm.controller";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {PermissionMiddleware} from "@middlewares/validates/permission.middleware";
+import {PermissionUtil} from 'utils/permission.util';
+import {PostTermEndPoint} from "@constants/endPoints/postTerm.endPoint";
 
 export const postTermRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const postTermEndPoint = new PostTermEndPoint("");

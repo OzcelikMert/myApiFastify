@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import Variable from "../library/variable";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {VariableLibrary} from "@library/variable";
 import {
     ISubscriberDeleteManyParamService,
     ISubscriberAddParamService,
@@ -8,10 +8,10 @@ import {
     ISubscriberGetResultService,
     ISubscriberGetParamService,
     ISubscriberDeleteParamService
-} from "../types/services/subscriber.service";
-import {subscriberModel} from "../models/subscriber.model";
-import {ISubscriberModel} from "../types/models/subscriber.model";
-import {subscriberObjectIdKeys} from "../constants/objectIdKeys/subscriber.objectIdKeys";
+} from "types/services/subscriber.service";
+import {subscriberModel} from "@models/subscriber.model";
+import {ISubscriberModel} from "types/models/subscriber.model";
+import {subscriberObjectIdKeys} from "@constants/objectIdKeys/subscriber.objectIdKeys";
 
 const get = async (params: ISubscriberGetParamService) => {
     let filters: mongoose.FilterQuery<ISubscriberModel> = {}
@@ -62,14 +62,14 @@ const getMany = async (params: ISubscriberGetManyParamService) => {
 }
 
 const add = async (params: ISubscriberAddParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, subscriberObjectIdKeys);
 
     return (await subscriberModel.create(params)).toObject()
 }
 
 const delete_ = async (params: ISubscriberDeleteParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, subscriberObjectIdKeys);
 
     let filters: mongoose.FilterQuery<ISubscriberModel> = {}
@@ -91,7 +91,7 @@ const delete_ = async (params: ISubscriberDeleteParamService) => {
 }
 
 const deleteMany = async (params: ISubscriberDeleteManyParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, subscriberObjectIdKeys);
 
     let filters: mongoose.FilterQuery<ISubscriberModel> = {}

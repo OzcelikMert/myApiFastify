@@ -1,10 +1,10 @@
 import * as mongoose from "mongoose";
-import {StatusId} from "../constants/status";
-import {PostTypeId} from "../constants/postTypes";
-import {PostTermTypeId} from "../constants/postTermTypes";
-import {userModel} from "./user.model";
-import {languageModel} from "./language.model";
-import {IPostTermContentModel, IPostTermModel} from "../types/models/postTerm.model";
+import {StatusId} from "@constants/status";
+import {PostTypeId} from "@constants/postTypes";
+import {PostTermTypeId} from "@constants/postTermTypes";
+import {userModel} from "@models/user.model";
+import {languageModel} from "@models/language.model";
+import {IPostTermContentModel, IPostTermModel} from "types/models/postTerm.model";
 
 const schemaContent = new mongoose.Schema<IPostTermContentModel>(
     {

@@ -1,6 +1,6 @@
 import {object, string, number, array, boolean, z, coerce} from 'zod';
-import {StatusId} from "../constants/status";
-import {ZodUtil} from "../utils/zod.util";
+import {StatusId} from "@constants/status";
+import {ZodUtil} from "@utils/zod.util";
 
 const postBody = object({
     mainId: string().optional().default(""),

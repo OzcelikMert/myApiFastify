@@ -1,8 +1,8 @@
 import * as mongoose from "mongoose";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import Variable from "../library/variable";
-import { Config } from "../config";
-import {navigationObjectIdKeys} from "../constants/objectIdKeys/navigation.objectIdKeys";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {VariableLibrary} from "@library/variable";
+import { Config } from "@configs/index";
+import {navigationObjectIdKeys} from "@constants/objectIdKeys/navigation.objectIdKeys";
 import {
     INavigationDeleteManyParamService,
     INavigationAddParamService,
@@ -11,10 +11,10 @@ import {
     INavigationUpdateParamService,
     INavigationUpdateRankParamService,
     INavigationUpdateStatusManyParamService, INavigationGetManyParamService
-} from "../types/services/navigation.service";
-import {navigationModel} from "../models/navigation.model";
-import { StatusId } from "../constants/status";
-import { INavigationModel } from "../types/models/navigation.model";
+} from "types/services/navigation.service";
+import {navigationModel} from "@models/navigation.model";
+import { StatusId } from "@constants/status";
+import { INavigationModel } from "types/models/navigation.model";
 
 const get = async (params: INavigationGetParamService) => {
     let filters: mongoose.FilterQuery<INavigationModel> = {}
@@ -145,14 +145,14 @@ const getMany = async (params: INavigationGetManyParamService) => {
 }
 
 const add = async (params: INavigationAddParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, navigationObjectIdKeys);
 
     return (await navigationModel.create(params)).toObject();
 }
 
 const update = async (params: INavigationUpdateParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, navigationObjectIdKeys);
     let filters: mongoose.FilterQuery<INavigationModel> = {}
 
@@ -187,7 +187,7 @@ const update = async (params: INavigationUpdateParamService) => {
 }
 
 const updateRank = async (params: INavigationUpdateRankParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, navigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<INavigationModel> = {}
@@ -216,7 +216,7 @@ const updateRank = async (params: INavigationUpdateRankParamService) => {
 }
 
 const updateStatusMany = async (params: INavigationUpdateStatusManyParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, navigationObjectIdKeys);
 
     let filters: mongoose.FilterQuery<INavigationModel> = {}

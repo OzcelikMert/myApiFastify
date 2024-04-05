@@ -1,5 +1,5 @@
-import {UserRoleId} from "../userRoles";
 import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
+import {UserRoleId} from "@constants/userRoles";
 
 const getFlags: IEndPointPermission = {
     permissionId: [],

@@ -1,9 +1,9 @@
 import * as mongoose from "mongoose";
-import {IComponentElementContentModel, IComponentElementModel, IComponentModel} from "../types/models/component.model";
-import {userModel} from "./user.model";
-import {ElementTypeId} from "../constants/elementTypes";
-import {languageModel} from "./language.model";
-import {ComponentTypeId} from "../constants/componentTypes";
+import {IComponentElementContentModel, IComponentElementModel, IComponentModel} from "types/models/component.model";
+import {ElementTypeId} from "@constants/elementTypes";
+import {ComponentTypeId} from "@constants/componentTypes";
+import {languageModel} from "@models/language.model";
+import {userModel} from "@models/user.model";
 
 const schemaElementContent = new mongoose.Schema<IComponentElementContentModel>(
     {

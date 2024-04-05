@@ -1,15 +1,14 @@
-import { IAuthPostSchema } from "../schemas/auth.schema";
-import {UserService} from "../services/user.service";
-import {StatusId} from "../constants/status";
-import {LogMiddleware} from "../middlewares/log.middleware";
-import {UserUtil} from "../utils/user.util";
+import { IAuthPostSchema } from "@schemas/auth.schema";
+import {UserService} from "@services/user.service";
+import {StatusId} from "@constants/status";
+import {LogMiddleware} from "@middlewares/log.middleware";
 import { FastifyReply, FastifyRequest } from "fastify";
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {ISessionAuthModel} from "../types/models/sessionAuth.model";
-import {IUserGetResultService} from "../types/services/user.service";
-import {SessionAuthUtil} from "../utils/sessinAuth.util";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {ISessionAuthModel} from "types/models/sessionAuth.model";
+import {IUserGetResultService} from "types/services/user.service";
+import {SessionAuthUtil} from "@utils/sessinAuth.util";
 
 const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

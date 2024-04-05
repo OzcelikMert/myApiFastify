@@ -1,15 +1,15 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {LogMiddleware} from "../middlewares/log.middleware";
-import {SitemapService} from "../services/sitemap.service";
-import {PostTypeId} from "../constants/postTypes";
-import {PostTermTypeId} from "../constants/postTermTypes";
-import {ISitemapGetPostSchema, ISitemapGetPostTermSchema} from "../schemas/sitemap.schema";
+import {ApiResult} from "@library/api/result";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {SitemapService} from "@services/sitemap.service";
+import {PostTypeId} from "@constants/postTypes";
+import {PostTermTypeId} from "@constants/postTermTypes";
+import {ISitemapGetPostSchema, ISitemapGetPostTermSchema} from "@schemas/sitemap.schema";
 import {
     ISitemapGetMapsResultService,
     ISitemapGetPostResultService,
     ISitemapGetPostTermResultService
-} from "../types/services/sitemap.service";
+} from "types/services/sitemap.service";
 
 const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

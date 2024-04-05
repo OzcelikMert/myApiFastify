@@ -1,10 +1,10 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {LogMiddleware} from "./log.middleware";
-import {NavigationService} from "../services/navigation.service";
-import {INavigationPutStatusManySchema, INavigationPutWithIdSchema} from "../schemas/navigation.schema";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {NavigationService} from "@services/navigation.service";
+import {INavigationPutStatusManySchema, INavigationPutWithIdSchema} from "@schemas/navigation.schema";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -18,6 +18,8 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
@@ -41,6 +43,8 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {

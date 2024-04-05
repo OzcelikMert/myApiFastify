@@ -1,6 +1,6 @@
 import {array, boolean, number, object, string, z} from 'zod';
-import {StatusId} from "../constants/status";
-import {ZodUtil, ZodUtilVariableType} from "../utils/zod.util";
+import {StatusId} from "@constants/status";
+import {ZodUtil} from "@utils/zod.util";
 
 const postBody = object({
     title: string().min(1),

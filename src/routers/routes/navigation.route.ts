@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import {NavigationSchema} from "../../schemas/navigation.schema";
-import {NavigationController} from "../../controllers/navigation.controller";
-import {NavigationMiddleware} from "../../middlewares/navigation.middleware";
-import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
-import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {NavigationEndPoint} from "../../constants/endPoints/navigation.endPoint";
-import {NavigationEndPointPermission} from "../../constants/endPointPermissions/navigation.endPoint.permission";
+import {NavigationSchema} from "@schemas/navigation.schema";
+import {NavigationController} from "@controllers/navigation.controller";
+import {NavigationMiddleware} from "@middlewares/navigation.middleware";
+import {PermissionMiddleware} from "@middlewares/validates/permission.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {NavigationEndPoint} from "@constants/endPoints/navigation.endPoint";
+import {NavigationEndPointPermission} from "@constants/endPointPermissions/navigation.endPoint.permission";
 
 export const navigationRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const navigationEndPoint = new NavigationEndPoint("");

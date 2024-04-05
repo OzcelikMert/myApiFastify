@@ -1,9 +1,9 @@
-import {ApiResult} from "../library/api/result";
+import {ApiResult} from "@library/api/result";
 import osu from "node-os-utils";
 import checkDiskSpace from "check-disk-space";
 import os from "os";
-import {Config} from "../config";
-import {LogMiddleware} from "../middlewares/log.middleware";
+import {Config} from "@configs/index";
+import {LogMiddleware} from "@middlewares/log.middleware";
 import {FastifyReply, FastifyRequest} from "fastify";
 
 const get = async (req: FastifyRequest, reply: FastifyReply) => {

@@ -1,18 +1,17 @@
 import * as mongoose from "mongoose";
-import {languageModel} from "./language.model";
+import {languageModel} from "@models/language.model";
 import {
     ISettingContactModel,
     ISettingContactFormModel,
     ISettingModel,
     ISettingSeoContentModel,
     ISettingSocialMediaModel, ISettingECommerceModel, ISettingPathModel, ISettingPathContentModel
-} from "../types/models/setting.model";
-import {CurrencyId} from "../constants/currencyTypes";
+} from "types/models/setting.model";
+import {CurrencyId} from "@constants/currencyTypes";
 
 const schemaPathContent = new mongoose.Schema<ISettingPathContentModel>(
     {
         langId: {type: mongoose.Schema.Types.ObjectId, ref: languageModel, required: true},
-        title: {type: String, default: ""},
         asPath: {type: String, default: ""}
     },
     {timestamps: true}

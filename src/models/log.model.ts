@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import {ILogModel} from "../types/models/log.model";
-import {userModel} from "./user.model";
+import {ILogModel} from "types/models/log.model";
+import {userModel} from "@models/user.model";
 
 const schema = new mongoose.Schema<ILogModel>(
     {

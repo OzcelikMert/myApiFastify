@@ -1,7 +1,7 @@
-import {object, string, number, array, boolean, z} from 'zod';
-import {ElementTypeId} from "../constants/elementTypes";
-import {ComponentTypeId} from "../constants/componentTypes";
-import {ZodUtil} from "../utils/zod.util";
+import {object, string, number, array, z} from 'zod';
+import {ElementTypeId} from "@constants/elementTypes";
+import {ComponentTypeId} from "@constants/componentTypes";
+import {ZodUtil} from "@utils/zod.util";
 
 const postBody = object({
     key: string().min(1),

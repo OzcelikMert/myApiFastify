@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {LogMiddleware} from "../log.middleware";
+import {LogMiddleware} from "@middlewares/log.middleware";
 
 const set = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

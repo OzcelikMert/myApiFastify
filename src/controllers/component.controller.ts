@@ -1,15 +1,15 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {LogMiddleware} from "../middlewares/log.middleware";
-import {IComponentGetResultService} from "../types/services/component.service";
+import {ApiResult} from "@library/api/result";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {IComponentGetResultService} from "types/services/component.service";
 import {
     IComponentDeleteManySchema,
     IComponentGetManySchema,
     IComponentGetWithKeySchema,
     IComponentGetWithIdSchema, IComponentPostSchema, IComponentPutWithIdSchema
-} from "../schemas/component.schema";
-import {ComponentService} from "../services/component.service";
-import {IComponentModel} from "../types/models/component.model";
+} from "@schemas/component.schema";
+import {ComponentService} from "@services/component.service";
+import {IComponentModel} from "types/models/component.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

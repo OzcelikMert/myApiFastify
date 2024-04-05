@@ -1,10 +1,10 @@
 import {FastifyRequest} from "fastify";
-import {IEndPointPermission} from "../types/constants/endPoint.permissions";
-import {PostTypeId} from "../constants/postTypes";
-import {PostEndPointPermission} from "../constants/endPointPermissions/post.endPoint.permission";
-import {EndPoints} from "../constants/endPoints";
-import {userRoles, UserRoleId} from "../constants/userRoles";
-import {PermissionId, permissions} from "../constants/permissions";
+import {IEndPointPermission} from "types/constants/endPoint.permissions";
+import {PostTypeId} from "@constants/postTypes";
+import {PostEndPointPermission} from "@constants/endPointPermissions/post.endPoint.permission";
+import {EndPoints} from "@constants/endPoints";
+import {userRoles, UserRoleId} from "@constants/userRoles";
+import {PermissionId, permissions} from "@constants/permissions";
 
 const getPermissionKeyPrefix = (method: string) => {
     let prefix = "";

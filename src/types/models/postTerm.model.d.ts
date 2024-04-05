@@ -1,7 +1,7 @@
 import { ObjectId } from "mongoose"
-import {PostTypeId} from "../../constants/postTypes";
-import {PostTermTypeId} from "../../constants/postTermTypes";
-import {StatusId} from "../../constants/status";
+import {PostTypeId} from "@constants/postTypes";
+import {PostTermTypeId} from "@constants/postTermTypes";
+import {StatusId} from "@constants/status";
 
 export interface IPostTermModel {
     _id: string | ObjectId

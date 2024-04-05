@@ -1,8 +1,8 @@
 import { FastifyInstance } from 'fastify';
-import {SitemapController} from "../../controllers/sitemap.controller";
-import {SitemapSchema} from "../../schemas/sitemap.schema";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {SitemapEndPoint} from "../../constants/endPoints/sitemap.endPoint";
+import {SitemapController} from "@controllers/sitemap.controller";
+import {SitemapSchema} from "@schemas/sitemap.schema";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {SitemapEndPoint} from "@constants/endPoints/sitemap.endPoint";
 
 export const sitemapRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const sitemapEndPoint = new SitemapEndPoint("");

@@ -1,4 +1,4 @@
-class UserLibrary {
+export class UserLibrary {
     static getIP(request: any) : string {
         let ip = request.headers['x-forwarded-for'] ||
             request.connection.remoteAddress ||
@@ -9,5 +9,3 @@ class UserLibrary {
         return ip[0];
     }
 }
-
-export default UserLibrary;

@@ -1,4 +1,4 @@
-import {UserRoleId} from "../../constants/userRoles";
+import {UserRoleId} from "@constants/userRoles";
 import { ObjectId } from "mongoose"
 
 export interface ISessionAuthUserModel {

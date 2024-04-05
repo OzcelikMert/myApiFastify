@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-class MongoDBHelpers {
+export class MongoDBHelpers {
     static convertToObjectId(string?: any) {
         if(string){
             try {
@@ -32,5 +32,3 @@ class MongoDBHelpers {
         return anyData;
     }
 }
-
-export default MongoDBHelpers;

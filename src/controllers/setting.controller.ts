@@ -1,13 +1,13 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
+import {ApiResult} from "@library/api/result";
 import {
     ISettingGetSchema, ISettingPutContactFormSchema, ISettingPutECommerceSchema,
     ISettingPutGeneralSchema, ISettingPutPathSchema,
     ISettingPutSEOSchema, ISettingPutSocialMediaSchema
-} from "../schemas/setting.schema";
-import {SettingService} from "../services/setting.service";
-import {LogMiddleware} from "../middlewares/log.middleware";
-import {ISettingGetResultService} from "../types/services/setting.service";
+} from "@schemas/setting.schema";
+import {SettingService} from "@services/setting.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {ISettingGetResultService} from "types/services/setting.service";
 
 const get = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

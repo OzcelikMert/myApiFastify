@@ -1,15 +1,15 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {SubscriberService} from "../services/subscriber.service";
-import {LogMiddleware} from "../middlewares/log.middleware";
+import {ApiResult} from "@library/api/result";
+import {SubscriberService} from "@services/subscriber.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
 import {
     ISubscriberDeleteWithIdSchema, ISubscriberDeleteManySchema,
     ISubscriberGetWithIdSchema,
     ISubscriberGetManySchema,
     ISubscriberPostSchema, ISubscriberDeleteWithEmailSchema, ISubscriberGetWithEmailSchema
-} from "../schemas/subscriber.schema";
-import {ISubscriberGetResultService} from "../types/services/subscriber.service";
-import {ISubscriberModel} from "../types/models/subscriber.model";
+} from "@schemas/subscriber.schema";
+import {ISubscriberGetResultService} from "types/services/subscriber.service";
+import {ISubscriberModel} from "types/models/subscriber.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

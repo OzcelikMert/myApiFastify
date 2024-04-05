@@ -1,14 +1,14 @@
 import * as mongoose from "mongoose";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import Variable from "../library/variable";
-import {galleryObjectIdKeys} from "../constants/objectIdKeys/gallery.objectIdKeys";
-import {IGalleryModel} from "../types/models/gallery.model";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {VariableLibrary} from "@library/variable";
+import {galleryObjectIdKeys} from "@constants/objectIdKeys/gallery.objectIdKeys";
+import {IGalleryModel} from "types/models/gallery.model";
 import {
     IGalleryAddParamService, IGalleryDeleteManyParamService,
     IGalleryGetManyParamService, IGalleryGetParamService,
     IGalleryGetResultService
-} from "../types/services/gallery.service";
-import {galleryModel} from "../models/gallery.model";
+} from "types/services/gallery.service";
+import {galleryModel} from "@models/gallery.model";
 
 const get = async (params: IGalleryGetParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {}
@@ -77,7 +77,7 @@ const getMany = async (params: IGalleryGetManyParamService) => {
 }
 
 const add = async (params: IGalleryAddParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, galleryObjectIdKeys);
 
     return (await galleryModel.create(params)).toObject();

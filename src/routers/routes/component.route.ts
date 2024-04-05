@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
-import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {ComponentEndPoint} from "../../constants/endPoints/component.endPoint";
-import {ComponentSchema} from "../../schemas/component.schema";
-import {ComponentController} from "../../controllers/component.controller";
-import {ComponentEndPointPermission} from "../../constants/endPointPermissions/component.endPoint.permission";
-import {ComponentMiddleware} from "../../middlewares/component.middleware";
+import {PermissionMiddleware} from "@middlewares/validates/permission.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {ComponentEndPoint} from "@constants/endPoints/component.endPoint";
+import {ComponentSchema} from "@schemas/component.schema";
+import {ComponentController} from "@controllers/component.controller";
+import {ComponentEndPointPermission} from "@constants/endPointPermissions/component.endPoint.permission";
+import {ComponentMiddleware} from "@middlewares/component.middleware";
 
 export const componentRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const componentEndPoint = new ComponentEndPoint("");

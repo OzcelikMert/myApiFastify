@@ -3,11 +3,16 @@ import {
     ISettingModel, ISettingECommerceModel,
     ISettingSeoContentModel, ISettingSocialMediaModel, ISettingPathModel, ISettingPathContentModel
 } from "../models/setting.model";
-import {SettingProjectionKeys} from "../../constants/settingProjections";
+import {SettingProjectionKeys} from "@constants/settingProjections";
+
+export type ISettingPathGetResultService = {
+    contents?: ISettingPathContentModel | ISettingPathContentModel[]
+} & Omit<ISettingPathModel, "contents">
 
 export type ISettingGetResultService = {
     seoContents?: ISettingSeoContentModel | ISettingSeoContentModel[]
-} & Omit<ISettingModel, "seoContents">
+    paths?: ISettingPathGetResultService | ISettingPathGetResultService[]
+} & Omit<ISettingModel, "seoContents"|"paths">
 
 export type ISettingGetParamService = {
     langId?: string
@@ -16,7 +21,10 @@ export type ISettingGetParamService = {
 
 export type ISettingAddParamService = {
     seoContents?: ISettingSeoContentModel
-} & Omit<ISettingModel, "_id" | "seoContents">
+    contactForms?: ISettingContactFormModel[]
+    socialMedia?: ISettingSocialMediaModel[]
+    paths?: ISettingPathModel
+} & Omit<ISettingModel, "_id" | "seoContents"|"contactForms"|"socialMedia"|"paths">
 
 export type ISettingUpdateGeneralParamService = {
 

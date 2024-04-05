@@ -2,7 +2,13 @@
 Api for My Admin Panel
 
 Things to do:
+- configdeki timer icin her modelin timerini timers klasorunun icinde olustur
+- servislerde langId icin filter olustur eger gonderilen langId yoksa ise default langId yi cekicek sekilde filter querysi yaz (tum contentsleri cekip oradan dongu ile idyi bulma bunu mongo db filterinde yap)
+- image yukleniyormu diye kontrol et (basePath degisti belki hataya sebep oluyordur)
 
++ imagelerde statla imagenin bilgilerini cektikten sonra dbye kaydet. her resim icin stat bilgilerini tekrar tekrar cekme
++ projedeki import pathlerini tsconfigde tanimla ve tanimli haliyle cek
++ midlewarede ilk select sorgularindan sonra gelen degeri bir degiskene aktar ve diger middlewarelarde o degiskenden cek
 + settinge dynamic pathler icin bir model ve route yap (sadece super admin ekleyip guncelleyebilsin)
 + statusu pending olan postlari kontrol et tarihi gelenleri statuslarini active olarak guncelle (bunu timer veya farkli bir yol ile yap otomatik guncelleme yapsin)
 + page type olarak super admin disindaki kullanicilar sadece default page typi ekleyebilsin

@@ -1,11 +1,12 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {ViewService} from "../services/view.service";
-import Variable, {DateMask} from "../library/variable";
-import {LogMiddleware} from "./log.middleware";
-import {IViewPostSchema} from "../schemas/view.schema";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {ViewService} from "@services/view.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {IViewPostSchema} from "@schemas/view.schema";
+import {VariableLibrary} from "@library/variable";
+import {DateMask} from "@library/variable/date";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -13,7 +14,7 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let reqData = req as IViewPostSchema;
 
-        let url = Variable.isEmpty(reqData.body.url) ? "/" : reqData.body.url;
+        let url = VariableLibrary.isEmpty(reqData.body.url) ? "/" : reqData.body.url;
 
         let dateStart = new Date(new Date().getStringWithMask(DateMask.DATE)),
             dateEnd = new Date(new Date().getStringWithMask(DateMask.DATE));
@@ -37,20 +38,7 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
         }
     });
 }
-const checkAndDeleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await LogMiddleware.error(req, reply, async () => {
-        let dateEnd = new Date();
-        dateEnd.addDays(-7);
-
-        let serviceResult = await ViewService.get({dateEnd: dateEnd});
-
-        if (serviceResult) {
-            await ViewService.deleteMany({dateEnd: dateEnd})
-        }
-    });
-}
 
 export const ViewMiddleware = {
-    check: check,
-    checkAndDeleteMany: checkAndDeleteMany
+    check: check
 };

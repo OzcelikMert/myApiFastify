@@ -1,12 +1,11 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {UserService} from "../services/user.service";
-import {userRoles} from "../constants/userRoles";
-import {LogMiddleware} from "./log.middleware";
-import {IUserPutWithIdSchema, IUserPutPasswordSchema} from "../schemas/user.schema";
-import {PermissionUtil} from "../utils/permission.util";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {UserService} from "@services/user.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {IUserPutWithIdSchema, IUserPutPasswordSchema} from "@schemas/user.schema";
+import {PermissionUtil} from "@utils/permission.util";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -22,6 +21,8 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {

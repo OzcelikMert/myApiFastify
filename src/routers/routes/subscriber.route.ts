@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import {SubscriberSchema} from "../../schemas/subscriber.schema";
-import {SubscriberController} from "../../controllers/subscriber.controller";
-import {SubscribeMiddleware} from "../../middlewares/subscriber.middleware";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
-import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
-import {SubscriberEndPoint} from "../../constants/endPoints/subscriber.endPoint";
-import {SubscriberEndPointPermission} from "../../constants/endPointPermissions/subscriber.endPoint.permission";
+import {SubscriberSchema} from "@schemas/subscriber.schema";
+import {SubscriberController} from "@controllers/subscriber.controller";
+import {SubscribeMiddleware} from "@middlewares/subscriber.middleware";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {PermissionMiddleware} from "@middlewares/validates/permission.middleware";
+import {SubscriberEndPoint} from "@constants/endPoints/subscriber.endPoint";
+import {SubscriberEndPointPermission} from "@constants/endPointPermissions/subscriber.endPoint.permission";
 
 export const subscriberRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const subscriberEndPoint = new SubscriberEndPoint("");

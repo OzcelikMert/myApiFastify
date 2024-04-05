@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {ApiResult} from "../../library/api/result";
-import {ApiErrorCodes} from "../../library/api/errorCodes";
-import {ApiStatusCodes} from "../../library/api/statusCodes";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
 import {ZodSchema} from "zod";
 
 const check = (schema: ZodSchema) => async (

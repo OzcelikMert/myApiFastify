@@ -1,14 +1,13 @@
-import {DateMask} from "./date";
 import string from "./string";
 const { createHash } = require('crypto');
 
-enum FilterTypes {
+export enum FilterTypes {
     EMAIL,
     INT,
     FLOAT
 }
 
-class Variable{
+export class VariableLibrary {
     static clearAllScriptTags<T>(data: any, expectKeys?: string[]): T {
         for (let key in data) {
             if (expectKeys && expectKeys.includes(key)) continue;
@@ -54,7 +53,7 @@ class Variable{
         return true;
     }
     static isNotNull(...variable: any[]){
-        return !Variable.isNull(variable);
+        return !VariableLibrary.isNull(variable);
     }
     static setDefault(variable: any, default_value: any) : any{
         return (this.isSet(variable)) ? variable() : default_value;
@@ -86,12 +85,6 @@ class Variable{
     }
 }
 
-export {
-    DateMask,
-    FilterTypes
-}
-
-export default Variable;
 
 
 

@@ -1,22 +1,22 @@
+import * as Declaration from 'types/declaration'
+import "@library/variable/array"
+import "@library/variable/string"
+import "@library/variable/number"
+import "@library/variable/date"
+import "@library/variable/math"
 import fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyFormBody from '@fastify/formbody';
 import fastifyCompress from '@fastify/compress';
 import fastifyMultipart from '@fastify/multipart';
-import InitConfig from "./config";
 import chalk from 'chalk';
-import {routers} from "./routers";
 import config from "config";
-
-import * as Declaration from './types/declaration'
-import "./library/variable/array"
-import "./library/variable/string"
-import "./library/variable/number"
-import "./library/variable/date"
-import "./library/variable/math"
-import {ViewInitMiddleware} from "./middlewares/init/view.init.middleware";
-import {SessionAuthMiddleware} from "./middlewares/validates/sessionAuth.middleware";
-import {RequestInitMiddleware} from "./middlewares/init/request.init.middleware";
+import {routers} from "@routers/index";
+import InitConfig from "@configs/index";
+import {ViewInitMiddleware} from "@middlewares/init/view.init.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {RequestInitMiddleware} from "@middlewares/init/request.init.middleware";
+import {Timers} from "@timers/index";
 
 const port = config.get("serverPort") as number;
 const trafficMBLimit = config.get("serverTrafficMBLimit") as number || 2;
@@ -53,6 +53,8 @@ console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
     server.addHook('preHandler', SessionAuthMiddleware.reload);
 
     await server.register(routers);
+
+    Timers.iniLongTimer();
 
     server.listen({port: port}, () => {
         console.log(chalk.cyan(`=========  SERVER STARTED =========\n`));

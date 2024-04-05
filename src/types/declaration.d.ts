@@ -1,4 +1,4 @@
-import {ISessionAuthModel} from "./models/sessionAuth.model";
+import {ISessionAuthModel} from "types/models/sessionAuth.model";
 import {Session} from "@fastify/secure-session";
 
 declare module "*.png";
@@ -10,5 +10,6 @@ declare module 'fastify' {
     export interface FastifyRequest {
         sessionAuth?: Session<ISessionAuthModel>
         isFromAdminPanel: boolean
+        cachedServiceResult: any
     }
 }

@@ -4,20 +4,19 @@ import fastifyCookie from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
 import http from "http";
 import https from "https";
-import sessionAuthConfig from "./session/session.auth.config";
-import {IConfig} from "../types/config";
-import dbConnect from "./db";
-import {UserService} from "../services/user.service";
-import {UserRoleId} from "../constants/userRoles";
-import {StatusId} from "../constants/status";
-import {LanguageService} from "../services/language.service";
-import {SettingService} from "../services/setting.service";
 import * as path from "path"
 import {generate} from "generate-password";
 import chalk from "chalk";
 import fs from "fs";
-import {PathUtil} from "../utils/path.util";
-import {PostService} from "../services/post.service";
+import {IConfig} from "types/config";
+import {UserService} from "@services/user.service";
+import {UserRoleId} from "@constants/userRoles";
+import {StatusId} from "@constants/status";
+import {LanguageService} from "@services/language.service";
+import {SettingService} from "@services/setting.service";
+import {PathUtil} from "@utils/path.util";
+import {sessionAuthConfig} from "@configs/session/session.auth.config";
+import dbConnect from "@configs/db";
 
 let Config: IConfig = {
     passwordSalt: "_@QffsDh14Q",
@@ -40,7 +39,6 @@ let Config: IConfig = {
 
 class InitConfig {
     private server: FastifyInstance;
-    private timerHour = 2;
 
     constructor(server: FastifyInstance) {
         this.server = server;
@@ -56,7 +54,6 @@ class InitConfig {
             await this.checkSuperAdminUser();
             await this.checkLanguages();
             await this.checkSettings();
-            this.initTimer();
             resolve();
         });
     }
@@ -150,41 +147,10 @@ class InitConfig {
     private async checkSettings() {
         let settings = await SettingService.get({});
         if (!settings) {
-            await SettingService.add({
-                contactForms: [],
-                socialMedia: [],
-            });
+            await SettingService.add({});
             console.log(chalk.green(`#Setting`))
             console.log(chalk.blue(`- Created`))
         }
-    }
-
-    private async initTimer() {
-        console.log(chalk.green(`#Timer Created ${new Date().toLocaleString()}`));
-        setTimeout(async () => {
-            console.log(chalk.blue(`- Timer Started`))
-            console.time(`configTimer`)
-            let date = new Date();
-
-            /* Check Pending Posts */
-            console.log(chalk.gray(`- Check Pending Posts`));
-            let pendingPostServiceResult = await PostService.getMany({
-                statusId: StatusId.Pending,
-                dateStart: date
-            })
-
-            if(pendingPostServiceResult.length > 0){
-                await PostService.updateStatusMany({
-                    _id: pendingPostServiceResult.map(pendingPost => pendingPost._id.toString()),
-                    statusId: StatusId.Active
-                })
-                console.log(chalk.gray(`- Found Pending Posts ${pendingPostServiceResult.length} and they have activated!`));
-            }
-
-            console.timeEnd(`configTimer`);
-            console.log(chalk.blue(`- Timer Finished`))
-            this.initTimer();
-        }, (1000 * 60 * 60) * this.timerHour)
     }
 }
 

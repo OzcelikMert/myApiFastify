@@ -1,16 +1,16 @@
 import * as mongoose from "mongoose";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import {Config} from "../config";
-import Variable from "../library/variable";
+import {Config} from "@configs/index";
 import {
     IComponentAddParamService, IComponentDeleteManyParamService,
     IComponentGetManyParamService,
     IComponentGetParamService,
     IComponentGetResultService, IComponentUpdateParamService
-} from "../types/services/component.service";
-import {IComponentModel} from "../types/models/component.model";
-import {componentObjectIdKeys} from "../constants/objectIdKeys/component.objectIdKeys";
-import {componentModel} from "../models/component.model";
+} from "types/services/component.service";
+import {IComponentModel} from "types/models/component.model";
+import {componentObjectIdKeys} from "@constants/objectIdKeys/component.objectIdKeys";
+import {componentModel} from "@models/component.model";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {VariableLibrary} from "@library/variable";
 
 const get = async (params: IComponentGetParamService) => {
     let filters: mongoose.FilterQuery<IComponentModel> = {}
@@ -106,7 +106,7 @@ const getMany = async (params: IComponentGetManyParamService) => {
 }
 
 const add = async (params: IComponentAddParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
 
     return (await componentModel.create(params)).toObject()
@@ -114,7 +114,7 @@ const add = async (params: IComponentAddParamService) => {
 }
 
 const update = async (params: IComponentUpdateParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IComponentModel> = {}

@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import {languageModel} from "./language.model";
-import {IViewModel} from "../types/models/view.model";
+import {languageModel} from "@models/language.model";
+import {IViewModel} from "types/models/view.model";
 
 const schema = new mongoose.Schema<IViewModel>(
     {

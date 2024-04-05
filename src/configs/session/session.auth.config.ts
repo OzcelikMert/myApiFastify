@@ -7,7 +7,7 @@ export const sessionAuthTTL = 60 * 60;
 export const sessionAuthKey = crypto.randomBytes(32);
 export const sessionAuthRefreshSeconds = 120;
 
-const sessionAuthConfig = {
+export const sessionAuthConfig = {
     key: sessionAuthKey,
     secret: crypto.randomBytes(32).toString('hex'),
     salt:  "ShMf250ld@__45s1",
@@ -38,5 +38,3 @@ const sessionAuthConfig = {
         collection: sessionAuthModel,
     },*/
 }
-
-export default sessionAuthConfig;

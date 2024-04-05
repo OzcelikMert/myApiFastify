@@ -1,5 +1,5 @@
-import {IUserPopulateService} from "./user.service";
-import {IPostTermPopulateService} from "./postTerm.service";
+import {IUserPopulateService} from "../services/user.service";
+import {IPostTermPopulateService} from "../services/postTerm.service";
 import {
     IPostContentModel,
     IPostModel,
@@ -7,11 +7,11 @@ import {
     IPostECommerceVariationContentModel,
     IPostECommerceVariationModel
 } from "../models/post.model";
-import {PostTypeId} from "../../constants/postTypes";
-import {PageTypeId} from "../../constants/pageTypes";
-import {StatusId} from "../../constants/status";
+import {PostTypeId} from "@constants/postTypes";
+import {PageTypeId} from "@constants/pageTypes";
+import {StatusId} from "@constants/status";
 import {IComponentModel} from "../models/component.model";
-import {PostSortTypeId} from "../../constants/postSortTypes";
+import {PostSortTypeId} from "@constants/postSortTypes";
 
 export interface IPostAlternateService {
     langId: string

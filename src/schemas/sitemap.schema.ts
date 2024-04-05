@@ -1,7 +1,7 @@
-import {object, number, z} from 'zod';
-import {PostTermTypeId} from "../constants/postTermTypes";
-import {PostTypeId} from "../constants/postTypes";
-import {ZodUtil} from "../utils/zod.util";
+import {object, z} from 'zod';
+import {PostTermTypeId} from "@constants/postTermTypes";
+import {PostTypeId} from "@constants/postTypes";
+import {ZodUtil} from "@utils/zod.util";
 
 const getPostTermSchema = object({
     query: object({

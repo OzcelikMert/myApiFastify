@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import {SettingSchema} from "../../schemas/setting.schema";
-import {SettingController} from "../../controllers/setting.controller";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
-import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
-import {SettingEndPoint} from "../../constants/endPoints/setting.endPoint";
-import {SettingEndPointPermission} from "../../constants/endPointPermissions/setting.endPoint.permission";
-import {SettingMiddleware} from "../../middlewares/setting.middleware";
+import {SettingSchema} from "@schemas/setting.schema";
+import {SettingController} from "@controllers/setting.controller";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {PermissionMiddleware} from "@middlewares/validates/permission.middleware";
+import {SettingEndPoint} from "@constants/endPoints/setting.endPoint";
+import {SettingEndPointPermission} from "@constants/endPointPermissions/setting.endPoint.permission";
+import {SettingMiddleware} from "@middlewares/setting.middleware";
 
 export const settingRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const settingEndPoint = new SettingEndPoint("");

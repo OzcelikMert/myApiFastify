@@ -1,21 +1,21 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
-import {DateMask} from "../library/variable"
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import fs, {Stats} from "fs";
-import {Config} from "../config";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import fs from "fs";
+import {Config} from "@configs/index";
 import path from "path";
 import sharp from "sharp";
 import multer from "fastify-multer";
-import {IGalleryDeleteManySchema, IGalleryGetManySchema} from "../schemas/gallery.schema";
-import {LogMiddleware} from "../middlewares/log.middleware";
-import {GalleryService} from "../services/gallery.service";
-import {PermissionUtil} from "../utils/permission.util";
-import {UserRoleId} from "../constants/userRoles";
-import {GalleryTypeId} from "../constants/galleryTypeId";
-import {IGalleryGetResultService, IGalleryImageProperties} from "../types/services/gallery.service";
-import {IGalleryModel} from "../types/models/gallery.model";
+import {IGalleryDeleteManySchema, IGalleryGetManySchema} from "@schemas/gallery.schema";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {GalleryService} from "@services/gallery.service";
+import {PermissionUtil} from "@utils/permission.util";
+import {UserRoleId} from "@constants/userRoles";
+import {GalleryTypeId} from "@constants/galleryTypeId";
+import {IGalleryGetResultService, IGalleryImageProperties} from "types/services/gallery.service";
+import {IGalleryModel} from "types/models/gallery.model";
+import {DateMask} from "@library/variable/date";
 
 const upload: any = multer({
     storage: multer.memoryStorage(),
@@ -33,9 +33,11 @@ const upload: any = multer({
 async function getImageProperties(name: string) {
     return new Promise<IGalleryImageProperties>(resolve => {
         fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
+            const sizeKB = Number((stats.size / 1024).toFixed(2));
+            const sizeMB = Number((stats.size / (1024 * 1024)).toFixed(2));
             resolve({
-                sizeKB: Number(stats.size) / 1024,
-                sizeMB: Number(stats.size) / (1024 * 1024),
+                sizeKB,
+                sizeMB,
             });
         })
     });
@@ -43,7 +45,7 @@ async function getImageProperties(name: string) {
 
 const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<(IGalleryGetResultService & IGalleryImageProperties)[]>();
+        let apiResult = new ApiResult<(IGalleryGetResultService)[]>();
         apiResult.data = [];
 
         const reqData = req as IGalleryGetManySchema;
@@ -55,8 +57,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
         for (const item of gallery) {
             apiResult.data?.push({
-                ...item,
-                ...(await getImageProperties(item.name))
+                ...item
             });
         }
 
@@ -66,7 +67,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<(IGalleryModel & IGalleryImageProperties)[]>();
+        let apiResult = new ApiResult<(IGalleryModel)[]>();
         apiResult.data = [];
 
         function newName() {
@@ -105,17 +106,20 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                             });
                         })
 
+                        let imageProperties = await getImageProperties(name);
+
                         let insertedData = await GalleryService.add({
                             oldName: file.originalname,
                             name: name,
                             authorId: req.sessionAuth!.user!.userId,
-                            typeId: GalleryTypeId.Image
+                            typeId: GalleryTypeId.Image,
+                            sizeKB: imageProperties.sizeKB,
+                            sizeMB: imageProperties.sizeMB
                         });
 
                         if(insertedData){
                             apiResult.data?.push({
-                                ...insertedData,
-                                ...(await getImageProperties(insertedData.name))
+                                ...insertedData
                             });
                         }
                     }

@@ -1,6 +1,6 @@
-import {PermissionId} from "../permissions";
-import {UserRoleId} from "../userRoles";
 import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
+import {PermissionId} from "@constants/permissions";
+import {UserRoleId} from "@constants/userRoles";
 
 const addSlider: IEndPointPermission = {
     permissionId: [PermissionId.SliderAdd],

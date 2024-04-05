@@ -1,6 +1,6 @@
 import {object, string, array, z} from 'zod';
-import {GalleryTypeId} from "../constants/galleryTypeId";
-import {ZodUtil} from "../utils/zod.util";
+import {GalleryTypeId} from "@constants/galleryTypeId";
+import {ZodUtil} from "@utils/zod.util";
 
 const getManySchema = object({
     query: object({

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {languageModel} from "../models/language.model";
+import {languageModel} from "@models/language.model";
 import {
     ILanguageGetResultService,
     ILanguageGetManyParamService,
@@ -8,11 +8,11 @@ import {
     ILanguageUpdateParamService,
     ILanguageUpdateRankParamService,
     ILanguageUpdateIsDefaultManyParamService
-} from "../types/services/language.service";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import Variable from "../library/variable";
-import {languageObjectIdKeys} from "../constants/objectIdKeys/language.objectIdKeys";
-import { ILanguageModel } from "../types/models/language.model";
+} from "types/services/language.service";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {VariableLibrary} from "@library/variable";
+import {languageObjectIdKeys} from "@constants/objectIdKeys/language.objectIdKeys";
+import { ILanguageModel } from "types/models/language.model";
 
 const get = async (params: ILanguageGetParamService) => {
     let filters: mongoose.FilterQuery<ILanguageModel> = {}
@@ -75,7 +75,7 @@ const getMany = async (params: ILanguageGetManyParamService) => {
 }
 
 const add = async (params: ILanguageAddParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
     if(params.locale){
@@ -91,7 +91,7 @@ const add = async (params: ILanguageAddParamService) => {
 
 const update = async (params: ILanguageUpdateParamService) => {
     let filters: mongoose.FilterQuery<ILanguageModel> = {}
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
     if (params._id) {
@@ -124,7 +124,7 @@ const update = async (params: ILanguageUpdateParamService) => {
 
 const updateRank = async (params: ILanguageUpdateRankParamService) => {
     let filters: mongoose.FilterQuery<ILanguageModel> = {}
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
     if (params._id) {
@@ -150,7 +150,7 @@ const updateRank = async (params: ILanguageUpdateRankParamService) => {
 
 const updateIsDefaultMany = async (params: ILanguageUpdateIsDefaultManyParamService) => {
     let filters: mongoose.FilterQuery<ILanguageModel> = {}
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
     if (params._id) {

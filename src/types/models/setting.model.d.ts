@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose"
-import {CurrencyId} from "../../constants/currencyTypes";
+import {CurrencyId} from "@constants/currencyTypes";
 
 export interface ISettingModel {
     _id: string | ObjectId

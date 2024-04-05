@@ -1,12 +1,13 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {LogMiddleware} from "./log.middleware";
-import {IComponentDeleteManySchema, IComponentPutWithIdSchema} from "../schemas/component.schema";
-import {ComponentService} from "../services/component.service";
-import {PermissionUtil} from "../utils/permission.util";
-import {UserRoleId} from "../constants/userRoles";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {IComponentDeleteManySchema, IComponentPutWithIdSchema} from "@schemas/component.schema";
+import {ComponentService} from "@services/component.service";
+import {PermissionUtil} from "@utils/permission.util";
+import {UserRoleId} from "@constants/userRoles";
+import {IComponentGetResultService} from "types/services/component.service";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -20,6 +21,8 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
@@ -43,6 +46,8 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
@@ -57,9 +62,9 @@ const checkPermissionWithId = async (req: FastifyRequest, reply: FastifyReply) =
 
         let reqData = req as IComponentPutWithIdSchema;
 
-        let serviceResult = await ComponentService.get({_id: reqData.params._id});
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
+            let serviceResult = req.cachedServiceResult as IComponentGetResultService;
 
-        if (serviceResult && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
             let reqToCheck = {
                 key: reqData.body.key,
                 typeId: reqData.body.typeId,

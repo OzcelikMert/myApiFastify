@@ -1,5 +1,5 @@
-import {IPermission} from "../types/constants/permissions";
-import {UserRoleId} from "./userRoles";
+import {IPermission} from "types/constants/permissions";
+import {UserRoleId} from "@constants/userRoles";
 
 export enum PermissionId {
     BlogAdd = 1,

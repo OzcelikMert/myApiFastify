@@ -1,17 +1,17 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {ApiResult} from "../library/api/result";
+import {ApiResult} from "@library/api/result";
 import {
     ILanguageGetWithIdSchema,
     ILanguageGetManySchema,
     ILanguagePostSchema, ILanguagePutWithIdSchema, ILanguagePutRankWithIdSchema, ILanguageGetDefaultSchema
-} from "../schemas/language.schema";
-import {LanguageService} from "../services/language.service";
-import {LogMiddleware} from "../middlewares/log.middleware";
+} from "@schemas/language.schema";
+import {LanguageService} from "@services/language.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
 import fs from "fs";
-import {Config} from "../config";
+import {Config} from "@configs/index";
 import path from "path";
-import {ILanguageGetResultService} from "../types/services/language.service";
-import {ILanguageModel} from "../types/models/language.model";
+import {ILanguageGetResultService} from "types/services/language.service";
+import {ILanguageModel} from "types/models/language.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

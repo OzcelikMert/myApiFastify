@@ -1,12 +1,12 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {IMailerPostSchema} from "../schemas/mailer.schema";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {IMailerPostSchema} from "@schemas/mailer.schema";
 import * as NodeMailer from "nodemailer";
-import {SettingService} from "../services/setting.service";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import {LogMiddleware} from "../middlewares/log.middleware";
+import {SettingService} from "@services/setting.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
 
 const send = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

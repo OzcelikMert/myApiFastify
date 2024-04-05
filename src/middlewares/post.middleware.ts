@@ -1,14 +1,15 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {PostService} from "../services/post.service";
-import {LogMiddleware} from "./log.middleware";
-import {IPostDeleteManySchema, IPostPutWithIdSchema} from "../schemas/post.schema";
-import {UserRoleId} from "../constants/userRoles";
-import {PermissionUtil} from "../utils/permission.util";
-import {PostTypeId} from "../constants/postTypes";
-import {PageTypeId} from "../constants/pageTypes";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {PostService} from "@services/post.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {IPostDeleteManySchema, IPostPutWithIdSchema} from "@schemas/post.schema";
+import {UserRoleId} from "@constants/userRoles";
+import {PermissionUtil} from "@utils/permission.util";
+import {PostTypeId} from "@constants/postTypes";
+import {PageTypeId} from "@constants/pageTypes";
+import {IPostGetManyResultService, IPostGetResultService} from "types/services/post.service";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -25,6 +26,8 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
@@ -51,6 +54,8 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
@@ -66,20 +71,15 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
         let reqData = req as IPostPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let serviceResult = await PostService.get({
-                _id: reqData.params._id,
-                typeId: reqData.body.typeId
-            });
+            let serviceResult = req.cachedServiceResult as IPostGetResultService;
 
-            if (serviceResult) {
-                if (
-                    req.sessionAuth!.user?.userId.toString() != serviceResult.authorId._id.toString() &&
-                    !serviceResult.authors?.some(author => author._id == req.sessionAuth!.user?.userId.toString())
-                ) {
-                    apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.noPerm;
-                    apiResult.statusCode = ApiStatusCodes.forbidden;
-                }
+            if (
+                req.sessionAuth!.user?.userId.toString() != serviceResult.authorId._id.toString() &&
+                !serviceResult.authors?.some(author => author._id == req.sessionAuth!.user?.userId.toString())
+            ) {
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.noPerm;
+                apiResult.statusCode = ApiStatusCodes.forbidden;
             }
         }
 
@@ -96,19 +96,14 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IPostDeleteManySchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let serviceResult = await PostService.getMany({
-                _id: reqData.body._id,
-                typeId: [reqData.body.typeId]
-            });
+            let serviceResult = req.cachedServiceResult as IPostGetManyResultService[];
 
-            if (serviceResult) {
-                for (const post of serviceResult) {
-                    if (post.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
-                        apiResult.status = false;
-                        apiResult.errorCode = ApiErrorCodes.noPerm;
-                        apiResult.statusCode = ApiStatusCodes.forbidden;
-                        break;
-                    }
+            for (const post of serviceResult) {
+                if (post.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.noPerm;
+                    apiResult.statusCode = ApiStatusCodes.forbidden;
+                    break;
                 }
             }
         }
@@ -126,27 +121,22 @@ const checkAuthorsWithId = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IPostPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let serviceResult = await PostService.get({
-                _id: reqData.params._id,
-                typeId: reqData.body.typeId
-            });
+            let serviceResult = req.cachedServiceResult as IPostGetResultService;
 
-            if (serviceResult) {
-                if(
-                    // Check is author
-                    req.sessionAuth!.user?.userId.toString() != serviceResult.authorId._id.toString() &&
-                    // Check post is authors data
-                    reqData.body.authors &&
-                    // Check request authors are same with service result authors
-                    (
-                        reqData.body.authors.length != serviceResult.authors?.length ||
-                        !reqData.body.authors.every(reqAuthor => serviceResult?.authors?.some(serviceAuthor => serviceAuthor._id == reqAuthor))
-                    )
-                ){
-                    apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.noPerm;
-                    apiResult.statusCode = ApiStatusCodes.forbidden;
-                }
+            if(
+                // Check is author
+                req.sessionAuth!.user?.userId.toString() != serviceResult.authorId._id.toString() &&
+                // Check post authors data
+                reqData.body.authors &&
+                // Check request authors are same with service result authors
+                (
+                    reqData.body.authors.length != serviceResult.authors?.length ||
+                    !reqData.body.authors.every(reqAuthor => serviceResult?.authors?.some(serviceAuthor => serviceAuthor._id == reqAuthor))
+                )
+            ){
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.noPerm;
+                apiResult.statusCode = ApiStatusCodes.forbidden;
             }
         }
 
@@ -165,12 +155,9 @@ const checkPageTypeIdWithId = async (req: FastifyRequest, reply: FastifyReply) =
         if(reqData.body.typeId == PostTypeId.Page){
             if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
                 if(reqData.params._id){
-                    let serviceResult = await PostService.get({
-                        _id: reqData.params._id,
-                        typeId: reqData.body.typeId
-                    });
+                    let serviceResult = req.cachedServiceResult as IPostGetResultService;
 
-                    if (serviceResult && serviceResult.pageTypeId != reqData.body.pageTypeId) {
+                    if (serviceResult.pageTypeId != reqData.body.pageTypeId) {
                         apiResult.status = false;
                         apiResult.errorCode = ApiErrorCodes.noPerm;
                         apiResult.statusCode = ApiStatusCodes.forbidden;

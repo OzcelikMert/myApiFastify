@@ -1,6 +1,6 @@
-import {IUserPopulateService} from "./user.service";
+import {IUserPopulateService} from "../services/user.service";
 import {INavigationContentModel, INavigationModel} from "../models/navigation.model";
-import {StatusId} from "../../constants/status";
+import {StatusId} from "@constants/status";
 
 export interface INavigationPopulateService {
     _id:  string

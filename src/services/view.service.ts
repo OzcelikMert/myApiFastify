@@ -1,14 +1,14 @@
 import * as mongoose from "mongoose";
-import {viewModel} from "../models/view.model";
+import {viewModel} from "@models/view.model";
 import {
     IViewDeleteManyParamService,
     IViewAddParamService,
     IViewGetParamService, IViewGetTotalResultService, IViewGetResultService
-} from "../types/services/view.service";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import Variable from "../library/variable";
-import {viewObjectIdKeys} from "../constants/objectIdKeys/view.objectIdKeys";
-import {IViewModel} from "../types/models/view.model";
+} from "types/services/view.service";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {VariableLibrary} from "@library/variable";
+import {viewObjectIdKeys} from "@constants/objectIdKeys/view.objectIdKeys";
+import {IViewModel} from "types/models/view.model";
 
 const get = async (params: IViewGetParamService) => {
     let filters: mongoose.FilterQuery<IViewModel> = {}
@@ -124,7 +124,7 @@ const getTotalWithCountry = async (params: IViewGetParamService) => {
 }
 
 const add = async (params: IViewAddParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, viewObjectIdKeys);
 
     return (await viewModel.create(params)).toObject()

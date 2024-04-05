@@ -1,9 +1,9 @@
 import * as mongoose from "mongoose";
-import {userModel} from "./user.model";
-import {StatusId} from "../constants/status";
-import {PostTypeId} from "../constants/postTypes";
-import {languageModel} from "./language.model";
-import {postTermModel} from "./postTerm.model";
+import {userModel} from "@models/user.model";
+import {StatusId} from "@constants/status";
+import {PostTypeId} from "@constants/postTypes";
+import {languageModel} from "@models/language.model";
+import {postTermModel} from "@models/postTerm.model";
 import {
     IPostBeforeAndAfterModel,
     IPostContentButtonModel,
@@ -17,10 +17,10 @@ import {
     IPostECommerceVariationContentModel,
     IPostECommerceVariationModel,
     IPostECommerceVariationSelectedModel
-} from "../types/models/post.model";
-import {ProductTypeId} from "../constants/productTypes";
-import {AttributeTypeId} from "../constants/attributeTypes";
-import {componentModel} from "./component.model";
+} from "types/models/post.model";
+import {ProductTypeId} from "@constants/productTypes";
+import {AttributeTypeId} from "@constants/attributeTypes";
+import {componentModel} from "@models/component.model";
 
 const schemaPostECommerceVariationContent = new mongoose.Schema<IPostECommerceVariationContentModel>(
     {

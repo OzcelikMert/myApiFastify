@@ -1,11 +1,11 @@
 import {object, string, number, array, boolean, z} from 'zod';
-import {ProductTypeId} from "../constants/productTypes";
-import {StatusId} from "../constants/status";
-import {PostTypeId} from "../constants/postTypes";
-import {PageTypeId} from "../constants/pageTypes";
-import {AttributeTypeId} from "../constants/attributeTypes";
-import {ZodUtil} from "../utils/zod.util";
-import {PostSortTypeId} from "../constants/postSortTypes";
+import {ProductTypeId} from "@constants/productTypes";
+import {StatusId} from "@constants/status";
+import {PostTypeId} from "@constants/postTypes";
+import {PageTypeId} from "@constants/pageTypes";
+import {AttributeTypeId} from "@constants/attributeTypes";
+import {ZodUtil} from "@utils/zod.util";
+import {PostSortTypeId} from "@constants/postSortTypes";
 
 const postBody = object({
     typeId: z.nativeEnum(PostTypeId),

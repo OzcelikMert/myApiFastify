@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import {LanguageSchema} from "../../schemas/language.schema";
-import {LanguageController} from "../../controllers/language.controller";
-import {LanguageMiddleware} from "../../middlewares/language.middleware";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
-import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
-import {LanguageEndPoint} from "../../constants/endPoints/language.endPoint";
-import {LanguageEndPointPermission} from "../../constants/endPointPermissions/language.endPoint.permission";
+import {LanguageSchema} from "@schemas/language.schema";
+import {LanguageController} from "@controllers/language.controller";
+import {LanguageMiddleware} from "@middlewares/language.middleware";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {PermissionMiddleware} from "@middlewares/validates/permission.middleware";
+import {LanguageEndPoint} from "@constants/endPoints/language.endPoint";
+import {LanguageEndPointPermission} from "@constants/endPointPermissions/language.endPoint.permission";
 
 export const languageRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const languageEndPoint = new LanguageEndPoint("");

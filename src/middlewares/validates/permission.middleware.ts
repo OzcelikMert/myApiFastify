@@ -1,11 +1,11 @@
 import {FastifyReply, FastifyRequest} from 'fastify';
-import {ApiResult} from "../../library/api/result";
-import {ApiErrorCodes} from "../../library/api/errorCodes";
-import {ApiStatusCodes} from "../../library/api/statusCodes";
-import {LogMiddleware} from "../log.middleware";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
 import {IEndPointPermissionFunc, IEndPointPermission} from "../../types/constants/endPoint.permissions";
-import {PermissionUtil} from "../../utils/permission.util";
-import {UserService} from "../../services/user.service";
+import {PermissionUtil} from "@utils/permission.util";
+import {UserService} from "@services/user.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
 
 const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => async (
     req: FastifyRequest,

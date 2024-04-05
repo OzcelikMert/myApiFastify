@@ -1,21 +1,21 @@
 import * as mongoose from "mongoose";
-import {userModel} from "../models/user.model";
+import {userModel} from "@models/user.model";
 import {
     IUserDeleteParamService,
     IUserAddParamService,
     IUserGetParamService, IUserGetResultService,
     IUserUpdateParamService,
     IUserGetManyParamService
-} from "../types/services/user.service";
-import {StatusId} from "../constants/status";
-import {UserUtil} from "../utils/user.util";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import {Config} from "../config";
-import Variable from "../library/variable";
-import {userObjectIdKeys} from "../constants/objectIdKeys/user.objectIdKeys";
-import {IUserModel} from "../types/models/user.model";
-import {PermissionUtil} from "../utils/permission.util";
-import {UserRoleId} from "../constants/userRoles";
+} from "types/services/user.service";
+import {StatusId} from "@constants/status";
+import {UserUtil} from "@utils/user.util";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {Config} from "@configs/index";
+import {VariableLibrary} from "@library/variable";
+import {userObjectIdKeys} from "@constants/objectIdKeys/user.objectIdKeys";
+import {IUserModel} from "types/models/user.model";
+import {PermissionUtil} from "@utils/permission.util";
+import {UserRoleId} from "@constants/userRoles";
 
 const createURL = async (_id: string | null, name: string) => {
     let urlAlreadyCount = 2;
@@ -180,7 +180,7 @@ const getMany = async (params: IUserGetManyParamService, hidePhone: boolean = fa
 }
 
 const add = async (params: IUserAddParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, userObjectIdKeys);
 
     params.url = await createURL(null, params.name);
@@ -193,12 +193,12 @@ const add = async (params: IUserAddParamService) => {
 }
 
 const update = async (params: IUserUpdateParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, userObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IUserModel> = {}
 
-    if (Variable.isEmpty(params.password)) {
+    if (VariableLibrary.isEmpty(params.password)) {
         delete params.password;
     }
 
@@ -232,7 +232,7 @@ const update = async (params: IUserUpdateParamService) => {
 }
 
 const delete_ = async (params: IUserDeleteParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, userObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IUserModel> = {}

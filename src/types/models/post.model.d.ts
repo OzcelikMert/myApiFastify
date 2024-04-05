@@ -1,9 +1,9 @@
 import { ObjectId } from "mongoose"
-import {PostTypeId} from "../../constants/postTypes";
-import {PageTypeId} from "../../constants/pageTypes";
-import {StatusId} from "../../constants/status";
-import {AttributeTypeId} from "../../constants/attributeTypes";
-import {ProductTypeId} from "../../constants/productTypes";
+import {PostTypeId} from "@constants/postTypes";
+import {PageTypeId} from "@constants/pageTypes";
+import {StatusId} from "@constants/status";
+import {AttributeTypeId} from "@constants/attributeTypes";
+import {ProductTypeId} from "@constants/productTypes";
 
 export interface IPostModel {
     _id: string | ObjectId

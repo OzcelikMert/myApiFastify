@@ -1,12 +1,13 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {PostTermService} from "../services/postTerm.service";
-import {LogMiddleware} from "./log.middleware";
-import {IPostTermDeleteManySchema, IPostTermPutWithIdSchema} from "../schemas/postTerm.schema";
-import {UserRoleId} from "../constants/userRoles";
-import {PermissionUtil} from "../utils/permission.util";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {PostTermService} from "@services/postTerm.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {IPostTermDeleteManySchema, IPostTermPutWithIdSchema} from "@schemas/postTerm.schema";
+import {UserRoleId} from "@constants/userRoles";
+import {PermissionUtil} from "@utils/permission.util";
+import {IPostTermGetResultService} from "types/services/postTerm.service";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -24,6 +25,8 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
@@ -51,6 +54,8 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
@@ -66,11 +71,7 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
         let reqData = req as IPostTermPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let postTerm = await PostTermService.get({
-                _id: reqData.params._id,
-                postTypeId: reqData.body.postTypeId,
-                typeId: reqData.body.typeId,
-            });
+            let postTerm = req.cachedServiceResult as IPostTermGetResultService;
 
             if (postTerm) {
                 if (postTerm.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
@@ -94,11 +95,7 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IPostTermDeleteManySchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let postTerms = await PostTermService.getMany({
-                _id: reqData.body._id,
-                postTypeId: reqData.body.postTypeId,
-                typeId: [reqData.body.typeId],
-            });
+            let postTerms = req.cachedServiceResult as IPostTermGetResultService[];
 
             if (postTerms) {
                 for (const postTerm of postTerms) {

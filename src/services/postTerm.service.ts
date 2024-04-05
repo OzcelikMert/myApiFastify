@@ -1,21 +1,21 @@
 import * as mongoose from "mongoose";
-import {postTermModel} from "../models/postTerm.model";
+import {postTermModel} from "@models/postTerm.model";
 import {
     IPostTermDeleteManyParamService,
     IPostTermAddParamService,
     IPostTermGetParamService, IPostTermGetResultService,
     IPostTermUpdateParamService, IPostTermUpdateRankParamService, IPostTermUpdateStatusManyParamService,
     IPostTermGetManyParamService
-} from "../types/services/postTerm.service";
-import MongoDBHelpers from "../library/mongodb/helpers";
-import Variable from "../library/variable";
-import { Config } from "../config";
-import {postTermObjectIdKeys} from "../constants/objectIdKeys/postTerm.objectIdKeys";
-import {postModel} from "../models/post.model";
-import { PostTermTypeId } from "../constants/postTermTypes";
-import { StatusId } from "../constants/status";
-import { IPostTermModel } from "../types/models/postTerm.model";
-import {PostTypeId} from "../constants/postTypes";
+} from "types/services/postTerm.service";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
+import {VariableLibrary} from "@library/variable";
+import { Config } from "@configs/index";
+import {postTermObjectIdKeys} from "@constants/objectIdKeys/postTerm.objectIdKeys";
+import {postModel} from "@models/post.model";
+import { PostTermTypeId } from "@constants/postTermTypes";
+import { StatusId } from "@constants/status";
+import { IPostTermModel } from "types/models/postTerm.model";
+import {PostTypeId} from "@constants/postTypes";
 
 const createURL = async (_id: string | null, title: string, typeId: PostTermTypeId, postTypeId: PostTypeId) => {
     let urlAlreadyCount = 2;
@@ -213,7 +213,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
 const add = async (params: IPostTermAddParamService) => {
     params = MongoDBHelpers.convertToObjectIdData(params, postTermObjectIdKeys);
 
-    if (Variable.isEmpty(params.mainId)) {
+    if (VariableLibrary.isEmpty(params.mainId)) {
         delete params.mainId;
     }
 
@@ -225,7 +225,7 @@ const add = async (params: IPostTermAddParamService) => {
 }
 
 const update = async (params: IPostTermUpdateParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, postTermObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostTermModel> = {}
@@ -275,7 +275,7 @@ const update = async (params: IPostTermUpdateParamService) => {
 }
 
 const updateRank = async (params: IPostTermUpdateRankParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, postTermObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostTermModel> = {}
@@ -314,7 +314,7 @@ const updateRank = async (params: IPostTermUpdateRankParamService) => {
 }
 
 const updateStatusMany = async (params: IPostTermUpdateStatusManyParamService) => {
-    params = Variable.clearAllScriptTags(params);
+    params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, postTermObjectIdKeys);
 
     let filters: mongoose.FilterQuery<IPostTermModel> = {}

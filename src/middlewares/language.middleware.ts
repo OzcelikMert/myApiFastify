@@ -1,10 +1,11 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {ApiErrorCodes} from "../library/api/errorCodes";
-import {ApiStatusCodes} from "../library/api/statusCodes";
-import {LogMiddleware} from "./log.middleware";
-import {LanguageService} from "../services/language.service";
-import {ILanguagePutWithIdSchema} from "../schemas/language.schema";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {LanguageService} from "@services/language.service";
+import {ILanguagePutWithIdSchema} from "@schemas/language.schema";
+import {ILanguageGetResultService} from "types/services/language.service";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -18,6 +19,8 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notFound;
             apiResult.statusCode = ApiStatusCodes.notFound;
+        }else {
+            req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
@@ -32,20 +35,14 @@ const checkIsDefaultWithId = async (req: FastifyRequest, reply: FastifyReply) =>
 
         let reqData = req as ILanguagePutWithIdSchema;
 
-        let serviceResult = await LanguageService.get({isDefault: true});
+        let serviceResult = req.cachedServiceResult as ILanguageGetResultService;
 
-        if(serviceResult){
-            if(reqData.body.isDefault){
-                if(serviceResult._id?.toString() != reqData.params._id){
-                    await LanguageService.updateIsDefaultMany({isDefault: false});
-                }
-            }else {
-                if(serviceResult._id?.toString() == reqData.params._id){
-                    apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.emptyValue;
-                    apiResult.statusCode = ApiStatusCodes.badRequest;
-                }
-            }
+        if(!serviceResult.isDefault && reqData.body.isDefault){
+            await LanguageService.updateIsDefaultMany({isDefault: false});
+        }else if (serviceResult.isDefault && !reqData.body.isDefault) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.emptyValue;
+            apiResult.statusCode = ApiStatusCodes.badRequest;
         }
 
         if (!apiResult.status) {

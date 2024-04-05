@@ -1,5 +1,5 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
+import {ApiResult} from "@library/api/result";
 import {
     IUserDeleteWithIdSchema,
     IUserGetWithIdSchema,
@@ -9,12 +9,12 @@ import {
     IUserPutPasswordSchema,
     IUserPutProfileSchema,
     IUserGetWithURLSchema, IUserPutProfileImageSchema
-} from "../schemas/user.schema";
-import {UserService} from "../services/user.service";
-import {LogMiddleware} from "../middlewares/log.middleware";
-import {IUserGetResultService} from "../types/services/user.service";
-import {IUserModel} from "../types/models/user.model";
-import {SessionAuthUtil} from "../utils/sessinAuth.util";
+} from "@schemas/user.schema";
+import {UserService} from "@services/user.service";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {IUserGetResultService} from "types/services/user.service";
+import {IUserModel} from "types/models/user.model";
+import {SessionAuthUtil} from "@utils/sessinAuth.util";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {

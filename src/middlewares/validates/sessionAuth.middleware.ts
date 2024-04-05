@@ -1,13 +1,12 @@
 import {FastifyReply, FastifyRequest, RouteHandlerMethod} from "fastify";
-import {ApiResult} from "../../library/api/result";
-import {ApiErrorCodes} from "../../library/api/errorCodes";
-import {ApiStatusCodes} from "../../library/api/statusCodes";
-import {UserService} from "../../services/user.service";
-import {StatusId} from "../../constants/status";
-import {sessionAuthRefreshSeconds, sessionAuthTTL} from "../../config/session/session.auth.config";
-import {LogMiddleware} from "../log.middleware";
-import {UserUtil} from "../../utils/user.util";
-import {SessionAuthUtil} from "../../utils/sessinAuth.util";
+import {ApiResult} from "@library/api/result";
+import {ApiErrorCodes} from "@library/api/errorCodes";
+import {ApiStatusCodes} from "@library/api/statusCodes";
+import {UserService} from "@services/user.service";
+import {StatusId} from "@constants/status";
+import {sessionAuthRefreshSeconds, sessionAuthTTL} from "@configs/session/session.auth.config";
+import {SessionAuthUtil} from "@utils/sessinAuth.util";
+import {LogMiddleware} from "@middlewares/log.middleware";
 
 const check = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {

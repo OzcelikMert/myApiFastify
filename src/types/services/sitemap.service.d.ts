@@ -1,6 +1,6 @@
-import {PostTermTypeId} from "../../constants/postTermTypes";
-import {PostTypeId} from "../../constants/postTypes";
-import {PageTypeId} from "../../constants/pageTypes";
+import {PostTermTypeId} from "@constants/postTermTypes";
+import {PostTypeId} from "@constants/postTypes";
+import {PageTypeId} from "@constants/pageTypes";
 
 export interface ISitemapGetPostTermCountResultService {
     typeId: PostTermTypeId

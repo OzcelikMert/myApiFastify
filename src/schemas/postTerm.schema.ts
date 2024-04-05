@@ -1,8 +1,8 @@
-import {object, string, array, boolean, number, z} from 'zod';
-import {StatusId} from "../constants/status";
-import {PostTypeId} from "../constants/postTypes";
-import {PostTermTypeId} from "../constants/postTermTypes";
-import {ZodUtil} from "../utils/zod.util";
+import {object, string, array, number, z} from 'zod';
+import {StatusId} from "@constants/status";
+import {PostTypeId} from "@constants/postTypes";
+import {PostTermTypeId} from "@constants/postTermTypes";
+import {ZodUtil} from "@utils/zod.util";
 
 const postBody = object({
     postTypeId: z.nativeEnum(PostTypeId),

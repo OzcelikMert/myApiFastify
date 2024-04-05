@@ -1,5 +1,5 @@
-import {EndPoints} from "./index";
-import {PathUtil} from "../../utils/path.util";
+import {EndPoints} from "@constants/endPoints/index";
+import {PathUtil} from "@utils/path.util";
 
 export class ViewEndPoint {
     private mainPath: string;

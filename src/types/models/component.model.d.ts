@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose"
-import {ElementTypeId} from "../../constants/elementTypes";
-import {ComponentTypeId} from "../../constants/componentTypes";
+import {ElementTypeId} from "@constants/elementTypes";
+import {ComponentTypeId} from "@constants/componentTypes";
 
 export interface IComponentModel {
     _id?: ObjectId | string,

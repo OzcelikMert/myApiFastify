@@ -1,8 +1,8 @@
-import {object, string, array, number, z} from 'zod';
-import {UserRoleId} from "../constants/userRoles";
-import {StatusId} from "../constants/status";
-import {PermissionId} from "../constants/permissions";
-import {ZodUtil} from "../utils/zod.util";
+import {object, string, array, z} from 'zod';
+import {UserRoleId} from "@constants/userRoles";
+import {StatusId} from "@constants/status";
+import {PermissionId} from "@constants/permissions";
+import {ZodUtil} from "@utils/zod.util";
 
 const postBody = {
     roleId: z.nativeEnum(UserRoleId),

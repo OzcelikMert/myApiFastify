@@ -1,5 +1,5 @@
 import {object, string, array, z} from 'zod';
-import {ZodUtil} from "../utils/zod.util";
+import {ZodUtil} from "@utils/zod.util";
 
 const getWithIdSchema = object({
     params: object({

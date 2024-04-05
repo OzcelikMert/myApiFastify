@@ -1,7 +1,7 @@
 import {array, number, object, string, z} from 'zod';
-import {SettingProjectionKeys} from "../constants/settingProjections";
-import {CurrencyId} from "../constants/currencyTypes";
-import {ZodUtil} from "../utils/zod.util";
+import {SettingProjectionKeys} from "@constants/settingProjections";
+import {CurrencyId} from "@constants/currencyTypes";
+import {ZodUtil} from "@utils/zod.util";
 
 const getSchema = object({
     query: object({

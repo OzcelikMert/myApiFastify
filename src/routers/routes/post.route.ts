@@ -1,13 +1,13 @@
 import {FastifyInstance} from 'fastify';
-import {PostSchema} from "../../schemas/post.schema";
-import {PostController} from "../../controllers/post.controller";
-import {PostMiddleware} from "../../middlewares/post.middleware";
-import {ViewMiddleware} from "../../middlewares/view.middleware";
-import {RequestMiddleware} from "../../middlewares/validates/request.middleware";
-import {SessionAuthMiddleware} from "../../middlewares/validates/sessionAuth.middleware";
-import {PermissionMiddleware} from "../../middlewares/validates/permission.middleware";
-import {PermissionUtil} from "../../utils/permission.util";
-import {PostEndPoint} from "../../constants/endPoints/post.endPoint";
+import {PostSchema} from "@schemas/post.schema";
+import {PostController} from "@controllers/post.controller";
+import {PostMiddleware} from "@middlewares/post.middleware";
+import {ViewMiddleware} from "@middlewares/view.middleware";
+import {RequestMiddleware} from "@middlewares/validates/request.middleware";
+import {SessionAuthMiddleware} from "@middlewares/validates/sessionAuth.middleware";
+import {PermissionMiddleware} from "@middlewares/validates/permission.middleware";
+import {PermissionUtil} from "@utils/permission.util";
+import {PostEndPoint} from "@constants/endPoints/post.endPoint";
 
 export const postRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const postEndPoint = new PostEndPoint("");

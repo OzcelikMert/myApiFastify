@@ -1,13 +1,13 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
+import {ApiResult} from "@library/api/result";
 import {lookup} from "geoip-lite";
-import {ViewService} from "../services/view.service";
-import {Config} from "../config";
-import {LogMiddleware} from "../middlewares/log.middleware";
-import {IViewPostSchema} from "../schemas/view.schema";
-import Variable from "../library/variable";
-import {IViewGetTotalResultService} from "../types/services/view.service";
-import {IViewModel} from "../types/models/view.model";
+import {ViewService} from "@services/view.service";
+import {Config} from "@configs/index";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {IViewPostSchema} from "@schemas/view.schema";
+import {IViewGetTotalResultService} from "types/services/view.service";
+import {IViewModel} from "types/models/view.model";
+import {VariableLibrary} from "@library/variable";
 
 const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -67,7 +67,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
         apiResult.data = await ViewService.add({
             ...reqData.body,
             ip: ip,
-            url: Variable.isEmpty(reqData.body.url) ? "/" : reqData.body.url,
+            url: VariableLibrary.isEmpty(reqData.body.url) ? "/" : reqData.body.url,
             ...ipDetail
         })
 

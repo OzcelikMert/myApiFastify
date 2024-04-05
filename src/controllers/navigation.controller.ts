@@ -1,16 +1,16 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "../library/api/result";
-import {LogMiddleware} from "../middlewares/log.middleware";
-import {NavigationService} from "../services/navigation.service";
+import {ApiResult} from "@library/api/result";
+import {LogMiddleware} from "@middlewares/log.middleware";
+import {NavigationService} from "@services/navigation.service";
 import {
     INavigationDeleteManySchema,
     INavigationGetWithIdSchema,
     INavigationGetManySchema,
     INavigationPostSchema,
     INavigationPutWithIdSchema, INavigationPutRankWithIdSchema, INavigationPutStatusManySchema
-} from "../schemas/navigation.schema";
-import {INavigationGetResultService} from "../types/services/navigation.service";
-import {INavigationModel} from "../types/models/navigation.model";
+} from "@schemas/navigation.schema";
+import {INavigationGetResultService} from "types/services/navigation.service";
+import {INavigationModel} from "types/models/navigation.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
