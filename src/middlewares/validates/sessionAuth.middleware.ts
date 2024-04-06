@@ -63,7 +63,7 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
                         roleId: user.roleId,
                         ip: req.ip,
                         permissions: user.permissions,
-                        refreshedAt: date.toString()
+                        refreshedAt: date
                     })
                 }
             }

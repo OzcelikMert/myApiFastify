@@ -45,7 +45,7 @@ console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
 
     server.addHook('onResponse', async (request, reply) => {
         const responseTime = reply.getResponseTime();
-        console.log(`Response time for ${request.method} ${request.url}: ${responseTime}ms`);
+        console.log(`Response time for ${chalk.green(request.method)} '${chalk.gray(request.url)}': ${chalk.yellow(responseTime.toFixed(2))}ms`);
     });
 
     server.addHook('preHandler', RequestInitMiddleware.set);

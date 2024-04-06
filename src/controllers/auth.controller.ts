@@ -46,7 +46,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
                     roleId: user.roleId,
                     ip: req.ip,
                     permissions: user.permissions,
-                    refreshedAt: date.toString(),
+                    refreshedAt: date,
                 });
             }else {
                 apiResult.status = false;

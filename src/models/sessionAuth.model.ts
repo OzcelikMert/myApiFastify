@@ -11,7 +11,7 @@ const schemaUser = new mongoose.Schema<ISessionAuthUserModel>(
             email: {type: String, required: true},
             token: {type: String, default: "", required: true},
             permissions: {type: [Number], default: []},
-            refreshedAt: {type: String, default: ""},
+            refreshedAt: {type: Date, default: ""},
     },
     {timestamps: true}
 )

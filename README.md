@@ -2,7 +2,6 @@
 Api for My Admin Panel
 
 Things to do:
-- servislerde langId icin filter olustur eger gonderilen langId yoksa ise default langId yi cekicek sekilde filter querysi yaz (tum contentsleri cekip oradan dongu ile idyi bulma bunu mongo db filterinde yap)
 - image yukleniyormu diye kontrol et (basePath degisti belki hataya sebep oluyordur)
 
 + configdeki timer icin her modelin timerini timers klasorunun icinde olustur
