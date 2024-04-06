@@ -2,8 +2,8 @@
 Api for My Admin Panel
 
 Things to do:
-- image yukleniyormu diye kontrol et (basePath degisti belki hataya sebep oluyordur)
 
++ image yukleniyormu diye kontrol et (basePath degisti belki hataya sebep oluyordur)
 + configdeki timer icin her modelin timerini timers klasorunun icinde olustur
 + imagelerde statla imagenin bilgilerini cektikten sonra dbye kaydet. her resim icin stat bilgilerini tekrar tekrar cekme
 + projedeki import pathlerini tsconfigde tanimla ve tanimli haliyle cek
