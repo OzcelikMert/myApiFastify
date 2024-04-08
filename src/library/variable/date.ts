@@ -18,7 +18,7 @@ declare global {
     }
 
     interface DateConstructor {
-        convertHoursToSeconds(hours: number): number
+        convertHoursToMS(hours: number): number
     }
 }
 
@@ -139,7 +139,7 @@ Date.prototype.diffSeconds = function (date) {
     let diff = (this.getTime() - date.getTime()) / 1000;
     return Math.round(diff);
 }
-Date.convertHoursToSeconds = function (hours) {
+Date.convertHoursToMS = function (hours) {
     return (1000 * 60 * 60) * hours;
 }
 export default {}

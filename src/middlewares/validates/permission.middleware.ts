@@ -2,10 +2,10 @@ import {FastifyReply, FastifyRequest} from 'fastify';
 import {ApiResult} from "@library/api/result";
 import {ApiErrorCodes} from "@library/api/errorCodes";
 import {ApiStatusCodes} from "@library/api/statusCodes";
-import {IEndPointPermissionFunc, IEndPointPermission} from "../../types/constants/endPoint.permissions";
+import {IEndPointPermissionFunc, IEndPointPermission} from "types/constants/endPoint.permissions";
 import {PermissionUtil} from "@utils/permission.util";
-import {UserService} from "@services/user.service";
 import {LogMiddleware} from "@middlewares/log.middleware";
+import {IUserGetResultService} from "types/services/user.service";
 
 const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => async (
     req: FastifyRequest,
@@ -16,7 +16,7 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
-        let user = await UserService.get({_id: req.sessionAuth!.user!.userId.toString()});
+        let user = req.cachedServiceResult as IUserGetResultService;
 
         if(user){
             if (

@@ -1,4 +1,4 @@
-import {IEndPointPermission} from "../../types/constants/endPoint.permissions";
+import {IEndPointPermission} from "types/constants/endPoint.permissions";
 import {UserRoleId} from "@constants/userRoles";
 import {PermissionId} from "@constants/permissions";
 

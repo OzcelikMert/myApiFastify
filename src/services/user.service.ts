@@ -5,7 +5,7 @@ import {
     IUserAddParamService,
     IUserGetParamService, IUserGetResultService,
     IUserUpdateParamService,
-    IUserGetManyParamService
+    IUserGetManyParamService, IUserUpdateStatusManyParamService
 } from "types/services/user.service";
 import {StatusId} from "@constants/status";
 import {UserUtil} from "@utils/user.util";
@@ -151,6 +151,12 @@ const getMany = async (params: IUserGetManyParamService, hidePhone: boolean = fa
             permissions: { $in: params.permissions }
         }
     }
+    if (params.banDateEnd) {
+        filters = {
+            ...filters,
+            banDateEnd: {$lt: params.banDateEnd}
+        }
+    }
 
     let query = userModel.find(filters, {});
 
@@ -231,6 +237,36 @@ const update = async (params: IUserUpdateParamService) => {
     return doc ? doc.toObject() : null;
 }
 
+const updateStatusMany = async (params: IUserUpdateStatusManyParamService) => {
+    params = VariableLibrary.clearAllScriptTags(params);
+    params = MongoDBHelpers.convertToObjectIdData(params, userObjectIdKeys);
+
+    let filters: mongoose.FilterQuery<IUserModel> = {}
+
+    if (params._id) {
+        filters = {
+            ...filters,
+            _id: {$in: params._id}
+        }
+    }
+
+    return await Promise.all((await userModel.find(filters).exec()).map(async doc => {
+        doc.statusId = params.statusId;
+
+        if(params.lastAuthorId){
+            doc.lastAuthorId = params.lastAuthorId;
+        }
+
+        await doc.save();
+
+        return {
+            _id: doc._id,
+            statusId: doc.statusId,
+            lastAuthorId: doc.lastAuthorId
+        };
+    }));
+}
+
 const delete_ = async (params: IUserDeleteParamService) => {
     params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, userObjectIdKeys);
@@ -261,5 +297,6 @@ export const UserService = {
     getMany: getMany,
     add: add,
     update: update,
-    delete: delete_
+    updateStatusMany: updateStatusMany,
+    delete: delete_,
 };

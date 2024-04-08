@@ -10,6 +10,6 @@ declare module 'fastify' {
     export interface FastifyRequest {
         sessionAuth?: Session<ISessionAuthModel>
         isFromAdminPanel: boolean
-        cachedServiceResult: any
+        cachedServiceResult?: any
     }
 }

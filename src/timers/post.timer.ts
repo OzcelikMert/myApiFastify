@@ -4,14 +4,14 @@ import {StatusId} from "@constants/status";
 const checkIsPending = async () => {
     try {
         let date = new Date();
-        let pendingPostServiceResult = await PostService.getMany({
+        let serviceResult = await PostService.getMany({
             statusId: StatusId.Pending,
             dateStart: date
         })
 
-        if(pendingPostServiceResult.length > 0){
+        if(serviceResult.length > 0){
             await PostService.updateStatusMany({
-                _id: pendingPostServiceResult.map(pendingPost => pendingPost._id.toString()),
+                _id: serviceResult.map(item => item._id.toString()),
                 statusId: StatusId.Active
             })
         }

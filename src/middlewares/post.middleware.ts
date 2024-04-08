@@ -146,7 +146,7 @@ const checkAuthorsWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const checkPageTypeIdWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkPageTypeId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
@@ -182,5 +182,5 @@ export const PostMiddleware = {
     checkIsAuthorWithId: checkIsAuthorWithId,
     checkIsAuthorMany: checkIsAuthorMany,
     checkAuthorsWithId: checkAuthorsWithId,
-    checkPageTypeIdWithId: checkPageTypeIdWithId
+    checkPageTypeId: checkPageTypeId
 };

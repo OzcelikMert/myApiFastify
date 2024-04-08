@@ -46,6 +46,8 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
                     roleId: user.roleId,
                     ip: req.ip,
                     permissions: user.permissions,
+                    createdAt: date,
+                    updatedAt: date,
                     refreshedAt: date,
                 });
             }else {

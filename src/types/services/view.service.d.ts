@@ -1,4 +1,4 @@
-import {IViewModel} from "../models/view.model";
+import {IViewModel} from "types/models/view.model";
 
 export type IViewGetResultService = {} & IViewModel
 
@@ -28,5 +28,6 @@ export interface IViewAddParamService {
 }
 
 export interface IViewDeleteManyParamService {
-    dateEnd: Date
+    _id?: string[]
+    dateEnd?: Date
 }

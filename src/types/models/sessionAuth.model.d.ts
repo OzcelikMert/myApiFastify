@@ -9,7 +9,7 @@ export interface ISessionAuthUserModel {
     image: string
     ip: string,
     permissions: number[]
-    createAt?: Date
+    createdAt?: Date
     updatedAt?: Date
     refreshedAt?: Date
 }

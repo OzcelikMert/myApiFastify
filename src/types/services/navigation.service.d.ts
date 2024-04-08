@@ -1,5 +1,5 @@
-import {IUserPopulateService} from "../services/user.service";
-import {INavigationContentModel, INavigationModel} from "../models/navigation.model";
+import {IUserPopulateService} from "types/services/user.service";
+import {INavigationContentModel, INavigationModel} from "types/models/navigation.model";
 import {StatusId} from "@constants/status";
 
 export interface INavigationPopulateService {

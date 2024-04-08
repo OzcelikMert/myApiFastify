@@ -1,4 +1,4 @@
-import {IUserModel} from "../models/user.model";
+import {IUserModel} from "types/models/user.model";
 import {StatusId} from "@constants/status";
 import {UserRoleId} from "@constants/userRoles";
 import {PermissionId} from "@constants/permissions";
@@ -34,7 +34,8 @@ export interface IUserGetManyParamService {
     count?: number,
     page?: number
     permissions?: PermissionId[]
-    ignoreUserId?: string[]
+    ignoreUserId?: string[],
+    banDateEnd?: Date
 }
 
 export type IUserAddParamService = {
@@ -50,6 +51,12 @@ export type IUserUpdateParamService = {
     permissions?: PermissionId[]
     password?: string
 } & Omit<IUserAddParamService, "_id"|"roleId"|"statusId"|"name"|"email"|"permissions"|"password">
+
+export type IUserUpdateStatusManyParamService = {
+    _id: string[],
+    statusId: StatusId,
+    lastAuthorId?: string
+}
 
 export type IUserDeleteParamService = {
     _id: string,

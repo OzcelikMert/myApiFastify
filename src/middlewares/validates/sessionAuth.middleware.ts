@@ -1,19 +1,21 @@
-import {FastifyReply, FastifyRequest, RouteHandlerMethod} from "fastify";
+import {FastifyReply, FastifyRequest} from "fastify";
 import {ApiResult} from "@library/api/result";
 import {ApiErrorCodes} from "@library/api/errorCodes";
 import {ApiStatusCodes} from "@library/api/statusCodes";
 import {UserService} from "@services/user.service";
 import {StatusId} from "@constants/status";
-import {sessionAuthRefreshSeconds, sessionAuthTTL} from "@configs/session/session.auth.config";
+import {sessionAuthRefreshMinutes, sessionAuthTTLMinutes} from "@configs/session/session.auth.config";
 import {SessionAuthUtil} from "@utils/sessinAuth.util";
 import {LogMiddleware} from "@middlewares/log.middleware";
+import {ISessionAuthUserModel} from "types/models/sessionAuth.model";
+import {IUserGetResultService} from "types/services/user.service";
 
 const check = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         let apiResult = new ApiResult();
 
         if (req.sessionAuth && req.sessionAuth.user) {
-            let user = await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}, false);
+            let user = req.cachedServiceResult as IUserGetResultService;
             if (
                 !user ||
                 req.sessionAuth._id != SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip)
@@ -22,11 +24,11 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
                     req.sessionAuth!.delete();
                     resolve(1);
                 });
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.notLoggedIn;
+                apiResult.statusCode = ApiStatusCodes.unauthorized;
             }
-        }
-
-
-        if ((typeof req.sessionAuth === "undefined" || typeof req.sessionAuth.user === "undefined")) {
+        }else {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.notLoggedIn;
             apiResult.statusCode = ApiStatusCodes.unauthorized;
@@ -41,30 +43,34 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
 const reload = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         if (req.sessionAuth && req.sessionAuth.user) {
-            if (Number(new Date().diffSeconds(new Date(req.sessionAuth.user.updatedAt ?? ""))) > sessionAuthTTL) {
+            if (Number(new Date().diffMinutes(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthTTLMinutes) {
                 req.sessionAuth.delete();
-            }
-        }
-
-        if (req.sessionAuth && req.sessionAuth.user) {
-            let date = new Date();
-            if (Number(date.diffSeconds(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshSeconds) {
-                let user = await UserService.get({
-                    _id: req.sessionAuth.user.userId.toString()
-                }, false);
-                if (user) {
-                    req.sessionAuth?.set("_id", SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip));
-
-                    req.sessionAuth.set("user", {
-                        userId: user._id,
-                        email: user.email,
-                        name: user.name,
-                        image: user.image,
-                        roleId: user.roleId,
+            }else {
+                let date = new Date();
+                let serviceResult = await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}, false);
+                if(serviceResult) {
+                    req.cachedServiceResult = serviceResult;
+                    let sessionAuthUser: ISessionAuthUserModel = {
+                        ...req.sessionAuth.user,
+                        userId: serviceResult._id,
+                        email: serviceResult.email,
+                        name: serviceResult.name,
+                        image: serviceResult.image,
+                        roleId: serviceResult.roleId,
                         ip: req.ip,
-                        permissions: user.permissions,
-                        refreshedAt: date
-                    })
+                        permissions: serviceResult.permissions,
+                    }
+
+                    if (
+                        JSON.stringify(sessionAuthUser) != JSON.stringify(req.sessionAuth.user) ||
+                        Number(date.diffMinutes(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshMinutes
+                    ) {
+                        req.sessionAuth.set("_id", SessionAuthUtil.createToken(serviceResult._id.toString(), serviceResult.password!, req.ip));
+                        req.sessionAuth.set("user", {
+                            ...sessionAuthUser,
+                            refreshedAt: date
+                        });
+                    }
                 }
             }
         }

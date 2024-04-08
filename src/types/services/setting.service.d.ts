@@ -2,7 +2,7 @@ import {
     ISettingContactFormModel,
     ISettingModel, ISettingECommerceModel,
     ISettingSeoContentModel, ISettingSocialMediaModel, ISettingPathModel, ISettingPathContentModel
-} from "../models/setting.model";
+} from "types/models/setting.model";
 import {SettingProjectionKeys} from "@constants/settingProjections";
 
 export type ISettingPathGetResultService = {

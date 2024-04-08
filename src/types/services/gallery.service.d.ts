@@ -1,5 +1,5 @@
-import {IGalleryModel} from "../models/gallery.model";
-import {IUserPopulateService} from "../services/user.service";
+import {IGalleryModel} from "types/models/gallery.model";
+import {IUserPopulateService} from "types/services/user.service";
 import {GalleryTypeId} from "@constants/galleryTypeId";
 
 export type IGalleryImageProperties = {

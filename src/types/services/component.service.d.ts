@@ -1,5 +1,5 @@
-import {IUserPopulateService} from "../services/user.service";
-import {IComponentElementModel, IComponentModel, IComponentElementContentModel} from "../models/component.model";
+import {IUserPopulateService} from "types/services/user.service";
+import {IComponentElementModel, IComponentModel, IComponentElementContentModel} from "types/models/component.model";
 import {ComponentTypeId} from "@constants/componentTypes";
 
 export interface IComponentAlternateService {

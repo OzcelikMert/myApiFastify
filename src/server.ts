@@ -54,7 +54,7 @@ console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
 
     await server.register(routers);
 
-    Timers.iniLongTimer();
+    Timers.initLongTimer();
 
     server.listen({port: port}, () => {
         console.log(chalk.cyan(`=========  SERVER STARTED =========\n`));

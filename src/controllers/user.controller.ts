@@ -107,7 +107,8 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
 
         req.sessionAuth!.set("user", {
             ...req.sessionAuth!.user!,
-            name: reqData.body.name
+            name: reqData.body.name,
+            updatedAt: new Date()
         })
 
         await reply.status(apiResult.statusCode).send(apiResult)
@@ -127,7 +128,8 @@ const updateProfileImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
         req.sessionAuth!.set("user", {
             ...req.sessionAuth!.user!,
-            image: reqData.body.image
+            image: reqData.body.image,
+            updatedAt: new Date()
         })
 
         await reply.status(apiResult.statusCode).send(apiResult)
@@ -146,7 +148,11 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
         });
 
         if(serviceResult){
-            req.sessionAuth!.set("_id", SessionAuthUtil.createToken(serviceResult._id.toString(), serviceResult.password, req.ip))
+            req.sessionAuth!.set("_id", SessionAuthUtil.createToken(serviceResult._id.toString(), serviceResult.password, req.ip));
+            req.sessionAuth!.set("user", {
+                ...req.sessionAuth!.user!,
+                updatedAt: new Date()
+            })
         }
 
         await reply.status(apiResult.statusCode).send(apiResult)

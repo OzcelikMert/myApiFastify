@@ -8,7 +8,7 @@ const checkOld = async () => {
         let serviceResult = await ViewService.get({dateEnd: dateEnd});
 
         if (serviceResult) {
-            await ViewService.deleteMany({dateEnd: dateEnd})
+            await ViewService.deleteMany({dateEnd: dateEnd});
         }
     }catch (e) {}
 }

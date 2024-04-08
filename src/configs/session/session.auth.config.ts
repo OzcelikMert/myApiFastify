@@ -3,9 +3,9 @@ import crypto from "crypto";
 
 const serverProtocol = config.get("serverProtocol") as string;
 
-export const sessionAuthTTL = 60 * 60;
+export const sessionAuthTTLMinutes = 60 * 24;
 export const sessionAuthKey = crypto.randomBytes(32);
-export const sessionAuthRefreshSeconds = 120;
+export const sessionAuthRefreshMinutes = 15;
 
 export const sessionAuthConfig = {
     key: sessionAuthKey,
@@ -15,7 +15,7 @@ export const sessionAuthConfig = {
     cookieName: "sessionAuthCookie",
     cookie: {
         path: '/',
-        maxAge: 1000 * 60 * 60 * 24 * 365,
+        maxAge: Date.convertHoursToMS(24 * 365),
         sameSite: 'lax',
         httpOnly: true,
         secure: serverProtocol !== "http",

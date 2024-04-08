@@ -1,4 +1,4 @@
-import {ISubscriberModel} from "../models/subscriber.model";
+import {ISubscriberModel} from "types/models/subscriber.model";
 
 export type ISubscriberGetResultService = {} & ISubscriberModel
 
