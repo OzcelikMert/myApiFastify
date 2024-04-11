@@ -23,6 +23,7 @@ export interface IPostModel {
     beforeAndAfter?: IPostBeforeAndAfterModel
     eCommerce?: IPostECommerceModel
     comments?: IPostCommentModel[]
+    similarItems?: string[] | ObjectId[]
     updatedAt?: string
     createdAt?: string
 }

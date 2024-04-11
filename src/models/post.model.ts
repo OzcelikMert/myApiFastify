@@ -162,9 +162,10 @@ const schema = new mongoose.Schema<IPostModel>(
         eCommerce: {type: schemaECommerce},
         beforeAndAfter: {type: schemaBeforeAndAfter},
         components: {type: [mongoose.Schema.Types.ObjectId], ref: componentModel},
-        comments: {type: [schemaComment], default: []}
+        comments: {type: [schemaComment], default: []},
+        similarItems: {type: [mongoose.Schema.Types.ObjectId], ref: "posts" }
     },
     {timestamps: true}
-).index({typeId: 1, statusId: 1, authorId: 1, authors: 1, pageTypeId: 1, categories: 1, tags: 1});
+).index({typeId: 1, statusId: 1, authorId: 1, authors: 1, pageTypeId: 1, categories: 1, tags: 1, comments: 1});
 
 export const postModel = mongoose.model<IPostModel, mongoose.Model<IPostModel>>("posts", schema)
