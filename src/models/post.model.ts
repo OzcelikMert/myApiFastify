@@ -16,11 +16,22 @@ import {
     IPostECommerceShippingModel,
     IPostECommerceVariationContentModel,
     IPostECommerceVariationModel,
-    IPostECommerceVariationSelectedModel
+    IPostECommerceVariationSelectedModel, IPostCommentModel
 } from "types/models/post.model";
 import {ProductTypeId} from "@constants/productTypes";
 import {AttributeTypeId} from "@constants/attributeTypes";
 import {componentModel} from "@models/component.model";
+
+const schemaComment = new mongoose.Schema<IPostCommentModel>(
+    {
+        parentId: {type: mongoose.Schema.Types.ObjectId, ref: "posts"},
+        authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
+        message: {type: String, default: ""},
+        likes: {type: [mongoose.Schema.Types.ObjectId], ref: userModel, default: []},
+        dislikes: {type: [mongoose.Schema.Types.ObjectId], ref: userModel, default: []},
+    },
+    {timestamps: true}
+).index({authorId: 1, likes: 1, dislikes: 1});
 
 const schemaPostECommerceVariationContent = new mongoose.Schema<IPostECommerceVariationContentModel>(
     {
@@ -105,7 +116,8 @@ const schemaContentButton = new mongoose.Schema<IPostContentButtonModel>(
     {
         title: {type: String, default: ""},
         url: {type: String, default: ""}
-    }
+    },
+    {timestamps: true}
 );
 
 const schemaBeforeAndAfter = new mongoose.Schema<IPostBeforeAndAfterModel>(
@@ -113,7 +125,8 @@ const schemaBeforeAndAfter = new mongoose.Schema<IPostBeforeAndAfterModel>(
         imageBefore: {type: String, default: ""},
         imageAfter: {type: String, default: ""},
         images: {type: [String], default: []}
-    }
+    },
+    {timestamps: true}
 );
 
 
@@ -128,7 +141,8 @@ const schemaContent = new mongoose.Schema<IPostContentModel>(
         url: {type: String, default: ""},
         views: {type: Number, default: 0},
         buttons: {type: [schemaContentButton]},
-    }
+    },
+    {timestamps: true}
 );
 
 const schema = new mongoose.Schema<IPostModel>(
@@ -148,6 +162,7 @@ const schema = new mongoose.Schema<IPostModel>(
         eCommerce: {type: schemaECommerce},
         beforeAndAfter: {type: schemaBeforeAndAfter},
         components: {type: [mongoose.Schema.Types.ObjectId], ref: componentModel},
+        comments: {type: [schemaComment], default: []}
     },
     {timestamps: true}
 ).index({typeId: 1, statusId: 1, authorId: 1, authors: 1, pageTypeId: 1, categories: 1, tags: 1});
