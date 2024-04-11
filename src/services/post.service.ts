@@ -312,7 +312,6 @@ const getMany = async (params: IPostGetManyParamService) => {
         }
     }
 
-    console.log(filters);
     let query = postModel.find(filters);
 
     query.populate({
