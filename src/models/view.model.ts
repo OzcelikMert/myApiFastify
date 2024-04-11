@@ -12,6 +12,6 @@ const schema = new mongoose.Schema<IViewModel>(
         region: {type: String, default: ""}
     },
     {timestamps: true}
-).index({langId: 1})
+).index({langId: 1, ip: 1, city: 1, country: 1, region: 1})
 
 export const viewModel = mongoose.model<IViewModel, mongoose.Model<IViewModel>>("views", schema)

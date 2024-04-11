@@ -87,7 +87,7 @@ const get = async (params: IPostGetParamService) => {
             "categories",
             "tags"
         ].join(" "),
-        select: "_id typeId contents.title contents.langId contents.url contents.image",
+        select: "_id typeId postTypeId contents",
         match: {
             typeId: {$in: [PostTermTypeId.Category, PostTermTypeId.Tag]},
             statusId: StatusId.Active,
@@ -113,7 +113,7 @@ const get = async (params: IPostGetParamService) => {
             "eCommerce.variationDefaults.attributeId",
             "eCommerce.variationDefaults.variationId",
         ].join(" "),
-        select: "_id typeId contents.title contents.langId contents.url contents.image",
+        select: "_id typeId postTypeId contents",
         match: {
             typeId: {$in: [PostTermTypeId.Attributes, PostTermTypeId.Variations]},
             statusId: StatusId.Active,
@@ -151,7 +151,8 @@ const get = async (params: IPostGetParamService) => {
             "lastAuthorId",
             "authors"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     });
 
     query.sort({isFixed: "desc", rank: "asc", createdAt: "desc"});
@@ -176,8 +177,8 @@ const get = async (params: IPostGetParamService) => {
         if (Array.isArray(doc.contents)) {
             doc.alternates = doc.contents.map(content => ({
                 langId: content.langId.toString(),
-                title: content.title,
-                url: content.url
+                title: content.title ?? "",
+                url: content.url ?? ""
             }));
 
             for (const docContent of doc.contents) {
@@ -217,6 +218,32 @@ const get = async (params: IPostGetParamService) => {
         }
 
         doc.views = views;
+
+        if (params.isIncludePrevAndNext) {
+            let prevBlog = await getMany({
+                langId: params.langId,
+                statusId: params.statusId,
+                typeId: [params.typeId],
+                ltCreatedAt: new Date(doc.createdAt ?? ""),
+                count: 1
+            });
+
+            if (prevBlog.length > 0) {
+                doc.prev = prevBlog[0];
+            }
+
+            let nextBlog = await getMany({
+                langId: params.langId,
+                statusId: params.statusId,
+                typeId: [params.typeId],
+                gtCreatedAt: new Date(doc.createdAt ?? ""),
+                count: 1
+            });
+
+            if (nextBlog.length > 0) {
+                doc.next = nextBlog[0];
+            }
+        }
     }
 
     return doc;
@@ -239,11 +266,9 @@ const getMany = async (params: IPostGetManyParamService) => {
         ...filters,
         "contents.title": {$regex: new RegExp(params.title, "i")}
     }
-    if (params.typeId) {
-        filters = {
-            ...filters,
-            typeId: {$in: params.typeId}
-        }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: {$in: params.typeId}
     }
     if (params.pageTypeId) filters = {
         ...filters,
@@ -253,25 +278,41 @@ const getMany = async (params: IPostGetManyParamService) => {
         ...filters,
         statusId: params.statusId
     }
-    if (params.ignorePostId) {
-        filters = {
-            ...filters,
-            _id: {$nin: params.ignorePostId}
-        }
+    if (params.ignorePostId) filters = {
+        ...filters,
+        _id: {$nin: params.ignorePostId}
     }
-    if (params.categories) {
-        filters = {
-            ...filters,
-            categories: {$in: params.categories}
-        }
+    if (params.categories) filters = {
+        ...filters,
+        categories: {$in: params.categories}
+    }
+    if (params.tags) filters = {
+        ...filters,
+        tags: {$in: params.tags}
     }
     if (params.dateStart) {
+        params.dateStart.setHours(0, 0, 0, 0);
         filters = {
             ...filters,
-            dateStart: {$lt: params.dateStart}
+            dateStart: {$lt: params.dateStart.toISOString()}
+        }
+    }
+    if (params.ltCreatedAt) {
+        params.ltCreatedAt.setHours(0, 0, 0, 0);
+        filters = {
+            ...filters,
+            createdAt: {$lt: params.ltCreatedAt.toISOString()}
+        }
+    }
+    if (params.gtCreatedAt) {
+        params.gtCreatedAt.setHours(0, 0, 0, 0);
+        filters = {
+            ...filters,
+            createdAt: {$gt: params.gtCreatedAt.toISOString()}
         }
     }
 
+    console.log(filters);
     let query = postModel.find(filters);
 
     query.populate({
@@ -279,7 +320,7 @@ const getMany = async (params: IPostGetManyParamService) => {
             "categories",
             "tags"
         ].join(" "),
-        select: "_id typeId contents.title contents.langId contents.url contents.image",
+        select: "_id typeId postTypeId contents",
         match: {
             typeId: {$in: [PostTermTypeId.Category, PostTermTypeId.Tag]},
             statusId: StatusId.Active,
@@ -302,7 +343,8 @@ const getMany = async (params: IPostGetManyParamService) => {
             "lastAuthorId",
             "authors"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     });
 
     switch (params.sortTypeId) {
@@ -310,7 +352,7 @@ const getMany = async (params: IPostGetManyParamService) => {
             query.sort({createdAt: "desc"});
             break;
         case PostSortTypeId.MostPopular:
-            query.sort({views: "desc"});
+            query.sort({views: "desc", createdAt: "desc"});
             break;
         default:
             query.sort({isFixed: "desc", rank: "asc", createdAt: "desc"});
@@ -423,7 +465,7 @@ const add = async (params: IPostAddParamService) => {
         params.contents.url = await createURL(null, params.contents.title ?? "", params.typeId);
     }
 
-    if(params.dateStart){
+    if (params.dateStart) {
         params.dateStart = (new Date(params.dateStart));
     }
 
@@ -471,7 +513,7 @@ const update = async (params: IPostUpdateParamService) => {
 
         }
 
-        if(params.dateStart){
+        if (params.dateStart) {
             params.dateStart = new Date(params.dateStart);
         }
 
@@ -595,7 +637,7 @@ const updateStatusMany = async (params: IPostUpdateStatusManyParamService) => {
     return await Promise.all((await postModel.find(filters).exec()).map(async doc => {
         doc.statusId = params.statusId;
 
-        if(params.lastAuthorId){
+        if (params.lastAuthorId) {
             doc.lastAuthorId = params.lastAuthorId;
         }
 

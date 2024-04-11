@@ -4,11 +4,7 @@ import {StatusId} from "@constants/status";
 
 export interface INavigationPopulateService {
     _id:  string
-    contents: {
-        langId: string
-        title: string,
-        url: string,
-    }
+    contents: INavigationContentModel | INavigationContentModel[]
 }
 
 export interface INavigationAlternateService {

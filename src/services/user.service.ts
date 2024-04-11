@@ -91,7 +91,8 @@ const get = async (params: IUserGetParamService, hidePassword: boolean = true, h
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     });
 
     query.sort({createdAt: "desc"});
@@ -165,7 +166,8 @@ const getMany = async (params: IUserGetManyParamService, hidePhone: boolean = fa
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     });
 
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));

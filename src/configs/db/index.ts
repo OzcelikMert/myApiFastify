@@ -12,6 +12,7 @@ function dbConnect() {
 
     mongoose.set("strictQuery", false);
     return mongoose.connect(`${protocol}://${host}${port ? `:${port}` : ""}${hostParams ? `${hostParams}` : ""}`, {
+        noDelay: true,
         autoCreate: true,
         autoIndex: true,
         dbName: name,

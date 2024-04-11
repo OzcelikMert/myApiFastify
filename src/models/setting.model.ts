@@ -15,7 +15,7 @@ const schemaPathContent = new mongoose.Schema<ISettingPathContentModel>(
         asPath: {type: String, default: ""}
     },
     {timestamps: true}
-).index({langId: 1});
+);
 
 const schemaPath = new mongoose.Schema<ISettingPathModel>(
     {
@@ -71,7 +71,7 @@ const schemaSEOContent = new mongoose.Schema<ISettingSeoContentModel>(
         tags: {type: [String], default: []}
     },
     {timestamps: true}
-).index({langId: 1});
+);
 
 const schema = new mongoose.Schema<ISettingModel>(
     {

@@ -15,7 +15,7 @@ const schemaContent = new mongoose.Schema<IPostTermContentModel>(
         url: {type: String, default: ""}
     },
     {timestamps: true}
-).index({langId: 1});
+);
 
 const schema = new mongoose.Schema<IPostTermModel>(
     {

@@ -52,7 +52,8 @@ const get = async (params: INavigationGetParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     })
 
     query.sort({rank: "asc", createdAt: "desc"});
@@ -101,7 +102,7 @@ const getMany = async (params: INavigationGetManyParamService) => {
 
     query.populate({
         path: "mainId",
-        select: "_id contents.title contents.url contents.langId",
+        select: "_id contents",
         match: { statusId: StatusId.Active },
         options: { omitUndefined: true },
         transform: (doc: INavigationGetResultService) => {
@@ -119,7 +120,8 @@ const getMany = async (params: INavigationGetManyParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     })
 
     query.sort({rank: "asc", createdAt: "desc"});

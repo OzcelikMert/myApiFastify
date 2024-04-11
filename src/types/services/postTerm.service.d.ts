@@ -6,13 +6,9 @@ import {StatusId} from "@constants/status";
 
 export interface IPostTermPopulateService {
     _id: string,
+    postTypeId: PostTypeId,
     typeId: PostTermTypeId,
-    contents: {
-        langId: string,
-        title?: string,
-        image?: string
-        url?: string
-    }
+    contents?: IPostTermContentModel | IPostTermContentModel[]
 }
 
 export interface IPostTermAlternateService {

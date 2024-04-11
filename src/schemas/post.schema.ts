@@ -136,7 +136,8 @@ const getWithURLSchema = object({
         typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
         langId: string().optional(),
         pageTypeId: ZodUtil.convertToNumber(z.nativeEnum(PageTypeId)).optional(),
-        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional()
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
+        isIncludePrevAndNext: z.coerce.boolean().optional()
     })
 });
 

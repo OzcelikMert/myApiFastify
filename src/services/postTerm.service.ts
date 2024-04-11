@@ -75,7 +75,7 @@ const get = async (params: IPostTermGetParamService) => {
 
     query.populate({
         path: "mainId",
-        select: "_id typeId contents.title contents.langId contents.url contents.image",
+        select: "_id typeId postTypeId contents",
         match: { statusId: StatusId.Active },
         options: { omitUndefined: true },
         transform: (doc: IPostTermGetResultService) => {
@@ -93,7 +93,8 @@ const get = async (params: IPostTermGetParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     });
 
     query.sort({rank: "asc", createdAt: "desc"});
@@ -158,7 +159,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
 
     query.populate({
         path: "mainId",
-        select: "_id typeId contents.title contents.langId contents.url contents.image",
+        select: "_id typeId postTypeId contents",
         match: { statusId: StatusId.Active },
         options: { omitUndefined: true },
         transform: (doc: IPostTermGetResultService) => {
@@ -176,7 +177,8 @@ const getMany = async (params: IPostTermGetManyParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     })
 
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));

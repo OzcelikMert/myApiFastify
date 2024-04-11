@@ -33,7 +33,8 @@ const get = async (params: IComponentGetParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     });
 
     query.sort({rank: "asc", createdAt: "desc"});
@@ -80,7 +81,8 @@ const getMany = async (params: IComponentGetManyParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image"
+        select: "_id name url image",
+        options: {omitUndefined: true},
     })
 
     query.sort({rank: "asc", createdAt: "desc"});

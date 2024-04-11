@@ -10,7 +10,7 @@ const schemaContent = new mongoose.Schema<INavigationContentModel>(
         title: {type: String, default: ""},
         url: {type: String, default: ""},
     }
-).index({langId: 1});
+);
 
 const schema = new mongoose.Schema<INavigationModel>(
     {

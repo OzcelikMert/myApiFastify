@@ -29,7 +29,7 @@ const schemaPostECommerceVariationContent = new mongoose.Schema<IPostECommerceVa
         content: {type: String, default: ""},
         shortContent: {type: String, default: ""},
     }
-).index({langId: 1});
+);
 
 const schemaECommerceVariationSelected = new mongoose.Schema<IPostECommerceVariationSelectedModel>(
     {
@@ -37,7 +37,7 @@ const schemaECommerceVariationSelected = new mongoose.Schema<IPostECommerceVaria
         variationId: {type: mongoose.Schema.Types.ObjectId, ref: postTermModel, required: true},
     },
     {timestamps: true}
-).index({attributeId: 1});
+);
 
 const schemaECommerceAttribute = new mongoose.Schema<IPostECommerceAttributeModel>(
     {
@@ -46,7 +46,7 @@ const schemaECommerceAttribute = new mongoose.Schema<IPostECommerceAttributeMode
         typeId: {type: Number, enum: AttributeTypeId, default: AttributeTypeId.Text}
     },
     {timestamps: true}
-).index({attributeId: 1});
+);
 
 const schemaECommerceShipping = new mongoose.Schema<IPostECommerceShippingModel>(
     {
@@ -129,7 +129,7 @@ const schemaContent = new mongoose.Schema<IPostContentModel>(
         views: {type: Number, default: 0},
         buttons: {type: [schemaContentButton]},
     }
-).index({langId: 1});
+);
 
 const schema = new mongoose.Schema<IPostModel>(
     {
@@ -150,6 +150,6 @@ const schema = new mongoose.Schema<IPostModel>(
         components: {type: [mongoose.Schema.Types.ObjectId], ref: componentModel},
     },
     {timestamps: true}
-).index({typeId: 1, statusId: 1, authorId: 1});
+).index({typeId: 1, statusId: 1, authorId: 1, authors: 1, pageTypeId: 1, categories: 1, tags: 1});
 
 export const postModel = mongoose.model<IPostModel, mongoose.Model<IPostModel>>("posts", schema)

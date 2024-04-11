@@ -11,7 +11,7 @@ const schemaElementContent = new mongoose.Schema<IComponentElementContentModel>(
             content: {type: String, default: ""},
             url: {type: String}
     }
-).index({langId: 1});
+);
 
 const schemaElement = new mongoose.Schema<IComponentElementModel>(
     {

@@ -25,6 +25,6 @@ const schema = new mongoose.Schema<IUserModel>(
         twitter: {type: String, default: ""}
     },
     {timestamps: true}
-).index({roleId: 1, statusId: 1});
+).index({roleId: 1, statusId: 1, permissions: 1});
 
 export const userModel = mongoose.model<IUserModel, mongoose.Model<IUserModel>>("users", schema)
