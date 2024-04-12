@@ -8,7 +8,7 @@ const postBody = object({
     postTypeId: z.nativeEnum(PostTypeId),
     typeId: z.nativeEnum(PostTermTypeId),
     statusId: z.nativeEnum(StatusId),
-    mainId: string().optional(),
+    parentId: string().optional(),
     rank: number().default(0),
     contents: object({
         langId: string().min(1),

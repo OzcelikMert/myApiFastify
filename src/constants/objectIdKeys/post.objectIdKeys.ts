@@ -1,6 +1,6 @@
 export const postObjectIdKeys = [
     "_id",
-    "mainId",
+    "parentId",
     "categories",
     "tags",
     "components",

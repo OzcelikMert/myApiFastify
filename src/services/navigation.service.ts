@@ -33,7 +33,7 @@ const get = async (params: INavigationGetParamService) => {
     let query = navigationModel.findOne(filters);
 
     query.populate({
-        path: "mainId",
+        path: "parentId",
         select: "_id contents",
         match: { statusId: StatusId.Active},
         options: { omitUndefined: true },
@@ -101,7 +101,7 @@ const getMany = async (params: INavigationGetManyParamService) => {
     let query = navigationModel.find(filters);
 
     query.populate({
-        path: "mainId",
+        path: "parentId",
         select: "_id contents",
         match: { statusId: StatusId.Active },
         options: { omitUndefined: true },

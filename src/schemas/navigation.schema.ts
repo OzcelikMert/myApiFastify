@@ -3,7 +3,7 @@ import {StatusId} from "@constants/status";
 import {ZodUtil} from "@utils/zod.util";
 
 const postBody = object({
-    mainId: string().optional().default(""),
+    parentId: string().optional().default(""),
     statusId: z.nativeEnum(StatusId),
     rank: number().min(0),
     isPrimary: boolean().optional(),

@@ -20,7 +20,7 @@ export interface IPostTermAlternateService {
 export type IPostTermGetResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
-    mainId?: IPostTermPopulateService,
+    parentId?: IPostTermPopulateService,
     contents?: IPostTermContentModel | IPostTermContentModel[]
     alternates?: IPostTermAlternateService[],
     postCount?: number

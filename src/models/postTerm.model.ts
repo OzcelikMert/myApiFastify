@@ -22,7 +22,7 @@ const schema = new mongoose.Schema<IPostTermModel>(
         typeId: {type: Number, required: true, enum: PostTermTypeId},
         postTypeId: {type: Number, required: true, enum: PostTypeId},
         statusId: {type: Number, required: true, enum: StatusId},
-        mainId: {type: mongoose.Schema.Types.ObjectId, ref: "postTerms"},
+        parentId: {type: mongoose.Schema.Types.ObjectId, ref: "postTerms"},
         authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
         lastAuthorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
         rank: {type: Number, default: 0},

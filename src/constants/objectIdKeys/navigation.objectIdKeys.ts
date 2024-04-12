@@ -1,6 +1,6 @@
 export const navigationObjectIdKeys = [
     "_id",
-    "mainId",
+    "parentId",
     "authorId",
     "lastAuthorId",
     "langId",

@@ -15,7 +15,7 @@ const schemaContent = new mongoose.Schema<INavigationContentModel>(
 const schema = new mongoose.Schema<INavigationModel>(
     {
         statusId: {type: Number, required: true, enum: StatusId},
-        mainId: {type: mongoose.Schema.Types.ObjectId, ref: "navigations"},
+        parentId: {type: mongoose.Schema.Types.ObjectId, ref: "navigations"},
         authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
         lastAuthorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
         rank: {type: Number, default: 0},

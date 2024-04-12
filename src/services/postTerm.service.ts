@@ -74,7 +74,7 @@ const get = async (params: IPostTermGetParamService) => {
     let query = postTermModel.findOne(filters);
 
     query.populate({
-        path: "mainId",
+        path: "parentId",
         select: "_id typeId postTypeId contents",
         match: { statusId: StatusId.Active },
         options: { omitUndefined: true },
@@ -158,7 +158,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
     let query = postTermModel.find(filters);
 
     query.populate({
-        path: "mainId",
+        path: "parentId",
         select: "_id typeId postTypeId contents",
         match: { statusId: StatusId.Active },
         options: { omitUndefined: true },
@@ -215,8 +215,8 @@ const getMany = async (params: IPostTermGetManyParamService) => {
 const add = async (params: IPostTermAddParamService) => {
     params = MongoDBHelpers.convertToObjectIdData(params, postTermObjectIdKeys);
 
-    if (VariableLibrary.isEmpty(params.mainId)) {
-        delete params.mainId;
+    if (VariableLibrary.isEmpty(params.parentId)) {
+        delete params.parentId;
     }
 
     if(params.contents){

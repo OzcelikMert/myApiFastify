@@ -1,6 +1,6 @@
 export const postTermObjectIdKeys = [
     "_id",
-    "mainId",
+    "parentId",
     "authorId",
     "lastAuthorId",
     "langId"
