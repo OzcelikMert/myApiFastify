@@ -7,6 +7,7 @@ import {LogMiddleware} from "@middlewares/log.middleware";
 import {IViewPostSchema} from "@schemas/view.schema";
 import {VariableLibrary} from "@library/variable";
 import {DateMask} from "@library/variable/date";
+import {lookup} from "geoip-lite";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -15,13 +16,14 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IViewPostSchema;
 
         let url = VariableLibrary.isEmpty(reqData.body.url) ? "/" : reqData.body.url;
+        let ip = req.ip;
 
         let dateStart = new Date(new Date().getStringWithMask(DateMask.DATE)),
             dateEnd = new Date(new Date().getStringWithMask(DateMask.DATE));
         dateEnd.addDays(1);
 
         let serviceResult = await ViewService.get({
-            ip: req.ip,
+            ip: ip,
             url: url,
             dateStart: dateStart,
             dateEnd: dateEnd
@@ -31,6 +33,14 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
             apiResult.status = false;
             apiResult.errorCode = ApiErrorCodes.alreadyData;
             apiResult.statusCode = ApiStatusCodes.conflict;
+        }else {
+            let ipDetail = lookup(req.ip);
+            await ViewService.add({
+                ...reqData.body,
+                ip: ip,
+                url: url,
+                ...ipDetail
+            });
         }
 
         if (!apiResult.status) {

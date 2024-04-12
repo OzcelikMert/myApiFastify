@@ -24,6 +24,7 @@ export interface IPostModel {
     eCommerce?: IPostECommerceModel
     comments?: IPostCommentModel[]
     similarItems?: string[] | ObjectId[]
+    isNoIndex?: boolean
     updatedAt?: string
     createdAt?: string
 }

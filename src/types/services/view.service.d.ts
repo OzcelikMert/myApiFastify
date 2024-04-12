@@ -20,7 +20,7 @@ export type IViewGetTotalResultService = {
 
 export interface IViewAddParamService {
     url: string,
-    langId: string
+    langId?: string
     ip: string,
     country?: string,
     city?: string,

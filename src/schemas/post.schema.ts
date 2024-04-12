@@ -18,6 +18,7 @@ const postBody = object({
     dateStart: string().optional(),
     rank: number().min(0),
     isFixed: boolean().default(false),
+    isNoIndex: boolean().optional(),
     contents: object({
         langId: string().min(1),
         title: string().min(3),
@@ -185,7 +186,7 @@ const putViewWithIdSchema = object({
     }),
     body: object({
         typeId: z.nativeEnum(PostTypeId),
-        langId: string().min(1)
+        langId: string().optional()
     }),
 });
 

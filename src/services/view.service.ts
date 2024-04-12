@@ -9,6 +9,7 @@ import {MongoDBHelpers} from "@library/mongodb/helpers";
 import {VariableLibrary} from "@library/variable";
 import {viewObjectIdKeys} from "@constants/objectIdKeys/view.objectIdKeys";
 import {IViewModel} from "types/models/view.model";
+import {Config} from "@configs/index";
 
 const get = async (params: IViewGetParamService) => {
     let filters: mongoose.FilterQuery<IViewModel> = {}
@@ -126,6 +127,8 @@ const getTotalWithCountry = async (params: IViewGetParamService) => {
 const add = async (params: IViewAddParamService) => {
     params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, viewObjectIdKeys);
+
+    params.langId = params.langId || Config.defaultLangId;
 
     return (await viewModel.create(params)).toObject()
 }

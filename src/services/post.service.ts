@@ -566,6 +566,7 @@ const updateRank = async (params: IPostUpdateRankParamService) => {
 const updateView = async (params: IPostUpdateViewParamService) => {
     params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
 
     let filters: mongoose.FilterQuery<IPostModel> = {}
 
@@ -586,7 +587,7 @@ const updateView = async (params: IPostUpdateViewParamService) => {
     let views = 0,
         totalViews = 0;
     if (doc) {
-        let docContent = doc.contents.findSingle("langId", params.langId);
+        let docContent = doc.contents.findSingle("langId", params.langId || defaultLangId);
         if (docContent) {
             if (docContent.views) {
                 docContent.views = Number(docContent.views) + 1;

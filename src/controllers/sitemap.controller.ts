@@ -18,7 +18,7 @@ const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
         apiResult.data = {
             post: await SitemapService.getPostCount({typeId: [PostTypeId.Page, PostTypeId.Portfolio, PostTypeId.Blog]}),
             postTerm: await SitemapService.getPostTermCount({
-                postTypeId: [PostTypeId.Page, PostTypeId.Portfolio, PostTypeId.Blog],
+                postTypeId: [PostTypeId.Portfolio, PostTypeId.Blog],
                 typeId: [PostTermTypeId.Category, PostTermTypeId.Tag]
             })
         };

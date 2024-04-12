@@ -111,7 +111,7 @@ export type IPostUpdateRankParamService = {
 export type IPostUpdateViewParamService = {
     _id: string,
     typeId: PostTypeId
-    langId: string
+    langId?: string
 }
 
 export type IPostUpdateStatusManyParamService = {

@@ -2,7 +2,7 @@ import {object, string, z} from 'zod';
 
 const postSchema = object({
     body: object({
-        langId: string().min(1),
+        langId: string().optional(),
         url: string().default(""),
     })
 });

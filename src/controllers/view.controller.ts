@@ -1,13 +1,9 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "@library/api/result";
-import {lookup} from "geoip-lite";
 import {ViewService} from "@services/view.service";
 import {Config} from "@configs/index";
 import {LogMiddleware} from "@middlewares/log.middleware";
-import {IViewPostSchema} from "@schemas/view.schema";
 import {IViewGetTotalResultService} from "types/services/view.service";
-import {IViewModel} from "types/models/view.model";
-import {VariableLibrary} from "@library/variable";
 
 const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -55,28 +51,7 @@ const getStatistics = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const add = async (req: FastifyRequest, reply: FastifyReply) => {
-    await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IViewModel>();
-
-        const reqData = req as IViewPostSchema;
-
-        let ip = req.ip;
-        let ipDetail = lookup(req.ip);
-
-        apiResult.data = await ViewService.add({
-            ...reqData.body,
-            ip: ip,
-            url: VariableLibrary.isEmpty(reqData.body.url) ? "/" : reqData.body.url,
-            ...ipDetail
-        })
-
-        await reply.status(apiResult.statusCode).send(apiResult)
-    });
-}
-
 export const ViewController = {
     getNumber: getNumber,
-    getStatistics: getStatistics,
-    add: add,
+    getStatistics: getStatistics
 };

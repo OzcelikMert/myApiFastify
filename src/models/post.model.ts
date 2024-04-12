@@ -155,6 +155,7 @@ const schema = new mongoose.Schema<IPostModel>(
         dateStart: {type: Date},
         rank: {type: Number, default: 0},
         isFixed: {type: Boolean},
+        isNoIndex: {type: Boolean},
         pageTypeId: {type: Number},
         categories: {type: [mongoose.Schema.Types.ObjectId], ref: postTermModel},
         tags: {type: [mongoose.Schema.Types.ObjectId], ref: postTermModel},
