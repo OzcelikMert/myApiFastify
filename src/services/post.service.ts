@@ -57,7 +57,8 @@ const get = async (params: IPostGetParamService) => {
     }
     if (params.url) filters = {
         ...filters,
-        "contents.url": params.url
+        "contents.url": params.url,
+        "contents.langId": {$in: [params.langId, defaultLangId]}
     }
     if (params.typeId) {
         filters = {

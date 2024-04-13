@@ -4,7 +4,7 @@ import {ApiErrorCodes} from "@library/api/errorCodes";
 import {ApiStatusCodes} from "@library/api/statusCodes";
 import {PostService} from "@services/post.service";
 import {LogMiddleware} from "@middlewares/log.middleware";
-import {IPostDeleteManySchema, IPostPutWithIdSchema} from "@schemas/post.schema";
+import {IPostDeleteManySchema, IPostPutStatusManySchema, IPostPutWithIdSchema} from "@schemas/post.schema";
 import {UserRoleId} from "@constants/userRoles";
 import {PermissionUtil} from "@utils/permission.util";
 import {PostTypeId} from "@constants/postTypes";
@@ -146,28 +146,50 @@ const checkAuthorsWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const checkPageTypeId = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkPermissionForPageWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
         let reqData = req as IPostPutWithIdSchema;
 
-        if(reqData.body.typeId == PostTypeId.Page){
-            if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
-                if(reqData.params._id){
-                    let serviceResult = req.cachedServiceResult as IPostGetResultService;
+        if(reqData.body.typeId == PostTypeId.Page && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)){
+            let serviceResult = req.cachedServiceResult as IPostGetResultService;
 
-                    if (serviceResult.pageTypeId != reqData.body.pageTypeId) {
-                        apiResult.status = false;
-                        apiResult.errorCode = ApiErrorCodes.noPerm;
-                        apiResult.statusCode = ApiStatusCodes.forbidden;
-                    }
-                }else if (reqData.body.pageTypeId != PageTypeId.Default){
-                    apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.noPerm;
-                    apiResult.statusCode = ApiStatusCodes.forbidden;
-                }
+            let reqToCheck = {
+                pageTypeId: reqData.body.pageTypeId,
+                isNoIndex: reqData.body.isNoIndex,
+                statusId: reqData.body.statusId
             }
+
+            let serviceToCheck = {
+                pageTypeId: serviceResult.pageTypeId,
+                isNoIndex: serviceResult.isNoIndex,
+                statusId: serviceResult.statusId
+            }
+
+            if (JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)) {
+                apiResult.status = false;
+                apiResult.errorCode = ApiErrorCodes.noPerm;
+                apiResult.statusCode = ApiStatusCodes.forbidden;
+            }
+        }
+
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
+        }
+    });
+}
+
+const checkUserRoleForPage = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IPostPutStatusManySchema;
+
+        if(reqData.body.typeId == PostTypeId.Page && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)){
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.noPerm;
+            apiResult.statusCode = ApiStatusCodes.forbidden;
         }
 
         if (!apiResult.status) {
@@ -182,5 +204,6 @@ export const PostMiddleware = {
     checkIsAuthorWithId: checkIsAuthorWithId,
     checkIsAuthorMany: checkIsAuthorMany,
     checkAuthorsWithId: checkAuthorsWithId,
-    checkPageTypeId: checkPageTypeId
+    checkPermissionForPageWithId: checkPermissionForPageWithId,
+    checkUserRoleForPage: checkUserRoleForPage
 };

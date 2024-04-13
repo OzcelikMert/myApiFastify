@@ -6,6 +6,7 @@ import {IEndPointPermissionFunc, IEndPointPermission} from "types/constants/endP
 import {PermissionUtil} from "@utils/permission.util";
 import {LogMiddleware} from "@middlewares/log.middleware";
 import {IUserGetResultService} from "types/services/user.service";
+import {UserRoleId} from "@constants/userRoles";
 
 const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => async (
     req: FastifyRequest,
@@ -40,6 +41,30 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
     });
 };
 
+const checkUserRole = (roleId: UserRoleId) => async (req: FastifyRequest, res: FastifyReply) => {
+    await LogMiddleware.error(req, res, async () => {
+        let apiResult = new ApiResult();
+
+        if (req.sessionAuth && req.sessionAuth.user) {
+           if(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user.roleId, roleId)){
+               apiResult.status = false;
+               apiResult.errorCode = ApiErrorCodes.noPerm;
+               apiResult.statusCode = ApiStatusCodes.forbidden;
+           }
+        }else {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notLoggedIn;
+            apiResult.statusCode = ApiStatusCodes.unauthorized;
+        }
+
+        if (!apiResult.status) {
+            res.status(apiResult.statusCode).send(apiResult)
+        }
+    });
+};
+
+
 export const PermissionMiddleware = {
-    check: check
+    check: check,
+    checkUserRole: checkUserRole
 };

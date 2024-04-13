@@ -18,8 +18,8 @@ const removeSlider: IEndPointPermission = {
 }
 
 const addPage: IEndPointPermission = {
-    permissionId: [PermissionId.PageAdd],
-    userRoleId: UserRoleId.Editor
+    permissionId: [],
+    userRoleId: UserRoleId.SuperAdmin
 }
 
 const updatePage: IEndPointPermission = {
@@ -28,8 +28,8 @@ const updatePage: IEndPointPermission = {
 }
 
 const removePage: IEndPointPermission = {
-    permissionId: [PermissionId.PageDelete],
-    userRoleId: UserRoleId.Editor
+    permissionId: [],
+    userRoleId: UserRoleId.SuperAdmin
 }
 
 const addBlog: IEndPointPermission = {

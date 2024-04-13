@@ -60,7 +60,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
         apiResult.data = await PostService.get({
             ...reqData.params,
             ...reqData.query,
-            url: reqData.query.pageTypeId != PageTypeId.Default ? undefined : reqData.params.url
+            url: reqData.query.pageTypeId && reqData.query.pageTypeId != PageTypeId.Default ? undefined : reqData.params.url
         });
 
         await reply.status(apiResult.statusCode).send(apiResult);
