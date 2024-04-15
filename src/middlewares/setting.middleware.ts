@@ -6,7 +6,7 @@ import {UserRoleId} from "@constants/userRoles";
 import {ApiErrorCodes} from "@library/api/errorCodes";
 import {ApiStatusCodes} from "@library/api/statusCodes";
 import {
-    ISettingPutContactFormSchema,
+    ISettingPutContactFormSchema, ISettingPutGeneralSchema,
     ISettingPutSocialMediaSchema
 } from "@schemas/setting.schema";
 import {SettingService} from "@services/setting.service";
@@ -15,6 +15,40 @@ import {SettingProjectionKeys} from "@constants/settingProjections";
 const check = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
+
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
+        }
+    });
+}
+
+const checkPermissionForGeneral = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as ISettingPutGeneralSchema;
+
+        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
+            let serviceResult = await SettingService.get({projection: SettingProjectionKeys.General});
+
+            if(serviceResult){
+                let reqToCheck = {
+                    head: reqData.body.head ?? "",
+                    script: reqData.body.script ?? ""
+                }
+
+                let serviceToCheck = {
+                    head: serviceResult.head ?? "",
+                    script: serviceResult.script ?? ""
+                }
+
+                if (JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)) {
+                    apiResult.status = false;
+                    apiResult.errorCode = ApiErrorCodes.noPerm;
+                    apiResult.statusCode = ApiStatusCodes.forbidden;
+                }
+            }
+        }
 
         if (!apiResult.status) {
             await reply.status(apiResult.statusCode).send(apiResult)
@@ -95,5 +129,6 @@ const checkPermissionForContactForms = async (req: FastifyRequest, reply: Fastif
 export const SettingMiddleware = {
     check: check,
     checkPermissionForSocialMedia: checkPermissionForSocialMedia,
-    checkPermissionForContactForms: checkPermissionForContactForms
+    checkPermissionForContactForms: checkPermissionForContactForms,
+    checkPermissionForGeneral: checkPermissionForGeneral
 };

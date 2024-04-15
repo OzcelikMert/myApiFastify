@@ -11,7 +11,7 @@ import {SettingMiddleware} from "@middlewares/setting.middleware";
 export const settingRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
     const settingEndPoint = new SettingEndPoint("");
     fastify.get(settingEndPoint.GET, { preHandler: [RequestMiddleware.check(SettingSchema.get)] }, SettingController.get);
-    fastify.put(settingEndPoint.UPDATE_GENERAL, { preHandler: [RequestMiddleware.check(SettingSchema.putGeneral), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_GENERAL)] }, SettingController.updateGeneral);
+    fastify.put(settingEndPoint.UPDATE_GENERAL, { preHandler: [RequestMiddleware.check(SettingSchema.putGeneral), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_GENERAL), SettingMiddleware.checkPermissionForGeneral] }, SettingController.updateGeneral);
     fastify.put(settingEndPoint.UPDATE_SEO, { preHandler: [RequestMiddleware.check(SettingSchema.putSeo), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_SEO)] }, SettingController.updateSEO);
     fastify.put(settingEndPoint.UPDATE_CONTACT_FORM, { preHandler: [RequestMiddleware.check(SettingSchema.putContactForm), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_CONTACT_FORM), SettingMiddleware.checkPermissionForContactForms] }, SettingController.updateContactForm);
     fastify.put(settingEndPoint.UPDATE_SOCIAL_MEDIA, { preHandler: [RequestMiddleware.check(SettingSchema.putSocialMedia), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_SOCIAL_MEDIA), SettingMiddleware.checkPermissionForSocialMedia] }, SettingController.updateSocialMedia);
