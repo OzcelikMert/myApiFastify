@@ -12,6 +12,8 @@ declare global {
 
         getStringWithMask(mask: string | DateMask, utc?: boolean): string
 
+        diffDays(date: Date): Number
+
         diffMinutes(date: Date): number
 
         diffSeconds(date: Date): number
@@ -130,6 +132,11 @@ Date.prototype.getStringWithMask = function (mask, utc = false) {
         return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);
     });
 };
+Date.prototype.diffDays = function (date) {
+    let diff = (date.getTime() - this.getTime()) / 1000;
+    diff /= (60 * 60 * 24);
+    return Math.ceil(diff);
+}
 Date.prototype.diffMinutes = function (date) {
     let diff = (this.getTime() - date.getTime()) / 1000;
     diff /= 60;

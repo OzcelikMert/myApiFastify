@@ -4,14 +4,14 @@ import {ViewTimer} from "@timers/view.timer";
 import {UserTimer} from "@timers/user.timer";
 
 const initLongTimer = (hours: number = 6) => {
-    console.log(chalk.green(`#Long Timer (each ${hours} hours)`));
-    console.log(chalk.blue(`- Long Timer Initialized ${new Date().toLocaleString()}`))
+    console.log(chalk.green(`#Timer (each ${hours} hours)`));
+    console.log(chalk.blue(`- Initialized ${new Date().toLocaleString()}`))
 
     async function start() {
         setTimeout(async () => {
             try {
-                console.log(chalk.green(`#Long Timer (each ${hours} hours)`));
-                console.log(chalk.blue(`- Long Timer Started ${new Date().toLocaleString()}`))
+                console.log(chalk.green(`#Timer (each ${hours} hours)`));
+                console.log(chalk.blue(`- Started ${new Date().toLocaleString()}`))
                 console.time(`longTimer`)
 
                 /* Check Pending Posts */

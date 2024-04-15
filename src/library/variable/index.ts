@@ -1,12 +1,6 @@
 import string from "./string";
 const { createHash } = require('crypto');
 
-export enum FilterTypes {
-    EMAIL,
-    INT,
-    FLOAT
-}
-
 export class VariableLibrary {
     static clearAllScriptTags<T>(data: any, expectKeys?: string[]): T {
         for (let key in data) {
@@ -59,30 +53,6 @@ export class VariableLibrary {
         return (this.isSet(variable)) ? variable() : default_value;
     }
     static hash(string: string, hashType: string): string { return createHash(hashType).update(string).digest("hex"); }
-    private static filterVar(variable: any, filter_type: FilterTypes) : string {
-        let regex;
-
-        // Check Filter Type
-        switch(filter_type){
-            case FilterTypes.EMAIL:
-                regex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
-                break;
-            case FilterTypes.INT:
-                regex = /([0-9]+)/g;
-                break;
-            case FilterTypes.FLOAT:
-                regex = /[+-]?([0-9]*[.])[0-9]+/g;
-        }
-        // Check Defined
-        let match;
-        if ((match = regex.exec(variable)) != null) {
-            variable = match[0];
-        } else {
-            variable = "";
-        }
-
-        return variable;
-    }
 }
 
 
