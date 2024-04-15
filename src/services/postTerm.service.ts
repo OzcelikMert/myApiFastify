@@ -93,7 +93,7 @@ const get = async (params: IPostTermGetParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image",
+        select: "_id name url image facebook instagram twitter",
         options: {omitUndefined: true},
     });
 
@@ -177,7 +177,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
             "authorId",
             "lastAuthorId"
         ].join(" "),
-        select: "_id name url image",
+        select: "_id name url image facebook instagram twitter",
         options: {omitUndefined: true},
     })
 

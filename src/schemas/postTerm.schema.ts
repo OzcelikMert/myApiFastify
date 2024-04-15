@@ -13,6 +13,7 @@ const postBody = object({
     contents: object({
         langId: string().min(1),
         title: string().min(3),
+        shortContent: string().optional(),
         image: string().optional(),
         url: string().optional(),
     })

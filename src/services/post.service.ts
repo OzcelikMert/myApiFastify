@@ -152,7 +152,7 @@ const get = async (params: IPostGetParamService) => {
             "lastAuthorId",
             "authors"
         ].join(" "),
-        select: "_id name url image",
+        select: "_id name url image facebook instagram twitter",
         options: {omitUndefined: true},
     });
 
@@ -225,7 +225,7 @@ const get = async (params: IPostGetParamService) => {
                 langId: params.langId,
                 statusId: params.statusId,
                 typeId: [params.typeId],
-                ltCreatedAt: new Date(doc.createdAt ?? ""),
+                gtCreatedAt: new Date(doc.createdAt ?? ""),
                 count: 1
             });
 
@@ -237,7 +237,7 @@ const get = async (params: IPostGetParamService) => {
                 langId: params.langId,
                 statusId: params.statusId,
                 typeId: [params.typeId],
-                gtCreatedAt: new Date(doc.createdAt ?? ""),
+                ltCreatedAt: new Date(doc.createdAt ?? ""),
                 count: 1
             });
 
@@ -343,7 +343,7 @@ const getMany = async (params: IPostGetManyParamService) => {
             "lastAuthorId",
             "authors"
         ].join(" "),
-        select: "_id name url image",
+        select: "_id name url image facebook instagram twitter",
         options: {omitUndefined: true},
     });
 
