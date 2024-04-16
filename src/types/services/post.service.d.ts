@@ -76,8 +76,8 @@ export interface IPostGetManyParamService {
     tags?: string[]
     authorId?: string
     dateStart?: Date
-    ltCreatedAt?: Date
-    gtCreatedAt?: Date
+    ltId?: string
+    gtId?: string
 }
 
 export interface IPostGetCountParamService {

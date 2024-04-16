@@ -225,8 +225,9 @@ const get = async (params: IPostGetParamService) => {
                 langId: params.langId,
                 statusId: params.statusId,
                 typeId: [params.typeId],
-                gtCreatedAt: new Date(doc.createdAt ?? ""),
-                count: 1
+                ltId: doc._id.toString(),
+                count: 1,
+                sortTypeId: PostSortTypeId.Newest
             });
 
             if (prevBlog.length > 0) {
@@ -237,8 +238,9 @@ const get = async (params: IPostGetParamService) => {
                 langId: params.langId,
                 statusId: params.statusId,
                 typeId: [params.typeId],
-                ltCreatedAt: new Date(doc.createdAt ?? ""),
-                count: 1
+                gtId: doc._id.toString(),
+                count: 1,
+                sortTypeId: PostSortTypeId.Oldest
             });
 
             if (nextBlog.length > 0) {
@@ -295,21 +297,19 @@ const getMany = async (params: IPostGetManyParamService) => {
         params.dateStart.setHours(0, 0, 0, 0);
         filters = {
             ...filters,
-            dateStart: {$lt: params.dateStart.toISOString()}
+            dateStart: {$lt: params.dateStart}
         }
     }
-    if (params.ltCreatedAt) {
-        params.ltCreatedAt.setHours(0, 0, 0, 0);
+    if (params.ltId) {
         filters = {
             ...filters,
-            createdAt: {$lt: params.ltCreatedAt.toISOString()}
+            _id: {$lt: params.ltId}
         }
     }
-    if (params.gtCreatedAt) {
-        params.gtCreatedAt.setHours(0, 0, 0, 0);
+    if (params.gtId) {
         filters = {
             ...filters,
-            createdAt: {$gt: params.gtCreatedAt.toISOString()}
+            _id: {$gt: params.gtId}
         }
     }
 
@@ -349,13 +349,16 @@ const getMany = async (params: IPostGetManyParamService) => {
 
     switch (params.sortTypeId) {
         case PostSortTypeId.Newest:
-            query.sort({createdAt: "desc"});
+            query.sort({_id: "desc"});
+            break;
+        case PostSortTypeId.Oldest:
+            query.sort({_id: "asc"});
             break;
         case PostSortTypeId.MostPopular:
-            query.sort({views: "desc", createdAt: "desc"});
+            query.sort({views: "desc", _id: "desc"});
             break;
         default:
-            query.sort({isFixed: "desc", rank: "asc", createdAt: "desc"});
+            query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
             break;
     }
 
