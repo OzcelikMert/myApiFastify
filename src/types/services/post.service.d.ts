@@ -107,6 +107,7 @@ export interface IPostGetCountParamService {
     statusId?: StatusId
     title?: string
     categories?: string[]
+    authorId?: string
 }
 
 export type IPostAddParamService = {

@@ -165,6 +165,7 @@ const getCountSchema = object({
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
         categories: ZodUtil.convertToArray(array(string().min(1))).optional(),
         title: string().optional(),
+        authorId: string().optional(),
     })
 });
 

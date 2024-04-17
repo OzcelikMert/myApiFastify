@@ -468,6 +468,10 @@ const getCount = async (params: IPostGetCountParamService) => {
         ...filters,
         statusId: params.statusId
     }
+    if (params.authorId) filters = {
+        ...filters,
+        $or: [{authorId: params.authorId}, {authors: {$in: params.authorId}}]
+    }
     if (params.title) filters = {
         ...filters,
         "contents.title": {$regex: new RegExp(params.title, "i")}
