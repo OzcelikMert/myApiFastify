@@ -5,7 +5,7 @@ import {LogMiddleware} from "@middlewares/log.middleware";
 import {
     IPostDeleteManySchema,
     IPostGetCountSchema,
-    IPostGetManySchema,
+    IPostGetManySchema, IPostGetPrevNextWithURLSchema,
     IPostGetWithIdSchema,
     IPostGetWithURLSchema,
     IPostPostSchema,
@@ -16,7 +16,11 @@ import {
 } from "@schemas/post.schema";
 import {PermissionUtil} from "@utils/permission.util";
 import {UserRoleId} from "@constants/userRoles";
-import {IPostGetManyResultService, IPostGetResultService} from "types/services/post.service";
+import {
+    IPostGetManyResultService,
+    IPostGetPrevNextResultService,
+    IPostGetResultService
+} from "types/services/post.service";
 import {IPostModel} from "types/models/post.model";
 import {PageTypeId} from "@constants/pageTypes";
 
@@ -62,6 +66,27 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query,
             url: reqData.query.pageTypeId && reqData.query.pageTypeId != PageTypeId.Default ? undefined : reqData.params.url
         });
+
+        await reply.status(apiResult.statusCode).send(apiResult);
+    })
+}
+
+const getPrevNextWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult<{prev?: IPostGetPrevNextResultService | null, next?: IPostGetPrevNextResultService | null }>();
+
+        let reqData = req as IPostGetPrevNextWithURLSchema;
+
+        apiResult.data = {
+            prev: await PostService.getPrevNext({
+                ...reqData.query,
+                prevId: reqData.params._id
+            }),
+            next: await PostService.getPrevNext({
+                ...reqData.query,
+                nextId: reqData.params._id
+            })
+        };
 
         await reply.status(apiResult.statusCode).send(apiResult);
     })
@@ -177,6 +202,7 @@ export const PostController = {
     getWithId: getWithId,
     getMany: getMany,
     getWithURL: getWithURL,
+    getPrevNextWithId: getPrevNextWithId,
     getCount: getCount,
     add: add,
     updateWithId: updateWithId,

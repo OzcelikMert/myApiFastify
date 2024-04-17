@@ -14,12 +14,14 @@ import {subscriberRoute} from "@routers/routes/subscriber.route";
 import {sitemapRoute} from "@routers/routes/sitemap.route";
 import {navigationRoute} from "@routers/routes/navigation.route";
 import {componentRoute} from "@routers/routes/component.route";
+import {postCommentRoute} from "@routers/routes/postComment.route";
 
 export const routers = function (fastify: FastifyInstance, opts: any, done: () => void) {
     fastify.register(userRoute, { prefix: EndPoints.USER });
     fastify.register(authRoute, { prefix: EndPoints.AUTH });
     fastify.register(postRoute, { prefix: EndPoints.POST  });
     fastify.register(postTermRoute, { prefix: EndPoints.POST_TERM });
+    fastify.register(postCommentRoute, { prefix: EndPoints.POST_COMMENT });
     fastify.register(galleryRoute, { prefix: EndPoints.GALLERY });
     fastify.register(settingRoute, { prefix: EndPoints.SETTING });
     fastify.register(languageRoute, { prefix: EndPoints.LANGUAGE });

@@ -30,7 +30,7 @@ const getPost = async (params: ISitemapGetPostParamService) => {
 
     let query = postModel.find(filters);
 
-    query.sort({createdAt: "desc"});
+    query.sort({_id: "desc"});
 
     query.skip(sitemapLimit * (params.page && params.page > 0 ? params.page - 1 : 0));
     query.limit(sitemapLimit);
@@ -103,7 +103,7 @@ const getPostTerm = async (params: ISitemapGetPostTermParamService) => {
 
     let query = postTermModel.find(filters);
 
-    query.sort({createdAt: "desc"});
+    query.sort({_id: "desc"});
 
     query.skip(sitemapLimit * (params.page && params.page > 0 ? params.page - 1 : 0));
     query.limit(sitemapLimit);

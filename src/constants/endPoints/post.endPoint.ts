@@ -11,6 +11,7 @@ export class PostEndPoint {
     get GET() { return PathUtil.createPath(this.mainPath, "/get"); }
     get GET_WITH_ID() { return PathUtil.createPath(this.mainPath, `/get/:_id`); }
     get GET_WITH_URL() { return PathUtil.createPath(this.mainPath, `/get/url/:url`); }
+    get GET_PREV_NEXT_WITH_ID() { return PathUtil.createPath(this.mainPath, "/get/prev-next/:_id"); }
     get GET_COUNT() { return PathUtil.createPath(this.mainPath, "/get/count"); }
     get ADD() { return PathUtil.createPath(this.mainPath, "/add"); }
     get UPDATE_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/:_id`); }

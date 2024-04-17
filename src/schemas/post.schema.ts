@@ -19,6 +19,7 @@ const postBody = object({
     rank: number().min(0),
     isFixed: boolean().default(false),
     isNoIndex: boolean().optional(),
+    similarItems: array(string().min(1)).optional(),
     contents: object({
         langId: string().min(1),
         title: string().min(3),
@@ -122,10 +123,12 @@ const getManySchema = object({
         langId: string().optional(),
         title: string().optional(),
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
+        authorId: string().optional(),
         count: z.coerce.number().optional(),
         page: z.coerce.number().optional(),
         sortTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostSortTypeId)).optional(),
-        categories: ZodUtil.convertToArray(array(string().min(1))).optional()
+        categories: ZodUtil.convertToArray(array(string().min(1))).optional(),
+        tags: ZodUtil.convertToArray(array(string().min(1))).optional()
     })
 });
 
@@ -138,7 +141,20 @@ const getWithURLSchema = object({
         langId: string().optional(),
         pageTypeId: ZodUtil.convertToNumber(z.nativeEnum(PageTypeId)).optional(),
         statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
-        isIncludePrevAndNext: z.coerce.boolean().optional()
+    })
+});
+
+const getPrevNextWithIdSchema = object({
+    params: object({
+        _id: string().min(1),
+    }),
+    query: object({
+        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
+        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
+        langId: string().optional(),
+        authorId: string().optional(),
+        categories: ZodUtil.convertToArray(array(string().min(1))).optional(),
+        tags: ZodUtil.convertToArray(array(string().min(1))).optional()
     })
 });
 
@@ -200,6 +216,7 @@ const deleteManySchema = object({
 export type IPostGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type IPostGetManySchema = z.infer<typeof getManySchema>;
 export type IPostGetWithURLSchema = z.infer<typeof getWithURLSchema>;
+export type IPostGetPrevNextWithURLSchema = z.infer<typeof getPrevNextWithIdSchema>;
 export type IPostGetCountSchema = z.infer<typeof getCountSchema>;
 export type IPostPostSchema = z.infer<typeof postSchema>;
 export type IPostPutWithIdSchema = z.infer<typeof putWithIdSchema>;
@@ -212,6 +229,7 @@ export const PostSchema = {
     getWithId: getWithIdSchema,
     getMany: getManySchema,
     getWithURL: getWithURLSchema,
+    getPrevNextWithId: getPrevNextWithIdSchema,
     getCount: getCountSchema,
     post: postSchema,
     putWithId: putWithIdSchema,

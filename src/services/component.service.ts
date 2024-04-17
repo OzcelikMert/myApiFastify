@@ -37,7 +37,7 @@ const get = async (params: IComponentGetParamService) => {
         options: {omitUndefined: true},
     });
 
-    query.sort({rank: "asc", createdAt: "desc"});
+    query.sort({rank: "asc", _id: "desc"});
 
     let doc = (await query.lean<IComponentGetResultService>().exec());
 
@@ -85,9 +85,11 @@ const getMany = async (params: IComponentGetManyParamService) => {
         options: {omitUndefined: true},
     })
 
-    query.sort({rank: "asc", createdAt: "desc"});
+    query.sort({rank: "asc", _id: "desc"});
 
-    return (await query.lean<IComponentGetResultService[]>().exec()).map(doc => {
+    let docs = (await query.lean<IComponentGetResultService[]>().exec());
+
+    return docs.map(doc => {
         for (let docElement of doc.elements) {
             if (Array.isArray(docElement.contents)) {
                 docElement.alternates = docElement.contents.map(content => ({

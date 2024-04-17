@@ -6,7 +6,7 @@ import {
     IPostGetCountParamService,
     IPostGetManyParamService,
     IPostGetManyResultService,
-    IPostGetParamService,
+    IPostGetParamService, IPostGetPrevNextParamService, IPostGetPrevNextResultService,
     IPostGetResultService,
     IPostUpdateParamService,
     IPostUpdateRankParamService,
@@ -156,7 +156,7 @@ const get = async (params: IPostGetParamService) => {
         options: {omitUndefined: true},
     });
 
-    query.sort({isFixed: "desc", rank: "asc", createdAt: "desc"});
+    query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
 
     let doc = (await query.lean<IPostGetResultService>().exec());
 
@@ -219,34 +219,6 @@ const get = async (params: IPostGetParamService) => {
         }
 
         doc.views = views;
-
-        if (params.isIncludePrevAndNext) {
-            let prevBlog = await getMany({
-                langId: params.langId,
-                statusId: params.statusId,
-                typeId: [params.typeId],
-                ltId: doc._id.toString(),
-                count: 1,
-                sortTypeId: PostSortTypeId.Newest
-            });
-
-            if (prevBlog.length > 0) {
-                doc.prev = prevBlog[0];
-            }
-
-            let nextBlog = await getMany({
-                langId: params.langId,
-                statusId: params.statusId,
-                typeId: [params.typeId],
-                gtId: doc._id.toString(),
-                count: 1,
-                sortTypeId: PostSortTypeId.Oldest
-            });
-
-            if (nextBlog.length > 0) {
-                doc.next = nextBlog[0];
-            }
-        }
     }
 
     return doc;
@@ -298,18 +270,6 @@ const getMany = async (params: IPostGetManyParamService) => {
         filters = {
             ...filters,
             dateStart: {$lt: params.dateStart}
-        }
-    }
-    if (params.ltId) {
-        filters = {
-            ...filters,
-            _id: {$lt: params.ltId}
-        }
-    }
-    if (params.gtId) {
-        filters = {
-            ...filters,
-            _id: {$gt: params.gtId}
         }
     }
 
@@ -365,7 +325,9 @@ const getMany = async (params: IPostGetManyParamService) => {
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
     if (params.count) query.limit(params.count);
 
-    return (await query.lean<IPostGetManyResultService[]>().exec()).map((doc) => {
+    let docs = (await query.lean<IPostGetManyResultService[]>().exec());
+
+    return docs.map((doc) => {
         let views = 0;
 
         if (doc.categories) {
@@ -430,6 +392,68 @@ const getMany = async (params: IPostGetManyParamService) => {
 
         return doc;
     });
+}
+
+const getPrevNext = async (params: IPostGetPrevNextParamService) => {
+    let filters: mongoose.FilterQuery<IPostModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+    let sortTypeId: PostSortTypeId = PostSortTypeId.Newest;
+
+    if (params.authorId) filters = {
+        ...filters,
+        $or: [{authorId: params.authorId}, {authors: {$in: params.authorId}}]
+    }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: {$in: params.typeId}
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+    if (params.categories) filters = {
+        ...filters,
+        categories: {$in: params.categories}
+    }
+    if (params.tags) filters = {
+        ...filters,
+        tags: {$in: params.tags}
+    }
+    if (params.prevId) {
+        filters = {
+            ...filters,
+            _id: {$lt: params.prevId}
+        }
+    }
+    if (params.nextId) {
+        filters = {
+            ...filters,
+            _id: {$gt: params.nextId}
+        }
+        sortTypeId = PostSortTypeId.Oldest;
+    }
+
+    let query = postModel.findOne(filters, "_id contents._id contents.langId contents.title contents.url contents.image createdAt");
+
+    switch (sortTypeId) {
+        case PostSortTypeId.Newest:
+            query.sort({_id: "desc"});
+            break;
+        case PostSortTypeId.Oldest:
+            query.sort({_id: "asc"});
+            break;
+    }
+
+    let doc = (await query.lean<IPostGetPrevNextResultService>().exec());
+
+    if (doc) {
+        if (Array.isArray(doc.contents)) {
+            doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+        }
+    }
+
+    return doc;
 }
 
 const getCount = async (params: IPostGetCountParamService) => {
@@ -638,7 +662,9 @@ const updateStatusMany = async (params: IPostUpdateStatusManyParamService) => {
         }
     }
 
-    return await Promise.all((await postModel.find(filters).exec()).map(async doc => {
+    let docs = (await postModel.find(filters).exec());
+
+    return await Promise.all(docs.map(async doc => {
         doc.statusId = params.statusId;
 
         if (params.lastAuthorId) {
@@ -677,6 +703,7 @@ const deleteMany = async (params: IPostDeleteManyParamService) => {
 export const PostService = {
     get: get,
     getMany: getMany,
+    getPrevNext: getPrevNext,
     getCount: getCount,
     add: add,
     update: update,

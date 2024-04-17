@@ -16,22 +16,11 @@ import {
     IPostECommerceShippingModel,
     IPostECommerceVariationContentModel,
     IPostECommerceVariationModel,
-    IPostECommerceVariationSelectedModel, IPostCommentModel
+    IPostECommerceVariationSelectedModel
 } from "types/models/post.model";
 import {ProductTypeId} from "@constants/productTypes";
 import {AttributeTypeId} from "@constants/attributeTypes";
 import {componentModel} from "@models/component.model";
-
-const schemaComment = new mongoose.Schema<IPostCommentModel>(
-    {
-        parentId: {type: mongoose.Schema.Types.ObjectId, ref: "posts"},
-        authorId: {type: mongoose.Schema.Types.ObjectId, ref: userModel, required: true},
-        message: {type: String, default: ""},
-        likes: {type: [mongoose.Schema.Types.ObjectId], ref: userModel, default: []},
-        dislikes: {type: [mongoose.Schema.Types.ObjectId], ref: userModel, default: []},
-    },
-    {timestamps: true}
-).index({authorId: 1, likes: 1, dislikes: 1});
 
 const schemaPostECommerceVariationContent = new mongoose.Schema<IPostECommerceVariationContentModel>(
     {
@@ -163,7 +152,6 @@ const schema = new mongoose.Schema<IPostModel>(
         eCommerce: {type: schemaECommerce},
         beforeAndAfter: {type: schemaBeforeAndAfter},
         components: {type: [mongoose.Schema.Types.ObjectId], ref: componentModel},
-        comments: {type: [schemaComment], default: []},
         similarItems: {type: [mongoose.Schema.Types.ObjectId], ref: "posts" }
     },
     {timestamps: true}

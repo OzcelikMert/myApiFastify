@@ -24,7 +24,7 @@ export type IPostTermGetResultService = {
     contents?: IPostTermContentModel | IPostTermContentModel[]
     alternates?: IPostTermAlternateService[],
     postCount?: number
-} & Omit<IPostTermModel, "contents">
+} & Omit<IPostTermModel, "contents"|"authorId"|"lastAuthorId"|"parentId">
 
 export interface IPostTermGetParamService {
     langId?: string

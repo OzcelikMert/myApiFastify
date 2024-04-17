@@ -19,10 +19,11 @@ const getPermissionKeyPrefix = (method: string) => {
     return prefix;
 }
 
-const getPostPermission = (req: FastifyRequest) : IEndPointPermission => {
+const getPostPermission = (forceMethod?: "POST" | "PUT" | "DELETE" | "GET") => (req: FastifyRequest) : IEndPointPermission => {
     let reqData = req as any;
     let path = req.originalUrl.replace(`/api`, "");
-    let method = req.method.toUpperCase();
+    let method = forceMethod ?? req.method;
+    method = method.toUpperCase();
     let typeIdKey = path.startsWith(EndPoints.POST_TERM) ? "postTypeId" : "typeId";
     let typeId: PostTypeId = reqData.query[typeIdKey] ?? reqData.body[typeIdKey] ?? 0;
     let permissionKeyPrefix = getPermissionKeyPrefix(method);

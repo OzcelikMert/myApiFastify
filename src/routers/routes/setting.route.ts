@@ -9,13 +9,13 @@ import {SettingEndPointPermission} from "@constants/endPointPermissions/setting.
 import {SettingMiddleware} from "@middlewares/setting.middleware";
 
 export const settingRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
-    const settingEndPoint = new SettingEndPoint("");
-    fastify.get(settingEndPoint.GET, { preHandler: [RequestMiddleware.check(SettingSchema.get)] }, SettingController.get);
-    fastify.put(settingEndPoint.UPDATE_GENERAL, { preHandler: [RequestMiddleware.check(SettingSchema.putGeneral), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_GENERAL), SettingMiddleware.checkPermissionForGeneral] }, SettingController.updateGeneral);
-    fastify.put(settingEndPoint.UPDATE_SEO, { preHandler: [RequestMiddleware.check(SettingSchema.putSeo), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_SEO)] }, SettingController.updateSEO);
-    fastify.put(settingEndPoint.UPDATE_CONTACT_FORM, { preHandler: [RequestMiddleware.check(SettingSchema.putContactForm), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_CONTACT_FORM), SettingMiddleware.checkPermissionForContactForms] }, SettingController.updateContactForm);
-    fastify.put(settingEndPoint.UPDATE_SOCIAL_MEDIA, { preHandler: [RequestMiddleware.check(SettingSchema.putSocialMedia), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_SOCIAL_MEDIA), SettingMiddleware.checkPermissionForSocialMedia] }, SettingController.updateSocialMedia);
-    fastify.put(settingEndPoint.UPDATE_ECOMMERCE, { preHandler: [RequestMiddleware.check(SettingSchema.putECommerce), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_ECOMMERCE)] }, SettingController.updateECommerce);
-    fastify.put(settingEndPoint.UPDATE_PATH, { preHandler: [RequestMiddleware.check(SettingSchema.putPath), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_PATH)] }, SettingController.updatePath);
+    const endPoint = new SettingEndPoint("");
+    fastify.get(endPoint.GET, { preHandler: [RequestMiddleware.check(SettingSchema.get)] }, SettingController.get);
+    fastify.put(endPoint.UPDATE_GENERAL, { preHandler: [RequestMiddleware.check(SettingSchema.putGeneral), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_GENERAL), SettingMiddleware.checkPermissionForGeneral] }, SettingController.updateGeneral);
+    fastify.put(endPoint.UPDATE_SEO, { preHandler: [RequestMiddleware.check(SettingSchema.putSeo), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_SEO)] }, SettingController.updateSEO);
+    fastify.put(endPoint.UPDATE_CONTACT_FORM, { preHandler: [RequestMiddleware.check(SettingSchema.putContactForm), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_CONTACT_FORM), SettingMiddleware.checkPermissionForContactForms] }, SettingController.updateContactForm);
+    fastify.put(endPoint.UPDATE_SOCIAL_MEDIA, { preHandler: [RequestMiddleware.check(SettingSchema.putSocialMedia), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_SOCIAL_MEDIA), SettingMiddleware.checkPermissionForSocialMedia] }, SettingController.updateSocialMedia);
+    fastify.put(endPoint.UPDATE_ECOMMERCE, { preHandler: [RequestMiddleware.check(SettingSchema.putECommerce), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_ECOMMERCE)] }, SettingController.updateECommerce);
+    fastify.put(endPoint.UPDATE_PATH, { preHandler: [RequestMiddleware.check(SettingSchema.putPath), SessionAuthMiddleware.check, PermissionMiddleware.check(SettingEndPointPermission.UPDATE_PATH)] }, SettingController.updatePath);
     done();
 }

@@ -13,6 +13,15 @@ import {StatusId} from "@constants/status";
 import {IComponentModel} from "types/models/component.model";
 import {PostSortTypeId} from "@constants/postSortTypes";
 
+export interface IPostPopulateService {
+    _id: string
+    contents?: Partial<IPostContentModel>
+    authorId?: string
+    authors?: string[]
+    createdAt?: string
+    updatedAt?: string
+}
+
 export interface IPostAlternateService {
     langId: string
     title?: string,
@@ -35,8 +44,6 @@ export type IPostGetResultService = {
             alternates?: IPostAlternateService[]
         })[]
     })
-    prev?: IPostGetManyResultService,
-    next?: IPostGetManyResultService
 } & Omit<IPostModel, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce"|"authors">
 
 export type IPostGetManyResultService = {
@@ -48,6 +55,12 @@ export type IPostGetManyResultService = {
     })
     components?: string[]
 } & Omit<IPostGetResultService, "eCommerce"|"components">
+
+export interface IPostGetPrevNextResultService {
+    _id: string
+    contents?: IPostContentModel | IPostContentModel[]
+    createdAt: string
+}
 
 export interface IPostGetParamService {
     typeId: PostTypeId,
@@ -76,8 +89,17 @@ export interface IPostGetManyParamService {
     tags?: string[]
     authorId?: string
     dateStart?: Date
-    ltId?: string
-    gtId?: string
+}
+
+export interface IPostGetPrevNextParamService {
+    typeId: PostTypeId,
+    statusId?: StatusId
+    prevId?: string
+    nextId?: string
+    langId?: string
+    categories?: string[]
+    tags?: string[]
+    authorId?: string
 }
 
 export interface IPostGetCountParamService {

@@ -95,7 +95,7 @@ const get = async (params: IUserGetParamService, hidePassword: boolean = true, h
         options: {omitUndefined: true},
     });
 
-    query.sort({createdAt: "desc"});
+    query.sort({_id: "desc"});
 
     let doc = (await query.lean<IUserGetResultService>().exec());
 
@@ -173,9 +173,11 @@ const getMany = async (params: IUserGetManyParamService, hidePhone: boolean = fa
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
     if (params.count) query.limit(params.count);
 
-    query.sort({createdAt: "desc"});
+    query.sort({_id: "desc"});
 
-    return (await query.lean<IUserGetResultService[]>().exec()).map((user) => {
+    let docs = (await query.lean<IUserGetResultService[]>().exec());
+
+    return docs.map((user) => {
         delete user.password;
 
         if(hidePhone){
@@ -252,7 +254,9 @@ const updateStatusMany = async (params: IUserUpdateStatusManyParamService) => {
         }
     }
 
-    return await Promise.all((await userModel.find(filters).exec()).map(async doc => {
+    let docs = (await userModel.find(filters).exec());
+
+    return await Promise.all(docs.map(async doc => {
         doc.statusId = params.statusId;
 
         if(params.lastAuthorId){

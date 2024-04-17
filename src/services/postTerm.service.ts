@@ -97,7 +97,7 @@ const get = async (params: IPostTermGetParamService) => {
         options: {omitUndefined: true},
     });
 
-    query.sort({rank: "asc", createdAt: "desc"});
+    query.sort({rank: "asc", _id: "desc"});
 
     let doc = (await query.lean<IPostTermGetResultService>().exec());
 
@@ -184,9 +184,11 @@ const getMany = async (params: IPostTermGetManyParamService) => {
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
     if (params.count) query.limit(params.count);
 
-    query.sort({rank: "asc", createdAt: "desc"});
+    query.sort({rank: "asc", _id: "desc"});
 
-    return Promise.all((await query.lean<IPostTermGetResultService[]>().exec()).map(async (doc) => {
+    let docs = (await query.lean<IPostTermGetResultService[]>().exec());
+
+    return Promise.all(docs.map(async (doc) => {
         if (Array.isArray(doc.contents)) {
             doc.alternates = doc.contents.map(content => ({
                 langId: content.langId.toString(),
@@ -338,7 +340,9 @@ const updateStatusMany = async (params: IPostTermUpdateStatusManyParamService) =
         postTypeId: params.postTypeId
     }
 
-    return await Promise.all((await postTermModel.find(filters).exec()).map(async doc => {
+    let docs = (await postTermModel.find(filters).exec());
+
+    return await Promise.all(docs.map(async doc => {
         doc.statusId = params.statusId;
         doc.lastAuthorId = params.lastAuthorId;
 

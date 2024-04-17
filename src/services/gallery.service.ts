@@ -37,7 +37,7 @@ const get = async (params: IGalleryGetParamService) => {
         options: {omitUndefined: true},
     });
 
-    query.sort({createdAt: "desc"});
+    query.sort({_id: "desc"});
 
     return (await query.lean<IGalleryGetResultService>().exec());
 }
@@ -73,9 +73,11 @@ const getMany = async (params: IGalleryGetManyParamService) => {
         options: {omitUndefined: true},
     });
 
-    query.sort({createdAt: "desc"});
+    query.sort({_id: "desc"});
 
-    return (await query.lean<IGalleryGetResultService[]>().exec());
+    let docs = (await query.lean<IGalleryGetResultService[]>().exec());
+
+    return docs;
 }
 
 const add = async (params: IGalleryAddParamService) => {

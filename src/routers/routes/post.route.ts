@@ -10,16 +10,17 @@ import {PermissionUtil} from "@utils/permission.util";
 import {PostEndPoint} from "@constants/endPoints/post.endPoint";
 
 export const postRoute = function (fastify: FastifyInstance, opts: any, done: () => void) {
-    const postEndPoint = new PostEndPoint("");
-    fastify.get(postEndPoint.GET, { preHandler: [RequestMiddleware.check(PostSchema.getMany)] }, PostController.getMany);
-    fastify.get(postEndPoint.GET_COUNT, { preHandler: [RequestMiddleware.check(PostSchema.getCount)] }, PostController.getCount);
-    fastify.get(postEndPoint.GET_WITH_URL, { preHandler: [RequestMiddleware.check(PostSchema.getWithURL)] }, PostController.getWithURL);
-    fastify.get(postEndPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.getWithId), SessionAuthMiddleware.check] }, PostController.getWithId);
-    fastify.post(postEndPoint.ADD, { preHandler: [RequestMiddleware.check(PostSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission)] }, PostController.add);
-    fastify.put(postEndPoint.UPDATE_VIEW_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.putViewWithId), ViewMiddleware.check, PostMiddleware.checkWithId] }, PostController.updateViewWithId);
-    fastify.put(postEndPoint.UPDATE_RANK_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.putRankWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostMiddleware.checkUserRoleForPage, PostMiddleware.checkWithId, PostMiddleware.checkIsAuthorWithId] }, PostController.updateRankWithId);
-    fastify.put(postEndPoint.UPDATE_STATUS, { preHandler: [RequestMiddleware.check(PostSchema.putStatusMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostMiddleware.checkUserRoleForPage, PostMiddleware.checkMany, PostMiddleware.checkIsAuthorMany] }, PostController.updateStatusMany);
-    fastify.put(postEndPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.putWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostMiddleware.checkWithId, PostMiddleware.checkPermissionForPageWithId, PostMiddleware.checkIsAuthorWithId, PostMiddleware.checkAuthorsWithId] }, PostController.updateWithId);
-    fastify.delete(postEndPoint.DELETE, { preHandler: [RequestMiddleware.check(PostSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission), PostMiddleware.checkMany, PostMiddleware.checkIsAuthorMany] }, PostController.deleteMany);
+    const endPoint = new PostEndPoint("");
+    fastify.get(endPoint.GET, { preHandler: [RequestMiddleware.check(PostSchema.getMany)] }, PostController.getMany);
+    fastify.get(endPoint.GET_COUNT, { preHandler: [RequestMiddleware.check(PostSchema.getCount)] }, PostController.getCount);
+    fastify.get(endPoint.GET_WITH_URL, { preHandler: [RequestMiddleware.check(PostSchema.getWithURL)] }, PostController.getWithURL);
+    fastify.get(endPoint.GET_PREV_NEXT_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.getPrevNextWithId)] }, PostController.getPrevNextWithId);
+    fastify.get(endPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.getWithId), SessionAuthMiddleware.check] }, PostController.getWithId);
+    fastify.post(endPoint.ADD, { preHandler: [RequestMiddleware.check(PostSchema.post), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission())] }, PostController.add);
+    fastify.put(endPoint.UPDATE_VIEW_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.putViewWithId), ViewMiddleware.check, PostMiddleware.checkWithId] }, PostController.updateViewWithId);
+    fastify.put(endPoint.UPDATE_RANK_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.putRankWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission()), PostMiddleware.checkUserRoleForPage, PostMiddleware.checkWithId, PostMiddleware.checkIsAuthorWithId] }, PostController.updateRankWithId);
+    fastify.put(endPoint.UPDATE_STATUS, { preHandler: [RequestMiddleware.check(PostSchema.putStatusMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission()), PostMiddleware.checkUserRoleForPage, PostMiddleware.checkMany, PostMiddleware.checkIsAuthorMany] }, PostController.updateStatusMany);
+    fastify.put(endPoint.UPDATE_WITH_ID, { preHandler: [RequestMiddleware.check(PostSchema.putWithId), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission()), PostMiddleware.checkWithId, PostMiddleware.checkPermissionForPageWithId, PostMiddleware.checkIsAuthorWithId, PostMiddleware.checkAuthorsWithId] }, PostController.updateWithId);
+    fastify.delete(endPoint.DELETE, { preHandler: [RequestMiddleware.check(PostSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission()), PostMiddleware.checkMany, PostMiddleware.checkIsAuthorMany] }, PostController.deleteMany);
     done();
 }

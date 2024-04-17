@@ -56,7 +56,7 @@ const get = async (params: INavigationGetParamService) => {
         options: {omitUndefined: true},
     })
 
-    query.sort({rank: "asc", createdAt: "desc"});
+    query.sort({rank: "asc", _id: "desc"});
 
     let doc = (await query.lean<INavigationGetResultService>().exec());
 
@@ -124,9 +124,11 @@ const getMany = async (params: INavigationGetManyParamService) => {
         options: {omitUndefined: true},
     })
 
-    query.sort({rank: "asc", createdAt: "desc"});
+    query.sort({rank: "asc", _id: "desc"});
 
-    return (await query.lean<INavigationGetResultService[]>().exec()).map((doc) => {
+    let docs = (await query.lean<INavigationGetResultService[]>().exec());
+
+    return docs.map((doc) => {
         if (Array.isArray(doc.contents)) {
             doc.alternates = doc.contents.map(content => ({
                 langId: content.langId.toString()
@@ -230,7 +232,9 @@ const updateStatusMany = async (params: INavigationUpdateStatusManyParamService)
         }
     }
 
-    return await Promise.all((await navigationModel.find(filters).exec()).map(async doc => {
+    let docs = (await navigationModel.find(filters).exec());
+
+    return await Promise.all(docs.map(async doc => {
         doc.statusId = params.statusId;
         doc.lastAuthorId = params.lastAuthorId;
 

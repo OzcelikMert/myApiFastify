@@ -8,7 +8,6 @@ import {IPostDeleteManySchema, IPostPutStatusManySchema, IPostPutWithIdSchema} f
 import {UserRoleId} from "@constants/userRoles";
 import {PermissionUtil} from "@utils/permission.util";
 import {PostTypeId} from "@constants/postTypes";
-import {PageTypeId} from "@constants/pageTypes";
 import {IPostGetManyResultService, IPostGetResultService} from "types/services/post.service";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
