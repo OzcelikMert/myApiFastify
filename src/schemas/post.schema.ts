@@ -128,7 +128,8 @@ const getManySchema = object({
         page: z.coerce.number().optional(),
         sortTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostSortTypeId)).optional(),
         categories: ZodUtil.convertToArray(array(string().min(1))).optional(),
-        tags: ZodUtil.convertToArray(array(string().min(1))).optional()
+        tags: ZodUtil.convertToArray(array(string().min(1))).optional(),
+        ignorePostId: ZodUtil.convertToArray(array(string().min(1))).optional(),
     })
 });
 
