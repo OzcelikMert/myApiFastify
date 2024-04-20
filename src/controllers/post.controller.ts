@@ -156,11 +156,11 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const updateViewWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult();
+        let apiResult = new ApiResult<any>();
 
         let reqData = req as IPostPutViewWithIdSchema;
 
-        await PostService.updateView({
+        apiResult.data = await PostService.updateView({
             ...reqData.params,
             ...reqData.body
         });

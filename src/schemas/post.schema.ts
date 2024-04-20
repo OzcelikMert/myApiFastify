@@ -204,7 +204,8 @@ const putViewWithIdSchema = object({
     }),
     body: object({
         typeId: z.nativeEnum(PostTypeId),
-        langId: string().optional()
+        langId: string().optional(),
+        url: string().optional()
     }),
 });
 

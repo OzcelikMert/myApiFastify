@@ -18,8 +18,10 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
         let url = VariableLibrary.isEmpty(reqData.body.url) ? "/" : reqData.body.url;
         let ip = req.ip;
 
-        let dateStart = new Date(new Date().getStringWithMask(DateMask.DATE)),
-            dateEnd = new Date(new Date().getStringWithMask(DateMask.DATE));
+        let dateStart = new Date(),
+            dateEnd = new Date();
+        dateStart.setHours(0, 0, 0, 0);
+        dateEnd.setHours(0, 0, 0, 0);
         dateEnd.addDays(1);
 
         let serviceResult = await ViewService.get({
