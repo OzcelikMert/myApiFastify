@@ -9,6 +9,9 @@ export const postObjectIdKeys = [
     "langId",
     "attributeId",
     "variationId",
+    "parentId",
+    "itemId",
+    "similarItems",
     "ltId",
     "gtId"
 ]

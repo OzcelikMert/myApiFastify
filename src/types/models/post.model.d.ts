@@ -7,6 +7,7 @@ import {ProductTypeId} from "@constants/productTypes";
 
 export interface IPostModel {
     _id: string | ObjectId
+    parentId?: string | ObjectId
     typeId: PostTypeId,
     statusId: StatusId,
     pageTypeId?: PageTypeId,
@@ -60,7 +61,7 @@ export interface IPostECommerceModel<T = string | ObjectId, P = string[] | Objec
     inventory?: IPostECommerceInventoryModel
     shipping?: IPostECommerceShippingModel
     attributes?: IPostECommerceAttributeModel<T, P>[]
-    variations?: IPostECommerceVariationModel<T>[]
+    variationItems?: IPostECommerceVariationItemModel<T>[]
     variationDefaults?: IPostECommerceVariationSelectedModel<T>[]
 }
 
@@ -92,27 +93,14 @@ export interface IPostECommerceAttributeModel<T = string | ObjectId, P = string[
     typeId: AttributeTypeId
 }
 
-export interface IPostECommerceVariationModel<T = string | ObjectId> {
+export interface IPostECommerceVariationItemModel<T = string | ObjectId> {
     _id?: string | ObjectId
-    rank: number
     selectedVariations: IPostECommerceVariationSelectedModel<T>[]
-    images: string[]
-    contents?: IPostECommerceVariationContentModel[]
-    inventory: IPostECommerceInventoryModel
-    shipping: IPostECommerceShippingModel
-    pricing: IPostECommercePricingModel
+    itemId: string | ObjectId
 }
 
 export interface IPostECommerceVariationSelectedModel<T = string | ObjectId> {
     _id?: string | ObjectId
     attributeId: T
     variationId: T
-}
-
-export interface IPostECommerceVariationContentModel {
-    _id?: string | ObjectId
-    langId: string | ObjectId
-    image?: string
-    content?: string,
-    shortContent?: string,
 }

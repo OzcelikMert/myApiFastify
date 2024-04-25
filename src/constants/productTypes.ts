@@ -1,5 +1,5 @@
 export enum ProductTypeId {
-    SimpleProduct = 1,
-    VariableProduct,
-    ExternalProduct
+    Simple = 1,
+    Variable,
+    External
 }

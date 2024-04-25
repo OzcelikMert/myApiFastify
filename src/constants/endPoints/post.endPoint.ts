@@ -14,7 +14,9 @@ export class PostEndPoint {
     get GET_PREV_NEXT_WITH_ID() { return PathUtil.createPath(this.mainPath, "/get/prev-next/:_id"); }
     get GET_COUNT() { return PathUtil.createPath(this.mainPath, "/get/count"); }
     get ADD() { return PathUtil.createPath(this.mainPath, "/add"); }
+    get ADD_PRODUCT() { return PathUtil.createPath(this.mainPath, "/add/product"); }
     get UPDATE_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/:_id`); }
+    get UPDATE_PRODUCT_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/product/:_id`); }
     get UPDATE_VIEW_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/view/:_id`); }
     get UPDATE_RANK_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/rank/:_id`); }
     get UPDATE_STATUS() { return PathUtil.createPath(this.mainPath, "/update/status"); }

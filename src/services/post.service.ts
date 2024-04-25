@@ -200,12 +200,6 @@ const get = async (params: IPostGetParamService) => {
             if (doc.eCommerce.variations) {
                 for (let docECommerceVariation of doc.eCommerce.variations) {
                     docECommerceVariation.selectedVariations = docECommerceVariation.selectedVariations.filter(item => item.attributeId);
-                    if (Array.isArray(docECommerceVariation.contents)) {
-                        docECommerceVariation.alternates = docECommerceVariation.contents.map(content => ({
-                            langId: content.langId.toString(),
-                        }));
-                        docECommerceVariation.contents = docECommerceVariation.contents.findSingle("langId", params.langId) ?? docECommerceVariation.contents.findSingle("langId", defaultLangId);
-                    }
                 }
             }
 
@@ -373,16 +367,6 @@ const getMany = async (params: IPostGetManyParamService) => {
                         })
                     })
                 });
-
-                for (let docECommerceVariation of doc.eCommerce.variations) {
-                    if (Array.isArray(docECommerceVariation.contents)) {
-                        docECommerceVariation.alternates = docECommerceVariation.contents.map(content => ({
-                            langId: content.langId.toString(),
-                        }));
-                        docECommerceVariation.contents = docECommerceVariation.contents.findSingle("langId", params.langId) ?? docECommerceVariation.contents.findSingle("langId", defaultLangId);
-                        delete docECommerceVariation.contents?.content;
-                    }
-                }
             }
             doc.eCommerce.variationDefaults = [];
             doc.eCommerce.attributes = [];

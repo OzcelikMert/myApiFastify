@@ -4,8 +4,7 @@ import {
     IPostContentModel,
     IPostModel,
     IPostECommerceModel,
-    IPostECommerceVariationContentModel,
-    IPostECommerceVariationModel
+    IPostECommerceVariationItemModel
 } from "types/models/post.model";
 import {PostTypeId} from "@constants/postTypes";
 import {PageTypeId} from "@constants/pageTypes";
@@ -38,18 +37,16 @@ export type IPostGetResultService = {
     tags?: IPostTermPopulateService[]
     contents?: IPostContentModel | IPostContentModel[]
     alternates?: IPostAlternateService[]
-    eCommerce?: (Omit<IPostECommerceModel<IPostTermPopulateService, IPostTermPopulateService[]>, "variations"> & {
-        variations?: (Omit<IPostECommerceVariationModel<IPostTermPopulateService>, "contents"> & {
-            contents?: IPostECommerceVariationContentModel | IPostECommerceVariationContentModel[]
+    eCommerce?: (Omit<IPostECommerceModel<IPostTermPopulateService, IPostTermPopulateService[]>, "variationItems"> & {
+        variationItems?: (Omit<IPostECommerceVariationItemModel<IPostTermPopulateService>, "contents"> & {
             alternates?: IPostAlternateService[]
         })[]
     })
 } & Omit<IPostModel, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce"|"authors">
 
 export type IPostGetManyResultService = {
-    eCommerce?: (Omit<IPostECommerceModel, "variations"> & {
-        variations?: (Omit<IPostECommerceVariationModel, "contents"> & {
-            contents?: IPostECommerceVariationContentModel | IPostECommerceVariationContentModel[]
+    eCommerce?: (Omit<IPostECommerceModel, "variationItems"> & {
+        variationItems?: (Omit<IPostECommerceVariationItemModel, "contents"> & {
             alternates?: IPostAlternateService[]
         })[]
     })
@@ -112,9 +109,9 @@ export interface IPostGetCountParamService {
 
 export type IPostAddParamService = {
     contents: IPostContentModel
-    eCommerce?: (Omit<IPostECommerceModel, "variations"> & {
-        variations?: (Omit<IPostECommerceVariationModel, "contents"> & {
-            contents: IPostECommerceVariationContentModel
+    eCommerce?: (Omit<IPostECommerceModel, "variationItems"> & {
+        variationItems: (Omit<IPostECommerceVariationItemModel, "contents"> & {
+            contents: IPostECommerceVariationItemModel
         })[]
     })
 } & Omit<IPostModel, "_id"|"views"|"contents"|"eCommerce">
@@ -135,6 +132,7 @@ export type IPostUpdateViewParamService = {
     _id: string,
     typeId: PostTypeId
     langId?: string
+    url?: string
 }
 
 export type IPostUpdateStatusManyParamService = {

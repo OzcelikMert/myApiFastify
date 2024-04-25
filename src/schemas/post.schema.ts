@@ -7,100 +7,93 @@ import {AttributeTypeId} from "@constants/attributeTypes";
 import {ZodUtil} from "@utils/zod.util";
 import {PostSortTypeId} from "@constants/postSortTypes";
 
-const postBody = object({
+const schemaECommerceShipping = object({
+    width: string().default(""),
+    height: string().default(""),
+    depth: string().default(""),
+    weight: string().default(""),
+});
+
+const schemaECommerceInventory = object({
+    sku: string().default(""),
+    quantity: number().default(0),
+    isManageStock: boolean().default(false)
+});
+
+const schemaECommercePricing = object({
+    taxRate: number().default(0),
+    taxExcluded: number().default(0),
+    taxIncluded: number().default(0),
+    compared: number().default(0),
+    shipping: number().default(0),
+});
+
+const schemaECommerceAttribute = object({
+    typeId: z.nativeEnum(AttributeTypeId),
+    attributeId: string().min(1),
+    variations: array(string().min(1)),
+});
+
+const schemaECommerceVariationSelected = object({
+    attributeId: string().min(1),
+    variationId: string().min(1),
+});
+
+const schemaECommerceVariationItem = object({
+    selectedVariations: array(schemaECommerceVariationSelected).default([]),
+    itemId: string()
+});
+
+const schemaECommerce = object({
+    typeId: z.nativeEnum(ProductTypeId),
+    images: array(string().min(1)).default([]),
+    pricing: schemaECommercePricing,
+    inventory: schemaECommerceInventory,
+    shipping: schemaECommerceShipping,
+    attributes: array(schemaECommerceAttribute).default([]),
+    variationItems: array(schemaECommerceVariationItem).default([]),
+    variationDefaults: array(schemaECommerceVariationSelected).default([]),
+}).optional()
+
+const schemaContentButton = object({
+    title: string().min(1),
+    url: string().optional()
+});
+
+const schemaBeforeAndAfter = object({
+    imageBefore: string().min(1),
+    imageAfter: string().min(1),
+    images: array(string().min(1)).default([]),
+});
+
+const schemaContent = object({
+    langId: string().min(1),
+    title: string().min(3),
+    image: string().optional(),
+    icon: string().optional(),
+    url: string().optional(),
+    content: string().optional(),
+    shortContent: string().optional(),
+    buttons: array(schemaContentButton).optional()
+});
+
+const schema = object({
+    parentId: string().optional(),
     typeId: z.nativeEnum(PostTypeId),
     statusId: z.nativeEnum(StatusId),
     pageTypeId: z.nativeEnum(PageTypeId).optional(),
     categories: array(string().min(1)).default([]),
     tags: array(string().min(1)).default([]),
     authors: array(string().min(1)).optional(),
-    components: array(string().min(1)).optional().default([]),
     dateStart: string().optional(),
     rank: number().min(0),
     isFixed: boolean().default(false),
     isNoIndex: boolean().optional(),
+    contents: schemaContent,
+    eCommerce: schemaECommerce.optional(),
+    beforeAndAfter: schemaBeforeAndAfter.optional(),
+    components: array(string().min(1)).optional(),
     similarItems: array(string().min(1)).optional(),
-    contents: object({
-        langId: string().min(1),
-        title: string().min(3),
-        image: string().optional(),
-        icon: string().optional(),
-        url: string().optional(),
-        content: string().optional(),
-        shortContent: string().optional(),
-        buttons: array(object({
-            title: string().min(1),
-            url: string().optional()
-        })).default([])
-    }),
-    beforeAndAfter: object({
-        imageBefore: string().min(1),
-        imageAfter: string().min(1),
-        images: array(string().min(1)).default([]),
-    }).optional(),
-    eCommerce: object({
-        typeId: z.nativeEnum(ProductTypeId).default(ProductTypeId.SimpleProduct),
-        images: array(string().min(1)).default([]),
-        pricing: object({
-            taxRate: number().default(0),
-            taxExcluded: number().default(0),
-            taxIncluded: number().default(0),
-            compared: number().default(0),
-            shipping: number().default(0),
-        }),
-        inventory: object({
-            sku: string().default(""),
-            quantity: number().default(0),
-            isManageStock: boolean().default(false)
-        }),
-        shipping: object({
-            width: string().default(""),
-            height: string().default(""),
-            depth: string().default(""),
-            weight: string().default(""),
-        }),
-        attributes: array(object({
-            typeId: z.nativeEnum(AttributeTypeId),
-            attributeId: string().min(1),
-            variations: array(string().min(1)).default([]),
-        })).default([]),
-        variations: array(object({
-            selectedVariations: array(object({
-                attributeId: string().min(1),
-                variationId: string().min(1),
-            })).default([]),
-            images: array(string().min(1)).default([]),
-            rank: number().min(0),
-            pricing: object({
-                taxRate: number().default(0),
-                taxExcluded: number().default(0),
-                taxIncluded: number().default(0),
-                compared: number().default(0),
-                shipping: number().default(0),
-            }),
-            inventory: object({
-                sku: string().default(""),
-                quantity: number().default(0),
-                isManageStock: boolean().default(false)
-            }),
-            shipping: object({
-                width: string().default(""),
-                height: string().default(""),
-                depth: string().default(""),
-                weight: string().default(""),
-            }),
-            contents: object({
-                langId: string().min(1),
-                image: string().optional(),
-                content: string().optional(),
-                shortContent: string().optional(),
-            })
-        })).default([]),
-        variationDefaults: array(object({
-            attributeId: string().min(1),
-            variationId: string().min(1),
-        })).default([]),
-    }).optional()
 });
 
 const getWithIdSchema = object({
@@ -170,14 +163,14 @@ const getCountSchema = object({
 });
 
 const postSchema = object({
-    body: postBody
+    body: schema
 });
 
 const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
-    body: postBody
+    body: schema
 });
 
 const putStatusManySchema = object({
