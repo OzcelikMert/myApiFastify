@@ -3,22 +3,26 @@ import {ElementTypeId} from "@constants/elementTypes";
 import {ComponentTypeId} from "@constants/componentTypes";
 import {ZodUtil} from "@utils/zod.util";
 
-const postBody = object({
+const schemaElementContent = object({
+    url: string().optional(),
+    langId: string().min(1),
+    content: string().optional()
+});
+
+const schemaElement = object({
+    _id: string().optional(),
+    key: string().min(1),
+    typeId: z.nativeEnum(ElementTypeId),
+    title: string().min(1),
+    rank: number().min(0),
+    contents: schemaElementContent
+});
+
+const schema = object({
     key: string().min(1),
     title: string().min(1),
     typeId: z.nativeEnum(ComponentTypeId),
-    elements: (array(object({
-        _id: string().optional(),
-        key: string().min(1),
-        typeId: z.nativeEnum(ElementTypeId),
-        title: string().min(1),
-        rank: number().min(0),
-        contents: object({
-            url: string().optional(),
-            langId: string().min(1),
-            content: string().optional()
-        })
-    }))).min(1)
+    elements: array(schemaElement).min(1)
 })
 
 const getWithIdSchema = object({
@@ -50,14 +54,14 @@ const getManySchema = object({
 });
 
 const postSchema = object({
-    body: postBody
+    body: schema
 });
 
 const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
-    body: postBody
+    body: schema
 });
 
 const deleteManySchema = object({

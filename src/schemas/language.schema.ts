@@ -2,7 +2,7 @@ import {array, boolean, number, object, string, z} from 'zod';
 import {StatusId} from "@constants/status";
 import {ZodUtil} from "@utils/zod.util";
 
-const postBody = object({
+const schema = object({
     title: string().min(1),
     image: string().min(1),
     shortKey: string().min(1),
@@ -33,14 +33,14 @@ const getDefaultSchema = object({
 });
 
 const postSchema = object({
-    body: postBody,
+    body: schema,
 });
 
 const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
-    body: postBody
+    body: schema
 });
 
 const putRankWithIdSchema = object({

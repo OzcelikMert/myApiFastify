@@ -3,6 +3,57 @@ import {SettingProjectionKeys} from "@constants/settingProjections";
 import {CurrencyId} from "@constants/currencyTypes";
 import {ZodUtil} from "@utils/zod.util";
 
+const schemaPathContent = object({
+    _id: string().optional(),
+    langId: string().min(1),
+    asPath: string().min(1),
+});
+
+const schemaPath = object({
+    _id: string().optional(),
+    key: string().min(1),
+    title: string().min(1),
+    path: string().min(1),
+    contents: schemaPathContent
+});
+
+const schemaContactForm = object({
+    _id: string().optional(),
+    name: string().min(1),
+    key: string().min(1),
+    outGoingEmail: string().min(1),
+    email: string().min(1),
+    password: string().optional(),
+    outGoingServer: string().min(1),
+    inComingServer: string().min(1),
+    port: number().min(1)
+});
+
+const schemaSocialMedia = object({
+    _id: string().optional(),
+    key: string().default(""),
+    title: string().default(""),
+    url: string().default(""),
+});
+
+const schemaECommerce = object({
+    currencyId: z.nativeEnum(CurrencyId),
+});
+
+const schemaContact = object({
+    email: string().optional(),
+    phone: string().optional(),
+    address: string().optional(),
+    addressMap: string().optional(),
+});
+
+const schemaSEOContent = object({
+    langId: string().min(1),
+    title: string().optional(),
+    content: string().optional(),
+    tags: array(string().min(1)).default([])
+});
+
 const getSchema = object({
     query: object({
         langId: string().optional(),
@@ -17,74 +68,37 @@ const putGeneralSchema = object({
         logoTwo: string().optional(),
         head: string().optional(),
         script: string().optional(),
-        contact: object({
-            email: string().optional(),
-            phone: string().optional(),
-            address: string().optional(),
-            addressMap: string().optional(),
-        }),
+        contact: schemaContact,
     })
 });
 
 const putSeoSchema = object({
     body: object({
-        seoContents: object({
-            langId: string().min(1),
-            title: string().optional(),
-            content: string().optional(),
-            tags: array(string().min(1)).default([])
-        }),
+        seoContents: schemaSEOContent,
     })
 });
 
 const putContactFormSchema = object({
     body: object({
-        contactForms: array(object({
-            _id: string().optional(),
-            name: string().min(1),
-            key: string().min(1),
-            outGoingEmail: string().min(1),
-            email: string().min(1),
-            password: string().optional(),
-            outGoingServer: string().min(1),
-            inComingServer: string().min(1),
-            port: number().min(1)
-        })).min(1),
+        contactForms: array(schemaContactForm).min(1),
     })
 });
 
 const putSocialMediaSchema = object({
     body: object({
-        socialMedia: array(object({
-            _id: string().optional(),
-            key: string().default(""),
-            title: string().default(""),
-            url: string().default(""),
-        })).min(1),
+        socialMedia: array(schemaSocialMedia).min(1),
     })
 });
 
 const putECommerceSchema = object({
     body: object({
-        eCommerce: object({
-            currencyId: z.nativeEnum(CurrencyId),
-        }),
+        eCommerce: schemaECommerce,
     })
 });
 
 const putPathSchema = object({
     body: object({
-        paths: array(object({
-            _id: string().optional(),
-            key: string().min(1),
-            title: string().min(1),
-            path: string().min(1),
-            contents: object({
-                _id: string().optional(),
-                langId: string().min(1),
-                asPath: string().min(1),
-            })
-        })).min(1),
+        paths: array(schemaPath).min(1),
     })
 });
 

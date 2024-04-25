@@ -3,7 +3,7 @@ import {StatusId} from "@constants/status";
 import {PostTypeId} from "@constants/postTypes";
 import {ZodUtil} from "@utils/zod.util";
 
-const postBody = object({
+const schema = object({
     parentId: string().optional(),
     postId: string().min(1),
     postTypeId: z.nativeEnum(PostTypeId),
@@ -33,14 +33,14 @@ const getManySchema = object({
 });
 
 const postSchema = object({
-    body: postBody
+    body: schema
 });
 
 const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
-    body: postBody
+    body: schema
 });
 
 const putLikeWithIdSchema = object({

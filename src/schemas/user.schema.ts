@@ -4,7 +4,7 @@ import {StatusId} from "@constants/status";
 import {PermissionId} from "@constants/permissions";
 import {ZodUtil} from "@utils/zod.util";
 
-const postBody = {
+const schema = {
     roleId: z.nativeEnum(UserRoleId),
     statusId: z.nativeEnum(StatusId),
     name: string().min(3),
@@ -45,7 +45,7 @@ const getManySchema = object({
 });
 
 const postSchema = object({
-    body: object(postBody)
+    body: object(schema)
 });
 
 const putWithIdSchema = object({
@@ -53,7 +53,7 @@ const putWithIdSchema = object({
         _id: string().min(1),
     }),
     body: object({
-        ...postBody,
+        ...schema,
         password: string().optional()
     })
 });

@@ -41,7 +41,7 @@ const schemaECommerceVariationSelected = object({
 
 const schemaECommerceVariationItem = object({
     selectedVariations: array(schemaECommerceVariationSelected).default([]),
-    itemId: string()
+    itemId: string().min(1)
 });
 
 const schemaECommerce = object({

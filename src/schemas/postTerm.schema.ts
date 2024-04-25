@@ -4,19 +4,21 @@ import {PostTypeId} from "@constants/postTypes";
 import {PostTermTypeId} from "@constants/postTermTypes";
 import {ZodUtil} from "@utils/zod.util";
 
-const postBody = object({
+const schemaContent = object({
+    langId: string().min(1),
+    title: string().min(3),
+    shortContent: string().optional(),
+    image: string().optional(),
+    url: string().optional(),
+});
+
+const schema = object({
     postTypeId: z.nativeEnum(PostTypeId),
     typeId: z.nativeEnum(PostTermTypeId),
     statusId: z.nativeEnum(StatusId),
     parentId: string().optional(),
     rank: number().default(0),
-    contents: object({
-        langId: string().min(1),
-        title: string().min(3),
-        shortContent: string().optional(),
-        image: string().optional(),
-        url: string().optional(),
-    })
+    contents: schemaContent
 })
 
 const getWithIdSchema = object({
@@ -58,14 +60,14 @@ const getWithURLSchema = object({
 });
 
 const postSchema = object({
-    body: postBody
+    body: schema
 });
 
 const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
-    body: postBody
+    body: schema
 });
 
 const putStatusManySchema = object({

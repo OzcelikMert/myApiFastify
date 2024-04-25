@@ -2,17 +2,19 @@ import {object, string, number, array, boolean, z, coerce} from 'zod';
 import {StatusId} from "@constants/status";
 import {ZodUtil} from "@utils/zod.util";
 
-const postBody = object({
+const schemaContent = object({
+    langId: string().min(1),
+    title: string().default(""),
+    url: string().optional(),
+});
+
+const schema = object({
     parentId: string().optional().default(""),
     statusId: z.nativeEnum(StatusId),
     rank: number().min(0),
     isPrimary: boolean().optional(),
     isSecondary: boolean().optional(),
-    contents: object({
-        langId: string().min(1),
-        title: string().default(""),
-        url: string().optional(),
-    }),
+    contents: schemaContent
 })
 
 const getWithIdSchema = object({
@@ -36,14 +38,14 @@ const getManySchema = object({
 });
 
 const postSchema = object({
-    body: postBody
+    body: schema
 });
 
 const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
-    body: postBody
+    body: schema
 });
 
 const putStatusManySchema = object({
