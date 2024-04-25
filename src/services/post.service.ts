@@ -197,9 +197,9 @@ const get = async (params: IPostGetParamService) => {
         }
 
         if (doc.eCommerce) {
-            if (doc.eCommerce.variations) {
-                for (let docECommerceVariation of doc.eCommerce.variations) {
-                    docECommerceVariation.selectedVariations = docECommerceVariation.selectedVariations.filter(item => item.attributeId);
+            if (doc.eCommerce.variationItems) {
+                for (let docECommerceVariationItem of doc.eCommerce.variationItems) {
+                    docECommerceVariationItem.selectedVariations = docECommerceVariationItem.selectedVariations.filter(item => item.attributeId);
                 }
             }
 
@@ -358,8 +358,8 @@ const getMany = async (params: IPostGetManyParamService) => {
         }
 
         if (doc.eCommerce) {
-            if (doc.eCommerce.variations) {
-                doc.eCommerce.variations = doc.eCommerce.variations.filter(variation => {
+            if (doc.eCommerce.variationItems) {
+                doc.eCommerce.variationItems = doc.eCommerce.variationItems.filter(variation => {
                     return variation.selectedVariations.every(selectedVariation => {
                         return doc.eCommerce?.variationDefaults?.some(variationDefault => {
                             return variationDefault.attributeId.toString() == selectedVariation.attributeId.toString() &&

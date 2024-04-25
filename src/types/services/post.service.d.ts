@@ -109,12 +109,7 @@ export interface IPostGetCountParamService {
 
 export type IPostAddParamService = {
     contents: IPostContentModel
-    eCommerce?: (Omit<IPostECommerceModel, "variationItems"> & {
-        variationItems: (Omit<IPostECommerceVariationItemModel, "contents"> & {
-            contents: IPostECommerceVariationItemModel
-        })[]
-    })
-} & Omit<IPostModel, "_id"|"views"|"contents"|"eCommerce">
+} & Omit<IPostModel, "_id"|"views"|"contents">
 
 export type IPostUpdateParamService = {
     _id: string
