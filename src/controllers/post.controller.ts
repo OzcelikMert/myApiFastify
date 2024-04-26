@@ -4,11 +4,15 @@ import {PostService} from "@services/post.service";
 import {LogMiddleware} from "@middlewares/log.middleware";
 import {
     IPostDeleteManySchema,
+    IPostDeleteProductManySchema,
     IPostGetCountSchema,
-    IPostGetManySchema, IPostGetPrevNextWithURLSchema,
+    IPostGetManySchema,
+    IPostGetPrevNextWithURLSchema,
     IPostGetWithIdSchema,
     IPostGetWithURLSchema,
+    IPostPostProductSchema,
     IPostPostSchema,
+    IPostPutProductWithIdSchema,
     IPostPutRankWithIdSchema,
     IPostPutStatusManySchema,
     IPostPutViewWithIdSchema,
@@ -17,20 +21,23 @@ import {
 import {PermissionUtil} from "@utils/permission.util";
 import {UserRoleId} from "@constants/userRoles";
 import {
-    IPostGetManyResultService,
-    IPostGetPrevNextResultService,
-    IPostGetResultService
+    IPostGetManyWithPopulateResultService,
+    IPostGetPrevNextResultService, IPostGetWithPopulateResultService,
 } from "types/services/post.service";
-import {IPostModel} from "types/models/post.model";
+import {IPostECommerceVariationModel, IPostModel} from "types/models/post.model";
 import {PageTypeId} from "@constants/pageTypes";
+import {PostTypeId} from "@constants/postTypes";
+import {StatusId} from "@constants/status";
+import {ProductTypeId} from "@constants/productTypes";
+import {MongoDBHelpers} from "@library/mongodb/helpers";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostGetResultService>();
+        let apiResult = new ApiResult<IPostGetWithPopulateResultService>();
 
         let reqData = req as IPostGetWithIdSchema;
 
-        apiResult.data = await PostService.get({
+        apiResult.data = await PostService.getWithPopulate({
             ...reqData.params,
             ...reqData.query,
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
@@ -42,11 +49,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostGetManyResultService[]>();
+        let apiResult = new ApiResult<IPostGetManyWithPopulateResultService[]>();
 
         let reqData = req as IPostGetManySchema;
 
-        apiResult.data = await PostService.getMany({
+        apiResult.data = await PostService.getManyWithPopulate({
             ...reqData.query,
             ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
@@ -57,11 +64,11 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostGetResultService>();
+        let apiResult = new ApiResult<IPostGetWithPopulateResultService>();
 
         let reqData = req as IPostGetWithURLSchema;
 
-        apiResult.data = await PostService.get({
+        apiResult.data = await PostService.getWithPopulate({
             ...reqData.params,
             ...reqData.query,
             url: reqData.query.pageTypeId && reqData.query.pageTypeId != PageTypeId.Default ? undefined : reqData.params.url
@@ -122,6 +129,51 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
+const addProduct = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult<IPostModel>();
+
+        let reqData = req as IPostPostProductSchema;
+
+        let productId = MongoDBHelpers.createObjectId().toString();
+        let variations: IPostECommerceVariationModel[] = [];
+
+        for(const variation of reqData.body.eCommerce.variations) {
+            let serviceResultVariationItem = await PostService.add({
+                ...variation.item,
+                parentId: productId,
+                typeId: PostTypeId.ProductVariation,
+                authorId: req.sessionAuth!.user!.userId.toString(),
+                lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+                statusId: StatusId.Active,
+                eCommerce: {
+                    ...variation.item.eCommerce,
+                    typeId: ProductTypeId.Simple
+                }
+            });
+            variations.push({
+                selectedVariations: variation.selectedVariations,
+                rank: variation.rank,
+                itemId: serviceResultVariationItem._id,
+            });
+        }
+
+        apiResult.data = await PostService.add({
+            ...reqData.body,
+            _id: productId,
+            typeId: PostTypeId.Product,
+            authorId: req.sessionAuth!.user!.userId.toString(),
+            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+            eCommerce: {
+                ...reqData.body.eCommerce,
+                variations: variations
+            }
+        });
+
+        await reply.status(apiResult.statusCode).send(apiResult);
+    });
+}
+
 const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
@@ -133,6 +185,79 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
+
+        await reply.status(apiResult.statusCode).send(apiResult);
+    });
+}
+
+const updateProductWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IPostPutProductWithIdSchema;
+        let serviceResultProduct = req.cachedServiceResult as IPostModel;
+
+        if(serviceResultProduct.eCommerce){
+            let variations: IPostECommerceVariationModel[] = [];
+
+            // Delete removed variations
+            let removedVariations: string[] = [];
+            for(const variation of serviceResultProduct.eCommerce.variations ?? []) {
+                if (!reqData.body.eCommerce.variations.some(productVariation => productVariation.item._id.toString() == variation.itemId.toString())) {
+                    removedVariations.push(variation.itemId.toString());
+                }
+            }
+            await PostService.deleteMany({
+                _id: removedVariations,
+                typeId: PostTypeId.ProductVariation
+            });
+
+            // Update variations or add new variations
+            for(const variation of reqData.body.eCommerce.variations) {
+                let variationItemId = "";
+                if(serviceResultProduct.eCommerce.variations?.some(productVariation => productVariation.itemId.toString() == variation.item._id.toString())){
+                    await PostService.update({
+                        ...variation.item,
+                        typeId: PostTypeId.ProductVariation,
+                        lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+                        eCommerce: {
+                            ...variation.item.eCommerce,
+                            typeId: ProductTypeId.Simple
+                        }
+                    });
+                }else {
+                    let serviceResultVariation = await PostService.add({
+                        ...variation.item,
+                        parentId: serviceResultProduct._id.toString(),
+                        typeId: PostTypeId.ProductVariation,
+                        authorId: req.sessionAuth!.user!.userId.toString(),
+                        lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+                        eCommerce: {
+                            ...variation.item.eCommerce,
+                            typeId: ProductTypeId.Simple
+                        }
+                    });
+                    variationItemId = serviceResultVariation._id.toString();
+                }
+                variations.push({
+                    selectedVariations: variation.selectedVariations,
+                    rank: variation.rank,
+                    itemId: variationItemId,
+                });
+            }
+
+
+            await PostService.update({
+                ...reqData.params,
+                ...reqData.body,
+                typeId: PostTypeId.Product,
+                lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+                eCommerce: {
+                    ...reqData.body.eCommerce,
+                    variations: variations
+                }
+            });
+        }
 
         await reply.status(apiResult.statusCode).send(apiResult);
     });
@@ -198,6 +323,28 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
+const deleteProductMany = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IPostDeleteProductManySchema;
+
+        await PostService.deleteMany({
+            ...reqData.body,
+            typeId: PostTypeId.Product
+        });
+
+        for (const _id of reqData.body._id) {
+            await PostService.deleteMany({
+                parentId: _id,
+                typeId: PostTypeId.ProductVariation
+            });
+        }
+
+        await reply.status(apiResult.statusCode).send(apiResult);
+    });
+}
+
 export const PostController = {
     getWithId: getWithId,
     getMany: getMany,
@@ -205,9 +352,12 @@ export const PostController = {
     getPrevNextWithId: getPrevNextWithId,
     getCount: getCount,
     add: add,
+    addProduct: addProduct,
     updateWithId: updateWithId,
+    updateProductWithId: updateProductWithId,
     updateRankWithId: updateRankWithId,
     updateViewWithId: updateViewWithId,
     updateStatusMany: updateStatusMany,
-    deleteMany: deleteMany
+    deleteMany: deleteMany,
+    deleteProductMany: deleteProductMany
 };

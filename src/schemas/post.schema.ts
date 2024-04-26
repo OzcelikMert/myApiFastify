@@ -39,9 +39,29 @@ const schemaECommerceVariationSelected = object({
     variationId: string().min(1),
 });
 
-const schemaECommerceVariationItem = object({
+const schemaECommerceVariationItemDetail = object({
+    _id: string().min(1),
+    statusId: z.nativeEnum(StatusId),
+    contents: object({
+        langId: string().min(1),
+        title: string().min(3),
+        image: string().optional(),
+        url: string().optional(),
+        content: string().optional(),
+        shortContent: string().optional(),
+    }),
+    eCommerce: object({
+        images: array(string().min(1)).default([]),
+        pricing: schemaECommercePricing,
+        inventory: schemaECommerceInventory,
+        shipping: schemaECommerceShipping
+    }),
+});
+
+const schemaECommerceVariation = object({
+    rank: number().min(0),
     selectedVariations: array(schemaECommerceVariationSelected).default([]),
-    itemId: string().min(1)
+    item: schemaECommerceVariationItemDetail
 });
 
 const schemaECommerce = object({
@@ -51,9 +71,9 @@ const schemaECommerce = object({
     inventory: schemaECommerceInventory,
     shipping: schemaECommerceShipping,
     attributes: array(schemaECommerceAttribute).default([]),
-    variationItems: array(schemaECommerceVariationItem).default([]),
-    variationDefaults: array(schemaECommerceVariationSelected).default([]),
-}).optional()
+    variations: array(schemaECommerceVariation).default([]),
+    variationDefaults: array(schemaECommerceVariationSelected).default([])
+})
 
 const schemaContentButton = object({
     title: string().min(1),
@@ -77,8 +97,20 @@ const schemaContent = object({
     buttons: array(schemaContentButton).optional()
 });
 
+const schemaProduct = object({
+    statusId: z.nativeEnum(StatusId),
+    categories: array(string().min(1)).default([]),
+    tags: array(string().min(1)).default([]),
+    authors: array(string().min(1)).optional(),
+    dateStart: string().optional(),
+    rank: number().min(0),
+    isFixed: boolean().default(false),
+    contents: schemaContent,
+    similarItems: array(string().min(1)).optional(),
+    eCommerce: schemaECommerce
+});
+
 const schema = object({
-    parentId: string().optional(),
     typeId: z.nativeEnum(PostTypeId),
     statusId: z.nativeEnum(StatusId),
     pageTypeId: z.nativeEnum(PageTypeId).optional(),
@@ -90,11 +122,11 @@ const schema = object({
     isFixed: boolean().default(false),
     isNoIndex: boolean().optional(),
     contents: schemaContent,
-    eCommerce: schemaECommerce.optional(),
     beforeAndAfter: schemaBeforeAndAfter.optional(),
     components: array(string().min(1)).optional(),
     similarItems: array(string().min(1)).optional(),
 });
+
 
 const getWithIdSchema = object({
     params: object({
@@ -166,11 +198,22 @@ const postSchema = object({
     body: schema
 });
 
+const postProductSchema = object({
+    body: schemaProduct
+});
+
 const putWithIdSchema = object({
     params: object({
         _id: string().min(1),
     }),
     body: schema
+});
+
+const putProductWithIdSchema = object({
+    params: object({
+        _id: string().min(1),
+    }),
+    body: schemaProduct
 });
 
 const putStatusManySchema = object({
@@ -209,17 +252,26 @@ const deleteManySchema = object({
     })
 });
 
+const deleteProductManySchema = object({
+    body: object({
+        _id: array(string().min(1)).min(1),
+    })
+});
+
 export type IPostGetWithIdSchema = z.infer<typeof getWithIdSchema>;
 export type IPostGetManySchema = z.infer<typeof getManySchema>;
 export type IPostGetWithURLSchema = z.infer<typeof getWithURLSchema>;
 export type IPostGetPrevNextWithURLSchema = z.infer<typeof getPrevNextWithIdSchema>;
 export type IPostGetCountSchema = z.infer<typeof getCountSchema>;
 export type IPostPostSchema = z.infer<typeof postSchema>;
+export type IPostPostProductSchema = z.infer<typeof postProductSchema>;
 export type IPostPutWithIdSchema = z.infer<typeof putWithIdSchema>;
+export type IPostPutProductWithIdSchema = z.infer<typeof putProductWithIdSchema>;
 export type IPostPutStatusManySchema = z.infer<typeof putStatusManySchema>;
 export type IPostPutRankWithIdSchema = z.infer<typeof putRankWithIdSchema>;
 export type IPostPutViewWithIdSchema = z.infer<typeof putViewWithIdSchema>;
 export type IPostDeleteManySchema = z.infer<typeof deleteManySchema>;
+export type IPostDeleteProductManySchema = z.infer<typeof deleteProductManySchema>;
 
 export const PostSchema = {
     getWithId: getWithIdSchema,
@@ -228,9 +280,12 @@ export const PostSchema = {
     getPrevNextWithId: getPrevNextWithIdSchema,
     getCount: getCountSchema,
     post: postSchema,
+    postProduct: postProductSchema,
     putWithId: putWithIdSchema,
+    putProductWithId: putProductWithIdSchema,
     putStatusMany: putStatusManySchema,
     putRankWithId: putRankWithIdSchema,
     putViewWithId: putViewWithIdSchema,
-    deleteMany: deleteManySchema
+    deleteMany: deleteManySchema,
+    deleteProductMany: deleteProductManySchema
 };

@@ -5,9 +5,9 @@ import {
     IPostDeleteManyParamService,
     IPostGetCountParamService,
     IPostGetManyParamService,
-    IPostGetManyResultService,
+    IPostGetManyWithPopulateResultService,
     IPostGetParamService, IPostGetPrevNextParamService, IPostGetPrevNextResultService,
-    IPostGetResultService,
+    IPostGetWithPopulateResultService,
     IPostUpdateParamService,
     IPostUpdateRankParamService,
     IPostUpdateStatusManyParamService,
@@ -83,6 +83,122 @@ const get = async (params: IPostGetParamService) => {
 
     let query = postModel.findOne(filters);
 
+    query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
+
+    let doc = (await query.lean<IPostModel>().exec());
+
+    if (doc) {
+        doc.contents = [];
+    }
+
+    return doc;
+}
+
+const getMany = async (params: IPostGetManyParamService) => {
+    let filters: mongoose.FilterQuery<IPostModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: {$in: params._id}
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        $or: [{authorId: params.authorId}, {authors: {$in: params.authorId}}]
+    }
+    if (params.title) filters = {
+        ...filters,
+        "contents.title": {$regex: new RegExp(params.title, "i")}
+    }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: {$in: params.typeId}
+    }
+    if (params.pageTypeId) filters = {
+        ...filters,
+        pageTypeId: {$in: params.pageTypeId}
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+    if (params.ignorePostId) filters = {
+        ...filters,
+        _id: {$nin: params.ignorePostId}
+    }
+    if (params.categories) filters = {
+        ...filters,
+        categories: {$in: params.categories}
+    }
+    if (params.tags) filters = {
+        ...filters,
+        tags: {$in: params.tags}
+    }
+    if (params.dateStart) {
+        params.dateStart.setHours(0, 0, 0, 0);
+        filters = {
+            ...filters,
+            dateStart: {$lt: params.dateStart}
+        }
+    }
+
+    let query = postModel.find(filters);
+
+    query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
+
+    if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
+    if (params.count) query.limit(params.count);
+
+    let docs = (await query.lean<IPostModel[]>().exec());
+
+    return docs.map((doc) => {
+        doc.contents = [];
+        return doc;
+    });
+}
+
+const getWithPopulate = async (params: IPostGetParamService) => {
+    let filters: mongoose.FilterQuery<IPostModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: params._id
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        $or: [{authorId: params.authorId}, {authors: {$in: params.authorId}}]
+    }
+    if (params.url) filters = {
+        ...filters,
+        "contents.url": params.url,
+        "contents.langId": {$in: [params.langId, defaultLangId]}
+    }
+    if (params.typeId) {
+        filters = {
+            ...filters,
+            typeId: params.typeId
+        }
+    }
+    if (params.pageTypeId) filters = {
+        ...filters,
+        pageTypeId: params.pageTypeId
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+    if (params.ignorePostId) {
+        filters = {
+            ...filters,
+            _id: {$nin: params.ignorePostId}
+        }
+    }
+
+    let query = postModel.findOne(filters);
+
     query.populate({
         path: [
             "categories",
@@ -105,46 +221,51 @@ const get = async (params: IPostGetParamService) => {
         }
     });
 
-    query.populate({
-        path: [
-            "eCommerce.attributes.attributeId",
-            "eCommerce.attributes.variations",
-            "eCommerce.variations.selectedVariations.attributeId",
-            "eCommerce.variations.selectedVariations.variationId",
-            "eCommerce.variationDefaults.attributeId",
-            "eCommerce.variationDefaults.variationId",
-        ].join(" "),
-        select: "_id typeId postTypeId contents",
-        match: {
-            typeId: {$in: [PostTermTypeId.Attributes, PostTermTypeId.Variations]},
-            statusId: StatusId.Active,
-            postTypeId: PostTypeId.Product
-        },
-        options: {omitUndefined: true},
-        transform: (doc: IPostTermGetResultService) => {
-            if (doc) {
-                if (Array.isArray(doc.contents)) {
-                    doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
-                }
-            }
-            return doc;
-        }
-    });
-
-    query.populate({
-        path: "components",
-        options: {omitUndefined: true},
-        transform: (doc: IComponentGetResultService) => {
-            if (doc) {
-                doc.elements.map(docType => {
-                    if (Array.isArray(docType.contents)) {
-                        docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);
+    switch (params.typeId) {
+        case PostTypeId.Product:
+            query.populate({
+                path: [
+                    "eCommerce.attributes.attributeId",
+                    "eCommerce.attributes.variations",
+                    "eCommerce.variations.selectedVariations.attributeId",
+                    "eCommerce.variations.selectedVariations.variationId",
+                    "eCommerce.variationDefaults.attributeId",
+                    "eCommerce.variationDefaults.variationId",
+                ].join(" "),
+                select: "_id typeId postTypeId contents",
+                match: {
+                    typeId: {$in: [PostTermTypeId.Attributes, PostTermTypeId.Variations]},
+                    statusId: StatusId.Active,
+                    postTypeId: PostTypeId.Product
+                },
+                options: {omitUndefined: true},
+                transform: (doc: IPostTermGetResultService) => {
+                    if (doc) {
+                        if (Array.isArray(doc.contents)) {
+                            doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+                        }
                     }
-                })
-            }
-            return doc;
-        }
-    });
+                    return doc;
+                }
+            });
+            break;
+        case PostTypeId.Page:
+            query.populate({
+                path: "components",
+                options: {omitUndefined: true},
+                transform: (doc: IComponentGetResultService) => {
+                    if (doc) {
+                        doc.elements.map(docType => {
+                            if (Array.isArray(docType.contents)) {
+                                docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);
+                            }
+                        })
+                    }
+                    return doc;
+                }
+            });
+            break;
+    }
 
     query.populate({
         path: [
@@ -158,7 +279,7 @@ const get = async (params: IPostGetParamService) => {
 
     query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
 
-    let doc = (await query.lean<IPostGetResultService>().exec());
+    let doc = (await query.lean<IPostGetWithPopulateResultService>().exec());
 
     if (doc) {
         let views = 0;
@@ -197,8 +318,8 @@ const get = async (params: IPostGetParamService) => {
         }
 
         if (doc.eCommerce) {
-            if (doc.eCommerce.variationItems) {
-                for (let docECommerceVariationItem of doc.eCommerce.variationItems) {
+            if (doc.eCommerce.variations) {
+                for (let docECommerceVariationItem of doc.eCommerce.variations) {
                     docECommerceVariationItem.selectedVariations = docECommerceVariationItem.selectedVariations.filter(item => item.attributeId);
                 }
             }
@@ -218,7 +339,7 @@ const get = async (params: IPostGetParamService) => {
     return doc;
 }
 
-const getMany = async (params: IPostGetManyParamService) => {
+const getManyWithPopulate = async (params: IPostGetManyParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
     let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
@@ -319,7 +440,7 @@ const getMany = async (params: IPostGetManyParamService) => {
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
     if (params.count) query.limit(params.count);
 
-    let docs = (await query.lean<IPostGetManyResultService[]>().exec());
+    let docs = (await query.lean<IPostGetManyWithPopulateResultService[]>().exec());
 
     return docs.map((doc) => {
         let views = 0;
@@ -358,8 +479,8 @@ const getMany = async (params: IPostGetManyParamService) => {
         }
 
         if (doc.eCommerce) {
-            if (doc.eCommerce.variationItems) {
-                doc.eCommerce.variationItems = doc.eCommerce.variationItems.filter(variation => {
+            if (doc.eCommerce.variations) {
+                doc.eCommerce.variations = doc.eCommerce.variations.filter(variation => {
                     return variation.selectedVariations.every(selectedVariation => {
                         return doc.eCommerce?.variationDefaults?.some(variationDefault => {
                             return variationDefault.attributeId.toString() == selectedVariation.attributeId.toString() &&
@@ -673,11 +794,18 @@ const deleteMany = async (params: IPostDeleteManyParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, postObjectIdKeys);
 
-    filters = {
-        ...filters,
-        _id: {$in: params._id}
+    if(params._id){
+        filters = {
+            ...filters,
+            _id: {$in: params._id}
+        }
     }
-
+    if(params.parentId){
+        filters = {
+            ...filters,
+            parentId: params.parentId
+        }
+    }
     if (params.typeId) {
         filters = {
             ...filters,
@@ -691,6 +819,8 @@ const deleteMany = async (params: IPostDeleteManyParamService) => {
 export const PostService = {
     get: get,
     getMany: getMany,
+    getWithPopulate: getWithPopulate,
+    getManyWithPopulate: getManyWithPopulate,
     getPrevNext: getPrevNext,
     getCount: getCount,
     add: add,

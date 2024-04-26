@@ -61,7 +61,7 @@ export interface IPostECommerceModel<T = string | ObjectId, P = string[] | Objec
     inventory?: IPostECommerceInventoryModel
     shipping?: IPostECommerceShippingModel
     attributes?: IPostECommerceAttributeModel<T, P>[]
-    variationItems?: IPostECommerceVariationItemModel<T>[]
+    variations?: IPostECommerceVariationModel<T>[]
     variationDefaults?: IPostECommerceVariationSelectedModel<T>[]
 }
 
@@ -93,8 +93,9 @@ export interface IPostECommerceAttributeModel<T = string | ObjectId, P = string[
     typeId: AttributeTypeId
 }
 
-export interface IPostECommerceVariationItemModel<T = string | ObjectId> {
+export interface IPostECommerceVariationModel<T = string | ObjectId> {
     _id?: string | ObjectId
+    rank: number
     selectedVariations: IPostECommerceVariationSelectedModel<T>[]
     itemId: string | ObjectId
 }

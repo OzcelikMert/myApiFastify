@@ -8,7 +8,8 @@ import {IPostDeleteManySchema, IPostPutStatusManySchema, IPostPutWithIdSchema} f
 import {UserRoleId} from "@constants/userRoles";
 import {PermissionUtil} from "@utils/permission.util";
 import {PostTypeId} from "@constants/postTypes";
-import {IPostGetManyResultService, IPostGetResultService} from "types/services/post.service";
+import {IPostModel} from "types/models/post.model";
+import {ObjectId} from "mongoose";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -70,11 +71,11 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
         let reqData = req as IPostPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let serviceResult = req.cachedServiceResult as IPostGetResultService;
+            let serviceResult = req.cachedServiceResult as IPostModel;
 
             if (
-                req.sessionAuth!.user?.userId.toString() != serviceResult.authorId._id.toString() &&
-                !serviceResult.authors?.some(author => author._id == req.sessionAuth!.user?.userId.toString())
+                req.sessionAuth!.user?.userId.toString() != serviceResult.authorId.toString() &&
+                !(serviceResult.authors as ObjectId[])?.some(author => author.toString() == req.sessionAuth!.user?.userId.toString())
             ) {
                 apiResult.status = false;
                 apiResult.errorCode = ApiErrorCodes.noPerm;
@@ -95,10 +96,10 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IPostDeleteManySchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let serviceResult = req.cachedServiceResult as IPostGetManyResultService[];
+            let serviceResult = req.cachedServiceResult as IPostModel[];
 
             for (const post of serviceResult) {
-                if (post.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
+                if (post.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                     apiResult.status = false;
                     apiResult.errorCode = ApiErrorCodes.noPerm;
                     apiResult.statusCode = ApiStatusCodes.forbidden;
@@ -113,26 +114,29 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
-const checkAuthorsWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkPermissionWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
         let reqData = req as IPostPutWithIdSchema;
 
-        if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let serviceResult = req.cachedServiceResult as IPostGetResultService;
+        let serviceResult = req.cachedServiceResult as IPostModel;
 
-            if(
-                // Check is author
-                req.sessionAuth!.user?.userId.toString() != serviceResult.authorId._id.toString() &&
-                // Check post authors data
-                reqData.body.authors &&
-                // Check request authors are same with service result authors
-                (
-                    reqData.body.authors.length != serviceResult.authors?.length ||
-                    !reqData.body.authors.every(reqAuthor => serviceResult?.authors?.some(serviceAuthor => serviceAuthor._id == reqAuthor))
-                )
-            ){
+        if (
+            req.sessionAuth!.user?.userId.toString() != serviceResult.authorId.toString() &&
+            !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)
+        ) {
+            let reqToCheck = {
+                authors: reqData.body.authors,
+                statusId: reqData.body.statusId
+            };
+
+            let serviceToCheck = {
+                authors: serviceResult.authors,
+                statusId: serviceResult.statusId
+            };
+
+            if(JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)){
                 apiResult.status = false;
                 apiResult.errorCode = ApiErrorCodes.noPerm;
                 apiResult.statusCode = ApiStatusCodes.forbidden;
@@ -152,7 +156,7 @@ const checkPermissionForPageWithId = async (req: FastifyRequest, reply: FastifyR
         let reqData = req as IPostPutWithIdSchema;
 
         if(reqData.body.typeId == PostTypeId.Page && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)){
-            let serviceResult = req.cachedServiceResult as IPostGetResultService;
+            let serviceResult = req.cachedServiceResult as IPostModel;
 
             let reqToCheck = {
                 pageTypeId: reqData.body.pageTypeId,
@@ -202,7 +206,7 @@ export const PostMiddleware = {
     checkMany: checkMany,
     checkIsAuthorWithId: checkIsAuthorWithId,
     checkIsAuthorMany: checkIsAuthorMany,
-    checkAuthorsWithId: checkAuthorsWithId,
+    checkPermissionWithId: checkPermissionWithId,
     checkPermissionForPageWithId: checkPermissionForPageWithId,
     checkUserRoleForPage: checkUserRoleForPage
 };

@@ -102,7 +102,7 @@ const checkPostIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply)
             });
 
             if (serviceResult) {
-                if (serviceResult.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
+                if (serviceResult.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                     apiResult.status = false;
                     apiResult.errorCode = ApiErrorCodes.noPerm;
                     apiResult.statusCode = ApiStatusCodes.forbidden;

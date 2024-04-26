@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 export class MongoDBHelpers {
+    static createObjectId() {
+        return new mongoose.Types.ObjectId()._id;
+    }
     static convertToObjectId(string?: any) {
         if(string){
             try {

@@ -21,4 +21,5 @@ export class PostEndPoint {
     get UPDATE_RANK_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/rank/:_id`); }
     get UPDATE_STATUS() { return PathUtil.createPath(this.mainPath, "/update/status"); }
     get DELETE() { return PathUtil.createPath(this.mainPath, "/delete"); }
+    get DELETE_PRODUCT() { return PathUtil.createPath(this.mainPath, "/delete/product"); }
 }

@@ -14,7 +14,7 @@ import {
     IPostECommerceInventoryModel,
     IPostECommercePricingModel,
     IPostECommerceShippingModel,
-    IPostECommerceVariationItemModel,
+    IPostECommerceVariationModel,
     IPostECommerceVariationSelectedModel
 } from "types/models/post.model";
 import {ProductTypeId} from "@constants/productTypes";
@@ -65,10 +65,11 @@ const schemaECommerceVariationSelected = new mongoose.Schema<IPostECommerceVaria
     {timestamps: true}
 ).index({attributeId: 1, variationId: 1});
 
-const schemaECommerceVariationItem = new mongoose.Schema<IPostECommerceVariationItemModel>(
+const schemaECommerceVariationItem = new mongoose.Schema<IPostECommerceVariationModel>(
     {
+        rank: {type: Number, default: 0},
         selectedVariations: {type: [schemaECommerceVariationSelected], default: []},
-        itemId: {type: mongoose.Schema.Types.ObjectId, ref: "posts", required: true }
+        itemId: {type: mongoose.Schema.Types.ObjectId, ref: "posts", required: true}
     },
     {timestamps: true}
 ).index({itemId: 1});
@@ -81,7 +82,7 @@ const schemaECommerce = new mongoose.Schema<IPostECommerceModel>(
         pricing: {type: schemaECommercePricing},
         shipping: {type: schemaECommerceShipping},
         attributes: {type: [schemaECommerceAttribute], default: []},
-        variationItems: {type: [schemaECommerceVariationItem], default: []},
+        variations: {type: [schemaECommerceVariationItem], default: []},
         variationDefaults: {type: [schemaECommerceVariationSelected], default: []}
     }
 ).index({typeId: 1});
@@ -138,9 +139,19 @@ const schema = new mongoose.Schema<IPostModel>(
         eCommerce: {type: schemaECommerce},
         beforeAndAfter: {type: schemaBeforeAndAfter},
         components: {type: [mongoose.Schema.Types.ObjectId], ref: componentModel},
-        similarItems: {type: [mongoose.Schema.Types.ObjectId], ref: "posts" }
+        similarItems: {type: [mongoose.Schema.Types.ObjectId], ref: "posts"}
     },
     {timestamps: true}
-).index({parentId: 1, typeId: 1, statusId: 1, authorId: 1, authors: 1, pageTypeId: 1, categories: 1, tags: 1, comments: 1});
+).index({
+    parentId: 1,
+    typeId: 1,
+    statusId: 1,
+    authorId: 1,
+    authors: 1,
+    pageTypeId: 1,
+    categories: 1,
+    tags: 1,
+    comments: 1
+});
 
 export const postModel = mongoose.model<IPostModel, mongoose.Model<IPostModel>>("posts", schema)

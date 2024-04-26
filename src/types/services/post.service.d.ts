@@ -4,7 +4,7 @@ import {
     IPostContentModel,
     IPostModel,
     IPostECommerceModel,
-    IPostECommerceVariationItemModel
+    IPostECommerceVariationModel
 } from "types/models/post.model";
 import {PostTypeId} from "@constants/postTypes";
 import {PageTypeId} from "@constants/pageTypes";
@@ -27,7 +27,7 @@ export interface IPostAlternateService {
     url?: string
 }
 
-export type IPostGetResultService = {
+export type IPostGetWithPopulateResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     authors?: IUserPopulateService[]
@@ -37,21 +37,21 @@ export type IPostGetResultService = {
     tags?: IPostTermPopulateService[]
     contents?: IPostContentModel | IPostContentModel[]
     alternates?: IPostAlternateService[]
-    eCommerce?: (Omit<IPostECommerceModel<IPostTermPopulateService, IPostTermPopulateService[]>, "variationItems"> & {
-        variationItems?: (Omit<IPostECommerceVariationItemModel<IPostTermPopulateService>, "contents"> & {
+    eCommerce?: (Omit<IPostECommerceModel<IPostTermPopulateService, IPostTermPopulateService[]>, "variations"> & {
+        variations?: (Omit<IPostECommerceVariationModel<IPostTermPopulateService>, "contents"> & {
             alternates?: IPostAlternateService[]
         })[]
     })
 } & Omit<IPostModel, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce"|"authors">
 
-export type IPostGetManyResultService = {
-    eCommerce?: (Omit<IPostECommerceModel, "variationItems"> & {
-        variationItems?: (Omit<IPostECommerceVariationItemModel, "contents"> & {
+export type IPostGetManyWithPopulateResultService = {
+    eCommerce?: (Omit<IPostECommerceModel, "variations"> & {
+        variations?: (Omit<IPostECommerceVariationModel, "contents"> & {
             alternates?: IPostAlternateService[]
         })[]
     })
     components?: string[]
-} & Omit<IPostGetResultService, "eCommerce"|"components">
+} & Omit<IPostGetWithPopulateResultService, "eCommerce"|"components">
 
 export interface IPostGetPrevNextResultService {
     _id: string
@@ -108,13 +108,15 @@ export interface IPostGetCountParamService {
 }
 
 export type IPostAddParamService = {
+    _id?: string
     contents: IPostContentModel
-} & Omit<IPostModel, "_id"|"views"|"contents">
+    rank?: number
+} & Omit<IPostModel, "_id"|"views"|"contents"|"rank">
 
 export type IPostUpdateParamService = {
     _id: string
     contents?: IPostContentModel
-} & Omit<IPostAddParamService, "authorId"|"contents">
+} & Omit<IPostAddParamService, "_id"|"authorId"|"contents">
 
 export type IPostUpdateRankParamService = {
     _id: string
@@ -138,6 +140,7 @@ export type IPostUpdateStatusManyParamService = {
 }
 
 export interface IPostDeleteManyParamService {
-    _id: string[]
+    _id?: string[]
+    parentId?: string
     typeId: PostTypeId
 }
