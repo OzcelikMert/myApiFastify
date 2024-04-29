@@ -5,13 +5,15 @@ import {
     IPostDeleteManyParamService,
     IPostGetCountParamService,
     IPostGetManyParamService,
-    IPostGetManyWithPopulateResultService,
-    IPostGetParamService, IPostGetPrevNextParamService, IPostGetPrevNextResultService,
-    IPostGetWithPopulateResultService,
+    IPostGetManyDetailedResultService,
+    IPostGetParamService,
+    IPostGetPrevNextParamService,
+    IPostGetPrevNextResultService,
+    IPostGetDetailedResultService,
     IPostUpdateParamService,
     IPostUpdateRankParamService,
     IPostUpdateStatusManyParamService,
-    IPostUpdateViewParamService
+    IPostUpdateViewParamService, IPostGetDetailedParamService, IPostGetManyDetailedParamService
 } from "types/services/post.service";
 import {IPostModel} from "types/models/post.model";
 import {MongoDBHelpers} from "@library/mongodb/helpers";
@@ -22,7 +24,7 @@ import {postObjectIdKeys} from "@constants/objectIdKeys/post.objectIdKeys";
 import {StatusId} from "@constants/status";
 import {PostTermTypeId} from "@constants/postTermTypes";
 import {PostTypeId} from "@constants/postTypes";
-import {IComponentGetResultService} from "types/services/component.service";
+import {IComponentGetDetailedResultService} from "types/services/component.service";
 import {PostSortTypeId} from "@constants/postSortTypes";
 
 const createURL = async (_id: string | null, title: string, typeId: PostTypeId) => {
@@ -147,18 +149,16 @@ const getMany = async (params: IPostGetManyParamService) => {
 
     query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
 
-    if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
-    if (params.count) query.limit(params.count);
-
     let docs = (await query.lean<IPostModel[]>().exec());
 
     return docs.map((doc) => {
         doc.contents = [];
+
         return doc;
     });
 }
 
-const getWithPopulate = async (params: IPostGetParamService) => {
+const getDetailed = async (params: IPostGetDetailedParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
     let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
@@ -253,7 +253,7 @@ const getWithPopulate = async (params: IPostGetParamService) => {
             query.populate({
                 path: "components",
                 options: {omitUndefined: true},
-                transform: (doc: IComponentGetResultService) => {
+                transform: (doc: IComponentGetDetailedResultService) => {
                     if (doc) {
                         doc.elements.map(docType => {
                             if (Array.isArray(docType.contents)) {
@@ -279,7 +279,7 @@ const getWithPopulate = async (params: IPostGetParamService) => {
 
     query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
 
-    let doc = (await query.lean<IPostGetWithPopulateResultService>().exec());
+    let doc = (await query.lean<IPostGetDetailedResultService>().exec());
 
     if (doc) {
         let views = 0;
@@ -334,12 +334,14 @@ const getWithPopulate = async (params: IPostGetParamService) => {
         }
 
         doc.views = views;
+
+        return doc;
     }
 
-    return doc;
+    return null;
 }
 
-const getManyWithPopulate = async (params: IPostGetManyParamService) => {
+const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
     let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
@@ -440,7 +442,7 @@ const getManyWithPopulate = async (params: IPostGetManyParamService) => {
     if (params.page) query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
     if (params.count) query.limit(params.count);
 
-    let docs = (await query.lean<IPostGetManyWithPopulateResultService[]>().exec());
+    let docs = (await query.lean<IPostGetManyDetailedResultService[]>().exec());
 
     return docs.map((doc) => {
         let views = 0;
@@ -819,8 +821,8 @@ const deleteMany = async (params: IPostDeleteManyParamService) => {
 export const PostService = {
     get: get,
     getMany: getMany,
-    getWithPopulate: getWithPopulate,
-    getManyWithPopulate: getManyWithPopulate,
+    getDetailed: getDetailed,
+    getManyDetailed: getManyDetailed,
     getPrevNext: getPrevNext,
     getCount: getCount,
     add: add,

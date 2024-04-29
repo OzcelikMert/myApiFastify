@@ -27,7 +27,7 @@ export interface IPostAlternateService {
     url?: string
 }
 
-export type IPostGetWithPopulateResultService = {
+export type IPostGetDetailedResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     authors?: IUserPopulateService[]
@@ -44,22 +44,41 @@ export type IPostGetWithPopulateResultService = {
     })
 } & Omit<IPostModel, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce"|"authors">
 
-export type IPostGetManyWithPopulateResultService = {
+export type IPostGetManyDetailedResultService = {
     eCommerce?: (Omit<IPostECommerceModel, "variations"> & {
         variations?: (Omit<IPostECommerceVariationModel, "contents"> & {
             alternates?: IPostAlternateService[]
         })[]
     })
     components?: string[]
-} & Omit<IPostGetWithPopulateResultService, "eCommerce"|"components">
-
-export interface IPostGetPrevNextResultService {
-    _id: string
-    contents?: IPostContentModel | IPostContentModel[]
-    createdAt: string
-}
+} & Omit<IPostGetDetailedResultService, "eCommerce"|"components">
 
 export interface IPostGetParamService {
+    typeId: PostTypeId,
+    _id?: string
+    pageTypeId?: PageTypeId
+    langId?: string
+    url?: string
+    statusId?: StatusId,
+    ignorePostId?: string[]
+    authorId?: string
+}
+
+export interface IPostGetManyParamService {
+    _id?: string[]
+    typeId?: PostTypeId[],
+    pageTypeId?: PageTypeId[]
+    langId?: string
+    statusId?: StatusId,
+    ignorePostId?: string[]
+    title?: string
+    categories?: string[]
+    tags?: string[]
+    authorId?: string
+    dateStart?: Date
+}
+
+export interface IPostGetDetailedParamService {
     typeId: PostTypeId,
     _id?: string
     pageTypeId?: PageTypeId
@@ -71,7 +90,7 @@ export interface IPostGetParamService {
     isIncludePrevAndNext?: boolean
 }
 
-export interface IPostGetManyParamService {
+export interface IPostGetManyDetailedParamService {
     _id?: string[]
     sortTypeId?: PostSortTypeId
     typeId?: PostTypeId[],
@@ -86,6 +105,12 @@ export interface IPostGetManyParamService {
     tags?: string[]
     authorId?: string
     dateStart?: Date
+}
+
+export interface IPostGetPrevNextResultService {
+    _id: string
+    contents?: IPostContentModel | IPostContentModel[]
+    createdAt: string
 }
 
 export interface IPostGetPrevNextParamService {

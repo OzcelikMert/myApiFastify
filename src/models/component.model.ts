@@ -33,6 +33,6 @@ const schema = new mongoose.Schema<IComponentModel>(
             typeId: {type: Number, required: true, enum: ComponentTypeId},
     },
     {timestamps: true}
-).index({authorId: 1, key: 1, typeId: 1});
+).index({authorId: 1, typeId: 1});
 
 export const componentModel = mongoose.model<IComponentModel, mongoose.Model<IComponentModel>>("components", schema)

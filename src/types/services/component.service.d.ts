@@ -6,7 +6,7 @@ export interface IComponentAlternateService {
     langId: string
 }
 
-export type IComponentGetResultService = {
+export type IComponentGetDetailedResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     elements: (Omit<IComponentElementModel, "contents"> & {
@@ -22,6 +22,19 @@ export interface IComponentGetParamService {
 }
 
 export interface IComponentGetManyParamService {
+    _id?: string[]
+    key?: string[]
+    langId?: string,
+    typeId?: ComponentTypeId
+}
+
+export interface IComponentGetDetailedParamService {
+    _id?: string
+    key?: string
+    langId?: string
+}
+
+export interface IComponentGetManyDetailedParamService {
     _id?: string[]
     key?: string[]
     langId?: string,

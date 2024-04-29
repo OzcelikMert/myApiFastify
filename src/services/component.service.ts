@@ -1,10 +1,14 @@
 import * as mongoose from "mongoose";
 import {Config} from "@configs/index";
 import {
-    IComponentAddParamService, IComponentDeleteManyParamService,
+    IComponentAddParamService,
+    IComponentDeleteManyParamService,
+    IComponentGetDetailedParamService,
+    IComponentGetManyDetailedParamService,
     IComponentGetManyParamService,
     IComponentGetParamService,
-    IComponentGetResultService, IComponentUpdateParamService
+    IComponentGetDetailedResultService,
+    IComponentUpdateParamService
 } from "types/services/component.service";
 import {IComponentModel} from "types/models/component.model";
 import {componentObjectIdKeys} from "@constants/objectIdKeys/component.objectIdKeys";
@@ -13,6 +17,68 @@ import {MongoDBHelpers} from "@library/mongodb/helpers";
 import {VariableLibrary} from "@library/variable";
 
 const get = async (params: IComponentGetParamService) => {
+    let filters: mongoose.FilterQuery<IComponentModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: params._id
+    }
+    if (params.key) filters = {
+        ...filters,
+        key: params.key
+    }
+
+    let query = componentModel.findOne(filters);
+
+    query.sort({rank: "asc", _id: "desc"});
+
+    let doc = (await query.lean<IComponentModel>().exec());
+
+    if (doc) {
+        for (let docElement of doc.elements) {
+            docElement.contents = [];
+        }
+    }
+
+    return doc;
+}
+
+const getMany = async (params: IComponentGetManyParamService) => {
+    let filters: mongoose.FilterQuery<IComponentModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: params._id
+    }
+    if (params.key) filters = {
+        ...filters,
+        key: {$in: params.key}
+    }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: {$in: params.typeId}
+    }
+
+    let query = componentModel.find(filters);
+
+    query.sort({rank: "asc", _id: "desc"});
+
+    let docs = (await query.lean<IComponentModel[]>().exec());
+
+    return docs.map(doc => {
+        for (let docElement of doc.elements) {
+            docElement.contents = [];
+        }
+
+        return doc;
+    });
+}
+
+const getDetailed = async (params: IComponentGetDetailedParamService) => {
     let filters: mongoose.FilterQuery<IComponentModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
     let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
@@ -39,7 +105,7 @@ const get = async (params: IComponentGetParamService) => {
 
     query.sort({rank: "asc", _id: "desc"});
 
-    let doc = (await query.lean<IComponentGetResultService>().exec());
+    let doc = (await query.lean<IComponentGetDetailedResultService>().exec());
 
     if (doc) {
         for (let docElement of doc.elements) {
@@ -56,7 +122,7 @@ const get = async (params: IComponentGetParamService) => {
     return doc;
 }
 
-const getMany = async (params: IComponentGetManyParamService) => {
+const getManyDetailed = async (params: IComponentGetManyDetailedParamService) => {
     let filters: mongoose.FilterQuery<IComponentModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, componentObjectIdKeys);
     let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
@@ -87,7 +153,7 @@ const getMany = async (params: IComponentGetManyParamService) => {
 
     query.sort({rank: "asc", _id: "desc"});
 
-    let docs = (await query.lean<IComponentGetResultService[]>().exec());
+    let docs = (await query.lean<IComponentGetDetailedResultService[]>().exec());
 
     return docs.map(doc => {
         for (let docElement of doc.elements) {
@@ -182,6 +248,8 @@ const deleteMany = async (params: IComponentDeleteManyParamService) => {
 export const ComponentService = {
     get: get,
     getMany: getMany,
+    getDetailed: getDetailed,
+    getManyDetailed: getManyDetailed,
     add: add,
     update: update,
     deleteMany: deleteMany

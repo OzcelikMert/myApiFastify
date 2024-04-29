@@ -21,8 +21,8 @@ import {
 import {PermissionUtil} from "@utils/permission.util";
 import {UserRoleId} from "@constants/userRoles";
 import {
-    IPostGetManyWithPopulateResultService,
-    IPostGetPrevNextResultService, IPostGetWithPopulateResultService,
+    IPostGetDetailedResultService,
+    IPostGetPrevNextResultService, IPostGetManyDetailedResultService,
 } from "types/services/post.service";
 import {IPostECommerceVariationModel, IPostModel} from "types/models/post.model";
 import {PageTypeId} from "@constants/pageTypes";
@@ -33,11 +33,11 @@ import {MongoDBHelpers} from "@library/mongodb/helpers";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostGetWithPopulateResultService>();
+        let apiResult = new ApiResult<IPostGetDetailedResultService>();
 
         let reqData = req as IPostGetWithIdSchema;
 
-        apiResult.data = await PostService.getWithPopulate({
+        apiResult.data = await PostService.getDetailed({
             ...reqData.params,
             ...reqData.query,
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
@@ -49,11 +49,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostGetManyWithPopulateResultService[]>();
+        let apiResult = new ApiResult<IPostGetManyDetailedResultService[]>();
 
         let reqData = req as IPostGetManySchema;
 
-        apiResult.data = await PostService.getManyWithPopulate({
+        apiResult.data = await PostService.getManyDetailed({
             ...reqData.query,
             ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
@@ -64,11 +64,11 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostGetWithPopulateResultService>();
+        let apiResult = new ApiResult<IPostGetDetailedResultService>();
 
         let reqData = req as IPostGetWithURLSchema;
 
-        apiResult.data = await PostService.getWithPopulate({
+        apiResult.data = await PostService.getDetailed({
             ...reqData.params,
             ...reqData.query,
             url: reqData.query.pageTypeId && reqData.query.pageTypeId != PageTypeId.Default ? undefined : reqData.params.url

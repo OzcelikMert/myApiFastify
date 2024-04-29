@@ -7,7 +7,7 @@ import {IComponentDeleteManySchema, IComponentPutWithIdSchema} from "@schemas/co
 import {ComponentService} from "@services/component.service";
 import {PermissionUtil} from "@utils/permission.util";
 import {UserRoleId} from "@constants/userRoles";
-import {IComponentGetResultService} from "types/services/component.service";
+import {IComponentModel} from "types/models/component.model";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -63,7 +63,7 @@ const checkPermissionWithId = async (req: FastifyRequest, reply: FastifyReply) =
         let reqData = req as IComponentPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)) {
-            let serviceResult = req.cachedServiceResult as IComponentGetResultService;
+            let serviceResult = req.cachedServiceResult as IComponentModel;
 
             let reqToCheck = {
                 key: reqData.body.key,

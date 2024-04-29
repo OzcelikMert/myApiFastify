@@ -1,7 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "@library/api/result";
 import {LogMiddleware} from "@middlewares/log.middleware";
-import {IComponentGetResultService} from "types/services/component.service";
+import {IComponentGetDetailedResultService} from "types/services/component.service";
 import {
     IComponentDeleteManySchema,
     IComponentGetManySchema,
@@ -13,11 +13,11 @@ import {IComponentModel} from "types/models/component.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IComponentGetResultService>();
+        let apiResult = new ApiResult<IComponentGetDetailedResultService>();
 
         let reqData = req as IComponentGetWithIdSchema;
 
-        apiResult.data = await ComponentService.get({
+        apiResult.data = await ComponentService.getDetailed({
             ...reqData.params,
             ...reqData.query
         });
@@ -28,11 +28,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithKey = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IComponentGetResultService>();
+        let apiResult = new ApiResult<IComponentGetDetailedResultService>();
 
         let reqData = req as IComponentGetWithKeySchema;
 
-        apiResult.data = await ComponentService.get({
+        apiResult.data = await ComponentService.getDetailed({
             ...reqData.params,
             ...reqData.query
         });
@@ -43,11 +43,11 @@ const getWithKey = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IComponentGetResultService[]>();
+        let apiResult = new ApiResult<IComponentGetDetailedResultService[]>();
 
         let reqData = req as IComponentGetManySchema;
 
-        apiResult.data = await ComponentService.getMany({
+        apiResult.data = await ComponentService.getManyDetailed({
             ...reqData.query
         });
 
