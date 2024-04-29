@@ -8,7 +8,7 @@ import {PermissionUtil} from "@utils/permission.util";
 import {IPostCommentDeleteManySchema, IPostCommentPutWithIdSchema} from "@schemas/postComment.schema";
 import {PostCommentService} from "@services/postComment.service";
 import {PostService} from "@services/post.service";
-import {IPostCommentGetResultService} from "types/services/postComponent.service";
+import {IPostCommentModel} from "types/models/postComment.model";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -72,10 +72,10 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
         let reqData = req as IPostCommentPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let serviceResult = req.cachedServiceResult as IPostCommentGetResultService;
+            let serviceResult = req.cachedServiceResult as IPostCommentModel;
 
             if (serviceResult) {
-                if (serviceResult.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
+                if (serviceResult.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                     apiResult.status = false;
                     apiResult.errorCode = ApiErrorCodes.noPerm;
                     apiResult.statusCode = ApiStatusCodes.forbidden;
@@ -89,7 +89,7 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
     });
 }
 
-const checkPostIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkIsAuthorWithIdForPost = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
@@ -120,5 +120,5 @@ export const PostCommentMiddleware = {
     checkWithId: checkWithId,
     checkMany: checkMany,
     checkIsAuthorWithId: checkIsAuthorWithId,
-    checkPostIsAuthorWithId: checkPostIsAuthorWithId,
+    checkIsAuthorWithIdForPost: checkIsAuthorWithIdForPost,
 };

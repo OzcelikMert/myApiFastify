@@ -2,10 +2,13 @@ import * as mongoose from "mongoose";
 import {MongoDBHelpers} from "@library/mongodb/helpers";
 import {VariableLibrary} from "@library/variable";
 import {
-    IPostCommentAddParamService, IPostCommentDeleteManyParamService,
+    IPostCommentAddParamService,
+    IPostCommentDeleteManyParamService,
+    IPostCommentGetDetailedManyParamService,
+    IPostCommentGetDetailedParamService,
     IPostCommentGetManyParamService,
     IPostCommentGetParamService,
-    IPostCommentGetResultService,
+    IPostCommentGetDetailedResultService,
     IPostCommentUpdateLikeParamService,
     IPostCommentUpdateParamService,
     IPostCommentUpdateStatusManyParamService
@@ -15,6 +18,78 @@ import {postCommentObjectIdKeys} from "@constants/objectIdKeys/postComment.objec
 import {postCommentModel} from "@models/postComment.model";
 
 const get = async (params: IPostCommentGetParamService) => {
+    let filters: mongoose.FilterQuery<IPostCommentModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, postCommentObjectIdKeys);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: params._id
+    }
+    if (params.postId) filters = {
+        ...filters,
+        postId: params.postId
+    }
+    if (params.postTypeId) filters = {
+        ...filters,
+        postTypeId: params.postTypeId
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+
+    let query = postCommentModel.findOne(filters);
+
+    query.sort({_id: "desc"});
+
+    let doc = (await query.lean<IPostCommentModel>().exec());
+
+    if (doc) {}
+
+    return doc;
+}
+
+const getMany = async (params: IPostCommentGetManyParamService) => {
+    let filters: mongoose.FilterQuery<IPostCommentModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, postCommentObjectIdKeys);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: {$in: params._id}
+    }
+    if (params.postId) filters = {
+        ...filters,
+        postId: params.postId
+    }
+    if (params.postTypeId) filters = {
+        ...filters,
+        postTypeId: params.postTypeId
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+
+    let query = postCommentModel.find(filters);
+
+    query.sort({_id: "desc"});
+
+    let docs = (await query.lean<IPostCommentModel[]>().exec());
+
+    return docs.map(doc => {
+        return doc;
+    })
+}
+
+const getDetailed = async (params: IPostCommentGetDetailedParamService) => {
     let filters: mongoose.FilterQuery<IPostCommentModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, postCommentObjectIdKeys);
 
@@ -52,7 +127,7 @@ const get = async (params: IPostCommentGetParamService) => {
 
     query.sort({_id: "desc"});
 
-    let doc = (await query.lean<IPostCommentGetResultService>().exec());
+    let doc = (await query.lean<IPostCommentGetDetailedResultService>().exec());
 
     if (doc) {
         doc.likeNumber = doc.likes?.length ?? 0;
@@ -67,7 +142,7 @@ const get = async (params: IPostCommentGetParamService) => {
     return doc;
 }
 
-const getMany = async (params: IPostCommentGetManyParamService) => {
+const getManyDetailed = async (params: IPostCommentGetDetailedManyParamService) => {
     let filters: mongoose.FilterQuery<IPostCommentModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, postCommentObjectIdKeys);
 
@@ -105,7 +180,7 @@ const getMany = async (params: IPostCommentGetManyParamService) => {
 
     query.sort({_id: "desc"});
 
-    let docs = (await query.lean<IPostCommentGetResultService[]>().exec());
+    let docs = (await query.lean<IPostCommentGetDetailedResultService[]>().exec());
 
     return docs.map(doc => {
         doc.likeNumber = doc.likes?.length ?? 0;
@@ -272,6 +347,8 @@ const deleteMany = async (params: IPostCommentDeleteManyParamService) => {
 export const PostCommentService = {
     get: get,
     getMany: getMany,
+    getDetailed: getDetailed,
+    getManyDetailed: getManyDetailed,
     add: add,
     update: update,
     updateLike: updateLike,

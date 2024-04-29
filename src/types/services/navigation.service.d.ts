@@ -11,7 +11,7 @@ export interface INavigationAlternateService {
     langId: string
 }
 
-export type INavigationGetResultService = {
+export type INavigationGetDetailedResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     parentId?: INavigationPopulateService,
@@ -26,6 +26,20 @@ export interface INavigationGetParamService {
 }
 
 export interface INavigationGetManyParamService {
+    _id?: string[]
+    langId?: string
+    statusId?: StatusId
+    isPrimary?: boolean
+    isSecondary?: boolean
+}
+
+export interface INavigationGetDetailedParamService {
+    _id?: string
+    langId?: string
+    statusId?: StatusId
+}
+
+export interface INavigationGetManyDetailedParamService {
     _id?: string[]
     langId?: string
     statusId?: StatusId

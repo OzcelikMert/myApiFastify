@@ -7,10 +7,13 @@ import {
     INavigationDeleteManyParamService,
     INavigationAddParamService,
     INavigationGetParamService,
-    INavigationGetResultService,
+    INavigationGetDetailedResultService,
     INavigationUpdateParamService,
     INavigationUpdateRankParamService,
-    INavigationUpdateStatusManyParamService, INavigationGetManyParamService
+    INavigationUpdateStatusManyParamService,
+    INavigationGetManyParamService,
+    INavigationGetDetailedParamService,
+    INavigationGetManyDetailedParamService
 } from "types/services/navigation.service";
 import {navigationModel} from "@models/navigation.model";
 import { StatusId } from "@constants/status";
@@ -32,45 +35,12 @@ const get = async (params: INavigationGetParamService) => {
 
     let query = navigationModel.findOne(filters);
 
-    query.populate({
-        path: "parentId",
-        select: "_id contents",
-        match: { statusId: StatusId.Active},
-        options: { omitUndefined: true },
-        transform: (doc: INavigationGetResultService) => {
-            if (doc) {
-                if (Array.isArray(doc.contents)) {
-                    doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
-                }
-                return doc;
-            }
-        }
-    });
-
-    query.populate({
-        path: [
-            "authorId",
-            "lastAuthorId"
-        ].join(" "),
-        select: "_id name url image",
-        options: {omitUndefined: true},
-    })
-
     query.sort({rank: "asc", _id: "desc"});
 
-    let doc = (await query.lean<INavigationGetResultService>().exec());
+    let doc = (await query.lean<INavigationModel>().exec());
 
     if (doc) {
-        if (Array.isArray(doc.contents)) {
-            doc.alternates = doc.contents.map(content => ({
-                langId: content.langId.toString()
-            }));
-
-            let docContent = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
-            if (docContent) {
-                doc.contents = docContent;
-            }
-        }
+        doc.contents = [];
     }
 
     return doc
@@ -100,12 +70,39 @@ const getMany = async (params: INavigationGetManyParamService) => {
 
     let query = navigationModel.find(filters);
 
+    query.sort({rank: "asc", _id: "desc"});
+
+    let docs = (await query.lean<INavigationModel[]>().exec());
+
+    return docs.map((doc) => {
+        doc.contents = [];
+
+        return doc;
+    });
+}
+
+const getDetailed = async (params: INavigationGetDetailedParamService) => {
+    let filters: mongoose.FilterQuery<INavigationModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, navigationObjectIdKeys);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: params._id
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+
+    let query = navigationModel.findOne(filters);
+
     query.populate({
         path: "parentId",
         select: "_id contents",
-        match: { statusId: StatusId.Active },
+        match: { statusId: StatusId.Active},
         options: { omitUndefined: true },
-        transform: (doc: INavigationGetResultService) => {
+        transform: (doc: INavigationGetDetailedResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
                     doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
@@ -126,7 +123,75 @@ const getMany = async (params: INavigationGetManyParamService) => {
 
     query.sort({rank: "asc", _id: "desc"});
 
-    let docs = (await query.lean<INavigationGetResultService[]>().exec());
+    let doc = (await query.lean<INavigationGetDetailedResultService>().exec());
+
+    if (doc) {
+        if (Array.isArray(doc.contents)) {
+            doc.alternates = doc.contents.map(content => ({
+                langId: content.langId.toString()
+            }));
+
+            let docContent = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+            if (docContent) {
+                doc.contents = docContent;
+            }
+        }
+    }
+
+    return doc
+}
+
+const getManyDetailed = async (params: INavigationGetManyDetailedParamService) => {
+    let filters: mongoose.FilterQuery<INavigationModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, navigationObjectIdKeys);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: { $in: params._id }
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+    if (typeof params.isPrimary !== "undefined") filters = {
+        ...filters,
+        isPrimary: params.isPrimary
+    }
+    if (typeof params.isSecondary !== "undefined") filters = {
+        ...filters,
+        isSecondary: params.isSecondary
+    }
+
+    let query = navigationModel.find(filters);
+
+    query.populate({
+        path: "parentId",
+        select: "_id contents",
+        match: { statusId: StatusId.Active },
+        options: { omitUndefined: true },
+        transform: (doc: INavigationGetDetailedResultService) => {
+            if (doc) {
+                if (Array.isArray(doc.contents)) {
+                    doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+                }
+                return doc;
+            }
+        }
+    });
+
+    query.populate({
+        path: [
+            "authorId",
+            "lastAuthorId"
+        ].join(" "),
+        select: "_id name url image",
+        options: {omitUndefined: true},
+    })
+
+    query.sort({rank: "asc", _id: "desc"});
+
+    let docs = (await query.lean<INavigationGetDetailedResultService[]>().exec());
 
     return docs.map((doc) => {
         if (Array.isArray(doc.contents)) {
@@ -264,6 +329,8 @@ const deleteMany = async (params: INavigationDeleteManyParamService) => {
 export const NavigationService = {
     get: get,
     getMany: getMany,
+    getDetailed: getDetailed,
+    getManyDetailed: getManyDetailed,
     add: add,
     update: update,
     updateRank: updateRank,

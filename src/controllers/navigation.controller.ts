@@ -9,16 +9,16 @@ import {
     INavigationPostSchema,
     INavigationPutWithIdSchema, INavigationPutRankWithIdSchema, INavigationPutStatusManySchema
 } from "@schemas/navigation.schema";
-import {INavigationGetResultService} from "types/services/navigation.service";
 import {INavigationModel} from "types/models/navigation.model";
+import {INavigationGetDetailedResultService} from "types/services/navigation.service";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<INavigationGetResultService>();
+        let apiResult = new ApiResult<INavigationGetDetailedResultService>();
 
         let reqData = req as INavigationGetWithIdSchema;
 
-        apiResult.data = await NavigationService.get({
+        apiResult.data = await NavigationService.getDetailed({
             ...reqData.params,
             ...reqData.query
         });
@@ -29,11 +29,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<INavigationGetResultService[]>();
+        let apiResult = new ApiResult<INavigationGetDetailedResultService[]>();
 
         let reqData = req as INavigationGetManySchema;
 
-        apiResult.data = await NavigationService.getMany({
+        apiResult.data = await NavigationService.getManyDetailed({
             ...reqData.query
         });
 

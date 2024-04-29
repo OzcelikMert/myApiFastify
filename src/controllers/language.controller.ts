@@ -10,12 +10,11 @@ import {LogMiddleware} from "@middlewares/log.middleware";
 import fs from "fs";
 import {Config} from "@configs/index";
 import path from "path";
-import {ILanguageGetResultService} from "types/services/language.service";
 import {ILanguageModel} from "types/models/language.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<ILanguageGetResultService>();
+        let apiResult = new ApiResult<ILanguageModel>();
 
         let reqData = req as ILanguageGetWithIdSchema;
 
@@ -29,7 +28,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getDefault = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<ILanguageGetResultService>();
+        let apiResult = new ApiResult<ILanguageModel>();
 
         let reqData = req as ILanguageGetDefaultSchema;
 
@@ -41,7 +40,7 @@ const getDefault = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<ILanguageGetResultService[]>();
+        let apiResult = new ApiResult<ILanguageModel[]>();
 
         let reqData = req as ILanguageGetManySchema;
 

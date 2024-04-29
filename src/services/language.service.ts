@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
 import {languageModel} from "@models/language.model";
 import {
-    ILanguageGetResultService,
     ILanguageGetManyParamService,
     ILanguageAddParamService,
     ILanguageGetParamService,
@@ -35,7 +34,7 @@ const get = async (params: ILanguageGetParamService) => {
 
     query.sort({rank: "asc", _id: "desc"});
 
-    return (await query.lean<ILanguageGetResultService>().exec());
+    return (await query.lean<ILanguageModel>().exec());
 }
 
 const getMany = async (params: ILanguageGetManyParamService) => {
@@ -71,7 +70,7 @@ const getMany = async (params: ILanguageGetManyParamService) => {
 
     query.sort({rank: "asc", _id: "desc"});
 
-    let docs = (await query.lean<ILanguageGetResultService[]>().exec());
+    let docs = (await query.lean<ILanguageModel[]>().exec());
 
     return docs;
 }

@@ -5,7 +5,7 @@ import {ApiStatusCodes} from "@library/api/statusCodes";
 import {LogMiddleware} from "@middlewares/log.middleware";
 import {LanguageService} from "@services/language.service";
 import {ILanguagePutWithIdSchema} from "@schemas/language.schema";
-import {ILanguageGetResultService} from "types/services/language.service";
+import {ILanguageModel} from "types/models/language.model";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -35,7 +35,7 @@ const checkIsDefaultWithId = async (req: FastifyRequest, reply: FastifyReply) =>
 
         let reqData = req as ILanguagePutWithIdSchema;
 
-        let serviceResult = req.cachedServiceResult as ILanguageGetResultService;
+        let serviceResult = req.cachedServiceResult as ILanguageModel;
 
         if(!serviceResult.isDefault && reqData.body.isDefault){
             await LanguageService.updateIsDefaultMany({isDefault: false});

@@ -13,8 +13,8 @@ export const postCommentRoute = function (fastify: FastifyInstance, opts: any, d
     fastify.get(endPoint.GET, { preHandler: [RequestMiddleware.check(PostCommentSchema.getMany)] }, PostCommentController.getMany);
     fastify.get(endPoint.GET_WITH_ID, { preHandler: [RequestMiddleware.check(PostCommentSchema.getWithId), SessionAuthMiddleware.check] }, PostCommentController.getWithId);
     fastify.post(endPoint.ADD, { preHandler: [RequestMiddleware.check(PostCommentSchema.post), SessionAuthMiddleware.check] }, PostCommentController.add);
-    fastify.put(endPoint.UPDATE_STATUS, { preHandler: [RequestMiddleware.check(PostCommentSchema.putStatusMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission()), PostCommentMiddleware.checkMany, PostCommentMiddleware.checkPostIsAuthorWithId] }, PostCommentController.updateStatusMany);
+    fastify.put(endPoint.UPDATE_STATUS, { preHandler: [RequestMiddleware.check(PostCommentSchema.putStatusMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission()), PostCommentMiddleware.checkMany, PostCommentMiddleware.checkIsAuthorWithIdForPost] }, PostCommentController.updateStatusMany);
     fastify.put(endPoint.UPDATE_LIKE_WITH_ID, { preHandler: [RequestMiddleware.check(PostCommentSchema.putLikeWithId), SessionAuthMiddleware.check, PostCommentMiddleware.checkWithId] }, PostCommentController.updateLikeWithId);
-    fastify.delete(endPoint.DELETE, { preHandler: [RequestMiddleware.check(PostCommentSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission("PUT")), PostCommentMiddleware.checkMany, PostCommentMiddleware.checkPostIsAuthorWithId] }, PostCommentController.deleteMany);
+    fastify.delete(endPoint.DELETE, { preHandler: [RequestMiddleware.check(PostCommentSchema.deleteMany), SessionAuthMiddleware.check, PermissionMiddleware.check(PermissionUtil.getPostPermission("PUT")), PostCommentMiddleware.checkMany, PostCommentMiddleware.checkIsAuthorWithIdForPost] }, PostCommentController.deleteMany);
     done();
 }

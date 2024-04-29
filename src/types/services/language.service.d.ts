@@ -1,8 +1,6 @@
 import {ILanguageModel} from "types/models/language.model";
 import {StatusId} from "@constants/status";
 
-export type ILanguageGetResultService = {} & ILanguageModel
-
 export interface ILanguageGetParamService {
     _id?: string
     shortKey?: string

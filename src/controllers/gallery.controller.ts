@@ -13,7 +13,7 @@ import {GalleryService} from "@services/gallery.service";
 import {PermissionUtil} from "@utils/permission.util";
 import {UserRoleId} from "@constants/userRoles";
 import {GalleryTypeId} from "@constants/galleryTypeId";
-import {IGalleryGetResultService, IGalleryImageProperties} from "types/services/gallery.service";
+import {IGalleryGetDetailedResultService, IGalleryImageProperties} from "types/services/gallery.service";
 import {IGalleryModel} from "types/models/gallery.model";
 import {DateMask} from "@library/variable/date";
 
@@ -45,12 +45,12 @@ async function getImageProperties(name: string) {
 
 const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<(IGalleryGetResultService)[]>();
+        let apiResult = new ApiResult<(IGalleryGetDetailedResultService)[]>();
         apiResult.data = [];
 
         const reqData = req as IGalleryGetManySchema;
 
-        let gallery = await GalleryService.getMany({
+        let gallery = await GalleryService.getManyDetailed({
             ...reqData.query,
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });

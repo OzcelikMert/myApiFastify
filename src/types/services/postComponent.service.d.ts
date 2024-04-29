@@ -3,7 +3,7 @@ import {PostTypeId} from "@constants/postTypes";
 import {StatusId} from "@constants/status";
 import {IPostCommentModel} from "types/models/postComment.model";
 
-export type IPostCommentGetResultService = {
+export type IPostCommentGetDetailedResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     likeNumber: number
@@ -17,10 +17,26 @@ export interface IPostCommentGetParamService {
     postTypeId: PostTypeId
     statusId?: StatusId
     authorId?: string
-    authorIdDidLike?: string
 }
 
 export interface IPostCommentGetManyParamService {
+    _id?: string[],
+    postId?: string
+    postTypeId: PostTypeId
+    statusId?: StatusId
+    authorId?: string
+}
+
+export interface IPostCommentGetDetailedParamService {
+    _id?: string,
+    postId?: string
+    postTypeId: PostTypeId
+    statusId?: StatusId
+    authorId?: string
+    authorIdDidLike?: string
+}
+
+export interface IPostCommentGetDetailedManyParamService {
     _id?: string[],
     postId?: string
     postTypeId: PostTypeId

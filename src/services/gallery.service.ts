@@ -4,13 +4,71 @@ import {VariableLibrary} from "@library/variable";
 import {galleryObjectIdKeys} from "@constants/objectIdKeys/gallery.objectIdKeys";
 import {IGalleryModel} from "types/models/gallery.model";
 import {
-    IGalleryAddParamService, IGalleryDeleteManyParamService,
-    IGalleryGetManyParamService, IGalleryGetParamService,
-    IGalleryGetResultService
+    IGalleryAddParamService,
+    IGalleryDeleteManyParamService,
+    IGalleryGetDetailedParamService,
+    IGalleryGetManyDetailedParamService,
+    IGalleryGetManyParamService,
+    IGalleryGetParamService,
+    IGalleryGetDetailedResultService
 } from "types/services/gallery.service";
 import {galleryModel} from "@models/gallery.model";
 
 const get = async (params: IGalleryGetParamService) => {
+    let filters: mongoose.FilterQuery<IGalleryModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, galleryObjectIdKeys);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: params._id
+    }
+    if (params.name) filters = {
+        ...filters,
+        name: params.name
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+
+    let query = galleryModel.findOne(filters);
+
+    query.sort({_id: "desc"});
+
+    return (await query.lean<IGalleryModel>().exec());
+}
+
+const getMany = async (params: IGalleryGetManyParamService) => {
+    let filters: mongoose.FilterQuery<IGalleryModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, galleryObjectIdKeys);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: { $in: params._id }
+    }
+    if (params.name) filters = {
+        ...filters,
+        name: { $in: params.name }
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: params.typeId
+    }
+
+    let query = galleryModel.find(filters);
+
+    query.sort({_id: "desc"});
+
+    let docs = (await query.lean<IGalleryModel[]>().exec());
+
+    return docs;
+}
+
+const getDetailed = async (params: IGalleryGetDetailedParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, galleryObjectIdKeys);
 
@@ -39,10 +97,10 @@ const get = async (params: IGalleryGetParamService) => {
 
     query.sort({_id: "desc"});
 
-    return (await query.lean<IGalleryGetResultService>().exec());
+    return (await query.lean<IGalleryGetDetailedResultService>().exec());
 }
 
-const getMany = async (params: IGalleryGetManyParamService) => {
+const getManyDetailed = async (params: IGalleryGetManyDetailedParamService) => {
     let filters: mongoose.FilterQuery<IGalleryModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, galleryObjectIdKeys);
 
@@ -75,7 +133,7 @@ const getMany = async (params: IGalleryGetManyParamService) => {
 
     query.sort({_id: "desc"});
 
-    let docs = (await query.lean<IGalleryGetResultService[]>().exec());
+    let docs = (await query.lean<IGalleryGetDetailedResultService[]>().exec());
 
     return docs;
 }
@@ -106,6 +164,8 @@ const deleteMany = async (params: IGalleryDeleteManyParamService) => {
 export const GalleryService = {
     get: get,
     getMany: getMany,
+    getDetailed: getDetailed,
+    getManyDetailed: getManyDetailed,
     add: add,
     deleteMany: deleteMany
 };

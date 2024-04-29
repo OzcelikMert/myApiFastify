@@ -7,7 +7,7 @@ import {UserRoleId} from "@constants/userRoles";
 import {GalleryService} from "@services/gallery.service";
 import {IGalleryDeleteManySchema} from "@schemas/gallery.schema";
 import {PermissionUtil} from "@utils/permission.util";
-import {IGalleryGetResultService} from "types/services/gallery.service";
+import {IGalleryModel} from "types/models/gallery.model";
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -41,11 +41,11 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IGalleryDeleteManySchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let serviceResult = req.cachedServiceResult as IGalleryGetResultService[];
+            let serviceResult = req.cachedServiceResult as IGalleryModel[];
 
             if (serviceResult) {
                 for (const item of serviceResult) {
-                    if (item.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
+                    if (item.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                         apiResult.status = false;
                         apiResult.errorCode = ApiErrorCodes.noPerm;
                         apiResult.statusCode = ApiStatusCodes.forbidden;

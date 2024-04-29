@@ -7,7 +7,7 @@ export type IGalleryImageProperties = {
     sizeMB: number
 }
 
-export type IGalleryGetResultService = {
+export type IGalleryGetDetailedResultService = {
     authorId: IUserPopulateService
 } & Omit<IGalleryModel, "authorId">
 
@@ -18,6 +18,19 @@ export interface IGalleryGetParamService {
 }
 
 export interface IGalleryGetManyParamService {
+    _id?: string[]
+    name?: string[]
+    authorId?: string
+    typeId?: GalleryTypeId
+}
+
+export interface IGalleryGetDetailedParamService {
+    _id?: string
+    name?: string
+    authorId?: string
+}
+
+export interface IGalleryGetManyDetailedParamService {
     _id?: string[]
     name?: string[]
     authorId?: string

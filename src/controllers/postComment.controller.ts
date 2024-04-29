@@ -1,7 +1,7 @@
 import {FastifyRequest, FastifyReply} from 'fastify';
 import {ApiResult} from "@library/api/result";
 import {LogMiddleware} from "@middlewares/log.middleware";
-import {IPostCommentGetResultService} from "types/services/postComponent.service";
+import {IPostCommentGetDetailedResultService} from "types/services/postComponent.service";
 import {
     IPostCommentDeleteManySchema,
     IPostCommentGetManySchema,
@@ -16,11 +16,11 @@ import {IPostCommentModel} from "types/models/postComment.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostCommentGetResultService>();
+        let apiResult = new ApiResult<IPostCommentGetDetailedResultService>();
 
         let reqData = req as IPostCommentGetWithIdSchema;
 
-        apiResult.data = await PostCommentService.get({
+        apiResult.data = await PostCommentService.getDetailed({
             ...reqData.params,
             ...reqData.query
         });
@@ -31,11 +31,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostCommentGetResultService[]>();
+        let apiResult = new ApiResult<IPostCommentGetDetailedResultService[]>();
 
         let reqData = req as IPostCommentGetManySchema;
 
-        apiResult.data = await PostCommentService.getMany({
+        apiResult.data = await PostCommentService.getManyDetailed({
             ...reqData.query
         });
 
