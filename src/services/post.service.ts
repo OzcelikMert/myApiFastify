@@ -248,6 +248,25 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
                     return doc;
                 }
             });
+
+            query.populate({
+                path: [
+                    "eCommerce.variations.itemId"
+                ].join(" "),
+                match: {
+                    typeId: PostTypeId.ProductVariation,
+                    statusId: StatusId.Active
+                },
+                options: {omitUndefined: true},
+                transform: (doc: IPostGetDetailedResultService) => {
+                    if (doc) {
+                        if (Array.isArray(doc.contents)) {
+                            doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+                        }
+                    }
+                    return doc;
+                }
+            });
             break;
         case PostTypeId.Page:
             query.populate({

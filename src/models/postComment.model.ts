@@ -17,6 +17,6 @@ const schema = new mongoose.Schema<IPostCommentModel>(
         likes: {type: [mongoose.Schema.Types.ObjectId], ref: userModel, default: []},
     },
     {timestamps: true}
-).index({postId: 1, postTypeId: 1, statusId: 1, authorId: 1, likes: 1, dislikes: 1});
+).index({postId: 1, postTypeId: 1, statusId: 1, authorId: 1});
 
 export const postCommentModel = mongoose.model<IPostCommentModel, mongoose.Model<IPostCommentModel>>("postComments", schema)

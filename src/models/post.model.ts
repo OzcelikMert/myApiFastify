@@ -65,14 +65,14 @@ const schemaECommerceVariationSelected = new mongoose.Schema<IPostECommerceVaria
     {timestamps: true}
 ).index({attributeId: 1, variationId: 1});
 
-const schemaECommerceVariationItem = new mongoose.Schema<IPostECommerceVariationModel>(
+const schemaECommerceVariation = new mongoose.Schema<IPostECommerceVariationModel>(
     {
         rank: {type: Number, default: 0},
         selectedVariations: {type: [schemaECommerceVariationSelected], default: []},
         itemId: {type: mongoose.Schema.Types.ObjectId, ref: "posts", required: true}
     },
     {timestamps: true}
-).index({itemId: 1});
+);
 
 const schemaECommerce = new mongoose.Schema<IPostECommerceModel>(
     {
@@ -82,7 +82,7 @@ const schemaECommerce = new mongoose.Schema<IPostECommerceModel>(
         pricing: {type: schemaECommercePricing},
         shipping: {type: schemaECommerceShipping},
         attributes: {type: [schemaECommerceAttribute], default: []},
-        variations: {type: [schemaECommerceVariationItem], default: []},
+        variations: {type: [schemaECommerceVariation], default: []},
         variationDefaults: {type: [schemaECommerceVariationSelected], default: []}
     }
 ).index({typeId: 1});
@@ -118,7 +118,7 @@ const schemaContent = new mongoose.Schema<IPostContentModel>(
         buttons: {type: [schemaContentButton]},
     },
     {timestamps: true}
-).index({langId: 1});
+)
 
 const schema = new mongoose.Schema<IPostModel>(
     {
