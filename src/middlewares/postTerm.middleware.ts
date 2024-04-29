@@ -7,7 +7,7 @@ import {LogMiddleware} from "@middlewares/log.middleware";
 import {IPostTermDeleteManySchema, IPostTermPutWithIdSchema} from "@schemas/postTerm.schema";
 import {UserRoleId} from "@constants/userRoles";
 import {PermissionUtil} from "@utils/permission.util";
-import {IPostTermGetResultService} from "types/services/postTerm.service";
+import {IPostTermModel} from "types/models/postTerm.model";
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
@@ -71,10 +71,10 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
         let reqData = req as IPostTermPutWithIdSchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let postTerm = req.cachedServiceResult as IPostTermGetResultService;
+            let postTerm = req.cachedServiceResult as IPostTermModel;
 
             if (postTerm) {
-                if (postTerm.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
+                if (postTerm.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                     apiResult.status = false;
                     apiResult.errorCode = ApiErrorCodes.noPerm;
                     apiResult.statusCode = ApiStatusCodes.forbidden;
@@ -95,11 +95,11 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         let reqData = req as IPostTermDeleteManySchema;
 
         if (!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor)) {
-            let postTerms = req.cachedServiceResult as IPostTermGetResultService[];
+            let postTerms = req.cachedServiceResult as IPostTermModel[];
 
             if (postTerms) {
                 for (const postTerm of postTerms) {
-                    if (postTerm.authorId._id.toString() != req.sessionAuth!.user?.userId.toString()) {
+                    if (postTerm.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                         apiResult.status = false;
                         apiResult.errorCode = ApiErrorCodes.noPerm;
                         apiResult.statusCode = ApiStatusCodes.forbidden;

@@ -13,7 +13,7 @@ export interface IUserPopulateService {
     twitter?: string
 }
 
-export type IUserGetResultService = {
+export type IUserGetDetailedResultService = {
     isOnline?: boolean
     password?: string
     authorId?: IUserPopulateService
@@ -31,6 +31,25 @@ export interface IUserGetParamService {
 }
 
 export interface IUserGetManyParamService {
+    _id?: string[]
+    statusId?: StatusId
+    email?: string,
+    permissions?: PermissionId[]
+    ignoreUserId?: string[],
+    banDateEnd?: Date
+}
+
+export interface IUserGetDetailedParamService {
+    _id?: string
+    email?: string
+    password?: string
+    statusId?: StatusId
+    url?: string
+    roleId?: UserRoleId
+    ignoreUserId?: string[]
+}
+
+export interface IUserGetManyDetailedParamService {
     _id?: string[]
     statusId?: StatusId
     email?: string,

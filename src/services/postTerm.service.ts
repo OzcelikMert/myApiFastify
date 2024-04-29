@@ -3,9 +3,14 @@ import {postTermModel} from "@models/postTerm.model";
 import {
     IPostTermDeleteManyParamService,
     IPostTermAddParamService,
-    IPostTermGetParamService, IPostTermGetResultService,
-    IPostTermUpdateParamService, IPostTermUpdateRankParamService, IPostTermUpdateStatusManyParamService,
-    IPostTermGetManyParamService
+    IPostTermGetParamService,
+    IPostTermUpdateParamService,
+    IPostTermUpdateRankParamService,
+    IPostTermUpdateStatusManyParamService,
+    IPostTermGetManyParamService,
+    IPostTermGetDetailedResultService,
+    IPostTermGetDetailedParamService,
+    IPostTermGetManyDetailedParamService
 } from "types/services/postTerm.service";
 import {MongoDBHelpers} from "@library/mongodb/helpers";
 import {VariableLibrary} from "@library/variable";
@@ -73,43 +78,12 @@ const get = async (params: IPostTermGetParamService) => {
 
     let query = postTermModel.findOne(filters);
 
-    query.populate({
-        path: "parentId",
-        select: "_id typeId postTypeId contents",
-        match: { statusId: StatusId.Active },
-        options: { omitUndefined: true },
-        transform: (doc: IPostTermGetResultService) => {
-            if (doc) {
-                if (Array.isArray(doc.contents)) {
-                    doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
-                }
-            }
-            return doc;
-        }
-    });
-
-    query.populate({
-        path: [
-            "authorId",
-            "lastAuthorId"
-        ].join(" "),
-        select: "_id name url image facebook instagram twitter",
-        options: {omitUndefined: true},
-    });
-
     query.sort({rank: "asc", _id: "desc"});
 
-    let doc = (await query.lean<IPostTermGetResultService>().exec());
+    let doc = (await query.lean<IPostTermModel>().exec());
 
     if (doc) {
-        if (Array.isArray(doc.contents)) {
-            doc.alternates = doc.contents.map(content => ({
-                langId: content.langId.toString(),
-                title: content.title,
-                url: content.url
-            }));
-            doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
-        }
+        doc.contents = [];
     }
 
     return doc;
@@ -157,12 +131,144 @@ const getMany = async (params: IPostTermGetManyParamService) => {
 
     let query = postTermModel.find(filters);
 
+    query.sort({rank: "asc", _id: "desc"});
+
+    let docs = (await query.lean<IPostTermModel[]>().exec());
+
+    return Promise.all(docs.map(async (doc) => {
+        doc.contents = [];
+        return doc;
+    }));
+}
+
+const getDetailed = async (params: IPostTermGetDetailedParamService) => {
+    let filters: mongoose.FilterQuery<IPostTermModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, [...postTermObjectIdKeys, "ignoreTermId"]);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: params._id
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+    if (params.url) filters = {
+        ...filters,
+        "contents.url": params.url
+    }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: params.typeId
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+    if (params.postTypeId) filters = {
+        ...filters,
+        postTypeId: params.postTypeId
+    }
+    if (params.ignoreTermId) {
+        filters = {
+            ...filters,
+            _id: { $nin: params.ignoreTermId }
+        }
+    }
+
+    let query = postTermModel.findOne(filters);
+
     query.populate({
         path: "parentId",
         select: "_id typeId postTypeId contents",
         match: { statusId: StatusId.Active },
         options: { omitUndefined: true },
-        transform: (doc: IPostTermGetResultService) => {
+        transform: (doc: IPostTermGetDetailedResultService) => {
+            if (doc) {
+                if (Array.isArray(doc.contents)) {
+                    doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+                }
+            }
+            return doc;
+        }
+    });
+
+    query.populate({
+        path: [
+            "authorId",
+            "lastAuthorId"
+        ].join(" "),
+        select: "_id name url image facebook instagram twitter",
+        options: {omitUndefined: true},
+    });
+
+    query.sort({rank: "asc", _id: "desc"});
+
+    let doc = (await query.lean<IPostTermGetDetailedResultService>().exec());
+
+    if (doc) {
+        if (Array.isArray(doc.contents)) {
+            doc.alternates = doc.contents.map(content => ({
+                langId: content.langId.toString(),
+                title: content.title,
+                url: content.url
+            }));
+            doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+        }
+    }
+
+    return doc;
+}
+
+const getManyDetailed = async (params: IPostTermGetManyDetailedParamService) => {
+    let filters: mongoose.FilterQuery<IPostTermModel> = {}
+    params = MongoDBHelpers.convertToObjectIdData(params, [...postTermObjectIdKeys, "ignoreTermId"]);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    if (params._id) filters = {
+        ...filters,
+        _id: params._id
+    }
+    if (params.authorId) filters = {
+        ...filters,
+        authorId: params.authorId
+    }
+    if (params.url) filters = {
+        ...filters,
+        "contents.url": params.url
+    }
+    if (params.title) filters = {
+        ...filters,
+        "contents.title": { $regex: new RegExp(params.title, "i") }
+    }
+    if (params.typeId) filters = {
+        ...filters,
+        typeId: { $in: params.typeId }
+    }
+    if (params.statusId) filters = {
+        ...filters,
+        statusId: params.statusId
+    }
+    if (params.postTypeId) filters = {
+        ...filters,
+        postTypeId: params.postTypeId
+    }
+    if (params.ignoreTermId) {
+        filters = {
+            ...filters,
+            _id: { $nin: params.ignoreTermId }
+        }
+    }
+
+    let query = postTermModel.find(filters);
+
+    query.populate({
+        path: "parentId",
+        select: "_id typeId postTypeId contents",
+        match: { statusId: StatusId.Active },
+        options: { omitUndefined: true },
+        transform: (doc: IPostTermGetDetailedResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
                     doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
@@ -186,7 +292,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
 
     query.sort({rank: "asc", _id: "desc"});
 
-    let docs = (await query.lean<IPostTermGetResultService[]>().exec());
+    let docs = (await query.lean<IPostTermGetDetailedResultService[]>().exec());
 
     return Promise.all(docs.map(async (doc) => {
         if (Array.isArray(doc.contents)) {
@@ -206,7 +312,7 @@ const getMany = async (params: IPostTermGetManyParamService) => {
             }
         }
 
-        if (params.withPostCount && doc.typeId == PostTermTypeId.Category) {
+        if (params.withPostCount) {
             doc.postCount = (await postModel.find({ typeId: doc.postTypeId, categories: { $in: [doc._id] } }).count().exec())
         }
 
@@ -383,6 +489,8 @@ const deleteMany = async (params: IPostTermDeleteManyParamService) => {
 export const PostTermService = {
     get: get,
     getMany: getMany,
+    getDetailed: getDetailed,
+    getManyDetailed: getManyDetailed,
     add: add,
     update: update,
     updateRank: updateRank,

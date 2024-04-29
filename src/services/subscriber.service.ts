@@ -5,7 +5,6 @@ import {
     ISubscriberDeleteManyParamService,
     ISubscriberAddParamService,
     ISubscriberGetManyParamService,
-    ISubscriberGetResultService,
     ISubscriberGetParamService,
     ISubscriberDeleteParamService
 } from "types/services/subscriber.service";
@@ -34,7 +33,7 @@ const get = async (params: ISubscriberGetParamService) => {
 
     query.sort({_id: "desc"});
 
-    return (await query.lean<ISubscriberGetResultService>().exec());
+    return (await query.lean<ISubscriberModel>().exec());
 }
 
 const getMany = async (params: ISubscriberGetManyParamService) => {
@@ -58,7 +57,7 @@ const getMany = async (params: ISubscriberGetManyParamService) => {
 
     query.sort({_id: "desc"});
 
-    let docs = (await query.lean<ISubscriberGetResultService[]>().exec());
+    let docs = (await query.lean<ISubscriberModel[]>().exec());
 
     return docs;
 }

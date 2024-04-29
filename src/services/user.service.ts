@@ -3,9 +3,13 @@ import {userModel} from "@models/user.model";
 import {
     IUserDeleteParamService,
     IUserAddParamService,
-    IUserGetParamService, IUserGetResultService,
+    IUserGetParamService,
+    IUserGetDetailedResultService,
     IUserUpdateParamService,
-    IUserGetManyParamService, IUserUpdateStatusManyParamService
+    IUserGetManyParamService,
+    IUserUpdateStatusManyParamService,
+    IUserGetManyDetailedParamService,
+    IUserGetDetailedParamService
 } from "types/services/user.service";
 import {StatusId} from "@constants/status";
 import {UserUtil} from "@utils/user.util";
@@ -33,7 +37,125 @@ const createURL = async (_id: string | null, name: string) => {
     return url;
 }
 
-const get = async (params: IUserGetParamService, hidePassword: boolean = true, hidePhone: boolean = false) => {
+const get = async (params: IUserGetParamService) => {
+    params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
+
+    let filters: mongoose.FilterQuery<IUserModel> = {
+        statusId: { $ne: StatusId.Deleted},
+    }
+
+    if(params.email) {
+        filters = {
+            ...filters,
+            email: params.email
+        }
+    }
+    if(params.password) {
+        filters = {
+            ...filters,
+            password: UserUtil.encodePassword(params.password)
+        }
+    }
+    if(params._id) {
+        filters = {
+            ...filters,
+            _id: params._id
+        }
+    }
+    if(params.roleId) {
+        filters = {
+            ...filters,
+            roleId: params.roleId
+        }
+    }
+    if(params.url) {
+        filters = {
+            ...filters,
+            url: params.url,
+            roleId: { $ne: UserRoleId.SuperAdmin},
+        }
+    }
+    if(params.statusId){
+        filters = {
+            ...filters,
+            statusId: params.statusId
+        }
+    }
+    if(params.ignoreUserId){
+        filters = {
+            ...filters,
+            _id: { $nin: params.ignoreUserId }
+        }
+    }
+
+    let query = userModel.findOne(filters, {});
+
+    query.sort({_id: "desc"});
+
+    let doc = (await query.lean<IUserModel>().exec());
+
+    if(doc){}
+
+    return doc;
+}
+
+const getMany = async (params: IUserGetManyParamService) => {
+    params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
+
+    let filters: mongoose.FilterQuery<IUserModel> = {
+        statusId: { $ne: StatusId.Deleted},
+        roleId: { $ne: UserRoleId.SuperAdmin},
+    }
+
+    if (params.email) {
+        filters = {
+            ...filters,
+            email: {$regex: new RegExp(params.email, "i")}
+        }
+    }
+    if (params._id) {
+        filters = {
+            ...filters,
+            _id: {$in: params._id}
+        }
+    }
+    if(params.statusId){
+        filters = {
+            ...filters,
+            statusId: params.statusId
+        }
+    }
+    if(params.ignoreUserId){
+        filters = {
+            ...filters,
+            _id: { $nin: params.ignoreUserId }
+        }
+    }
+    if(params.permissions){
+        filters = {
+            ...filters,
+            permissions: { $in: params.permissions }
+        }
+    }
+    if (params.banDateEnd) {
+        filters = {
+            ...filters,
+            banDateEnd: {$lt: params.banDateEnd}
+        }
+    }
+
+    let query = userModel.find(filters, {});
+
+    query.sort({_id: "desc"});
+
+    let docs = (await query.lean<IUserModel[]>().exec());
+
+    return docs.map((user) => {
+        return user;
+    });
+}
+
+const getDetailed = async (params: IUserGetDetailedParamService, hidePhone: boolean = false) => {
     params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
@@ -97,12 +219,10 @@ const get = async (params: IUserGetParamService, hidePassword: boolean = true, h
 
     query.sort({_id: "desc"});
 
-    let doc = (await query.lean<IUserGetResultService>().exec());
+    let doc = (await query.lean<IUserGetDetailedResultService>().exec());
 
     if(doc){
-        if(hidePassword){
-            delete doc.password;
-        }
+        delete doc.password;
 
         if(hidePhone){
             delete doc.phone;
@@ -114,7 +234,7 @@ const get = async (params: IUserGetParamService, hidePassword: boolean = true, h
     return doc;
 }
 
-const getMany = async (params: IUserGetManyParamService, hidePhone: boolean = false) => {
+const getManyDetailed = async (params: IUserGetManyDetailedParamService, hidePhone: boolean = false) => {
     params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
@@ -122,13 +242,13 @@ const getMany = async (params: IUserGetManyParamService, hidePhone: boolean = fa
         roleId: { $ne: UserRoleId.SuperAdmin},
     }
 
-    if (params.email) {
+    if(params.email) {
         filters = {
             ...filters,
             email: {$regex: new RegExp(params.email, "i")}
         }
     }
-    if (params._id) {
+    if(params._id) {
         filters = {
             ...filters,
             _id: {$in: params._id}
@@ -152,7 +272,7 @@ const getMany = async (params: IUserGetManyParamService, hidePhone: boolean = fa
             permissions: { $in: params.permissions }
         }
     }
-    if (params.banDateEnd) {
+    if(params.banDateEnd) {
         filters = {
             ...filters,
             banDateEnd: {$lt: params.banDateEnd}
@@ -175,7 +295,7 @@ const getMany = async (params: IUserGetManyParamService, hidePhone: boolean = fa
 
     query.sort({_id: "desc"});
 
-    let docs = (await query.lean<IUserGetResultService[]>().exec());
+    let docs = (await query.lean<IUserGetDetailedResultService[]>().exec());
 
     return docs.map((user) => {
         delete user.password;
@@ -301,6 +421,8 @@ const delete_ = async (params: IUserDeleteParamService) => {
 export const UserService = {
     get: get,
     getMany: getMany,
+    getDetailed: getDetailed,
+    getManyDetailed: getManyDetailed,
     add: add,
     update: update,
     updateStatusMany: updateStatusMany,

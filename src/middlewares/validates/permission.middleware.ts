@@ -5,8 +5,8 @@ import {ApiStatusCodes} from "@library/api/statusCodes";
 import {IEndPointPermissionFunc, IEndPointPermission} from "types/constants/endPoint.permissions";
 import {PermissionUtil} from "@utils/permission.util";
 import {LogMiddleware} from "@middlewares/log.middleware";
-import {IUserGetResultService} from "types/services/user.service";
 import {UserRoleId} from "@constants/userRoles";
+import {IUserModel} from "types/models/user.model";
 
 const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => async (
     req: FastifyRequest,
@@ -17,7 +17,7 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
 
         let permissionData = typeof permission == "function" ? permission(req) : permission;
 
-        let user = req.cachedServiceResult as IUserGetResultService;
+        let user = req.cachedServiceResult as IUserModel;
 
         if(user){
             if (

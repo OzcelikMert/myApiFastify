@@ -12,20 +12,20 @@ import {
 } from "@schemas/user.schema";
 import {UserService} from "@services/user.service";
 import {LogMiddleware} from "@middlewares/log.middleware";
-import {IUserGetResultService} from "types/services/user.service";
+import {IUserGetDetailedResultService} from "types/services/user.service";
 import {IUserModel} from "types/models/user.model";
 import {SessionAuthUtil} from "@utils/sessinAuth.util";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IUserGetResultService>();
+        let apiResult = new ApiResult<IUserGetDetailedResultService>();
 
         const reqData = req as IUserGetWithIdSchema;
 
-        apiResult.data = await UserService.get({
+        apiResult.data = await UserService.getDetailed({
             ...reqData.params,
             ...reqData.query
-        });
+        }, !req.isFromAdminPanel);
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });
@@ -33,11 +33,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IUserGetResultService[]>();
+        let apiResult = new ApiResult<IUserGetDetailedResultService[]>();
 
         const reqData = req as IUserGetManySchema;
 
-        apiResult.data = await UserService.getMany({
+        apiResult.data = await UserService.getManyDetailed({
             ...reqData.query,
         }, !req.isFromAdminPanel);
 
@@ -47,14 +47,14 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IUserGetResultService>();
+        let apiResult = new ApiResult<IUserGetDetailedResultService>();
 
         const reqData = req as IUserGetWithURLSchema;
 
-        apiResult.data = await UserService.get({
+        apiResult.data = await UserService.getDetailed({
             ...reqData.params,
             ...reqData.query
-        }, true, true);
+        }, !req.isFromAdminPanel);
 
         await reply.status(apiResult.statusCode).send(apiResult)
     });

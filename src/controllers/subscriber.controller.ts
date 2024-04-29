@@ -8,12 +8,11 @@ import {
     ISubscriberGetManySchema,
     ISubscriberPostSchema, ISubscriberDeleteWithEmailSchema, ISubscriberGetWithEmailSchema
 } from "@schemas/subscriber.schema";
-import {ISubscriberGetResultService} from "types/services/subscriber.service";
 import {ISubscriberModel} from "types/models/subscriber.model";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<ISubscriberGetResultService>();
+        let apiResult = new ApiResult<ISubscriberModel>();
 
         const reqData = req as ISubscriberGetWithIdSchema;
 
@@ -27,7 +26,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<ISubscriberGetResultService[]>();
+        let apiResult = new ApiResult<ISubscriberModel[]>();
 
         const reqData = req as ISubscriberGetManySchema;
 
@@ -41,7 +40,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<ISubscriberGetResultService>();
+        let apiResult = new ApiResult<ISubscriberModel>();
 
         const reqData = req as ISubscriberGetWithEmailSchema;
 

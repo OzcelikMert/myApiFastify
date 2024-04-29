@@ -6,7 +6,6 @@ import {ViewService} from "@services/view.service";
 import {LogMiddleware} from "@middlewares/log.middleware";
 import {IViewPostSchema} from "@schemas/view.schema";
 import {VariableLibrary} from "@library/variable";
-import {DateMask} from "@library/variable/date";
 import {lookup} from "geoip-lite";
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {

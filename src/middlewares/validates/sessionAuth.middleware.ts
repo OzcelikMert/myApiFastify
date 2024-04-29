@@ -8,14 +8,14 @@ import {sessionAuthRefreshMinutes, sessionAuthTTLMinutes} from "@configs/session
 import {SessionAuthUtil} from "@utils/sessinAuth.util";
 import {LogMiddleware} from "@middlewares/log.middleware";
 import {ISessionAuthUserModel} from "types/models/sessionAuth.model";
-import {IUserGetResultService} from "types/services/user.service";
+import {IUserModel} from "types/models/user.model";
 
 const check = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         let apiResult = new ApiResult();
 
         if (req.sessionAuth && req.sessionAuth.user) {
-            let user = req.cachedServiceResult as IUserGetResultService;
+            let user = req.cachedServiceResult as IUserModel;
             if (
                 !user ||
                 req.sessionAuth._id != SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip)
@@ -47,7 +47,7 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
                 req.sessionAuth.delete();
             }else {
                 let date = new Date();
-                let serviceResult = await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active}, false);
+                let serviceResult = await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active});
                 if(serviceResult) {
                     req.cachedServiceResult = serviceResult;
                     let sessionAuthUser: ISessionAuthUserModel = {

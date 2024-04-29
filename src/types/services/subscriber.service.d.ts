@@ -1,7 +1,5 @@
 import {ISubscriberModel} from "types/models/subscriber.model";
 
-export type ISubscriberGetResultService = {} & ISubscriberModel
-
 export interface ISubscriberGetParamService {
     _id?: string
     email?: string

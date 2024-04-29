@@ -12,16 +12,16 @@ import {PostTermService} from "@services/postTerm.service";
 import {LogMiddleware} from "@middlewares/log.middleware";
 import {PermissionUtil} from "@utils/permission.util";
 import {UserRoleId} from "@constants/userRoles";
-import {IPostTermGetResultService} from "types/services/postTerm.service";
 import {IPostTermModel} from "types/models/postTerm.model";
+import {IPostTermGetDetailedResultService} from "types/services/postTerm.service";
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostTermGetResultService>();
+        let apiResult = new ApiResult<IPostTermGetDetailedResultService>();
 
         let reqData = req as IPostTermGetWithIdSchema;
 
-        apiResult.data = await PostTermService.get({
+        apiResult.data = await PostTermService.getDetailed({
             ...reqData.params,
             ...reqData.query,
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
@@ -33,11 +33,11 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostTermGetResultService[]>();
+        let apiResult = new ApiResult<IPostTermGetDetailedResultService[]>();
 
         let reqData = req as IPostTermGetManySchema;
 
-        apiResult.data = await PostTermService.getMany({
+        apiResult.data = await PostTermService.getManyDetailed({
             ...reqData.query,
             ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
@@ -48,11 +48,11 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult<IPostTermGetResultService>();
+        let apiResult = new ApiResult<IPostTermGetDetailedResultService>();
 
         let reqData = req as IPostTermGetWithURLSchema;
 
-        apiResult.data = await PostTermService.get({
+        apiResult.data = await PostTermService.getDetailed({
             ...reqData.params,
             ...reqData.query
         });

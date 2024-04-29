@@ -3,7 +3,7 @@ import {viewModel} from "@models/view.model";
 import {
     IViewDeleteManyParamService,
     IViewAddParamService,
-    IViewGetParamService, IViewGetTotalResultService, IViewGetResultService
+    IViewGetParamService, IViewGetTotalResultService
 } from "types/services/view.service";
 import {MongoDBHelpers} from "@library/mongodb/helpers";
 import {VariableLibrary} from "@library/variable";
@@ -49,7 +49,7 @@ const get = async (params: IViewGetParamService) => {
         }
     }
 
-    return await viewModel.findOne(filters).lean<IViewGetResultService>().exec();
+    return await viewModel.findOne(filters).lean<IViewModel>().exec();
 }
 
 const getTotalWithDate = async (params: IViewGetParamService) => {

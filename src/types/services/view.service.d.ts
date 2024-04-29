@@ -1,7 +1,5 @@
 import {IViewModel} from "types/models/view.model";
 
-export type IViewGetResultService = {} & IViewModel
-
 export interface IViewGetParamService {
     ip?: string
     langId?: string

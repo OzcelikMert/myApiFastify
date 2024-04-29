@@ -17,7 +17,7 @@ export interface IPostTermAlternateService {
     url?: string
 }
 
-export type IPostTermGetResultService = {
+export type IPostTermGetDetailedResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     parentId?: IPostTermPopulateService,
@@ -45,12 +45,36 @@ export interface IPostTermGetManyParamService {
     url?: string
     title?: string
     statusId?: StatusId,
+    ignoreTermId?: string[]
+    authorId?: string
+}
+
+export interface IPostTermGetDetailedParamService {
+    langId?: string
+    _id?: string
+    typeId: PostTermTypeId,
+    postTypeId: PostTypeId,
+    statusId?: StatusId,
+    url?: string
+    ignoreTermId?: string[]
+    authorId?: string
+}
+
+export interface IPostTermGetManyDetailedParamService {
+    langId?: string
+    _id?: string[]
+    typeId?: PostTermTypeId[],
+    postTypeId: PostTypeId,
+    url?: string
+    title?: string
+    statusId?: StatusId,
     ignoreTermId?: string[],
     count?: number
     page?: number
     withPostCount?: boolean
     authorId?: string
 }
+
 
 export type IPostTermAddParamService = {
     contents?: IPostTermContentModel
