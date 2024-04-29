@@ -17,7 +17,6 @@ import {
 } from "types/services/post.service";
 import {IPostModel} from "types/models/post.model";
 import {MongoDBHelpers} from "@library/mongodb/helpers";
-import {IPostTermGetResultService} from "types/services/postTerm.service";
 import {VariableLibrary} from "@library/variable";
 import {Config} from "@configs/index";
 import {postObjectIdKeys} from "@constants/objectIdKeys/post.objectIdKeys";
@@ -26,6 +25,7 @@ import {PostTermTypeId} from "@constants/postTermTypes";
 import {PostTypeId} from "@constants/postTypes";
 import {IComponentGetDetailedResultService} from "types/services/component.service";
 import {PostSortTypeId} from "@constants/postSortTypes";
+import {IPostTermGetDetailedResultService} from "types/services/postTerm.service";
 
 const createURL = async (_id: string | null, title: string, typeId: PostTypeId) => {
     let urlAlreadyCount = 2;
@@ -211,7 +211,7 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
             postTypeId: params.typeId,
         },
         options: {omitUndefined: true},
-        transform: (doc: IPostTermGetResultService) => {
+        transform: (doc: IPostTermGetDetailedResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
                     doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
@@ -239,7 +239,7 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
                     postTypeId: PostTypeId.Product
                 },
                 options: {omitUndefined: true},
-                transform: (doc: IPostTermGetResultService) => {
+                transform: (doc: IPostTermGetDetailedResultService) => {
                     if (doc) {
                         if (Array.isArray(doc.contents)) {
                             doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
@@ -404,7 +404,7 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
             postTypeId: {$in: params.typeId}
         },
         options: {omitUndefined: true},
-        transform: (doc: IPostTermGetResultService) => {
+        transform: (doc: IPostTermGetDetailedResultService) => {
             if (doc) {
                 if (Array.isArray(doc.contents)) {
                     doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
