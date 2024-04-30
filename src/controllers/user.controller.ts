@@ -148,7 +148,8 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
         });
 
         if(serviceResult){
-            req.sessionAuth!.set("_id", SessionAuthUtil.createToken(serviceResult._id.toString(), serviceResult.password, req.ip));
+            let token = SessionAuthUtil.createToken(serviceResult._id.toString(), serviceResult.email, serviceResult.password, req.ip);
+            req.sessionAuth!.set("_id", token);
             req.sessionAuth!.set("user", {
                 ...req.sessionAuth!.user!,
                 updatedAt: new Date()

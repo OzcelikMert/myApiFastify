@@ -13,12 +13,12 @@ import {IUserModel} from "types/models/user.model";
 const check = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         let apiResult = new ApiResult();
-
         if (req.sessionAuth && req.sessionAuth.user) {
             let user = req.cachedServiceResult as IUserModel;
+            let token = SessionAuthUtil.createToken(user._id.toString(), user.email, user.password, req.ip);
             if (
                 !user ||
-                req.sessionAuth._id != SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip)
+                req.sessionAuth._id != token
             ) {
                 await new Promise(resolve => {
                     req.sessionAuth!.delete();
@@ -43,10 +43,10 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
 const reload = async (req: FastifyRequest, res: FastifyReply) => {
     await LogMiddleware.error(req, res, async () => {
         if (req.sessionAuth && req.sessionAuth.user) {
-            if (Number(new Date().diffMinutes(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthTTLMinutes) {
+            let date = new Date();
+            if (Number(date.diffMinutes(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthTTLMinutes) {
                 req.sessionAuth.delete();
             }else {
-                let date = new Date();
                 let serviceResult = await UserService.get({_id: req.sessionAuth.user.userId.toString(), statusId: StatusId.Active});
                 if(serviceResult) {
                     req.cachedServiceResult = serviceResult;
@@ -65,7 +65,8 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
                         JSON.stringify(sessionAuthUser) != JSON.stringify(req.sessionAuth.user) ||
                         Number(date.diffMinutes(new Date(req.sessionAuth.user.refreshedAt ?? ""))) > sessionAuthRefreshMinutes
                     ) {
-                        req.sessionAuth.set("_id", SessionAuthUtil.createToken(serviceResult._id.toString(), serviceResult.password!, req.ip));
+                        let token = SessionAuthUtil.createToken(serviceResult._id.toString(), serviceResult.email, serviceResult.password, req.ip);
+                        req.sessionAuth.set("_id", token);
                         req.sessionAuth.set("user", {
                             ...sessionAuthUser,
                             refreshedAt: date

@@ -155,7 +155,7 @@ const getMany = async (params: IUserGetManyParamService) => {
     });
 }
 
-const getDetailed = async (params: IUserGetDetailedParamService, hidePhone: boolean = false) => {
+const getDetailed = async (params: IUserGetDetailedParamService, hidePhone  = false, hidePassword = true) => {
     params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {
@@ -222,7 +222,9 @@ const getDetailed = async (params: IUserGetDetailedParamService, hidePhone: bool
     let doc = (await query.lean<IUserGetDetailedResultService>().exec());
 
     if(doc){
-        delete doc.password;
+        if(hidePassword){
+            delete doc.password;
+        }
 
         if(hidePhone){
             delete doc.phone;
@@ -234,7 +236,7 @@ const getDetailed = async (params: IUserGetDetailedParamService, hidePhone: bool
     return doc;
 }
 
-const getManyDetailed = async (params: IUserGetManyDetailedParamService, hidePhone: boolean = false) => {
+const getManyDetailed = async (params: IUserGetManyDetailedParamService, hidePhone = false) => {
     params = MongoDBHelpers.convertToObjectIdData(params, [...userObjectIdKeys, "ignoreUserId"]);
 
     let filters: mongoose.FilterQuery<IUserModel> = {

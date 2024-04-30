@@ -162,6 +162,7 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
     let filters: mongoose.FilterQuery<IPostModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, [...postObjectIdKeys, "ignorePostId"]);
     let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+    let views = 0;
 
     if (params._id) filters = {
         ...filters,
@@ -221,6 +222,16 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
         }
     });
 
+    query.populate({
+        path: [
+            "authorId",
+            "lastAuthorId",
+            "authors"
+        ].join(" "),
+        select: "_id name url image facebook instagram twitter",
+        options: {omitUndefined: true},
+    });
+
     switch (params.typeId) {
         case PostTypeId.Product:
             query.populate({
@@ -261,6 +272,10 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
                 transform: (doc: IPostGetDetailedResultService) => {
                     if (doc) {
                         if (Array.isArray(doc.contents)) {
+                            doc.contents.forEach(docContent => {
+                                views += docContent.views ?? 0;
+                            });
+
                             doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
                         }
                     }
@@ -286,23 +301,11 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
             break;
     }
 
-    query.populate({
-        path: [
-            "authorId",
-            "lastAuthorId",
-            "authors"
-        ].join(" "),
-        select: "_id name url image facebook instagram twitter",
-        options: {omitUndefined: true},
-    });
-
     query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
 
     let doc = (await query.lean<IPostGetDetailedResultService>().exec());
 
     if (doc) {
-        let views = 0;
-
         if (doc.categories) {
             doc.categories = doc.categories.filter(item => item);
         }
@@ -442,6 +445,30 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
         select: "_id name url image facebook instagram twitter",
         options: {omitUndefined: true},
     });
+
+    if(params.typeId){
+        if(params.typeId.includes(PostTypeId.Product)){
+            query.populate({
+                path: [
+                    "eCommerce.variations.itemId"
+                ].join(" "),
+                match: {
+                    typeId: PostTypeId.ProductVariation,
+                    statusId: StatusId.Active
+                },
+                options: {omitUndefined: true},
+                transform: (doc: IPostGetDetailedResultService) => {
+                    if (doc) {
+                        if (Array.isArray(doc.contents)) {
+                            doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+                            delete doc.contents?.content;
+                        }
+                    }
+                    return doc;
+                }
+            });
+        }
+    }
 
     switch (params.sortTypeId) {
         case PostSortTypeId.Newest:

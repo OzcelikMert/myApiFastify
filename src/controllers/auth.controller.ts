@@ -31,12 +31,13 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
 
         let user = await UserService.getDetailed({
             ...reqData.body
-        });
+        }, false, false);
 
         if(user){
             if(user.statusId == StatusId.Active) {
                 let date = new Date();
-                req.sessionAuth?.set("_id", SessionAuthUtil.createToken(user._id.toString(), user.password!, req.ip));
+                let token = SessionAuthUtil.createToken(user._id.toString(), user.email, user.password!, req.ip);
+                req.sessionAuth?.set("_id", token);
 
                 req.sessionAuth!.set("user", {
                     userId: user._id,
@@ -55,6 +56,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
                 apiResult.errorCode = ApiErrorCodes.noPerm;
                 apiResult.statusCode = ApiStatusCodes.notFound;
             }
+            delete user.password;
             apiResult.data = user;
         }else {
             apiResult.status = false;

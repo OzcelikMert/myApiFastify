@@ -39,7 +39,7 @@ const schemaECommerceVariationSelected = object({
     variationId: string().min(1),
 });
 
-const schemaECommerceVariationItemDetail = object({
+const schemaECommerceVariationItem = object({
     _id: string().min(1),
     statusId: z.nativeEnum(StatusId),
     contents: object({
@@ -61,15 +61,15 @@ const schemaECommerceVariationItemDetail = object({
 const schemaECommerceVariation = object({
     rank: number().min(0),
     selectedVariations: array(schemaECommerceVariationSelected).default([]),
-    item: schemaECommerceVariationItemDetail
+    itemId: schemaECommerceVariationItem
 });
 
 const schemaECommerce = object({
     typeId: z.nativeEnum(ProductTypeId),
     images: array(string().min(1)).default([]),
-    pricing: schemaECommercePricing,
-    inventory: schemaECommerceInventory,
-    shipping: schemaECommerceShipping,
+    pricing: schemaECommercePricing.optional(),
+    inventory: schemaECommerceInventory.optional(),
+    shipping: schemaECommerceShipping.optional(),
     attributes: array(schemaECommerceAttribute).default([]),
     variations: array(schemaECommerceVariation).default([]),
     variationDefaults: array(schemaECommerceVariationSelected).default([])

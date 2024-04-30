@@ -140,14 +140,14 @@ const addProduct = async (req: FastifyRequest, reply: FastifyReply) => {
 
         for(const variation of reqData.body.eCommerce.variations) {
             let serviceResultVariationItem = await PostService.add({
-                ...variation.item,
+                ...variation.itemId,
                 parentId: productId,
                 typeId: PostTypeId.ProductVariation,
                 authorId: req.sessionAuth!.user!.userId.toString(),
                 lastAuthorId: req.sessionAuth!.user!.userId.toString(),
                 statusId: StatusId.Active,
                 eCommerce: {
-                    ...variation.item.eCommerce,
+                    ...variation.itemId.eCommerce,
                     typeId: ProductTypeId.Simple
                 }
             });
@@ -203,37 +203,40 @@ const updateProductWithId = async (req: FastifyRequest, reply: FastifyReply) => 
             // Delete removed variations
             let removedVariations: string[] = [];
             for(const variation of serviceResultProduct.eCommerce.variations ?? []) {
-                if (!reqData.body.eCommerce.variations.some(productVariation => productVariation.item._id.toString() == variation.itemId.toString())) {
+                if (!reqData.body.eCommerce.variations.some(productVariation => productVariation.itemId._id.toString() == variation.itemId.toString())) {
                     removedVariations.push(variation.itemId.toString());
                 }
             }
-            await PostService.deleteMany({
-                _id: removedVariations,
-                typeId: PostTypeId.ProductVariation
-            });
+
+            if(removedVariations.length > 0){
+                await PostService.deleteMany({
+                    _id: removedVariations,
+                    typeId: PostTypeId.ProductVariation
+                });
+            }
 
             // Update variations or add new variations
             for(const variation of reqData.body.eCommerce.variations) {
-                let variationItemId = "";
-                if(serviceResultProduct.eCommerce.variations?.some(productVariation => productVariation.itemId.toString() == variation.item._id.toString())){
+                let variationItemId = variation.itemId._id;
+                if(serviceResultProduct.eCommerce.variations?.some(productVariation => productVariation.itemId.toString() == variation.itemId._id.toString())){
                     await PostService.update({
-                        ...variation.item,
+                        ...variation.itemId,
                         typeId: PostTypeId.ProductVariation,
                         lastAuthorId: req.sessionAuth!.user!.userId.toString(),
                         eCommerce: {
-                            ...variation.item.eCommerce,
+                            ...variation.itemId.eCommerce,
                             typeId: ProductTypeId.Simple
                         }
                     });
                 }else {
                     let serviceResultVariation = await PostService.add({
-                        ...variation.item,
+                        ...variation.itemId,
                         parentId: serviceResultProduct._id.toString(),
                         typeId: PostTypeId.ProductVariation,
                         authorId: req.sessionAuth!.user!.userId.toString(),
                         lastAuthorId: req.sessionAuth!.user!.userId.toString(),
                         eCommerce: {
-                            ...variation.item.eCommerce,
+                            ...variation.itemId.eCommerce,
                             typeId: ProductTypeId.Simple
                         }
                     });
