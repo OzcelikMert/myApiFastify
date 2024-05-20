@@ -3,7 +3,7 @@ export default {
     serverPort: 5001,
     serverTrafficMBLimit: 2,
     dbProtocol: "mongodb",
-    dbHost: "localhost",
+    dbHost: "127.0.0.1",
     dbHostParams: "",
     dbPort: 27017,
     dbName: "myadminpanel",

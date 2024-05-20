@@ -147,11 +147,8 @@ const schema = new mongoose.Schema<IPostModel>(
     typeId: 1,
     statusId: 1,
     authorId: 1,
-    authors: 1,
     pageTypeId: 1,
     categories: 1,
-    tags: 1,
-    comments: 1
 });
 
 export const postModel = mongoose.model<IPostModel, mongoose.Model<IPostModel>>("posts", schema)
