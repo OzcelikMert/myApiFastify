@@ -16,8 +16,8 @@ function dbConnect() {
         autoCreate: true,
         autoIndex: true,
         dbName: name,
-        user: user ?? undefined,
-        pass: password ?? undefined
+        user: user || undefined,
+        pass: password || undefined
     } as ConnectOptions)
 }
 
