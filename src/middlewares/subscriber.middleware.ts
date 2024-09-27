@@ -6,10 +6,10 @@ import {SubscriberService} from "@services/subscriber.service";
 import {LogMiddleware} from "@middlewares/log.middleware";
 import {
     ISubscriberDeleteWithIdSchema,
-    ISubscriberDeleteManySchema
+    ISubscriberDeleteManySchema, ISubscriberPostSchema, ISubscriberDeleteWithEmailSchema
 } from "@schemas/subscriber.schema";
 
-const checkWithId = (isThere: boolean) => async (req: FastifyRequest, reply: FastifyReply) => {
+const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
 
@@ -19,14 +19,12 @@ const checkWithId = (isThere: boolean) => async (req: FastifyRequest, reply: Fas
             ...reqData.params
         });
 
-        if ((isThere && serviceResult) || (!isThere && !serviceResult)) {
-            apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.alreadyData;
-            apiResult.statusCode = ApiStatusCodes.conflict;
-        }
-
         if(serviceResult){
             req.cachedServiceResult = serviceResult;
+        }else {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.notFound;
+            apiResult.statusCode = ApiStatusCodes.notFound;
         }
 
         if (!apiResult.status) {
@@ -62,7 +60,35 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
+const checkWithEmail = (ifHasGetError?: true) => async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as ISubscriberPostSchema & ISubscriberDeleteWithEmailSchema;
+
+        let serviceResult = await SubscriberService.get({
+            ...reqData.body,
+            ...reqData.params
+        });
+
+        if ((ifHasGetError && serviceResult) || (!ifHasGetError && !serviceResult)) {
+            apiResult.status = false;
+            apiResult.errorCode = ApiErrorCodes.alreadyData;
+            apiResult.statusCode = ApiStatusCodes.conflict;
+        }
+
+        if(serviceResult){
+            req.cachedServiceResult = serviceResult;
+        }
+
+        if (!apiResult.status) {
+            await reply.status(apiResult.statusCode).send(apiResult)
+        }
+    });
+}
+
 export const SubscribeMiddleware = {
     checkWithId: checkWithId,
+    checkWithEmail: checkWithEmail,
     checkMany: checkMany
 };
