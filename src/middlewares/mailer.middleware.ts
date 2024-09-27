@@ -17,12 +17,12 @@ const checkContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
         if(setting){
             if((typeof setting.contactForms === "undefined") || (setting.contactForms && setting.contactForms?.indexOfKey("_id", reqData.body.contactFormId) < 0)){
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.notFound;
-                apiResult.statusCode = ApiStatusCodes.notFound;
+                apiResult.setErrorCode = ApiErrorCodes.notFound;
+                apiResult.setStatusCode = ApiStatusCodes.notFound;
             }
 
             if (!apiResult.status) {
-                await reply.status(apiResult.statusCode).send(apiResult)
+                await reply.status(apiResult.getStatusCode).send(apiResult)
             }
         }
     });

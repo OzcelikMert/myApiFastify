@@ -17,14 +17,14 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (!serviceResult) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notFound;
-            apiResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.setErrorCode = ApiErrorCodes.notFound;
+            apiResult.setStatusCode = ApiStatusCodes.notFound;
         }else {
             req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -41,12 +41,12 @@ const checkIsDefaultWithId = async (req: FastifyRequest, reply: FastifyReply) =>
             await LanguageService.updateIsDefaultMany({isDefault: false});
         }else if (serviceResult.isDefault && !reqData.body.isDefault) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.emptyValue;
-            apiResult.statusCode = ApiStatusCodes.badRequest;
+            apiResult.setErrorCode = ApiErrorCodes.emptyValue;
+            apiResult.setStatusCode = ApiStatusCodes.badRequest;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }

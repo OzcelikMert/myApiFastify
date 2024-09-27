@@ -19,7 +19,7 @@ const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
             user: req.sessionAuth!.user!
         };
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     })
 };
 
@@ -53,18 +53,18 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
                 });
             }else {
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.noPerm;
-                apiResult.statusCode = ApiStatusCodes.notFound;
+                apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                apiResult.setStatusCode = ApiStatusCodes.notFound;
             }
             delete user.password;
             apiResult.data = user;
         }else {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notFound;
-            apiResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.setErrorCode = ApiErrorCodes.notFound;
+            apiResult.setStatusCode = ApiStatusCodes.notFound;
         }
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     })
 };
 
@@ -73,7 +73,7 @@ const logOut = async (req: FastifyRequest, reply: FastifyReply) => {
         let apiResult = new ApiResult();
 
         req.sessionAuth!.delete();
-        await reply.status(apiResult.statusCode).send(apiResult);
+        await reply.status(apiResult.getStatusCode).send(apiResult);
     })
 };
 

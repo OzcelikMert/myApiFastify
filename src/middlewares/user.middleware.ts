@@ -19,14 +19,14 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (!serviceResult) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notFound;
-            apiResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.setErrorCode = ApiErrorCodes.notFound;
+            apiResult.setStatusCode = ApiStatusCodes.notFound;
         }else {
             req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -57,22 +57,22 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
 
                 if (PermissionUtil.checkPermissionRoleRank(userRoleId, sessionUser!.roleId)) {
                     apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.noPerm;
-                    apiResult.statusCode = ApiStatusCodes.notFound;
+                    apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                    apiResult.setStatusCode = ApiStatusCodes.notFound;
                 }
             }else {
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.notLoggedIn;
-                apiResult.statusCode = ApiStatusCodes.unauthorized;
+                apiResult.setErrorCode = ApiErrorCodes.notLoggedIn;
+                apiResult.setStatusCode = ApiStatusCodes.unauthorized;
             }
         } else {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.incorrectData;
-            apiResult.statusCode = ApiStatusCodes.badRequest;
+            apiResult.setErrorCode = ApiErrorCodes.incorrectData;
+            apiResult.setStatusCode = ApiStatusCodes.badRequest;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -91,13 +91,13 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 
             if (serviceResult) {
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.alreadyData;
-                apiResult.statusCode = ApiStatusCodes.conflict;
+                apiResult.setErrorCode = ApiErrorCodes.registeredData;
+                apiResult.setStatusCode = ApiStatusCodes.conflict;
             }
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -115,12 +115,12 @@ const checkPasswordWithSessionEmail = async (req: FastifyRequest, reply: Fastify
 
         if (!serviceResult) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notFound;
-            apiResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.setErrorCode = ApiErrorCodes.notFound;
+            apiResult.setStatusCode = ApiStatusCodes.notFound;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }

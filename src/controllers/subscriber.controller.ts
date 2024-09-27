@@ -20,7 +20,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -34,7 +34,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -48,7 +48,7 @@ const getWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -62,7 +62,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -76,7 +76,7 @@ const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -90,7 +90,7 @@ const deleteWithEmail = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -104,7 +104,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

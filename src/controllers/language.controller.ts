@@ -22,7 +22,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.params
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -34,7 +34,7 @@ const getDefault = async (req: FastifyRequest, reply: FastifyReply) => {
 
         apiResult.data = await LanguageService.get({isDefault: true});
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -48,7 +48,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -73,7 +73,7 @@ const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
             });
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -87,7 +87,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -102,7 +102,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -117,7 +117,7 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body,
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

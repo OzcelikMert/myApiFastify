@@ -25,18 +25,18 @@ const check = (permission: IEndPointPermission | IEndPointPermissionFunc) => asy
                 !PermissionUtil.checkPermissionId(user.roleId, user.permissions, permissionData.permissionId)
             ) {
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.noPerm;
-                apiResult.statusCode = ApiStatusCodes.forbidden;
+                apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                apiResult.setStatusCode = ApiStatusCodes.forbidden;
             }
         }else {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notLoggedIn;
-            apiResult.statusCode = ApiStatusCodes.unauthorized;
+            apiResult.setErrorCode = ApiErrorCodes.notLoggedIn;
+            apiResult.setStatusCode = ApiStatusCodes.unauthorized;
         }
 
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 };
@@ -48,17 +48,17 @@ const checkUserRole = (roleId: UserRoleId) => async (req: FastifyRequest, res: F
         if (req.sessionAuth && req.sessionAuth.user) {
            if(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth.user.roleId, roleId)){
                apiResult.status = false;
-               apiResult.errorCode = ApiErrorCodes.noPerm;
-               apiResult.statusCode = ApiStatusCodes.forbidden;
+               apiResult.setErrorCode = ApiErrorCodes.noPerm;
+               apiResult.setStatusCode = ApiStatusCodes.forbidden;
            }
         }else {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notLoggedIn;
-            apiResult.statusCode = ApiStatusCodes.unauthorized;
+            apiResult.setErrorCode = ApiErrorCodes.notLoggedIn;
+            apiResult.setStatusCode = ApiStatusCodes.unauthorized;
         }
 
         if (!apiResult.status) {
-            res.status(apiResult.statusCode).send(apiResult)
+            res.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 };

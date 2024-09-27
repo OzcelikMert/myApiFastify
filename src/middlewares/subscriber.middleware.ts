@@ -23,12 +23,12 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             req.cachedServiceResult = serviceResult;
         }else {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notFound;
-            apiResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.setErrorCode = ApiErrorCodes.notFound;
+            apiResult.setStatusCode = ApiStatusCodes.notFound;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -48,14 +48,14 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
             (serviceResult.length != reqData.body._id.length)
         ) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.alreadyData;
-            apiResult.statusCode = ApiStatusCodes.conflict;
+            apiResult.setErrorCode = ApiErrorCodes.registeredData;
+            apiResult.setStatusCode = ApiStatusCodes.conflict;
         }else {
             req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -73,8 +73,8 @@ const checkWithEmail = (ifHasGetError?: true) => async (req: FastifyRequest, rep
 
         if ((ifHasGetError && serviceResult) || (!ifHasGetError && !serviceResult)) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.alreadyData;
-            apiResult.statusCode = ApiStatusCodes.conflict;
+            apiResult.setErrorCode = ApiErrorCodes.registeredData;
+            apiResult.setStatusCode = ApiStatusCodes.conflict;
         }
 
         if(serviceResult){
@@ -82,7 +82,7 @@ const checkWithEmail = (ifHasGetError?: true) => async (req: FastifyRequest, rep
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }

@@ -23,7 +23,7 @@ const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
             })
         };
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -35,7 +35,7 @@ const getPost = async (req: FastifyRequest, reply: FastifyReply) => {
 
         apiResult.data = await SitemapService.getPost(reqData.query);
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -47,7 +47,7 @@ const getPostTerm = async (req: FastifyRequest, reply: FastifyReply) => {
 
         apiResult.data = await SitemapService.getPostTerm(reqData.query)
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

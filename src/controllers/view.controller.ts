@@ -31,7 +31,7 @@ const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
             weeklyTotal: weeklyTotal
         };
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -47,7 +47,7 @@ const getStatistics = async (req: FastifyRequest, reply: FastifyReply) => {
             country: await ViewService.getTotalWithCountry({dateStart: dateStart}),
         };
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

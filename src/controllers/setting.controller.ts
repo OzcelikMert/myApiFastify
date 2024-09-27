@@ -19,7 +19,7 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         }, false);
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -31,7 +31,7 @@ const updateGeneral = async (req: FastifyRequest, reply: FastifyReply) => {
 
         await SettingService.updateGeneral(reqData.body)
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -43,7 +43,7 @@ const updateSEO = async (req: FastifyRequest, reply: FastifyReply) => {
 
         await SettingService.updateSEO(reqData.body)
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -55,7 +55,7 @@ const updateContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
 
         await SettingService.updateContactForm(reqData.body)
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -67,7 +67,7 @@ const updateSocialMedia = async (req: FastifyRequest, reply: FastifyReply) => {
 
         await SettingService.updateSocialMedia(reqData.body)
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -79,7 +79,7 @@ const updateECommerce = async (req: FastifyRequest, reply: FastifyReply) => {
 
         await SettingService.updateECommerce(reqData.body)
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -91,7 +91,7 @@ const updatePath = async (req: FastifyRequest, reply: FastifyReply) => {
 
         await SettingService.updatePath(reqData.body)
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

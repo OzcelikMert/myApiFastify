@@ -18,7 +18,7 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
             storage: (100 - ((diskSpace.free * 100) / diskSpace.size)).toFixed(2)
         }
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

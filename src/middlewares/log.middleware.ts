@@ -20,10 +20,10 @@ const error = async (req: FastifyRequest, reply: FastifyReply, func: () => Promi
             ...(req.sessionAuth && req.sessionAuth.user && req.sessionAuth.user.userId ? {userId: req.sessionAuth.user.userId} : {})
         });
         let apiResult = new ApiResult();
-        apiResult.statusCode = ApiStatusCodes.badRequest;
-        apiResult.errorCode = ApiErrorCodes.incorrectData;
+        apiResult.setStatusCode = ApiStatusCodes.badRequest;
+        apiResult.setErrorCode = ApiErrorCodes.incorrectData;
         apiResult.status = false;
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     }
 }
 

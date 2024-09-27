@@ -27,7 +27,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...(!PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -42,7 +42,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...(req.isFromAdminPanel && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.Editor) ? {authorId: req.sessionAuth!.user!.userId.toString()} : {})
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -57,7 +57,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -73,7 +73,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
             authorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -89,7 +89,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -105,7 +105,7 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -120,7 +120,7 @@ const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -134,7 +134,7 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

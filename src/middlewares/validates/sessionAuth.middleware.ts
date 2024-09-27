@@ -25,17 +25,17 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
                     resolve(1);
                 });
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.notLoggedIn;
-                apiResult.statusCode = ApiStatusCodes.unauthorized;
+                apiResult.setErrorCode = ApiErrorCodes.notLoggedIn;
+                apiResult.setStatusCode = ApiStatusCodes.unauthorized;
             }
         }else {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notLoggedIn;
-            apiResult.statusCode = ApiStatusCodes.unauthorized;
+            apiResult.setErrorCode = ApiErrorCodes.notLoggedIn;
+            apiResult.setStatusCode = ApiStatusCodes.unauthorized;
         }
 
         if (!apiResult.status) {
-            res.status(apiResult.statusCode).send(apiResult)
+            res.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 };

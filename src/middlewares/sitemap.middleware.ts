@@ -7,7 +7,7 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
         let apiResult = new ApiResult();
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }

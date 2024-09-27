@@ -66,23 +66,23 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
 
                     }else {
                         apiResult.status = false;
-                        apiResult.statusCode = ApiStatusCodes.conflict;
-                        apiResult.errorCode = ApiErrorCodes.incorrectData;
+                        apiResult.setStatusCode = ApiStatusCodes.conflict;
+                        apiResult.setErrorCode = ApiErrorCodes.incorrectData;
                     }
                 }catch (e: any) {
                     apiResult.status = false;
-                    apiResult.statusCode = ApiStatusCodes.conflict;
-                    apiResult.errorCode = ApiErrorCodes.incorrectData;
+                    apiResult.setStatusCode = ApiStatusCodes.conflict;
+                    apiResult.setErrorCode = ApiErrorCodes.incorrectData;
                     apiResult.customData = e;
                 }
             }else {
                 apiResult.status = false;
-                apiResult.statusCode = ApiStatusCodes.conflict;
-                apiResult.errorCode = ApiErrorCodes.incorrectData;
+                apiResult.setStatusCode = ApiStatusCodes.conflict;
+                apiResult.setErrorCode = ApiErrorCodes.incorrectData;
             }
         }
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

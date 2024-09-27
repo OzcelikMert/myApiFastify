@@ -27,7 +27,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         }, !req.isFromAdminPanel);
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -41,7 +41,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query,
         }, !req.isFromAdminPanel);
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -56,7 +56,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.query
         }, !req.isFromAdminPanel);
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -73,7 +73,7 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -90,7 +90,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -111,7 +111,7 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
             updatedAt: new Date()
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -132,7 +132,7 @@ const updateProfileImage = async (req: FastifyRequest, reply: FastifyReply) => {
             updatedAt: new Date()
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -156,7 +156,7 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
             })
         }
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -171,7 +171,7 @@ const deleteWithId = async (req: FastifyRequest, reply: FastifyReply) => {
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

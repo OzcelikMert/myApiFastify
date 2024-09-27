@@ -61,7 +61,7 @@ const getManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
             });
         }
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -80,8 +80,8 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
                 if (err) {
                     console.log(err);
                     apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.uploadError;
-                    apiResult.statusCode = ApiStatusCodes.badRequest;
+                    apiResult.setErrorCode = ApiErrorCodes.uploadError;
+                    apiResult.setStatusCode = ApiStatusCodes.badRequest;
                     apiResult.message = JSON.stringify(err);
                     resolve(1);
                     return;
@@ -126,8 +126,8 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
                 } catch (e) {
                     apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.uploadError;
-                    apiResult.statusCode = ApiStatusCodes.badRequest;
+                    apiResult.setErrorCode = ApiErrorCodes.uploadError;
+                    apiResult.setStatusCode = ApiStatusCodes.badRequest;
                     apiResult.message = JSON.stringify(e);
                     console.log(e)
                 }finally {
@@ -136,7 +136,7 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
             });
         })
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 
@@ -166,7 +166,7 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
             ...reqData.body
         });
 
-        await reply.status(apiResult.statusCode).send(apiResult)
+        await reply.status(apiResult.getStatusCode).send(apiResult)
     });
 }
 

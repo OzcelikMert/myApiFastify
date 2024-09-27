@@ -17,7 +17,7 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
         let apiResult = new ApiResult();
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -44,14 +44,14 @@ const checkPermissionForGeneral = async (req: FastifyRequest, reply: FastifyRepl
 
                 if (JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)) {
                     apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.noPerm;
-                    apiResult.statusCode = ApiStatusCodes.forbidden;
+                    apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                    apiResult.setStatusCode = ApiStatusCodes.forbidden;
                 }
             }
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -80,14 +80,14 @@ const checkPermissionForSocialMedia = async (req: FastifyRequest, reply: Fastify
 
                 if (JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)) {
                     apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.noPerm;
-                    apiResult.statusCode = ApiStatusCodes.forbidden;
+                    apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                    apiResult.setStatusCode = ApiStatusCodes.forbidden;
                 }
             }
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -114,14 +114,14 @@ const checkPermissionForContactForms = async (req: FastifyRequest, reply: Fastif
 
                 if (JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)) {
                     apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.noPerm;
-                    apiResult.statusCode = ApiStatusCodes.forbidden;
+                    apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                    apiResult.setStatusCode = ApiStatusCodes.forbidden;
                 }
             }
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }

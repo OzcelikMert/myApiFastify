@@ -32,8 +32,8 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (serviceResult) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.alreadyData;
-            apiResult.statusCode = ApiStatusCodes.conflict;
+            apiResult.setErrorCode = ApiErrorCodes.registeredData;
+            apiResult.setStatusCode = ApiStatusCodes.conflict;
         }else {
             let ipDetail = lookup(req.ip);
             await ViewService.add({
@@ -45,7 +45,7 @@ const check = async (req: FastifyRequest, reply: FastifyReply) => {
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }

@@ -21,17 +21,17 @@ const check = (schema: ZodSchema) => async (
             apiResult.status = false;
             apiResult.message = validatedData.error.format();
             apiResult.data = req.query;
-            apiResult.errorCode = ApiErrorCodes.incorrectData;
-            apiResult.statusCode = ApiStatusCodes.badRequest;
+            apiResult.setErrorCode = ApiErrorCodes.incorrectData;
+            apiResult.setStatusCode = ApiStatusCodes.badRequest;
         }
     } catch (e: any) {
         apiResult.status = false;
         apiResult.message = e.format ? e.format() : e.errors ?? "";
-        apiResult.errorCode = ApiErrorCodes.incorrectData;
-        apiResult.statusCode = ApiStatusCodes.badRequest;
+        apiResult.setErrorCode = ApiErrorCodes.incorrectData;
+        apiResult.setStatusCode = ApiStatusCodes.badRequest;
     } finally {
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     }
 }

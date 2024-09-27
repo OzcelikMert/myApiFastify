@@ -24,14 +24,14 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
 
         if (!serviceResult) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notFound;
-            apiResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.setErrorCode = ApiErrorCodes.notFound;
+            apiResult.setStatusCode = ApiStatusCodes.notFound;
         }else {
             req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -52,14 +52,14 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
             (serviceResult.length != reqData.body._id.length)
         ) {
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.notFound;
-            apiResult.statusCode = ApiStatusCodes.notFound;
+            apiResult.setErrorCode = ApiErrorCodes.notFound;
+            apiResult.setStatusCode = ApiStatusCodes.notFound;
         }else {
             req.cachedServiceResult = serviceResult;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -78,13 +78,13 @@ const checkIsAuthorWithId = async (req: FastifyRequest, reply: FastifyReply) => 
                 !(serviceResult.authors as ObjectId[])?.some(author => author.toString() == req.sessionAuth!.user?.userId.toString())
             ) {
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.noPerm;
-                apiResult.statusCode = ApiStatusCodes.forbidden;
+                apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                apiResult.setStatusCode = ApiStatusCodes.forbidden;
             }
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -101,15 +101,15 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
             for (const post of serviceResult) {
                 if (post.authorId.toString() != req.sessionAuth!.user?.userId.toString()) {
                     apiResult.status = false;
-                    apiResult.errorCode = ApiErrorCodes.noPerm;
-                    apiResult.statusCode = ApiStatusCodes.forbidden;
+                    apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                    apiResult.setStatusCode = ApiStatusCodes.forbidden;
                     break;
                 }
             }
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -138,13 +138,13 @@ const checkPermissionWithId = async (req: FastifyRequest, reply: FastifyReply) =
 
             if(JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)){
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.noPerm;
-                apiResult.statusCode = ApiStatusCodes.forbidden;
+                apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                apiResult.setStatusCode = ApiStatusCodes.forbidden;
             }
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -172,13 +172,13 @@ const checkPermissionForPageWithId = async (req: FastifyRequest, reply: FastifyR
 
             if (JSON.stringify(reqToCheck) != JSON.stringify(serviceToCheck)) {
                 apiResult.status = false;
-                apiResult.errorCode = ApiErrorCodes.noPerm;
-                apiResult.statusCode = ApiStatusCodes.forbidden;
+                apiResult.setErrorCode = ApiErrorCodes.noPerm;
+                apiResult.setStatusCode = ApiStatusCodes.forbidden;
             }
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
@@ -191,12 +191,12 @@ const checkUserRoleForPage = async (req: FastifyRequest, reply: FastifyReply) =>
 
         if(reqData.body.typeId == PostTypeId.Page && !PermissionUtil.checkPermissionRoleRank(req.sessionAuth!.user!.roleId, UserRoleId.SuperAdmin)){
             apiResult.status = false;
-            apiResult.errorCode = ApiErrorCodes.noPerm;
-            apiResult.statusCode = ApiStatusCodes.forbidden;
+            apiResult.setErrorCode = ApiErrorCodes.noPerm;
+            apiResult.setStatusCode = ApiStatusCodes.forbidden;
         }
 
         if (!apiResult.status) {
-            await reply.status(apiResult.statusCode).send(apiResult)
+            await reply.status(apiResult.getStatusCode).send(apiResult)
         }
     });
 }
