@@ -283,22 +283,6 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
                 }
             });
             break;
-        case PostTypeId.Page:
-            query.populate({
-                path: "components",
-                options: {omitUndefined: true},
-                transform: (doc: IComponentGetDetailedResultService) => {
-                    if (doc) {
-                        doc.elements.map(docType => {
-                            if (Array.isArray(docType.contents)) {
-                                docType.contents = docType.contents.findSingle("langId", params.langId) ?? docType.contents.findSingle("langId", defaultLangId);
-                            }
-                        })
-                    }
-                    return doc;
-                }
-            });
-            break;
     }
 
     query.sort({isFixed: "desc", rank: "asc", _id: "desc"});
@@ -312,10 +296,6 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
 
         if (doc.tags) {
             doc.tags = doc.tags.filter(item => item);
-        }
-
-        if (doc.components) {
-            doc.components = doc.components.filter(item => item);
         }
 
         if (Array.isArray(doc.contents)) {

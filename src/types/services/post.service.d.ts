@@ -31,7 +31,6 @@ export type IPostGetDetailedResultService = {
     authorId: IUserPopulateService,
     lastAuthorId: IUserPopulateService,
     authors?: IUserPopulateService[]
-    components?: IComponentModel[]
     views?: number,
     categories?: IPostTermPopulateService[]
     tags?: IPostTermPopulateService[]
@@ -42,7 +41,7 @@ export type IPostGetDetailedResultService = {
             alternates?: IPostAlternateService[]
         })[]
     })
-} & Omit<IPostModel, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"components"|"eCommerce"|"authors">
+} & Omit<IPostModel, "authorId"|"lastAuthorId"|"contents"|"categories"|"tags"|"eCommerce"|"authors">
 
 export type IPostGetManyDetailedResultService = {
     eCommerce?: (Omit<IPostECommerceModel, "variations"> & {
@@ -50,8 +49,7 @@ export type IPostGetManyDetailedResultService = {
             alternates?: IPostAlternateService[]
         })[]
     })
-    components?: string[]
-} & Omit<IPostGetDetailedResultService, "eCommerce"|"components">
+} & Omit<IPostGetDetailedResultService, "eCommerce">
 
 export interface IPostGetParamService {
     typeId: PostTypeId,

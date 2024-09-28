@@ -38,6 +38,7 @@ export interface ISettingContactFormModel {
     _id?: string | ObjectId
     name: string
     key: string
+    title: string
     outGoingEmail: string
     email: string
     password?: string

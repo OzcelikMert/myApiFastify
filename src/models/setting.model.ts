@@ -29,6 +29,7 @@ const schemaPath = new mongoose.Schema<ISettingPathModel>(
 
 const schemaContactForm = new mongoose.Schema<ISettingContactFormModel>(
     {
+        title: {type: String, default: ""},
         name: {type: String, default: ""},
         outGoingEmail: {type: String, default: ""},
         email: {type: String, default: ""},

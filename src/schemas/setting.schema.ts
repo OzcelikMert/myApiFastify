@@ -19,6 +19,7 @@ const schemaPath = object({
 
 const schemaContactForm = object({
     _id: string().optional(),
+    title: string().min(1),
     name: string().min(1),
     key: string().min(1),
     outGoingEmail: string().min(1),
