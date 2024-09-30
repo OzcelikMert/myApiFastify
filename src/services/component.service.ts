@@ -151,7 +151,9 @@ const getManyDetailed = async (params: IComponentGetManyDetailedParamService) =>
         options: {omitUndefined: true},
     })
 
-    query.sort({rank: "asc", _id: "desc"});
+    if(!params.withCustomSort){
+        query.sort({rank: "asc", _id: "desc"});
+    }
 
     let docs = (await query.lean<IComponentGetDetailedResultService[]>().exec());
 

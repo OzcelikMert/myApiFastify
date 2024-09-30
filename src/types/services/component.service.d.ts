@@ -40,6 +40,7 @@ export interface IComponentGetManyDetailedParamService {
     langId?: string,
     typeId?: ComponentTypeId
     withContent?: boolean
+    withCustomSort?: boolean
 }
 
 export type IComponentAddParamService = {
