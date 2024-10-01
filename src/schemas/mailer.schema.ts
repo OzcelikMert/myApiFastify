@@ -2,15 +2,15 @@ import {object, string, z} from 'zod';
 
 const postSchema = object({
     body: object({
-        contactFormId: string().min(1),
+        _id: string().optional(),
+        key: string().optional(),
         email: string().min(1).email(),
-        message: string().min(1),
-        replyMessage: string().optional()
+        message: string().min(1)
     })
 });
 
 export type IMailerPostSchema = z.infer<typeof postSchema>;
 
 export const MailerSchema = {
-    post: postSchema
+    post: postSchema,
 };

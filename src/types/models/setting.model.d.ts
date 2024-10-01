@@ -39,12 +39,12 @@ export interface ISettingContactFormModel {
     name: string
     key: string
     title: string
-    outGoingEmail: string
+    targetEmail: string
     email: string
     password?: string
-    outGoingServer: string
-    inComingServer: string
+    host: string
     port: number
+    hasSSL: boolean
 }
 
 export interface ISettingSeoContentModel {

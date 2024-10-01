@@ -31,13 +31,13 @@ const schemaContactForm = new mongoose.Schema<ISettingContactFormModel>(
     {
         title: {type: String, default: ""},
         name: {type: String, default: ""},
-        outGoingEmail: {type: String, default: ""},
+        targetEmail: {type: String, default: ""},
         email: {type: String, default: ""},
         key: {type: String, default: ""},
         password: {type: String, default: ""},
-        inComingServer: {type: String, default: ""},
-        outGoingServer: {type: String, default: ""},
-        port: {type: Number, default: 465}
+        host: {type: String, default: ""},
+        port: {type: Number, default: 465},
+        hasSSL: {type: Boolean, default: false}
     }
 );
 

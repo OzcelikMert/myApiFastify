@@ -114,19 +114,22 @@ const updateContactForm = async (params: ISettingUpdateContactFormParamService) 
     params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
-    if (params.contactForms) {
-        params.contactForms.map(contactForm => {
-            if (VariableLibrary.isEmpty(contactForm.password)) {
-                delete contactForm.password;
-            }
-            return contactForm;
-        })
-    }
+    params.contactForms.map(contactForm => {
+        if (VariableLibrary.isEmpty(contactForm.password)) {
+            delete contactForm.password;
+        }
+        return contactForm;
+    })
 
     let doc = (await settingModel.findOne({}).exec());
 
     if(doc){
-        doc.contactForms = params.contactForms;
+        for(let paramContactForm of params.contactForms) {
+            let docContactForm = doc.contactForms.findSingle("_id", MongoDBHelpers.convertToObjectId(paramContactForm._id));
+            if (docContactForm) {
+                docContactForm = Object.assign(docContactForm, paramContactForm);
+            }
+        }
         await doc.save();
     }
 

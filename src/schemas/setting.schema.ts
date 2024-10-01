@@ -1,4 +1,4 @@
-import {array, number, object, string, z} from 'zod';
+import {array, boolean, number, object, string, z} from 'zod';
 import {SettingProjectionKeys} from "@constants/settingProjections";
 import {CurrencyId} from "@constants/currencyTypes";
 import {ZodUtil} from "@utils/zod.util";
@@ -22,12 +22,12 @@ const schemaContactForm = object({
     title: string().min(1),
     name: string().min(1),
     key: string().min(1),
-    outGoingEmail: string().min(1),
+    targetEmail: string().min(1),
     email: string().min(1),
     password: string().optional(),
-    outGoingServer: string().min(1),
-    inComingServer: string().min(1),
-    port: number().min(1)
+    host: string().min(1),
+    port: number().min(1),
+    hasSSL: boolean().default(false)
 });
 
 const schemaSocialMedia = object({
