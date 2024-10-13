@@ -312,7 +312,7 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
             }
 
             let docContent = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
-            if (docContent) {
+            if (docContent && docContent.langId.toString() != params.langId?.toString()) {
                 docContent.views = 0;
             }
 
@@ -752,7 +752,8 @@ const updateView = async (params: IPostUpdateViewParamService) => {
     let views = 0,
         totalViews = 0;
     if (doc) {
-        let docContent = doc.contents.findSingle("langId", params.langId || defaultLangId);
+        let docContent = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+
         if (docContent) {
             if (docContent.views) {
                 docContent.views = Number(docContent.views) + 1;
