@@ -12,7 +12,8 @@ const schemaContent = new mongoose.Schema<IPostTermContentModel>(
         image: {type: String, default: ""},
         title: {type: String, default: ""},
         shortContent: {type: String, default: ""},
-        url: {type: String, default: ""}
+        url: {type: String, default: ""},
+        views: {type: Number, default: 0},
     },
     {timestamps: true}
 );

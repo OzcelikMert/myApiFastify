@@ -24,6 +24,7 @@ export type IPostTermGetDetailedResultService = {
     contents?: IPostTermContentModel | IPostTermContentModel[]
     alternates?: IPostTermAlternateService[],
     postCount?: number
+    views?: number
 } & Omit<IPostTermModel, "contents"|"authorId"|"lastAuthorId"|"parentId">
 
 export interface IPostTermGetParamService {
@@ -90,6 +91,14 @@ export type IPostTermUpdateRankParamService = {
     typeId: PostTermTypeId
     rank: number,
     lastAuthorId: string
+}
+
+export type IPostTermUpdateViewParamService = {
+    _id: string,
+    postTypeId: PostTypeId
+    typeId: PostTermTypeId
+    langId?: string
+    url?: string
 }
 
 export type IPostTermUpdateStatusManyParamService = {

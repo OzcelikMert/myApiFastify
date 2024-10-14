@@ -14,6 +14,7 @@ export class PostTermEndPoint {
     get ADD() { return PathUtil.createPath(this.mainPath, "/add"); }
     get UPDATE_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/:_id`); }
     get UPDATE_RANK_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/rank/:_id`); }
+    get UPDATE_VIEW_WITH_ID() { return PathUtil.createPath(this.mainPath, `/update/view/:_id`); }
     get UPDATE_STATUS() { return PathUtil.createPath(this.mainPath, "/update/status"); }
     get DELETE() { return PathUtil.createPath(this.mainPath, "/delete"); }
 }

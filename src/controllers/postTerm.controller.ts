@@ -6,7 +6,7 @@ import {
     IPostTermGetManySchema,
     IPostTermPostSchema,
     IPostTermPutWithIdSchema,
-    IPostTermGetWithURLSchema, IPostTermPutRankWithIdSchema, IPostTermPutStatusManySchema
+    IPostTermGetWithURLSchema, IPostTermPutRankWithIdSchema, IPostTermPutStatusManySchema, IPostTermPutViewWithIdSchema
 } from "@schemas/postTerm.schema";
 import {PostTermService} from "@services/postTerm.service";
 import {LogMiddleware} from "@middlewares/log.middleware";
@@ -109,6 +109,21 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 }
 
+const updateViewWithId = async (req: FastifyRequest, reply: FastifyReply) => {
+    await LogMiddleware.error(req, reply, async () => {
+        let apiResult = new ApiResult();
+
+        let reqData = req as IPostTermPutViewWithIdSchema;
+
+        await PostTermService.updateView({
+            ...reqData.params,
+            ...reqData.body
+        });
+
+        await reply.status(apiResult.getStatusCode).send(apiResult)
+    });
+}
+
 const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
         let apiResult = new ApiResult();
@@ -145,6 +160,7 @@ export const PostTermController = {
     add: add,
     updateWithId: updateWithId,
     updateRankWithId: updateRankWithId,
+    updateViewWithId: updateViewWithId,
     updateStatusMany: updateStatusMany,
     deleteMany: deleteMany
 };

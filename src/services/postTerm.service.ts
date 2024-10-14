@@ -10,7 +10,7 @@ import {
     IPostTermGetManyParamService,
     IPostTermGetDetailedResultService,
     IPostTermGetDetailedParamService,
-    IPostTermGetManyDetailedParamService
+    IPostTermGetManyDetailedParamService, IPostTermUpdateViewParamService
 } from "types/services/postTerm.service";
 import {MongoDBHelpers} from "@library/mongodb/helpers";
 import {VariableLibrary} from "@library/variable";
@@ -145,6 +145,7 @@ const getDetailed = async (params: IPostTermGetDetailedParamService) => {
     let filters: mongoose.FilterQuery<IPostTermModel> = {}
     params = MongoDBHelpers.convertToObjectIdData(params, [...postTermObjectIdKeys, "ignoreTermId"]);
     let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+    let views = 0;
 
     if (params._id) filters = {
         ...filters,
@@ -214,8 +215,22 @@ const getDetailed = async (params: IPostTermGetDetailedParamService) => {
                 title: content.title,
                 url: content.url
             }));
-            doc.contents = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+
+            for (const docContent of doc.contents) {
+                if (docContent.views) {
+                    views += Number(docContent.views);
+                }
+            }
+
+            let docContent = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+            if (docContent && docContent.langId.toString() != params.langId?.toString()) {
+                docContent.views = 0;
+            }
+
+            doc.contents = docContent;
         }
+
+        doc.views = views;
     }
 
     return doc;
@@ -295,12 +310,20 @@ const getManyDetailed = async (params: IPostTermGetManyDetailedParamService) => 
     let docs = (await query.lean<IPostTermGetDetailedResultService[]>().exec());
 
     return Promise.all(docs.map(async (doc) => {
+        let views = 0;
+
         if (Array.isArray(doc.contents)) {
             doc.alternates = doc.contents.map(content => ({
                 langId: content.langId.toString(),
                 title: content.title,
                 url: content.url
             }));
+
+            for (const docContent of doc.contents) {
+                if (docContent.views) {
+                    views += Number(docContent.views);
+                }
+            }
 
             let docContent = doc.contents.findSingle("langId", params.langId);
             if (!docContent) {
@@ -315,6 +338,8 @@ const getManyDetailed = async (params: IPostTermGetManyDetailedParamService) => 
         if (params.withPostCount) {
             doc.postCount = (await postModel.find({ typeId: doc.postTypeId, categories: { $in: [doc._id] } }).count().exec())
         }
+
+        doc.views = views;
 
         return doc;
     }))
@@ -423,6 +448,64 @@ const updateRank = async (params: IPostTermUpdateRankParamService) => {
     };
 }
 
+const updateView = async (params: IPostTermUpdateViewParamService) => {
+    params = VariableLibrary.clearAllScriptTags(params);
+    params = MongoDBHelpers.convertToObjectIdData(params, postTermObjectIdKeys);
+    let defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+    let filters: mongoose.FilterQuery<IPostTermModel> = {}
+
+    if (params._id) {
+        filters = {
+            ...filters,
+            _id: params._id
+        }
+    }
+    if (params.typeId) {
+        filters = {
+            ...filters,
+            typeId: params.typeId
+        }
+    }
+    if (params.postTypeId) filters = {
+        ...filters,
+        postTypeId: params.postTypeId
+    }
+
+    let doc = (await postTermModel.findOne(filters).exec());
+
+    let views = 0,
+        totalViews = 0;
+    if (doc) {
+        let docContent = doc.contents.findSingle("langId", params.langId) ?? doc.contents.findSingle("langId", defaultLangId);
+
+        if (docContent) {
+            if (docContent.views) {
+                docContent.views = Number(docContent.views) + 1;
+            } else {
+                docContent.views = 1;
+            }
+
+            views = docContent.views;
+
+            await doc.save();
+        }
+
+        for (const docContent of doc.contents) {
+            if (docContent.views) {
+                totalViews += Number(docContent.views);
+            }
+        }
+    }
+
+    return {
+        _id: doc?._id,
+        langId: params.langId,
+        views: views,
+        totalViews: totalViews
+    };
+}
+
 const updateStatusMany = async (params: IPostTermUpdateStatusManyParamService) => {
     params = VariableLibrary.clearAllScriptTags(params);
     params = MongoDBHelpers.convertToObjectIdData(params, postTermObjectIdKeys);
@@ -494,6 +577,7 @@ export const PostTermService = {
     add: add,
     update: update,
     updateRank: updateRank,
+    updateView: updateView,
     updateStatusMany: updateStatusMany,
     deleteMany: deleteMany
 };
