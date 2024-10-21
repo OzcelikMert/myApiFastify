@@ -4,6 +4,7 @@
   "description": "My Api With Fastify",
   "private": true,
   "main": "src/server.ts",
+  "repository": "OzcelikMert/myApiFastify",
   "scripts": {
     "start": "fastify start -l info src/server.ts",
     "build": "tsc",
