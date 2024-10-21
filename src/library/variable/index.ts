@@ -1,5 +1,5 @@
 import string from "./string";
-const { createHash } = require('crypto');
+import { createHash } from 'crypto';
 
 export class VariableLibrary {
     static clearAllScriptTags<T>(data: any, expectKeys?: string[]): T {

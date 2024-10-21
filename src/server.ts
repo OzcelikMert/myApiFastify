@@ -1,9 +1,9 @@
-import * as Declaration from 'types/declaration'
-import "@library/variable/array"
-import "@library/variable/string"
-import "@library/variable/number"
-import "@library/variable/date"
-import "@library/variable/math"
+import * as Declaration from 'types/declaration';
+import "@library/variable/array";
+import "@library/variable/string";
+import "@library/variable/number";
+import "@library/variable/date";
+import "@library/variable/math";
 import fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyFormBody from '@fastify/formbody';
@@ -23,7 +23,7 @@ const trafficMBLimit = config.get("serverTrafficMBLimit") as number || 2;
 const whitelist = config.get("whiteList") as string[];
 
 console.time(`server`)
-console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
+console.log(chalk.cyan(`\n=========  SERVER LOADING =========`));
 
 (async () => {
     const server = await fastify({ trustProxy: true, logger: true, ignoreTrailingSlash: true });
@@ -44,7 +44,7 @@ console.log(chalk.cyan?.(`\n=========  SERVER LOADING =========`));
     await server.register(fastifyMultipart);
 
     server.addHook('onResponse', async (request, reply) => {
-        const responseTime = reply.getResponseTime();
+        const responseTime = reply.elapsedTime;
         console.log(`Response time for ${chalk.green(request.method)} '${chalk.gray(request.url)}': ${chalk.yellow(responseTime.toFixed(2))}ms`);
     });
 

@@ -12,4 +12,8 @@ declare module 'fastify' {
         isFromAdminPanel: boolean
         cachedServiceResult?: any
     }
+
+    export interface FastifyReply {
+        getResponseTime(): any
+    }
 }

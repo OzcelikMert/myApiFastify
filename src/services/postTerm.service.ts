@@ -336,7 +336,7 @@ const getManyDetailed = async (params: IPostTermGetManyDetailedParamService) => 
         }
 
         if (params.withPostCount) {
-            doc.postCount = (await postModel.find({ typeId: doc.postTypeId, categories: { $in: [doc._id] } }).count().exec())
+            doc.postCount = (await postModel.find({ typeId: doc.postTypeId, categories: { $in: [doc._id] } }).countDocuments().exec())
         }
 
         doc.views = views;

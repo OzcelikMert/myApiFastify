@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "commonjs",
+    "module": "CommonJS",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,7 +17,7 @@
     "baseUrl": "./src",
     "typeRoots": [
       "../node_modules/@types",
-      "@types",
+      "types",
       "library/types",
       "node"
     ],
