@@ -1,25 +1,25 @@
-import { ObjectId } from "mongoose"
-import {UserRoleId} from "@constants/userRoles";
-import {StatusId} from "@constants/status";
-import {PermissionId} from "@constants/permissions";
+import { ObjectId } from 'mongoose';
+import { UserRoleId } from '@constants/userRoles';
+import { StatusId } from '@constants/status';
+import { PermissionId } from '@constants/permissions';
 
 export interface IUserModel {
-    _id: string | ObjectId
-    roleId: UserRoleId,
-    statusId: StatusId,
-    authorId?: string | ObjectId
-    lastAuthorId?: string | ObjectId
-    name: string,
-    email: string,
-    image: string,
-    url?: string,
-    comment?: string,
-    phone?: string,
-    password: string,
-    permissions: PermissionId[],
-    banDateEnd?: Date,
-    banComment?: string,
-    facebook?: string,
-    instagram?: string,
-    twitter?: string
+  _id: string | ObjectId;
+  roleId: UserRoleId;
+  statusId: StatusId;
+  authorId?: string | ObjectId;
+  lastAuthorId?: string | ObjectId;
+  name: string;
+  email: string;
+  image: string;
+  url?: string;
+  comment?: string;
+  phone?: string;
+  password: string;
+  permissions: PermissionId[];
+  banDateEnd?: Date;
+  banComment?: string;
+  facebook?: string;
+  instagram?: string;
+  twitter?: string;
 }

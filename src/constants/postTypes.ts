@@ -1,12 +1,12 @@
 export enum PostTypeId {
-    Blog = 1,
-    Portfolio,
-    Page,
-    Slider,
-    Reference,
-    Service,
-    Testimonial,
-    Product,
-    ProductVariation,
-    BeforeAndAfter
+  Blog = 1,
+  Portfolio,
+  Page,
+  Slider,
+  Reference,
+  Service,
+  Testimonial,
+  Product,
+  ProductVariation,
+  BeforeAndAfter,
 }

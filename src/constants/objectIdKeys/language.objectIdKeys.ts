@@ -1,3 +1,1 @@
-export const languageObjectIdKeys = [
-    "_id"
-]
+export const languageObjectIdKeys = ['_id'];

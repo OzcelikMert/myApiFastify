@@ -1,3 +1,1 @@
-export const logObjectIdKeys = [
-    "_id"
-]
+export const logObjectIdKeys = ['_id'];

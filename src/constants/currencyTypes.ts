@@ -1,5 +1,5 @@
 export enum CurrencyId {
-    TurkishLira = 1,
-    Dollar,
-    Euro,
+  TurkishLira = 1,
+  Dollar,
+  Euro,
 }

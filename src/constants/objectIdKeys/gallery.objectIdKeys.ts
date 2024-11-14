@@ -1,3 +1,1 @@
-export const galleryObjectIdKeys = [
-    "_id",
-]
+export const galleryObjectIdKeys = ['_id'];

@@ -1,183 +1,185 @@
-import * as mongoose from "mongoose";
-import {languageModel} from "@models/language.model";
+import * as mongoose from 'mongoose';
+import { languageModel } from '@models/language.model';
 import {
-    ILanguageGetManyParamService,
-    ILanguageAddParamService,
-    ILanguageGetParamService,
-    ILanguageUpdateParamService,
-    ILanguageUpdateRankParamService,
-    ILanguageUpdateIsDefaultManyParamService
-} from "types/services/language.service";
-import {MongoDBHelpers} from "@library/mongodb/helpers";
-import {VariableLibrary} from "@library/variable";
-import {languageObjectIdKeys} from "@constants/objectIdKeys/language.objectIdKeys";
-import { ILanguageModel } from "types/models/language.model";
+  ILanguageGetManyParamService,
+  ILanguageAddParamService,
+  ILanguageGetParamService,
+  ILanguageUpdateParamService,
+  ILanguageUpdateRankParamService,
+  ILanguageUpdateIsDefaultManyParamService,
+} from 'types/services/language.service';
+import { MongoDBHelpers } from '@library/mongodb/helpers';
+import { VariableLibrary } from '@library/variable';
+import { languageObjectIdKeys } from '@constants/objectIdKeys/language.objectIdKeys';
+import { ILanguageModel } from 'types/models/language.model';
 
 const get = async (params: ILanguageGetParamService) => {
-    let filters: mongoose.FilterQuery<ILanguageModel> = {}
-    params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
+  let filters: mongoose.FilterQuery<ILanguageModel> = {};
+  params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
-    if (params._id) {
-        filters = {
-            ...filters,
-            _id: params._id
-        }
-    }
-    if (params.isDefault) {
-        filters = {
-            ...filters,
-            isDefault: params.isDefault
-        }
-    }
+  if (params._id) {
+    filters = {
+      ...filters,
+      _id: params._id,
+    };
+  }
+  if (params.isDefault) {
+    filters = {
+      ...filters,
+      isDefault: params.isDefault,
+    };
+  }
 
-    let query = languageModel.findOne(filters, {});
+  const query = languageModel.findOne(filters, {});
 
-    query.sort({rank: "asc", _id: "desc"});
+  query.sort({ rank: 'asc', _id: 'desc' });
 
-    return (await query.lean<ILanguageModel>().exec());
-}
+  return await query.lean<ILanguageModel>().exec();
+};
 
 const getMany = async (params: ILanguageGetManyParamService) => {
-    let filters: mongoose.FilterQuery<ILanguageModel> = {}
-    params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
+  let filters: mongoose.FilterQuery<ILanguageModel> = {};
+  params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
-    if (params._id) {
-        filters = {
-            ...filters,
-            _id: { $in: params._id }
-        }
-    }
-    if (params.statusId) {
-        filters = {
-            ...filters,
-            statusId: params.statusId
-        }
-    }
-    if (params.shortKey) {
-        filters = {
-            ...filters,
-            shortKey: params.shortKey
-        }
-    }
-    if (params.locale) {
-        filters = {
-            ...filters,
-            locale: params.locale
-        }
-    }
+  if (params._id) {
+    filters = {
+      ...filters,
+      _id: { $in: params._id },
+    };
+  }
+  if (params.statusId) {
+    filters = {
+      ...filters,
+      statusId: params.statusId,
+    };
+  }
+  if (params.shortKey) {
+    filters = {
+      ...filters,
+      shortKey: params.shortKey,
+    };
+  }
+  if (params.locale) {
+    filters = {
+      ...filters,
+      locale: params.locale,
+    };
+  }
 
-    let query = languageModel.find(filters, {});
+  const query = languageModel.find(filters, {});
 
-    query.sort({rank: "asc", _id: "desc"});
+  query.sort({ rank: 'asc', _id: 'desc' });
 
-    let docs = (await query.lean<ILanguageModel[]>().exec());
+  const docs = await query.lean<ILanguageModel[]>().exec();
 
-    return docs;
-}
+  return docs;
+};
 
 const add = async (params: ILanguageAddParamService) => {
-    params = VariableLibrary.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
+  params = VariableLibrary.clearAllScriptTags(params);
+  params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
-    if(params.locale){
-        params.locale = params.locale.toLowerCase();
-    }
+  if (params.locale) {
+    params.locale = params.locale.toLowerCase();
+  }
 
-    if(params.shortKey){
-        params.shortKey = params.shortKey.toLowerCase();
-    }
+  if (params.shortKey) {
+    params.shortKey = params.shortKey.toLowerCase();
+  }
 
-    return (await languageModel.create(params)).toObject()
-}
+  return (await languageModel.create(params)).toObject();
+};
 
 const update = async (params: ILanguageUpdateParamService) => {
-    let filters: mongoose.FilterQuery<ILanguageModel> = {}
-    params = VariableLibrary.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
+  let filters: mongoose.FilterQuery<ILanguageModel> = {};
+  params = VariableLibrary.clearAllScriptTags(params);
+  params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
-    if (params._id) {
-        filters = {
-            _id: params._id
-        };
-    }
-
-    let doc = (await languageModel.findOne(filters).exec());
-
-    if (doc) {
-        if(params.locale){
-            params.locale = params.locale.toLowerCase();
-        }
-
-        if(params.shortKey){
-            params.shortKey = params.shortKey.toLowerCase();
-        }
-
-        doc = Object.assign(doc, params);
-
-        await doc.save();
-    }
-
-    return {
-        ...params,
-        _id: doc?._id,
+  if (params._id) {
+    filters = {
+      _id: params._id,
     };
-}
+  }
+
+  let doc = await languageModel.findOne(filters).exec();
+
+  if (doc) {
+    if (params.locale) {
+      params.locale = params.locale.toLowerCase();
+    }
+
+    if (params.shortKey) {
+      params.shortKey = params.shortKey.toLowerCase();
+    }
+
+    doc = Object.assign(doc, params);
+
+    await doc.save();
+  }
+
+  return {
+    ...params,
+    _id: doc?._id,
+  };
+};
 
 const updateRank = async (params: ILanguageUpdateRankParamService) => {
-    let filters: mongoose.FilterQuery<ILanguageModel> = {}
-    params = VariableLibrary.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
+  let filters: mongoose.FilterQuery<ILanguageModel> = {};
+  params = VariableLibrary.clearAllScriptTags(params);
+  params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
 
-    if (params._id) {
-        filters = {
-            ...filters,
-            _id: params._id
-        }
-    }
-
-    let doc = (await languageModel.findOne(filters).exec());
-
-    if (doc) {
-        doc.rank = params.rank;
-
-        await doc.save();
-    }
-
-    return {
-        _id: doc?._id,
-        rank: doc?.rank
+  if (params._id) {
+    filters = {
+      ...filters,
+      _id: params._id,
     };
-}
+  }
 
-const updateIsDefaultMany = async (params: ILanguageUpdateIsDefaultManyParamService) => {
-    let filters: mongoose.FilterQuery<ILanguageModel> = {}
-    params = VariableLibrary.clearAllScriptTags(params);
-    params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
+  const doc = await languageModel.findOne(filters).exec();
 
-    if (params._id) {
-        filters = {
-            _id: params._id
-        };
+  if (doc) {
+    doc.rank = params.rank;
+
+    await doc.save();
+  }
+
+  return {
+    _id: doc?._id,
+    rank: doc?.rank,
+  };
+};
+
+const updateIsDefaultMany = async (
+  params: ILanguageUpdateIsDefaultManyParamService
+) => {
+  let filters: mongoose.FilterQuery<ILanguageModel> = {};
+  params = VariableLibrary.clearAllScriptTags(params);
+  params = MongoDBHelpers.convertToObjectIdData(params, languageObjectIdKeys);
+
+  if (params._id) {
+    filters = {
+      _id: params._id,
+    };
+  }
+
+  const docs = await languageModel.find(filters).exec();
+
+  if (docs) {
+    for (const doc of docs) {
+      doc.isDefault = params.isDefault;
+      await doc.save();
     }
+    return true;
+  }
 
-    let docs = (await languageModel.find(filters).exec());
-
-    if (docs) {
-       for (const doc of docs) {
-           doc.isDefault = params.isDefault;
-           await doc.save();
-       }
-       return true;
-    }
-
-    return false;
-}
+  return false;
+};
 
 export const LanguageService = {
-    get: get,
-    getMany: getMany,
-    add: add,
-    update: update,
-    updateRank: updateRank,
-    updateIsDefaultMany: updateIsDefaultMany
+  get: get,
+  getMany: getMany,
+  add: add,
+  update: update,
+  updateRank: updateRank,
+  updateIsDefaultMany: updateIsDefaultMany,
 };

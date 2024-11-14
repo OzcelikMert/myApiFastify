@@ -1,32 +1,32 @@
-import {ILanguageModel} from "types/models/language.model";
-import {StatusId} from "@constants/status";
+import { ILanguageModel } from 'types/models/language.model';
+import { StatusId } from '@constants/status';
 
 export interface ILanguageGetParamService {
-    _id?: string
-    shortKey?: string
-    locale?: string
-    isDefault?: boolean
+  _id?: string;
+  shortKey?: string;
+  locale?: string;
+  isDefault?: boolean;
 }
 
 export interface ILanguageGetManyParamService {
-    _id?: string[]
-    shortKey?: string
-    locale?: string
-    statusId?: StatusId
+  _id?: string[];
+  shortKey?: string;
+  locale?: string;
+  statusId?: StatusId;
 }
 
-export type ILanguageAddParamService = {} & Omit<ILanguageModel, "_id">
+export type ILanguageAddParamService = {} & Omit<ILanguageModel, '_id'>;
 
 export type ILanguageUpdateParamService = {
-    _id: string
-} & ILanguageAddParamService
+  _id: string;
+} & ILanguageAddParamService;
 
 export type ILanguageUpdateRankParamService = {
-    _id: string
-    rank: number
-}
+  _id: string;
+  rank: number;
+};
 
 export type ILanguageUpdateIsDefaultManyParamService = {
-    _id?: string[]
-    isDefault: boolean
-}
+  _id?: string[];
+  isDefault: boolean;
+};

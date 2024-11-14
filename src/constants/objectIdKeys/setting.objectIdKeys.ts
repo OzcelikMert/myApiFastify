@@ -1,4 +1,1 @@
-export const settingObjectIdKeys = [
-    "_id",
-    "langId"
-]
+export const settingObjectIdKeys = ['_id', 'langId'];

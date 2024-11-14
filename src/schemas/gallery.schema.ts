@@ -1,25 +1,25 @@
-import {object, string, array, z} from 'zod';
-import {GalleryTypeId} from "@constants/galleryTypeId";
-import {ZodUtil} from "@utils/zod.util";
+import { object, string, array, z } from 'zod';
+import { GalleryTypeId } from '@constants/galleryTypeId';
+import { ZodUtil } from '@utils/zod.util';
 
 const getManySchema = object({
-    query: object({
-        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
-        name: ZodUtil.convertToArray(array(string().min(1))).optional(),
-        typeId: ZodUtil.convertToNumber(z.nativeEnum(GalleryTypeId)).optional(),
-    })
+  query: object({
+    _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
+    name: ZodUtil.convertToArray(array(string().min(1))).optional(),
+    typeId: ZodUtil.convertToNumber(z.nativeEnum(GalleryTypeId)).optional(),
+  }),
 });
 
 const deleteManySchema = object({
-    body: object({
-        _id: array(string().min(1)),
-    })
+  body: object({
+    _id: array(string().min(1)),
+  }),
 });
 
 export type IGalleryGetManySchema = z.infer<typeof getManySchema>;
 export type IGalleryDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const GallerySchema = {
-    getMany: getManySchema,
-    deleteMany: deleteManySchema
+  getMany: getManySchema,
+  deleteMany: deleteManySchema,
 };

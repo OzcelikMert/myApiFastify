@@ -1,6 +1,6 @@
 export const componentObjectIdKeys = [
-    "_id",
-    "authorId",
-    "lastAuthorId",
-    "langId",
-]
+  '_id',
+  'authorId',
+  'lastAuthorId',
+  'langId',
+];

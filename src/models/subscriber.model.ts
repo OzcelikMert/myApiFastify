@@ -1,11 +1,14 @@
-import * as mongoose from "mongoose";
-import {ISubscriberModel} from "types/models/subscriber.model";
+import * as mongoose from 'mongoose';
+import { ISubscriberModel } from 'types/models/subscriber.model';
 
 const schema = new mongoose.Schema<ISubscriberModel>(
-    {
-            email: {type: String, required: true},
-    },
-    {timestamps: true}
-)
+  {
+    email: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
-export const subscriberModel = mongoose.model<ISubscriberModel, mongoose.Model<ISubscriberModel>>("subscribers", schema)
+export const subscriberModel = mongoose.model<
+  ISubscriberModel,
+  mongoose.Model<ISubscriberModel>
+>('subscribers', schema);

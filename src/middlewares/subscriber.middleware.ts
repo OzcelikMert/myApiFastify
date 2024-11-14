@@ -1,94 +1,102 @@
-import {FastifyRequest, FastifyReply} from 'fastify';
-import {ApiResult} from "@library/api/result";
-import {ApiErrorCodes} from "@library/api/errorCodes";
-import {ApiStatusCodes} from "@library/api/statusCodes";
-import {SubscriberService} from "@services/subscriber.service";
-import {LogMiddleware} from "@middlewares/log.middleware";
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { ApiResult } from '@library/api/result';
+import { ApiErrorCodes } from '@library/api/errorCodes';
+import { ApiStatusCodes } from '@library/api/statusCodes';
+import { SubscriberService } from '@services/subscriber.service';
+import { LogMiddleware } from '@middlewares/log.middleware';
 import {
-    ISubscriberDeleteWithIdSchema,
-    ISubscriberDeleteManySchema, ISubscriberPostSchema, ISubscriberDeleteWithEmailSchema
-} from "@schemas/subscriber.schema";
+  ISubscriberDeleteWithIdSchema,
+  ISubscriberDeleteManySchema,
+  ISubscriberPostSchema,
+  ISubscriberDeleteWithEmailSchema,
+} from '@schemas/subscriber.schema';
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
-    await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult();
+  await LogMiddleware.error(req, reply, async () => {
+    const apiResult = new ApiResult();
 
-        let reqData = req as ISubscriberDeleteWithIdSchema;
+    const reqData = req as ISubscriberDeleteWithIdSchema;
 
-        let serviceResult = await SubscriberService.get({
-            ...reqData.params
-        });
-
-        if(serviceResult){
-            req.cachedServiceResult = serviceResult;
-        }else {
-            apiResult.status = false;
-            apiResult.setErrorCode = ApiErrorCodes.notFound;
-            apiResult.setStatusCode = ApiStatusCodes.notFound;
-        }
-
-        if (!apiResult.status) {
-            await reply.status(apiResult.getStatusCode).send(apiResult)
-        }
+    const serviceResult = await SubscriberService.get({
+      ...reqData.params,
     });
-}
+
+    if (serviceResult) {
+      req.cachedServiceResult = serviceResult;
+    } else {
+      apiResult.status = false;
+      apiResult.setErrorCode = ApiErrorCodes.notFound;
+      apiResult.setStatusCode = ApiStatusCodes.notFound;
+    }
+
+    if (!apiResult.status) {
+      await reply.status(apiResult.getStatusCode).send(apiResult);
+    }
+  });
+};
 
 const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
-    await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult();
+  await LogMiddleware.error(req, reply, async () => {
+    const apiResult = new ApiResult();
 
-        let reqData = req as ISubscriberDeleteManySchema;
+    const reqData = req as ISubscriberDeleteManySchema;
 
-        let serviceResult = await SubscriberService.getMany({
-            _id: reqData.body._id
-        });
-
-        if (
-            serviceResult.length == 0 ||
-            (serviceResult.length != reqData.body._id.length)
-        ) {
-            apiResult.status = false;
-            apiResult.setErrorCode = ApiErrorCodes.registeredData;
-            apiResult.setStatusCode = ApiStatusCodes.conflict;
-        }else {
-            req.cachedServiceResult = serviceResult;
-        }
-
-        if (!apiResult.status) {
-            await reply.status(apiResult.getStatusCode).send(apiResult)
-        }
+    const serviceResult = await SubscriberService.getMany({
+      _id: reqData.body._id,
     });
-}
 
-const checkWithEmail = (ifHasGetError?: true) => async (req: FastifyRequest, reply: FastifyReply) => {
+    if (
+      serviceResult.length == 0 ||
+      serviceResult.length != reqData.body._id.length
+    ) {
+      apiResult.status = false;
+      apiResult.setErrorCode = ApiErrorCodes.registeredData;
+      apiResult.setStatusCode = ApiStatusCodes.conflict;
+    } else {
+      req.cachedServiceResult = serviceResult;
+    }
+
+    if (!apiResult.status) {
+      await reply.status(apiResult.getStatusCode).send(apiResult);
+    }
+  });
+};
+
+const checkWithEmail =
+  (ifHasGetError?: true) =>
+  async (req: FastifyRequest, reply: FastifyReply) => {
     await LogMiddleware.error(req, reply, async () => {
-        let apiResult = new ApiResult();
+      const apiResult = new ApiResult();
 
-        let reqData = req as ISubscriberPostSchema & ISubscriberDeleteWithEmailSchema;
+      const reqData = req as ISubscriberPostSchema &
+        ISubscriberDeleteWithEmailSchema;
 
-        let serviceResult = await SubscriberService.get({
-            ...reqData.body,
-            ...reqData.params
-        });
+      const serviceResult = await SubscriberService.get({
+        ...reqData.body,
+        ...reqData.params,
+      });
 
-        if ((ifHasGetError && serviceResult) || (!ifHasGetError && !serviceResult)) {
-            apiResult.status = false;
-            apiResult.setErrorCode = ApiErrorCodes.registeredData;
-            apiResult.setStatusCode = ApiStatusCodes.conflict;
-        }
+      if (
+        (ifHasGetError && serviceResult) ||
+        (!ifHasGetError && !serviceResult)
+      ) {
+        apiResult.status = false;
+        apiResult.setErrorCode = ApiErrorCodes.registeredData;
+        apiResult.setStatusCode = ApiStatusCodes.conflict;
+      }
 
-        if(serviceResult){
-            req.cachedServiceResult = serviceResult;
-        }
+      if (serviceResult) {
+        req.cachedServiceResult = serviceResult;
+      }
 
-        if (!apiResult.status) {
-            await reply.status(apiResult.getStatusCode).send(apiResult)
-        }
+      if (!apiResult.status) {
+        await reply.status(apiResult.getStatusCode).send(apiResult);
+      }
     });
-}
+  };
 
 export const SubscribeMiddleware = {
-    checkWithId: checkWithId,
-    checkWithEmail: checkWithEmail,
-    checkMany: checkMany
+  checkWithId: checkWithId,
+  checkWithEmail: checkWithEmail,
+  checkMany: checkMany,
 };

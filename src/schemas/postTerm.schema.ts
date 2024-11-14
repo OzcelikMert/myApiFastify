@@ -1,113 +1,115 @@
-import {object, string, array, number, z} from 'zod';
-import {StatusId} from "@constants/status";
-import {PostTypeId} from "@constants/postTypes";
-import {PostTermTypeId} from "@constants/postTermTypes";
-import {ZodUtil} from "@utils/zod.util";
+import { object, string, array, number, z } from 'zod';
+import { StatusId } from '@constants/status';
+import { PostTypeId } from '@constants/postTypes';
+import { PostTermTypeId } from '@constants/postTermTypes';
+import { ZodUtil } from '@utils/zod.util';
 
 const schemaContent = object({
-    langId: string().min(1),
-    title: string().min(3),
-    shortContent: string().optional(),
-    image: string().optional(),
-    url: string().optional(),
+  langId: string().min(1),
+  title: string().min(3),
+  shortContent: string().optional(),
+  image: string().optional(),
+  url: string().optional(),
 });
 
 const schema = object({
-    postTypeId: z.nativeEnum(PostTypeId),
-    typeId: z.nativeEnum(PostTermTypeId),
-    statusId: z.nativeEnum(StatusId),
-    parentId: string().optional(),
-    rank: number().default(0),
-    contents: schemaContent
-})
+  postTypeId: z.nativeEnum(PostTypeId),
+  typeId: z.nativeEnum(PostTermTypeId),
+  statusId: z.nativeEnum(StatusId),
+  parentId: string().optional(),
+  rank: number().default(0),
+  contents: schemaContent,
+});
 
 const getWithIdSchema = object({
-    params: object({
-        _id: string().min(1),
-    }),
-    query: object({
-        postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
-        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)),
-        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
-        langId: string().optional(),
-    })
+  params: object({
+    _id: string().min(1),
+  }),
+  query: object({
+    postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
+    typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)),
+    statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
+    langId: string().optional(),
+  }),
 });
 
 const getManySchema = object({
-    query: object({
-        _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
-        typeId: ZodUtil.convertToArray(array(ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)))).optional(),
-        postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
-        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
-        withPostCount: z.coerce.boolean().optional(),
-        langId: string().optional(),
-        title: string().optional(),
-        count: z.coerce.number().optional(),
-        page: z.coerce.number().optional()
-    })
+  query: object({
+    _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
+    typeId: ZodUtil.convertToArray(
+      array(ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)))
+    ).optional(),
+    postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
+    statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
+    withPostCount: z.coerce.boolean().optional(),
+    langId: string().optional(),
+    title: string().optional(),
+    count: z.coerce.number().optional(),
+    page: z.coerce.number().optional(),
+  }),
 });
 
 const getWithURLSchema = object({
-    params: object({
-        url: string().min(1),
-    }),
-    query: object({
-        postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
-        typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)),
-        statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
-        langId: string().optional(),
-    })
+  params: object({
+    url: string().min(1),
+  }),
+  query: object({
+    postTypeId: ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)),
+    typeId: ZodUtil.convertToNumber(z.nativeEnum(PostTermTypeId)),
+    statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
+    langId: string().optional(),
+  }),
 });
 
 const postSchema = object({
-    body: schema
+  body: schema,
 });
 
 const putWithIdSchema = object({
-    params: object({
-        _id: string().min(1),
-    }),
-    body: schema
+  params: object({
+    _id: string().min(1),
+  }),
+  body: schema,
 });
 
 const putStatusManySchema = object({
-    body: object({
-        postTypeId: z.nativeEnum(PostTypeId),
-        typeId: z.nativeEnum(PostTermTypeId),
-        statusId: z.nativeEnum(StatusId),
-        _id: array(string().min(1)).min(1),
-    })
+  body: object({
+    postTypeId: z.nativeEnum(PostTypeId),
+    typeId: z.nativeEnum(PostTermTypeId),
+    statusId: z.nativeEnum(StatusId),
+    _id: array(string().min(1)).min(1),
+  }),
 });
 
 const putRankWithIdSchema = object({
-    params: object({
-        _id: string().min(1),
-    }),
-    body: object({
-        postTypeId: z.nativeEnum(PostTypeId),
-        typeId: z.nativeEnum(PostTermTypeId),
-        rank: number().min(0)
-    })
+  params: object({
+    _id: string().min(1),
+  }),
+  body: object({
+    postTypeId: z.nativeEnum(PostTypeId),
+    typeId: z.nativeEnum(PostTermTypeId),
+    rank: number().min(0),
+  }),
 });
 
 const putViewWithIdSchema = object({
-    params: object({
-        _id: string().min(1),
-    }),
-    body: object({
-        postTypeId: z.nativeEnum(PostTypeId),
-        typeId: z.nativeEnum(PostTermTypeId),
-        langId: string().optional(),
-        url: string().optional()
-    }),
+  params: object({
+    _id: string().min(1),
+  }),
+  body: object({
+    postTypeId: z.nativeEnum(PostTypeId),
+    typeId: z.nativeEnum(PostTermTypeId),
+    langId: string().optional(),
+    url: string().optional(),
+  }),
 });
 
 const deleteManySchema = object({
-    body: object({
-        postTypeId: z.nativeEnum(PostTypeId),
-        typeId: z.nativeEnum(PostTermTypeId),
-        _id: array(string().min(1)).min(1),
-    })
+  body: object({
+    postTypeId: z.nativeEnum(PostTypeId),
+    typeId: z.nativeEnum(PostTermTypeId),
+    _id: array(string().min(1)).min(1),
+  }),
 });
 
 export type IPostTermGetWithIdSchema = z.infer<typeof getWithIdSchema>;
@@ -121,13 +123,13 @@ export type IPostTermPutViewWithIdSchema = z.infer<typeof putViewWithIdSchema>;
 export type IPostTermDeleteManySchema = z.infer<typeof deleteManySchema>;
 
 export const PostTermSchema = {
-    getWithId: getWithIdSchema,
-    getMany: getManySchema,
-    getWithURL: getWithURLSchema,
-    post: postSchema,
-    putWithId: putWithIdSchema,
-    putStatusMany: putStatusManySchema,
-    putRankWithId: putRankWithIdSchema,
-    putViewWithId: putViewWithIdSchema,
-    deleteMany: deleteManySchema
+  getWithId: getWithIdSchema,
+  getMany: getManySchema,
+  getWithURL: getWithURLSchema,
+  post: postSchema,
+  putWithId: putWithIdSchema,
+  putStatusMany: putStatusManySchema,
+  putRankWithId: putRankWithIdSchema,
+  putViewWithId: putViewWithIdSchema,
+  deleteMany: deleteManySchema,
 };

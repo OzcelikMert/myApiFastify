@@ -1,4 +1,1 @@
-export const viewObjectIdKeys = [
-    "_id",
-    "langId",
-]
+export const viewObjectIdKeys = ['_id', 'langId'];
