@@ -2,3 +2,4 @@ node_modules/
 .idea/
 config/_default.ts
 session/
+package-lock.json
