@@ -1,5 +1,5 @@
 export default {
-    runType: "dev",
+    runType: "test",
     serverProtocol: "http",
     serverPort: 5001,
     serverTrafficMBLimit: 2,

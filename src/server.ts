@@ -16,54 +16,54 @@ import InitConfig from '@configs/index';
 import { ViewInitMiddleware } from '@middlewares/init/view.init.middleware';
 import { SessionAuthMiddleware } from '@middlewares/validates/sessionAuth.middleware';
 import { RequestInitMiddleware } from '@middlewares/init/request.init.middleware';
-import { Timers } from '@timers/index';
 
 const port = config.get('serverPort') as number;
+const runType = config.get('runType') as string;
 const trafficMBLimit = (config.get('serverTrafficMBLimit') as number) || 2;
 const whitelist = config.get('whiteList') as string[];
 
-console.time(`server`);
+console.time(`app`);
 console.log(chalk.cyan(`\n=========  SERVER LOADING =========`));
 
+export const app = fastify({
+  trustProxy: true,
+  logger: true,
+  ignoreTrailingSlash: true,
+});
+
 (async () => {
-  const server = await fastify({
-    trustProxy: true,
-    logger: true,
-    ignoreTrailingSlash: true,
-  });
+  await new InitConfig(app).init();
 
-  await new InitConfig(server).init();
-
-  await server.register(fastifyFormBody, {
+  await app.register(fastifyFormBody, {
     bodyLimit: trafficMBLimit,
   });
 
-  await server.register(fastifyCors, {
+  await app.register(fastifyCors, {
     origin: whitelist,
     methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS', 'HEAD'],
     credentials: true,
   });
 
-  await server.register(fastifyCompress);
-  await server.register(fastifyMultipart);
+  await app.register(fastifyCompress);
+  await app.register(fastifyMultipart);
 
-  server.addHook('onResponse', async (request, reply) => {
+  app.addHook('onResponse', async (request, reply) => {
     const responseTime = reply.elapsedTime;
     console.log(
       `Response time for ${chalk.green(request.method)} '${chalk.gray(request.url)}': ${chalk.yellow(responseTime.toFixed(2))}ms`
     );
   });
 
-  server.addHook('preHandler', RequestInitMiddleware.set);
-  server.addHook('preHandler', ViewInitMiddleware.set);
-  server.addHook('preHandler', SessionAuthMiddleware.reload);
+  app.addHook('preHandler', RequestInitMiddleware.set);
+  app.addHook('preHandler', ViewInitMiddleware.set);
+  app.addHook('preHandler', SessionAuthMiddleware.reload);
 
-  await server.register(routers);
+  await app.register(routers);
 
-  Timers.initLongTimer();
-
-  server.listen({ port: port }, () => {
-    console.log(chalk.cyan(`=========  SERVER STARTED =========\n`));
-    console.timeEnd(`server`);
-  });
+  if (runType !== 'test') {
+    app.listen({ port: port }, () => {
+      console.log(chalk.cyan(`=========  SERVER STARTED =========\n`));
+      console.timeEnd(`app`);
+    });
+  }
 })();

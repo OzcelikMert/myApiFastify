@@ -5,7 +5,7 @@ import { PostTermController } from '@controllers/postTerm.controller';
 import { RequestMiddleware } from '@middlewares/validates/request.middleware';
 import { SessionAuthMiddleware } from '@middlewares/validates/sessionAuth.middleware';
 import { PermissionMiddleware } from '@middlewares/validates/permission.middleware';
-import { PermissionUtil } from 'utils/permission.util';
+import { PermissionUtil } from '@utils/permission.util';
 import { PostTermEndPoint } from '@constants/endPoints/postTerm.endPoint';
 import { ViewMiddleware } from '@middlewares/view.middleware';
 

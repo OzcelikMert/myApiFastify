@@ -15,12 +15,6 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src",
-    "typeRoots": [
-      "../node_modules/@types",
-      "types",
-      "library/types",
-      "node"
-    ],
     "paths": {
       "@configs/*": ["configs/*"],
       "@constants/*": ["constants/*"],
@@ -38,6 +32,7 @@
     }
   },
   "include": [
+    "./tests/**/*.ts",
     "./src/**/*.ts",
     "./src/**/*.d.ts"
   ],

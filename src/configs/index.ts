@@ -17,6 +17,7 @@ import { SettingService } from '@services/setting.service';
 import { PathUtil } from '@utils/path.util';
 import { sessionAuthConfig } from '@configs/session/session.auth.config';
 import dbConnect from '@configs/db';
+import { Timers } from '@timers/index';
 
 const Config: IConfig = {
   passwordSalt: '_@QffsDh14Q',
@@ -43,23 +44,26 @@ const Config: IConfig = {
 };
 
 class InitConfig {
-  private server: FastifyInstance;
+  private app: FastifyInstance;
 
-  constructor(server: FastifyInstance) {
-    this.server = server;
+  constructor(app: FastifyInstance) {
+    this.app = app;
     Config.paths.root = path.resolve('./', 'src');
   }
 
   async init() {
-    return Promise.all([
-      this.setPublicFolders(),
-      this.setSession(),
-      this.security(),
-      this.mongodbConnect(),
-      this.checkSuperAdminUser(),
-      this.checkLanguages(),
-      this.checkSettings(),
-    ]);
+    if (process.env.NODE_ENV === 'test') return;
+    
+    await this.setPublicFolders();
+    await this.setSession();
+    await this.security();;
+    await this.mongodbConnect();
+    await this.checkSuperAdminUser();
+    await this.checkLanguages();
+    await this.checkSettings(); 
+    await this.initTimers();
+
+    return this.app;
   }
 
   private security() {
@@ -82,7 +86,7 @@ class InitConfig {
         fs.mkdirSync(path.resolve(Config.paths.root, folderPath));
       }
 
-      await this.server.register(fastifyStatic, {
+      await this.app.register(fastifyStatic, {
         root: path.resolve(Config.paths.root, folderPath),
         prefix: `/${folderPath}`,
       });
@@ -95,10 +99,10 @@ class InitConfig {
   }
 
   private async setSession() {
-    await this.server.register(fastifyCookie, {
+    await this.app.register(fastifyCookie, {
       secret: sessionAuthConfig.secret,
     });
-    await this.server.register(fastifySecureSession, sessionAuthConfig as any);
+    await this.app.register(fastifySecureSession, sessionAuthConfig as any);
   }
 
   private async mongodbConnect() {
@@ -158,6 +162,10 @@ class InitConfig {
       console.log(chalk.green(`#Setting`));
       console.log(chalk.blue(`- Created`));
     }
+  }
+
+  private async initTimers() {
+    Timers.initLongTimer();
   }
 }
 
