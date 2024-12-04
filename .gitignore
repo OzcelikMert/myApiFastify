@@ -4,3 +4,4 @@ config/_default.ts
 session/
 package-lock.json
 coverage/
+dist/

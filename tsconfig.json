@@ -6,7 +6,7 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
+    "noEmit": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -36,7 +36,9 @@
     "./src/**/*.ts",
     "./src/**/*.d.ts"
   ],
-  "exclude": ["../node_modules", "**/.*/"],
+  "exclude": [
+    "node_modules"
+  ],
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   }
