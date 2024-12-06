@@ -1,6 +1,8 @@
 services:
   api:
-    build: .
+    build:
+      context: api
+      dockerfile: ./DockerFile
     container_name: api
     ports:
       - "5001:5001"
