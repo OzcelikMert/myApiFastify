@@ -6,7 +6,7 @@
   "main": "src/server.ts",
   "repository": "OzcelikMert/myApiFastify",
   "scripts": {
-    "start": "fastify start -l info src/server.ts",
+    "start": "fastify start -l info src/server.js --env=production",
     "build": "tsc",
     "dev": "nodemon --config nodemon.json src/server.ts",
     "lint": "eslint ./src",
@@ -29,10 +29,12 @@
     "check-disk-space": "^3.4.0",
     "config": "^3.3.12",
     "fastify": "^5.0.0",
+    "fastify-cli": "^7.0.1",
     "fastify-multer": "^2.0.3",
     "fastify-session": "^5.2.1",
     "generate-password": "^1.7.1",
     "geoip-lite": "^1.4.10",
+    "module-alias": "^2.2.3",
     "mongoose": "^8.7.2",
     "node-os-utils": "^1.3.7",
     "nodemailer": "^6.9.15",
@@ -66,8 +68,25 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "tsc": "^2.0.4",
+    "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.14.0"
+    "typescript-eslint": "^8.14.0",
+    "typescript-transform-paths": "^3.5.2"
+  },
+  "_moduleAliases": {
+    "@configs": "src/configs",
+    "@constants": "src/constants",
+    "@library": "src/library",
+    "@controllers": "src/controllers",
+    "@middlewares": "src/middlewares",
+    "@models": "src/models",
+    "@routers": "src/routers",
+    "@schemas": "src/schemas",
+    "@services": "src/services",
+    "@uploads": "src/uploads",
+    "@timers": "src/timers",
+    "types": "src/types",
+    "@utils": "src/utils"
   }
 }

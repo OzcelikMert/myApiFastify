@@ -10,7 +10,7 @@ import { UserEndPoint } from '@constants/endPoints/user.endPoint';
 
 export const userRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new UserEndPoint('');

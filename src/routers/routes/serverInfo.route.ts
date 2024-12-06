@@ -7,7 +7,7 @@ import { ServerInfoEndPointPermission } from '@constants/endPointPermissions/ser
 
 export const serverInfoRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new ServerInfoEndPoint('');

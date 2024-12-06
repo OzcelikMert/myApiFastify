@@ -1,7 +1,7 @@
 import mongoose, { ConnectOptions } from 'mongoose';
 import config from 'config';
 
-function dbConnect() {
+export async function dbConnect() {
   const protocol = config.get<string>('dbProtocol');
   const name = config.get<string>('dbName');
   const host = config.get<string>('dbHost');
@@ -23,5 +23,3 @@ function dbConnect() {
     } as ConnectOptions
   );
 }
-
-export default dbConnect;

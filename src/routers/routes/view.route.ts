@@ -5,7 +5,7 @@ import { ViewEndPoint } from '@constants/endPoints/view.endPoint';
 
 export const viewRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new ViewEndPoint('');

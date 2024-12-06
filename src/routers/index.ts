@@ -18,7 +18,7 @@ import { postCommentRoute } from '@routers/routes/postComment.route';
 
 export const routers = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   fastify.register(userRoute, { prefix: EndPoints.USER });

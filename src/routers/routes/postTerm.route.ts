@@ -11,7 +11,7 @@ import { ViewMiddleware } from '@middlewares/view.middleware';
 
 export const postTermRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new PostTermEndPoint('');

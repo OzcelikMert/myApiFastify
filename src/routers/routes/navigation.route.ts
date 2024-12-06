@@ -10,7 +10,7 @@ import { NavigationEndPointPermission } from '@constants/endPointPermissions/nav
 
 export const navigationRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new NavigationEndPoint('');

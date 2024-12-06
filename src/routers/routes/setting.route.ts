@@ -10,7 +10,7 @@ import { SettingMiddleware } from '@middlewares/setting.middleware';
 
 export const settingRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new SettingEndPoint('');

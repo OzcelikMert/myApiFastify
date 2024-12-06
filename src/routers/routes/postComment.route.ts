@@ -10,7 +10,7 @@ import { PostCommentMiddleware } from '@middlewares/postComment.middleware';
 
 export const postCommentRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new PostCommentEndPoint('');

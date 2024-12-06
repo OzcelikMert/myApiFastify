@@ -12,7 +12,7 @@ import { PostEndPointPermission } from '@constants/endPointPermissions/post.endP
 
 export const postRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new PostEndPoint('');

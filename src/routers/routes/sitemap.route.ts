@@ -6,7 +6,7 @@ import { SitemapEndPoint } from '@constants/endPoints/sitemap.endPoint';
 
 export const sitemapRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new SitemapEndPoint('');

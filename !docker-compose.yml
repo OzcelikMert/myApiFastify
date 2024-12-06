@@ -1,0 +1,35 @@
+services:
+  api:
+    build: .
+    container_name: api
+    ports:
+      - "5001:5001"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/myadminpanel
+    networks:
+      - app-network
+  
+  mongo:
+    image: mongo:5.0.9
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: _@QffsDh14Q
+      MONGO_INITDB_DATABASE: myadminpanel
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+
+configs:
+  httpd-config:
+    external: true
+
+secrets:
+  server-certificate:
+    external: true
+
+networks:
+  app-network:
+    driver: bridge

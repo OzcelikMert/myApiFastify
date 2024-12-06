@@ -10,7 +10,7 @@ import { SubscriberEndPointPermission } from '@constants/endPointPermissions/sub
 
 export const subscriberRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new SubscriberEndPoint('');

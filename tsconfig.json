@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "CommonJS",
+    "noImplicitAny": true,
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -34,12 +35,15 @@
   "include": [
     "./tests/**/*.ts",
     "./src/**/*.ts",
-    "./src/**/*.d.ts"
+    "./src/**/*.d.ts",
+    "./config/*.ts"
   ],
   "exclude": [
     "node_modules"
   ],
   "ts-node": {
-    "require": ["tsconfig-paths/register"]
+    "require": [
+      "tsconfig-paths/register"
+    ]
   }
 }

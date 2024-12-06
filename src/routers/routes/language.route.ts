@@ -10,7 +10,7 @@ import { LanguageEndPointPermission } from '@constants/endPointPermissions/langu
 
 export const languageRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new LanguageEndPoint('');

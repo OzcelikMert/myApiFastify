@@ -7,7 +7,7 @@ import { AuthEndPoint } from '@constants/endPoints/auth.endPoint';
 
 export const authRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new AuthEndPoint('');

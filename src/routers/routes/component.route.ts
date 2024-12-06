@@ -10,7 +10,7 @@ import { ComponentMiddleware } from '@middlewares/component.middleware';
 
 export const componentRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new ComponentEndPoint('');

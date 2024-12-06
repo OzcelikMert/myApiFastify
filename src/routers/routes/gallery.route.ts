@@ -8,7 +8,7 @@ import { GalleryMiddleware } from '@middlewares/gallery.middleware';
 
 export const galleryRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new GalleryEndPoint('');

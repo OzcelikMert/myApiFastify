@@ -7,7 +7,7 @@ import { MailerEndPoint } from '@constants/endPoints/mailer.endPoint';
 
 export const mailerRoute = function (
   fastify: FastifyInstance,
-  opts: any,
+  opts: {},
   done: () => void
 ) {
   const endPoint = new MailerEndPoint('');
