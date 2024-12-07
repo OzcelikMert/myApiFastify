@@ -61,15 +61,10 @@ export default async function plugin (app: FastifyInstance, options: {}) {
 
   console.log(chalk.cyan(`=========  SERVER STARTED =========\n`));
   console.timeEnd(`app`);
-
-  if (runType !== 'test') {
-    app.listen({ port: port }, () => {
-      
-    });
-  }
 }
 
 export const options = {
+  pluginTimeout: 10000,
   trustProxy: true,
   logger: true,
   ignoreTrailingSlash: true,
@@ -78,7 +73,7 @@ export const options = {
       key: SSLKey,
       cert: SSLCert
     }
-  } : {}) 
+  } : {})
 }
 
 if(runType === "dev"){
