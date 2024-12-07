@@ -28,7 +28,7 @@ const SSLKey = config.get('SSLKey') as string;
 const SSLCert = config.get('SSLCert') as string;
 
 console.time(`app`);
-console.log(chalk.cyan(`\n=========  SERVER LOADING (${chalk.blue(runType)}) =========`));
+console.log(chalk.cyan(`\n=========  SERVER LOADING (${chalk.yellow(runType)}) =========`));
 
 export default async function plugin (app: FastifyInstance, options: {}) {
   await new InitConfig(app).init();

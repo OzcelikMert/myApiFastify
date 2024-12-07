@@ -16,9 +16,8 @@ import { LanguageService } from '@services/language.service';
 import { SettingService } from '@services/setting.service';
 import { PathUtil } from '@utils/path.util';
 import { sessionAuthConfig } from '@configs/session/session.auth.config';
-import { dbConnect } from '@configs/db';
+import { dbConnect, getDBUri } from '@configs/db';
 import { Timers } from '@timers/index';
-import config from 'config';
 
 const Config: IConfig = {
   passwordSalt: '_@QffsDh14Q',
@@ -106,8 +105,8 @@ class InitConfig {
 
   private async mongodbConnect() {
     try {
+      console.log(chalk.green(`#MongoDB (${chalk.yellow(getDBUri())})`));
       await dbConnect();
-      console.log(chalk.green(`#MongoDB`));
       console.log(chalk.blue(`- Connected`));
     } catch (e) {
       console.error('MongoDB Connection Error');
