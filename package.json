@@ -6,7 +6,7 @@
   "main": "src/server.ts",
   "repository": "OzcelikMert/myApiFastify",
   "scripts": {
-    "start": "fastify start -l info src/server.js --env=production",
+    "start": "fastify start -c config/default.json -l info -p 5001 src/server.js --env=production",
     "build": "tsc",
     "dev": "nodemon --config nodemon.json src/server.ts",
     "lint": "eslint ./src",

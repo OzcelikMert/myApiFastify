@@ -1,0 +1,19 @@
+{
+    "runType": "production",
+    "SSLKey": "",
+    "SSLCert": "",
+    "serverProtocol": "http",
+    "port": 5001,
+    "serverTrafficLimitMB": 2,
+    "dbProtocol": "mongodb",
+    "dbHost": "mongo",
+    "dbHostParams": "",
+    "dbPort": 27017,
+    "dbName": "myadminpanel",
+    "dbUser": "admin",
+    "dbPassword": "_@QffsDh14Q",
+    "whiteList": [
+        "http://192.168.1.10:3000",
+        "http://192.168.1.10:3001"
+    ]
+}

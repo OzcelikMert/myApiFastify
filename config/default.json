@@ -1,0 +1,19 @@
+{
+    "runType": "dev",
+    "SSLKey": "",
+    "SSLCert": "",
+    "serverProtocol": "http",
+    "port": 5001,
+    "serverTrafficLimitMB": 2,
+    "dbProtocol": "mongodb",
+    "dbHost": "127.0.0.1",
+    "dbHostParams": "",
+    "dbPort": 27017,
+    "dbName": "myadminpanel",
+    "dbUser": "",
+    "dbPassword": "",
+    "whiteList": [
+        "http://localhost:3000",
+        "http://localhost:3001"
+    ]
+}

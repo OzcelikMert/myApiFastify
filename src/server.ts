@@ -21,8 +21,8 @@ import { ViewInitMiddleware } from '@middlewares/init/view.init.middleware';
 import { SessionAuthMiddleware } from '@middlewares/validates/sessionAuth.middleware';
 import { RequestInitMiddleware } from '@middlewares/init/request.init.middleware';
 
-const port = config.get('serverPort') as number;
-const trafficMBLimit = (config.get('serverTrafficMBLimit') as number) || 2;
+const port = config.get('port') as number;
+const trafficLimitMB = (config.get('serverTrafficLimitMB') as number) || 2;
 const whitelist = config.get('whiteList') as string[];
 const SSLKey = config.get('SSLKey') as string;
 const SSLCert = config.get('SSLCert') as string;
@@ -34,7 +34,7 @@ export default async function plugin (app: FastifyInstance, options: {}) {
   await new InitConfig(app).init();
 
   await app.register(fastifyFormBody, {
-    bodyLimit: trafficMBLimit,
+    bodyLimit: trafficLimitMB,
   });
 
   await app.register(fastifyCors, {
@@ -58,7 +58,7 @@ export default async function plugin (app: FastifyInstance, options: {}) {
   await app.addHook('preHandler', SessionAuthMiddleware.reload);
 
   await app.register(routers);
-
+  
   console.log(chalk.cyan(`=========  SERVER STARTED =========\n`));
   console.timeEnd(`app`);
 }
@@ -78,5 +78,7 @@ export const options = {
 
 if(runType === "dev"){
   const app = fastify(options);
-  plugin(app, options);
+  plugin(app, options).then(() => {
+    app.listen({ port }, (err) => {});
+  });
 }
