@@ -29,11 +29,6 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "api", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     restart: always
 
   admin-panel:
@@ -46,7 +41,7 @@ services:
     networks:
       - app-network
     depends_on:
-      api:
+      mongo:
         condition: service_healthy
     restart: always
 
