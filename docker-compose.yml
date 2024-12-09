@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:5.0.9
+    image: mongo:4.4
     container_name: mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -24,12 +24,29 @@ services:
     container_name: api
     ports:
       - "5001:5001"
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/myadminpanel
     networks:
       - app-network
     depends_on:
       mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "api", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  admin-panel:
+    build:
+      context: admin-panel
+      dockerfile: ./DockerFile
+    container_name: admin-panel
+    ports:
+      - "3001:3001"
+    networks:
+      - app-network
+    depends_on:
+      api:
         condition: service_healthy
     restart: always
 
