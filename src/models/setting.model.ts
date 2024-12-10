@@ -88,6 +88,7 @@ const schema = new mongoose.Schema<ISettingModel>(
     logoTwo: { type: String, default: '' },
     head: { type: String, default: '' },
     script: { type: String, default: '' },
+    googleAnalyticURL: { type: String, default: 'javascript:void(0);' },
     seoContents: { type: [schemaSEOContent], default: [] },
     contact: { type: schemaContact },
     contactForms: { type: [schemaContactForm], default: [] },

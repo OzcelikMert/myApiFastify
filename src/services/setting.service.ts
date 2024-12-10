@@ -62,6 +62,10 @@ const get = async (
 
   if (doc) {
     if (Array.isArray(doc.seoContents)) {
+      doc.seoContentAlternates = doc.seoContents.map((content) => ({
+        langId: content.langId.toString(),
+      }));
+
       doc.seoContents =
         doc.seoContents.findSingle('langId', params.langId) ??
         doc.seoContents.findSingle('langId', defaultLangId);
@@ -97,7 +101,6 @@ const add = async (params: ISettingAddParamService) => {
 };
 
 const updateGeneral = async (params: ISettingUpdateGeneralParamService) => {
-  params = VariableLibrary.clearAllScriptTags(params, ['head', 'script']);
   params = MongoDBHelpers.convertToObjectIdData(params, settingObjectIdKeys);
 
   let doc = await settingModel.findOne({}).exec();

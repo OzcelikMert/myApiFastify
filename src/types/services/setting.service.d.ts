@@ -9,14 +9,19 @@ import {
 } from 'types/models/setting.model';
 import { SettingProjectionKeys } from '@constants/settingProjections';
 
-export type ISettingPathGetResultService = {
-  contents?: ISettingPathContentModel | ISettingPathContentModel[];
-} & Omit<ISettingPathModel, 'contents'>;
+export interface ISettingSeoContentAlternateService {
+  langId: string;
+}
 
 export type ISettingGetResultService = {
   seoContents?: ISettingSeoContentModel | ISettingSeoContentModel[];
   paths?: ISettingPathGetResultService | ISettingPathGetResultService[];
+  seoContentAlternates?: ISettingSeoContentAlternateService[]
 } & Omit<ISettingModel, 'seoContents' | 'paths'>;
+
+export type ISettingPathGetResultService = {
+  contents?: ISettingPathContentModel | ISettingPathContentModel[];
+} & Omit<ISettingPathModel, 'contents'>;
 
 export type ISettingGetParamService = {
   langId?: string;
@@ -24,10 +29,6 @@ export type ISettingGetParamService = {
 };
 
 export type ISettingAddParamService = {
-  seoContents?: ISettingSeoContentModel;
-  contactForms?: ISettingContactFormModel[];
-  socialMedia?: ISettingSocialMediaModel[];
-  paths?: ISettingPathModel;
 } & Omit<
   ISettingModel,
   '_id' | 'seoContents' | 'contactForms' | 'socialMedia' | 'paths'
@@ -35,7 +36,7 @@ export type ISettingAddParamService = {
 
 export type ISettingUpdateGeneralParamService = {} & Omit<
   ISettingAddParamService,
-  'seoContents' | 'contactForms' | 'socialMedia'
+  'seoContents' | 'contactForms' | 'socialMedia' | "paths"
 >;
 
 export type ISettingUpdateSEOParamService = {

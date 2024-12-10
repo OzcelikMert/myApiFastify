@@ -71,6 +71,7 @@ const putGeneralSchema = object({
     logoTwo: string().optional(),
     head: string().optional(),
     script: string().optional(),
+    googleAnalyticURL: string().optional(),
     contact: schemaContact,
   }),
 });
