@@ -74,7 +74,7 @@ export const postRoute = function (
       preHandler: [
         RequestMiddleware.check(PostSchema.putViewWithId),
         PostMiddleware.checkWithId,
-        ViewMiddleware.check,
+        //ViewMiddleware.check,
       ],
     },
     PostController.updateViewWithId
