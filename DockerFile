@@ -4,10 +4,10 @@ WORKDIR /usr/src/api
 
 COPY package*.json ./
 
+RUN npm install --omit=dev && npm cache clean --force
+
 COPY ./src ./src
 COPY ./config ./config
-
-RUN npm install --omit=dev && npm cache clean --force
 
 EXPOSE 5001
 
