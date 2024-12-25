@@ -49,9 +49,10 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
         req.sessionAuth?.set('_id', token);
 
         req.sessionAuth!.set('user', {
-          userId: user._id,
+          userId: user._id.toString(),
           email: user.email,
           name: user.name,
+          url: user.url ?? "",
           image: user.image,
           roleId: user.roleId,
           ip: req.ip,

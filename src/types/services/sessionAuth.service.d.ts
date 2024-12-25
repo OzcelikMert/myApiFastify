@@ -4,11 +4,15 @@ export interface ISessionAuthUserResultService {
   userId: string;
   roleId: UserRoleId;
   email: string;
+  name: string;
+  url: string;
+  image: string;
   ip: string;
-  token?: string;
   permissions: number[];
-  createAt?: string;
-  updatedAt?: string;
+  token?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  refreshedAt?: Date;
 }
 
 export interface ISessionAuthResultService {
