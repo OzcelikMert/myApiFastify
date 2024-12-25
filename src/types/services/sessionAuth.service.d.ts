@@ -9,7 +9,6 @@ export interface ISessionAuthUserResultService {
   image: string;
   ip: string;
   permissions: number[];
-  token?: string;
   createdAt?: Date;
   updatedAt?: Date;
   refreshedAt?: Date;

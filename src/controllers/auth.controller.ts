@@ -6,13 +6,13 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { ISessionAuthModel } from 'types/models/sessionAuth.model';
 import { SessionAuthUtil } from '@utils/sessinAuth.util';
 import { IUserGetDetailedResultService } from 'types/services/user.service';
+import { ISessionAuthResultService } from 'types/services/sessionAuth.service';
 
 const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
-    const apiResult = new ApiResult<ISessionAuthModel>();
+    const apiResult = new ApiResult<ISessionAuthResultService>();
 
     apiResult.data = {
       _id: req.sessionAuth!._id,

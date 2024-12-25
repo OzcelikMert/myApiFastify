@@ -16,6 +16,8 @@ import { LogMiddleware } from '@middlewares/log.middleware';
 import { IUserGetDetailedResultService } from 'types/services/user.service';
 import { IUserModel } from 'types/models/user.model';
 import { SessionAuthUtil } from '@utils/sessinAuth.util';
+import { ApiErrorCodes } from '@library/api/errorCodes';
+import { ApiStatusCodes } from '@library/api/statusCodes';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -114,16 +116,23 @@ const updateProfile = async (req: FastifyRequest, reply: FastifyReply) => {
 
     const reqData = req as IUserPutProfileSchema;
 
-    await UserService.update({
+    let user = await UserService.update({
       ...reqData.body,
       _id: req.sessionAuth!.user!.userId.toString(),
     });
 
-    req.sessionAuth!.set('user', {
-      ...req.sessionAuth!.user!,
-      name: reqData.body.name,
-      updatedAt: new Date(),
-    });
+    if(user){
+      req.sessionAuth!.set('user', {
+        ...req.sessionAuth!.user!,
+        name: user.name,
+        url: user.url ?? "",
+        updatedAt: new Date(),
+      });
+    }else{
+      apiResult.status = false;
+      apiResult.setErrorCode = ApiErrorCodes.notFound;
+      apiResult.setStatusCode = ApiStatusCodes.notFound;
+    }
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
