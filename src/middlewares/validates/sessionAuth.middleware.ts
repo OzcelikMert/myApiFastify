@@ -17,14 +17,25 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
   await LogMiddleware.error(req, res, async () => {
     const apiResult = new ApiResult();
     if (req.sessionAuth && req.sessionAuth.user) {
+      let status = true;
+
       const user = req.cachedServiceResult as IUserModel;
-      const token = SessionAuthUtil.createToken(
-        user._id.toString(),
-        user.email,
-        user.password,
-        req.ip
-      );
-      if (!user || req.sessionAuth._id != token) {
+      if (user) {
+        const token = SessionAuthUtil.createToken(
+          user._id.toString(),
+          user.email,
+          user.password,
+          req.ip
+        );
+
+        if (req.sessionAuth._id != token) {
+          status = false;
+        }
+      } else {
+        status = false;
+      }
+
+      if (!status) {
         await new Promise((resolve) => {
           req.sessionAuth!.delete();
           resolve(1);
@@ -67,13 +78,13 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
             userId: serviceResult._id.toString(),
             email: serviceResult.email,
             name: serviceResult.name,
-            url: serviceResult.url ?? "",
+            url: serviceResult.url ?? '',
             image: serviceResult.image,
             roleId: serviceResult.roleId,
             ip: req.ip,
             permissions: serviceResult.permissions,
             createdAt: date,
-            updatedAt: date
+            updatedAt: date,
           };
 
           if (

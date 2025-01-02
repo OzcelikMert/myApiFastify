@@ -5,3 +5,5 @@ session/
 package-lock.json
 coverage/
 dist/
+src/uploads/images/
+src/uploads/video/
