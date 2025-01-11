@@ -11,7 +11,7 @@ import {
 import { SessionAuthUtil } from '@utils/sessinAuth.util';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { IUserModel } from 'types/models/user.model';
-import { ISessionAuthUserResultService } from 'types/services/sessionAuth.service';
+import { ISessionAuthUser } from 'types/services/sessionAuth.service';
 
 const check = async (req: FastifyRequest, res: FastifyReply) => {
   await LogMiddleware.error(req, res, async () => {
@@ -73,7 +73,7 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
         });
         if (serviceResult) {
           req.cachedServiceResult = serviceResult;
-          const sessionAuthUser: ISessionAuthUserResultService = {
+          const sessionAuthUser: ISessionAuthUser = {
             ...req.sessionAuth.user,
             userId: serviceResult._id.toString(),
             email: serviceResult.email,

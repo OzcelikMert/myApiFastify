@@ -1,6 +1,6 @@
 import { UserRoleId } from '@constants/userRoles';
 
-export interface ISessionAuthUserResultService {
+export interface ISessionAuthUser {
   userId: string;
   roleId: UserRoleId;
   email: string;
@@ -14,7 +14,7 @@ export interface ISessionAuthUserResultService {
   refreshedAt?: Date;
 }
 
-export interface ISessionAuthResultService {
+export interface ISessionAuth {
   _id?: string;
-  user: ISessionAuthUserResultService;
+  user: ISessionAuthUser;
 }

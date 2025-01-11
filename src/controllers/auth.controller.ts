@@ -7,12 +7,11 @@ import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
 import { SessionAuthUtil } from '@utils/sessinAuth.util';
-import { IUserGetDetailedResultService } from 'types/services/user.service';
-import { ISessionAuthResultService } from 'types/services/sessionAuth.service';
+import { ISessionAuth, ISessionAuthUser } from 'types/services/sessionAuth.service';
 
 const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
-    const apiResult = new ApiResult<ISessionAuthResultService>();
+    const apiResult = new ApiResult<ISessionAuth>();
 
     apiResult.data = {
       _id: req.sessionAuth!._id,
@@ -25,16 +24,14 @@ const getSession = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const login = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
-    const apiResult = new ApiResult<IUserGetDetailedResultService>();
+    const apiResult = new ApiResult<ISessionAuthUser>();
 
     const reqData = req as IAuthPostSchema;
 
-    const user = await UserService.getDetailed(
+    const user = await UserService.get(
       {
         ...reqData.body,
-      },
-      false,
-      false
+      }
     );
 
     if (user) {
@@ -48,7 +45,7 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
         );
         req.sessionAuth?.set('_id', token);
 
-        req.sessionAuth!.set('user', {
+        const sessionAuthUser: ISessionAuthUser = {
           userId: user._id.toString(),
           email: user.email,
           name: user.name,
@@ -60,14 +57,15 @@ const login = async (req: FastifyRequest, reply: FastifyReply) => {
           createdAt: date,
           updatedAt: date,
           refreshedAt: date,
-        });
+        }
+
+        req.sessionAuth!.set('user', sessionAuthUser);
+        apiResult.data = sessionAuthUser;
       } else {
         apiResult.status = false;
         apiResult.setErrorCode = ApiErrorCodes.noPerm;
         apiResult.setStatusCode = ApiStatusCodes.notFound;
       }
-      delete user.password;
-      apiResult.data = user;
     } else {
       apiResult.status = false;
       apiResult.setErrorCode = ApiErrorCodes.notFound;

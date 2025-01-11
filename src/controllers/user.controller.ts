@@ -30,7 +30,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
         ...reqData.params,
         ...reqData.query,
       },
-      !req.isFromAdminPanel
+      Boolean(req.isFromAdminPanel && req.sessionAuth)
     );
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
@@ -47,7 +47,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
       {
         ...reqData.query,
       },
-      !req.isFromAdminPanel
+      Boolean(req.isFromAdminPanel && req.sessionAuth)
     );
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
@@ -65,7 +65,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
         ...reqData.params,
         ...reqData.query,
       },
-      !req.isFromAdminPanel
+      Boolean(req.isFromAdminPanel && req.sessionAuth)
     );
 
     await reply.status(apiResult.getStatusCode).send(apiResult);

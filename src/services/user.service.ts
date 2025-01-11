@@ -166,8 +166,7 @@ const getMany = async (params: IUserGetManyParamService) => {
 
 const getDetailed = async (
   params: IUserGetDetailedParamService,
-  hidePhone = false,
-  hidePassword = true
+  isAuthenticated = false
 ) => {
   params = MongoDBHelpers.convertToObjectIdData(params, [
     ...userObjectIdKeys,
@@ -235,12 +234,11 @@ const getDetailed = async (
   const doc = await query.lean<IUserGetDetailedResultService>().exec();
 
   if (doc) {
-    if (hidePassword) {
-      delete doc.password;
-    }
+    delete doc.password;
 
-    if (hidePhone) {
+    if (!isAuthenticated) {
       delete doc.phone;
+      doc.email = "";
     }
 
     doc.isOnline =
@@ -252,7 +250,7 @@ const getDetailed = async (
 
 const getManyDetailed = async (
   params: IUserGetManyDetailedParamService,
-  hidePhone = false
+  isAuthenticated = false
 ) => {
   params = MongoDBHelpers.convertToObjectIdData(params, [
     ...userObjectIdKeys,
@@ -320,8 +318,9 @@ const getManyDetailed = async (
   return docs.map((user) => {
     delete user.password;
 
-    if (hidePhone) {
+    if (isAuthenticated) {
       delete user.phone;
+      user.email = "";
     }
 
     user.isOnline =
