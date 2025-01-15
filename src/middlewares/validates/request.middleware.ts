@@ -6,7 +6,7 @@ import { ZodSchema } from 'zod';
 
 const check =
   (schema: ZodSchema) => async (req: FastifyRequest, reply: FastifyReply) => {
-    const apiResult = new ApiResult<any>();
+    const apiResult = new ApiResult<any, any>();
     try {
       const validatedData = await schema.safeParseAsync({
         body: req.body,
@@ -18,7 +18,11 @@ const check =
       } else {
         apiResult.status = false;
         apiResult.message = validatedData.error.format();
-        apiResult.data = req.query;
+        apiResult.customData = Object.assign(
+          { query: req.query },
+          { body: req.body },
+          { params: req.params }
+        );
         apiResult.setErrorCode = ApiErrorCodes.incorrectData;
         apiResult.setStatusCode = ApiStatusCodes.badRequest;
       }
