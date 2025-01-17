@@ -10,7 +10,7 @@ const schema = {
   name: string().min(3),
   email: string().min(1).email(),
   password: string().min(1),
-  permissions: array(z.nativeEnum(PermissionId)).min(1),
+  permissions: array(z.nativeEnum(PermissionId)).default([]),
   banDateEnd: string().optional(),
   banComment: string().optional(),
 };
