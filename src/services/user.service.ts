@@ -318,7 +318,7 @@ const getManyDetailed = async (
   return docs.map((user) => {
     delete user.password;
 
-    if (isAuthenticated) {
+    if (!isAuthenticated) {
       delete user.phone;
       user.email = "";
     }
