@@ -371,21 +371,23 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
     if (doc.eCommerce) {
       if (doc.eCommerce.variations) {
         for (const docECommerceVariationItem of doc.eCommerce.variations) {
-          docECommerceVariationItem.selectedVariations =
-            docECommerceVariationItem.selectedVariations.filter(
+          docECommerceVariationItem.options =
+            docECommerceVariationItem.options.filter(
               (item) => item.attributeId
             );
         }
       }
 
-      if (doc.eCommerce.variationDefaults) {
-        doc.eCommerce.variationDefaults =
-          doc.eCommerce.variationDefaults.filter((item) => item.attributeId);
+      if (doc.eCommerce.defaultVariationOptions) {
+        doc.eCommerce.defaultVariationOptions =
+          doc.eCommerce.defaultVariationOptions.filter(
+            (item) => item.attributeId
+          );
       }
 
       if (doc.eCommerce.attributes) {
         doc.eCommerce.attributes = doc.eCommerce.attributes.filter(
-          (item) => item.attributeId
+          (item) => item.attributeTermId
         );
       }
     }
@@ -493,7 +495,8 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
 
   if (params.typeId) {
     if (params.typeId.includes(PostTypeId.Product)) {
-      query.populate({
+      query.populate({ path: 'eCommerce.variations.product' });
+      /*query.populate({
         path: ['eCommerce.variations.itemId'].join(' '),
         match: {
           typeId: PostTypeId.ProductVariation,
@@ -511,7 +514,7 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
           }
           return doc;
         },
-      });
+      });*/
     }
   }
 
@@ -576,23 +579,46 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
       if (doc.eCommerce.variations) {
         doc.eCommerce.variations = doc.eCommerce.variations.filter(
           (variation) => {
-            return variation.selectedVariations.every((selectedVariation) => {
-              return doc.eCommerce?.variationDefaults?.some(
-                (variationDefault) => {
+            return variation.options.every((option) => {
+              return doc.eCommerce?.defaultVariationOptions?.some(
+                (defaultVariationOption) => {
                   return (
-                    variationDefault.attributeId.toString() ==
-                      selectedVariation.attributeId.toString() &&
-                    variationDefault.variationId.toString() ==
-                      selectedVariation.variationId.toString()
+                    defaultVariationOption.attributeId.toString() ==
+                      option.attributeId.toString() &&
+                    defaultVariationOption.variationTermId.toString() ==
+                      option.variationTermId.toString()
                   );
                 }
               );
             });
           }
         );
+
+        doc.eCommerce.variations = doc.eCommerce.variations.map((variation) => {
+          if (variation.product) {
+            if (Array.isArray(variation.product.contents)) {
+              variation.product.alternates = variation.product.contents?.map(
+                (content) => ({
+                  langId: content.langId.toString(),
+                  title: content.title,
+                  url: content.url,
+                })
+              );
+
+              variation.product.contents =
+                variation.product.contents.findSingle(
+                  'langId',
+                  params.langId
+                ) ??
+                variation.product.contents.findSingle('langId', defaultLangId);
+            }
+
+            delete variation.product.contents?.content;
+          }
+
+          return variation;
+        });
       }
-      doc.eCommerce.variationDefaults = [];
-      doc.eCommerce.attributes = [];
     }
 
     doc.views = views;

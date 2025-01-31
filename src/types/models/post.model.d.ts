@@ -65,7 +65,7 @@ export interface IPostECommerceModel<
   shipping?: IPostECommerceShippingModel;
   attributes?: IPostECommerceAttributeModel<T, P>[];
   variations?: IPostECommerceVariationModel<T>[];
-  variationDefaults?: IPostECommerceVariationSelectedModel<T>[];
+  defaultVariationOptions?: IPostECommerceVariationOptionModel<T>[];
 }
 
 export interface IPostECommercePricingModel {
@@ -94,20 +94,20 @@ export interface IPostECommerceAttributeModel<
   P = string[] | ObjectId[],
 > {
   _id?: string | ObjectId;
-  attributeId: T;
-  variations: P;
+  attributeTermId: T;
+  variationTerms: P;
   typeId: AttributeTypeId;
 }
 
 export interface IPostECommerceVariationModel<T = string | ObjectId> {
   _id?: string | ObjectId;
   rank: number;
-  selectedVariations: IPostECommerceVariationSelectedModel<T>[];
-  itemId: string | ObjectId;
+  options: IPostECommerceVariationOptionModel<T>[];
+  productId: string | ObjectId;
 }
 
-export interface IPostECommerceVariationSelectedModel<T = string | ObjectId> {
+export interface IPostECommerceVariationOptionModel<T = string | ObjectId> {
   _id?: string | ObjectId;
   attributeId: T;
-  variationId: T;
+  variationTermId: T;
 }

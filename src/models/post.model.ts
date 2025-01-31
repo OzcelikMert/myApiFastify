@@ -15,7 +15,7 @@ import {
   IPostECommercePricingModel,
   IPostECommerceShippingModel,
   IPostECommerceVariationModel,
-  IPostECommerceVariationSelectedModel,
+  IPostECommerceVariationOptionModel,
 } from 'types/models/post.model';
 import { ProductTypeId } from '@constants/productTypes';
 import { AttributeTypeId } from '@constants/attributeTypes';
@@ -47,12 +47,12 @@ const schemaECommercePricing = new mongoose.Schema<IPostECommercePricingModel>({
 const schemaECommerceAttribute =
   new mongoose.Schema<IPostECommerceAttributeModel>(
     {
-      attributeId: {
+      attributeTermId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: postTermModel,
         required: true,
       },
-      variations: {
+      variationTerms: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: postTermModel,
         default: [],
@@ -66,15 +66,15 @@ const schemaECommerceAttribute =
     { timestamps: true }
   ).index({ typeId: 1, variations: 1, attributeId: 1 });
 
-const schemaECommerceVariationSelected =
-  new mongoose.Schema<IPostECommerceVariationSelectedModel>(
+const schemaECommerceVariationOption =
+  new mongoose.Schema<IPostECommerceVariationOptionModel>(
     {
       attributeId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: postTermModel,
         required: true,
       },
-      variationId: {
+      variationTermId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: postTermModel,
         required: true,
@@ -87,18 +87,33 @@ const schemaECommerceVariation =
   new mongoose.Schema<IPostECommerceVariationModel>(
     {
       rank: { type: Number, default: 0 },
-      selectedVariations: {
-        type: [schemaECommerceVariationSelected],
+      options: {
+        type: [schemaECommerceVariationOption],
         default: [],
       },
-      itemId: {
+      productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'posts',
+        ref: "posts",
         required: true,
       },
     },
-    { timestamps: true }
+    {
+      timestamps: true,
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    }
   );
+
+schemaECommerceVariation.virtual('product', {
+  ref: 'posts',
+  localField: 'productId',
+  foreignField: '_id',
+  match: schemaFields => ({
+    parentId: schemaFields._id
+  }),
+  options: { omitUndefined: true },
+  justOne: true,
+});
 
 const schemaECommerce = new mongoose.Schema<IPostECommerceModel>({
   typeId: { type: Number, enum: ProductTypeId, required: true },
@@ -108,7 +123,7 @@ const schemaECommerce = new mongoose.Schema<IPostECommerceModel>({
   shipping: { type: schemaECommerceShipping },
   attributes: { type: [schemaECommerceAttribute], default: [] },
   variations: { type: [schemaECommerceVariation], default: [] },
-  variationDefaults: { type: [schemaECommerceVariationSelected], default: [] },
+  defaultVariationOptions: { type: [schemaECommerceVariationOption], default: [] },
 }).index({ typeId: 1 });
 
 const schemaContentButton = new mongoose.Schema<IPostContentButtonModel>(

@@ -40,11 +40,11 @@ export type IPostGetDetailedResultService = {
     IPostECommerceModel<IPostTermPopulateService, IPostTermPopulateService[]>,
     'variations'
   > & {
-    variations?: (Omit<
-      IPostECommerceVariationModel<IPostTermPopulateService>,
-      'contents'
-    > & {
-      alternates?: IPostAlternateService[];
+    variations?: (IPostECommerceVariationModel<IPostTermPopulateService> & {
+      product?: Omit<IPostModel, "contents"> & {
+        alternates?: IPostAlternateService[];
+        contents?: IPostContentModel | IPostContentModel[];
+      }
     })[];
   };
 } & Omit<
@@ -60,8 +60,11 @@ export type IPostGetDetailedResultService = {
 
 export type IPostGetManyDetailedResultService = {
   eCommerce?: Omit<IPostECommerceModel, 'variations'> & {
-    variations?: (Omit<IPostECommerceVariationModel, 'contents'> & {
-      alternates?: IPostAlternateService[];
+    variations?: (IPostECommerceVariationModel & {
+      product?: Omit<IPostModel, "contents"> & {
+        alternates?: IPostAlternateService[];
+        contents?: IPostContentModel | IPostContentModel[];
+      }
     })[];
   };
 } & Omit<IPostGetDetailedResultService, 'eCommerce'>;

@@ -157,32 +157,32 @@ const addProduct = async (req: FastifyRequest, reply: FastifyReply) => {
 
     const reqData = req as IPostPostProductSchema;
 
-    const productId = MongoDBHelpers.createObjectId().toString();
+    const mainProductId = MongoDBHelpers.createObjectId().toString();
     const variations: IPostECommerceVariationModel[] = [];
 
     for (const variation of reqData.body.eCommerce.variations) {
       const serviceResultVariationItem = await PostService.add({
-        ...variation.itemId,
-        parentId: productId,
+        ...variation.productId,
+        parentId: mainProductId,
         typeId: PostTypeId.ProductVariation,
         authorId: req.sessionAuth!.user!.userId.toString(),
         lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         statusId: StatusId.Active,
         eCommerce: {
-          ...variation.itemId.eCommerce,
+          ...variation.productId.eCommerce,
           typeId: ProductTypeId.Simple,
         },
       });
       variations.push({
-        selectedVariations: variation.selectedVariations,
+        options: variation.options,
         rank: variation.rank,
-        itemId: serviceResultVariationItem._id,
+        productId: serviceResultVariationItem._id,
       });
     }
 
     apiResult.data = await PostService.add({
       ...reqData.body,
-      _id: productId,
+      _id: mainProductId,
       typeId: PostTypeId.Product,
       authorId: req.sessionAuth!.user!.userId.toString(),
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
@@ -230,12 +230,12 @@ const updateProductWithId = async (
       for (const variation of serviceResultProduct.eCommerce.variations ?? []) {
         if (
           !reqData.body.eCommerce.variations.some(
-            (productVariation) =>
-              productVariation.itemId._id.toString() ==
-              variation.itemId.toString()
+            (newProductVariation) =>
+              newProductVariation.productId._id?.toString() ==
+              variation.productId.toString()
           )
         ) {
-          removedVariations.push(variation.itemId.toString());
+          removedVariations.push(variation.productId.toString());
         }
       }
 
@@ -247,42 +247,44 @@ const updateProductWithId = async (
       }
 
       // Update variations or add new variations
-      for (const variation of reqData.body.eCommerce.variations) {
-        let variationItemId = variation.itemId._id;
+      for (const newVariation of reqData.body.eCommerce.variations) {
+        let newVariationProductId = newVariation.productId._id ?? "";
         if (
           serviceResultProduct.eCommerce.variations?.some(
             (productVariation) =>
-              productVariation.itemId.toString() ==
-              variation.itemId._id.toString()
+              productVariation.productId.toString() ==
+              newVariationProductId.toString()
           )
         ) {
           await PostService.update({
-            ...variation.itemId,
+            ...newVariation.productId,
+            _id: newVariationProductId,
+            parentId: serviceResultProduct._id.toString(),
             typeId: PostTypeId.ProductVariation,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
             eCommerce: {
-              ...variation.itemId.eCommerce,
+              ...newVariation.productId.eCommerce,
               typeId: ProductTypeId.Simple,
             },
           });
         } else {
           const serviceResultVariation = await PostService.add({
-            ...variation.itemId,
+            ...newVariation.productId,
             parentId: serviceResultProduct._id.toString(),
             typeId: PostTypeId.ProductVariation,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
             eCommerce: {
-              ...variation.itemId.eCommerce,
+              ...newVariation.productId.eCommerce,
               typeId: ProductTypeId.Simple,
             },
           });
-          variationItemId = serviceResultVariation._id.toString();
+          newVariationProductId = serviceResultVariation._id.toString();
         }
         variations.push({
-          selectedVariations: variation.selectedVariations,
-          rank: variation.rank,
-          itemId: variationItemId,
+          options: newVariation.options,
+          rank: newVariation.rank,
+          productId: newVariationProductId,
         });
       }
 
