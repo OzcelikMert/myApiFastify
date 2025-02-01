@@ -12,8 +12,16 @@ const schema = new mongoose.Schema<IGalleryModel>(
     sizeKB: { type: Number, required: true },
     sizeMB: { type: Number, required: true },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 );
+
+schema.virtual('author', {
+  ref: 'users',
+  localField: 'authorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
 
 export const galleryModel = mongoose.model<
   IGalleryModel,

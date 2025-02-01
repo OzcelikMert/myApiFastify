@@ -58,6 +58,17 @@ const get = async (
 
   const query = settingModel.findOne(filters, projection);
 
+  if (params.projection) {
+    switch (params.projection) {
+      case SettingProjectionKeys.SEO:
+        query.populate("seoContents.lang")
+        break;
+      case SettingProjectionKeys.Path:
+        query.populate("paths.contents.lang")
+        break;
+    }
+  }
+
   const doc = await query.lean<ISettingGetResultService>().exec();
 
   if (doc) {

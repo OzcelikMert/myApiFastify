@@ -13,6 +13,13 @@ import {
   IGalleryGetDetailedResultService,
 } from 'types/services/gallery.service';
 import { galleryModel } from '@models/gallery.model';
+import { authorPopulationSelect } from './user.service';
+
+const authorPopulation = {
+  path: ['author'].join(' '),
+  select: authorPopulationSelect,
+  options: { omitUndefined: true },
+};
 
 const get = async (params: IGalleryGetParamService) => {
   let filters: mongoose.FilterQuery<IGalleryModel> = {};
@@ -97,11 +104,7 @@ const getDetailed = async (params: IGalleryGetDetailedParamService) => {
 
   const query = galleryModel.findOne(filters);
 
-  query.populate({
-    path: ['authorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
-  });
+  query.populate(authorPopulation);
 
   query.sort({ _id: 'desc' });
 
@@ -135,11 +138,7 @@ const getManyDetailed = async (params: IGalleryGetManyDetailedParamService) => {
 
   const query = galleryModel.find(filters);
 
-  query.populate({
-    path: ['authorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
-  });
+  query.populate(authorPopulation);
 
   query.sort({ _id: 'desc' });
 

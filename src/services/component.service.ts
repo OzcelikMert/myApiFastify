@@ -15,6 +15,14 @@ import { componentObjectIdKeys } from '@constants/objectIdKeys/component.objectI
 import { componentModel } from '@models/component.model';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
+import { StatusId } from '@constants/status';
+import { authorPopulationSelect } from './user.service';
+
+const authorPopulation = {
+  path: ['author', 'lastAuthor'].join(' '),
+  select: authorPopulationSelect,
+  options: { omitUndefined: true },
+};
 
 const get = async (params: IComponentGetParamService) => {
   let filters: mongoose.FilterQuery<IComponentModel> = {};
@@ -101,10 +109,14 @@ const getDetailed = async (params: IComponentGetDetailedParamService) => {
 
   const query = componentModel.findOne(filters);
 
+  query.populate(authorPopulation);
+
   query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
+    path: 'elements.contents.lang',
+    match: {
+      _id: params.langId ?? defaultLangId,
+      statusId: StatusId.Active,
+    },
   });
 
   query.sort({ rank: 'asc', _id: 'desc' });
@@ -153,10 +165,14 @@ const getManyDetailed = async (
 
   const query = componentModel.find(filters);
 
+  query.populate(authorPopulation);
+
   query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
+    path: 'elements.contents.lang',
+    match: {
+      _id: params.langId ?? defaultLangId,
+      statusId: StatusId.Active,
+    },
   });
 
   if (!params.withCustomSort) {

@@ -22,7 +22,7 @@ const schemaContent = new mongoose.Schema<IPostTermContentModel>(
     url: { type: String, default: '' },
     views: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 );
 
 const schema = new mongoose.Schema<IPostTermModel>(
@@ -44,8 +44,46 @@ const schema = new mongoose.Schema<IPostTermModel>(
     rank: { type: Number, default: 0 },
     contents: { type: [schemaContent], default: [] },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 ).index({ typeId: 1, postTypeId: 1, statusId: 1, authorId: 1 });
+
+schema.virtual('parent', {
+  ref: 'postTerms',
+  localField: 'parentId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  match: {
+    statusId: StatusId.Active
+  },
+  justOne: true,
+});
+
+schema.virtual('author', {
+  ref: 'users',
+  localField: 'authorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schema.virtual('lastAuthor', {
+  ref: 'users',
+  localField: 'lastAuthorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schema.virtual('postCount', {
+  ref: 'posts',
+  localField: '_id',
+  foreignField: 'categories',
+  options: { omitUndefined: true },
+  match: schemaFields => ({
+    typeId: schemaFields.postTypeId
+  }),
+  count: true,
+});
 
 export const postTermModel = mongoose.model<
   IPostTermModel,

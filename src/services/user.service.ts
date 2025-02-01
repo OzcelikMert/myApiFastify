@@ -164,6 +164,14 @@ const getMany = async (params: IUserGetManyParamService) => {
   });
 };
 
+export const authorPopulationSelect = "_id name url image facebook instagram twitter";
+
+const authorPopulation = {
+  path: ['author', 'lastAuthor'].join(' '),
+  select: authorPopulationSelect,
+  options: { omitUndefined: true },
+};
+
 const getDetailed = async (
   params: IUserGetDetailedParamService,
   isAuthenticated = false
@@ -223,11 +231,7 @@ const getDetailed = async (
 
   const query = userModel.findOne(filters, {});
 
-  query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
-  });
+  query.populate(authorPopulation);
 
   query.sort({ _id: 'desc' });
 
@@ -301,11 +305,7 @@ const getManyDetailed = async (
 
   const query = userModel.find(filters, {});
 
-  query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
-  });
+  query.populate(authorPopulation);
 
   if (params.page)
     query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));

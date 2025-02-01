@@ -16,6 +16,13 @@ import {
 import { IPostCommentModel } from 'types/models/postComment.model';
 import { postCommentObjectIdKeys } from '@constants/objectIdKeys/postComment.objectIdKeys';
 import { postCommentModel } from '@models/postComment.model';
+import { authorPopulationSelect } from './user.service';
+
+const authorPopulation = {
+  path: ['author', 'lastAuthor'].join(' '),
+  select: authorPopulationSelect,
+  options: { omitUndefined: true },
+};
 
 const get = async (params: IPostCommentGetParamService) => {
   let filters: mongoose.FilterQuery<IPostCommentModel> = {};
@@ -141,11 +148,7 @@ const getDetailed = async (params: IPostCommentGetDetailedParamService) => {
 
   const query = postCommentModel.findOne(filters);
 
-  query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
-  });
+  query.populate(authorPopulation);
 
   query.sort({ _id: 'desc' });
 
@@ -203,11 +206,7 @@ const getManyDetailed = async (
 
   const query = postCommentModel.find(filters);
 
-  query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
-  });
+  query.populate(authorPopulation);
 
   query.sort({ _id: 'desc' });
 
@@ -304,9 +303,13 @@ const updateLike = async (params: IPostCommentUpdateLikeParamService) => {
 
   const doc = await postCommentModel.findOne(filters).exec();
 
-  const likeNumber = 0;
+ 
+
+  let likeNumber = 0;
 
   if (doc) {
+    likeNumber = doc.likeCount ?? 0;
+
     const foundIndex = doc.likes.indexOfKey('', params.authorId);
 
     if (foundIndex > -1) {
@@ -314,6 +317,10 @@ const updateLike = async (params: IPostCommentUpdateLikeParamService) => {
     } else {
       doc.likes.push(params.authorId as any);
     }
+    
+    likeNumber = doc.likes.length;
+
+    doc.likeCount = likeNumber;
 
     await doc.save();
   }

@@ -12,6 +12,13 @@ import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
 import { languageObjectIdKeys } from '@constants/objectIdKeys/language.objectIdKeys';
 import { ILanguageModel } from 'types/models/language.model';
+import { authorPopulationSelect } from './user.service';
+
+const authorPopulation = {
+  path: ['author', 'lastAuthor'].join(' '),
+  select: authorPopulationSelect,
+  options: { omitUndefined: true },
+};
 
 const get = async (params: ILanguageGetParamService) => {
   let filters: mongoose.FilterQuery<ILanguageModel> = {};
@@ -31,6 +38,8 @@ const get = async (params: ILanguageGetParamService) => {
   }
 
   const query = languageModel.findOne(filters, {});
+
+  query.populate(authorPopulation);
 
   query.sort({ rank: 'asc', _id: 'desc' });
 
@@ -67,6 +76,8 @@ const getMany = async (params: ILanguageGetManyParamService) => {
   }
 
   const query = languageModel.find(filters, {});
+
+  query.populate(authorPopulation);
 
   query.sort({ rank: 'asc', _id: 'desc' });
 

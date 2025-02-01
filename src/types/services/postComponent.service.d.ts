@@ -4,12 +4,12 @@ import { StatusId } from '@constants/status';
 import { IPostCommentModel } from 'types/models/postComment.model';
 
 export type IPostCommentGetDetailedResultService = {
-  authorId: IUserPopulateService;
-  lastAuthorId: IUserPopulateService;
+  author?: IUserPopulateService;
+  lastAuthor?: IUserPopulateService;
   likeNumber: number;
   likes?: string[];
   didLike?: boolean;
-} & Omit<IPostCommentModel, 'authorId' | 'lastAuthorId' | 'likes'>;
+} & Omit<IPostCommentModel, 'likes'>;
 
 export interface IPostCommentGetParamService {
   _id?: string;
@@ -45,7 +45,7 @@ export interface IPostCommentGetDetailedManyParamService {
   authorIdDidLike?: string;
 }
 
-export type IPostCommentAddParamService = {} & Omit<IPostCommentModel, 'likes'>;
+export type IPostCommentAddParamService = {} & Omit<IPostCommentModel, 'likes' | 'likeCount'>;
 
 export type IPostCommentUpdateParamService = {
   _id: string;

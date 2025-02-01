@@ -8,6 +8,7 @@ import {
   ISettingPathContentModel,
 } from 'types/models/setting.model';
 import { SettingProjectionKeys } from '@constants/settingProjections';
+import { ILanguageModel } from 'types/models/language.model';
 
 export interface ISettingSeoContentAlternateService {
   langId: string;

@@ -21,14 +21,14 @@ export interface IPostTermAlternateService {
 }
 
 export type IPostTermGetDetailedResultService = {
-  authorId: IUserPopulateService;
-  lastAuthorId: IUserPopulateService;
-  parentId?: IPostTermPopulateService;
+  author?: IUserPopulateService;
+  lastAuthor?: IUserPopulateService;
+  parent?: IPostTermPopulateService;
   contents?: IPostTermContentModel | IPostTermContentModel[];
   alternates?: IPostTermAlternateService[];
   postCount?: number;
   views?: number;
-} & Omit<IPostTermModel, 'contents' | 'authorId' | 'lastAuthorId' | 'parentId'>;
+} & Omit<IPostTermModel, 'contents'>;
 
 export interface IPostTermGetParamService {
   langId?: string;

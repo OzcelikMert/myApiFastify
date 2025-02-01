@@ -24,8 +24,24 @@ const schema = new mongoose.Schema<IUserModel>(
     instagram: { type: String, default: '' },
     twitter: { type: String, default: '' },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 ).index({ roleId: 1, statusId: 1, permissions: 1 });
+
+schema.virtual('author', {
+  ref: 'users',
+  localField: 'authorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schema.virtual('lastAuthor', {
+  ref: 'users',
+  localField: 'lastAuthorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
 
 export const userModel = mongoose.model<IUserModel, mongoose.Model<IUserModel>>(
   'users',

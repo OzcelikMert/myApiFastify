@@ -31,9 +31,26 @@ const schema = new mongoose.Schema<IPostCommentModel>(
       ref: userModel,
       default: [],
     },
+    likeCount: { type: Number, required: true, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 ).index({ postId: 1, postTypeId: 1, statusId: 1, authorId: 1 });
+
+schema.virtual('author', {
+  ref: 'users',
+  localField: 'authorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schema.virtual('lastAuthor', {
+  ref: 'users',
+  localField: 'lastAuthorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
 
 export const postCommentModel = mongoose.model<
   IPostCommentModel,

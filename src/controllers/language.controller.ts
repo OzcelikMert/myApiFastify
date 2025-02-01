@@ -88,6 +88,8 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
 
     apiResult.data = await LanguageService.add({
       ...reqData.body,
+      authorId: req.sessionAuth!.user!.userId.toString(),
+      lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
@@ -103,6 +105,7 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     await LanguageService.update({
       ...reqData.params,
       ...reqData.body,
+      lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
 
     await reply.status(apiResult.getStatusCode).send(apiResult);

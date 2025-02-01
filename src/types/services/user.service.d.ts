@@ -16,9 +16,9 @@ export interface IUserPopulateService {
 export type IUserGetDetailedResultService = {
   isOnline?: boolean;
   password?: string;
-  authorId?: IUserPopulateService;
-  lastAuthorId?: IUserPopulateService;
-} & Omit<IUserModel, 'password' | 'authorId' | 'lastAuthorId'>;
+  author?: IUserPopulateService;
+  lastAuthor?: IUserPopulateService;
+} & Omit<IUserModel, 'password'>;
 
 export interface IUserGetParamService {
   _id?: string;

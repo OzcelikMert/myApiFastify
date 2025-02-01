@@ -11,13 +11,13 @@ export interface IComponentAlternateService {
 }
 
 export type IComponentGetDetailedResultService = {
-  authorId: IUserPopulateService;
-  lastAuthorId: IUserPopulateService;
+  author?: IUserPopulateService;
+  lastAuthor?: IUserPopulateService;
   elements: (Omit<IComponentElementModel, 'contents'> & {
     contents?: IComponentElementContentModel | IComponentElementContentModel[];
     alternates?: IComponentAlternateService[];
   })[];
-} & Omit<IComponentModel, 'elements' | 'authorId' | 'lastAuthorId'>;
+} & Omit<IComponentModel, 'elements'>;
 
 export interface IComponentGetParamService {
   _id?: string;

@@ -22,6 +22,7 @@ import { PostTermTypeId } from '@constants/postTermTypes';
 import { StatusId } from '@constants/status';
 import { IPostTermModel } from 'types/models/postTerm.model';
 import { PostTypeId } from '@constants/postTypes';
+import { authorPopulationSelect } from './user.service';
 
 const createURL = async (
   _id: string | null,
@@ -46,6 +47,27 @@ const createURL = async (
   }
 
   return url;
+};
+
+const transformContents = (doc: IPostTermGetDetailedResultService, langId?: string, removeContent?: boolean) => {
+  const defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+  if (doc && Array.isArray(doc.contents)) {
+    doc.contents =
+      doc.contents.findSingle('langId', langId) ??
+      doc.contents.findSingle('langId', defaultLangId);
+
+      if(removeContent){
+        delete doc.contents?.content;
+      }
+  }
+  return doc;
+};
+
+const authorPopulation = {
+  path: ['author', 'lastAuthor'].join(' '),
+  select: authorPopulationSelect,
+  options: { omitUndefined: true },
 };
 
 const get = async (params: IPostTermGetParamService) => {
@@ -219,27 +241,14 @@ const getDetailed = async (params: IPostTermGetDetailedParamService) => {
   const query = postTermModel.findOne(filters);
 
   query.populate({
-    path: 'parentId',
+    path: 'parent',
     select: '_id typeId postTypeId contents',
-    match: { statusId: StatusId.Active },
-    options: { omitUndefined: true },
-    transform: (doc: IPostTermGetDetailedResultService) => {
-      if (doc) {
-        if (Array.isArray(doc.contents)) {
-          doc.contents =
-            doc.contents.findSingle('langId', params.langId) ??
-            doc.contents.findSingle('langId', defaultLangId);
-        }
-      }
-      return doc;
-    },
+    transform: doc => transformContents(doc, params.langId, true),
   });
 
-  query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image facebook instagram twitter',
-    options: { omitUndefined: true },
-  });
+  query.populate(authorPopulation);
+
+  query.populate("postCount");
 
   query.sort({ rank: 'asc', _id: 'desc' });
 
@@ -333,27 +342,16 @@ const getManyDetailed = async (
   const query = postTermModel.find(filters);
 
   query.populate({
-    path: 'parentId',
+    path: 'parent',
     select: '_id typeId postTypeId contents',
-    match: { statusId: StatusId.Active },
-    options: { omitUndefined: true },
-    transform: (doc: IPostTermGetDetailedResultService) => {
-      if (doc) {
-        if (Array.isArray(doc.contents)) {
-          doc.contents =
-            doc.contents.findSingle('langId', params.langId) ??
-            doc.contents.findSingle('langId', defaultLangId);
-        }
-      }
-      return doc;
-    },
+    transform: doc => transformContents(doc, params.langId, true),
   });
 
-  query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image facebook instagram twitter',
-    options: { omitUndefined: true },
-  });
+  query.populate(authorPopulation);
+
+  if (params.withPostCount) {
+    query.populate("postCount");
+  }
 
   if (params.page)
     query.skip((params.count ?? 10) * (params.page > 0 ? params.page - 1 : 0));
@@ -388,13 +386,6 @@ const getManyDetailed = async (
         if (docContent) {
           doc.contents = docContent;
         }
-      }
-
-      if (params.withPostCount) {
-        doc.postCount = await postModel
-          .find({ typeId: doc.postTypeId, categories: { $in: [doc._id] } })
-          .countDocuments()
-          .exec();
       }
 
       doc.views = views;

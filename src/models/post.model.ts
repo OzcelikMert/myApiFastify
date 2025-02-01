@@ -20,6 +20,7 @@ import {
 import { ProductTypeId } from '@constants/productTypes';
 import { AttributeTypeId } from '@constants/attributeTypes';
 import { componentModel } from '@models/component.model';
+import { PostTermTypeId } from '@constants/postTermTypes';
 
 const schemaECommerceShipping =
   new mongoose.Schema<IPostECommerceShippingModel>({
@@ -63,7 +64,11 @@ const schemaECommerceAttribute =
         default: AttributeTypeId.Text,
       },
     },
-    { timestamps: true }
+    {
+      timestamps: true,
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    }
   ).index({ typeId: 1, variations: 1, attributeId: 1 });
 
 const schemaECommerceVariationOption =
@@ -71,7 +76,6 @@ const schemaECommerceVariationOption =
     {
       attributeId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: postTermModel,
         required: true,
       },
       variationTermId: {
@@ -80,7 +84,11 @@ const schemaECommerceVariationOption =
         required: true,
       },
     },
-    { timestamps: true }
+    {
+      timestamps: true,
+      toObject: { virtuals: true },
+      toJSON: { virtuals: true },
+    }
   ).index({ attributeId: 1, variationId: 1 });
 
 const schemaECommerceVariation =
@@ -93,7 +101,7 @@ const schemaECommerceVariation =
       },
       productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "posts",
+        ref: 'posts',
         required: true,
       },
     },
@@ -104,17 +112,6 @@ const schemaECommerceVariation =
     }
   );
 
-schemaECommerceVariation.virtual('product', {
-  ref: 'posts',
-  localField: 'productId',
-  foreignField: '_id',
-  match: schemaFields => ({
-    parentId: schemaFields._id
-  }),
-  options: { omitUndefined: true },
-  justOne: true,
-});
-
 const schemaECommerce = new mongoose.Schema<IPostECommerceModel>({
   typeId: { type: Number, enum: ProductTypeId, required: true },
   images: { type: [String], default: [] },
@@ -123,7 +120,10 @@ const schemaECommerce = new mongoose.Schema<IPostECommerceModel>({
   shipping: { type: schemaECommerceShipping },
   attributes: { type: [schemaECommerceAttribute], default: [] },
   variations: { type: [schemaECommerceVariation], default: [] },
-  defaultVariationOptions: { type: [schemaECommerceVariationOption], default: [] },
+  defaultVariationOptions: {
+    type: [schemaECommerceVariationOption],
+    default: [],
+  },
 }).index({ typeId: 1 });
 
 const schemaContentButton = new mongoose.Schema<IPostContentButtonModel>(
@@ -159,7 +159,7 @@ const schemaContent = new mongoose.Schema<IPostContentModel>(
     views: { type: Number, default: 0 },
     buttons: { type: [schemaContentButton] },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 );
 
 const schema = new mongoose.Schema<IPostModel>(
@@ -191,7 +191,7 @@ const schema = new mongoose.Schema<IPostModel>(
     components: { type: [mongoose.Schema.Types.ObjectId], ref: componentModel },
     similarItems: { type: [mongoose.Schema.Types.ObjectId], ref: 'posts' },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 ).index({
   parentId: 1,
   typeId: 1,
@@ -199,6 +199,71 @@ const schema = new mongoose.Schema<IPostModel>(
   authorId: 1,
   pageTypeId: 1,
   categories: 1,
+});
+
+schema.virtual('author', {
+  ref: 'users',
+  localField: 'authorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schema.virtual('lastAuthor', {
+  ref: 'users',
+  localField: 'lastAuthorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schemaContent.virtual('lang', {
+  ref: 'languages',
+  localField: 'langId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schemaECommerceVariation.virtual('product', {
+  ref: 'posts',
+  localField: 'productId',
+  foreignField: '_id',
+  match: (schemaFields) => {
+    return {
+      statusId: StatusId.Active, 
+      typeId: PostTypeId.ProductVariation,
+      parentId: schemaFields._id,
+    };
+  },
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schemaECommerceAttribute.virtual('attributeTerm', {
+  ref: 'postTerms',
+  localField: 'attributeTermId',
+  foreignField: '_id',
+  match: {
+    typeId: PostTermTypeId.Attributes,
+    statusId: StatusId.Active,
+    postTypeId: PostTypeId.Product,
+  },
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schemaECommerceVariationOption.virtual('variationTerm', {
+  ref: 'postTerms',
+  localField: 'variationTermId',
+  foreignField: '_id',
+  match: {
+    typeId: PostTermTypeId.Variations,
+    statusId: StatusId.Active,
+    postTypeId: PostTypeId.Product,
+  },
+  options: { omitUndefined: true },
+  justOne: true,
 });
 
 export const postModel = mongoose.model<IPostModel, mongoose.Model<IPostModel>>(

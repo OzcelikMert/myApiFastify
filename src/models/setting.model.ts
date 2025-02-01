@@ -21,7 +21,7 @@ const schemaPathContent = new mongoose.Schema<ISettingPathContentModel>(
     },
     asPath: { type: String, default: '' },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 );
 
 const schemaPath = new mongoose.Schema<ISettingPathModel>(
@@ -78,7 +78,7 @@ const schemaSEOContent = new mongoose.Schema<ISettingSeoContentModel>(
     content: { type: String, default: '' },
     tags: { type: [String], default: [] },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 );
 
 const schema = new mongoose.Schema<ISettingModel>(
@@ -98,6 +98,22 @@ const schema = new mongoose.Schema<ISettingModel>(
   },
   { timestamps: true }
 );
+
+schemaSEOContent.virtual('lang', {
+  ref: 'languages',
+  localField: 'langId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schemaPathContent.virtual('lang', {
+  ref: 'languages',
+  localField: 'langId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
 
 export const settingModel = mongoose.model<
   ISettingModel,

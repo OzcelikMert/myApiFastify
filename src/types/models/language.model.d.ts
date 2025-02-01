@@ -10,4 +10,6 @@ export interface ILanguageModel {
   statusId: StatusId;
   rank: number;
   isDefault: boolean;
+  authorId: string | ObjectId;
+  lastAuthorId: string | ObjectId;
 }

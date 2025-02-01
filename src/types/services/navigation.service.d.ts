@@ -15,9 +15,9 @@ export interface INavigationAlternateService {
 }
 
 export type INavigationGetDetailedResultService = {
-  authorId: IUserPopulateService;
-  lastAuthorId: IUserPopulateService;
-  parentId?: INavigationPopulateService;
+  author?: IUserPopulateService;
+  lastAuthor?: IUserPopulateService;
+  parent?: INavigationPopulateService;
   contents?: INavigationContentModel | INavigationContentModel[];
   alternates?: INavigationAlternateService[];
 } & Omit<INavigationModel, 'contents'>;

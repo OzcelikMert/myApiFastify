@@ -162,14 +162,14 @@ const addProduct = async (req: FastifyRequest, reply: FastifyReply) => {
 
     for (const variation of reqData.body.eCommerce.variations) {
       const serviceResultVariationItem = await PostService.add({
-        ...variation.productId,
+        ...variation.product,
         parentId: mainProductId,
         typeId: PostTypeId.ProductVariation,
         authorId: req.sessionAuth!.user!.userId.toString(),
         lastAuthorId: req.sessionAuth!.user!.userId.toString(),
         statusId: StatusId.Active,
         eCommerce: {
-          ...variation.productId.eCommerce,
+          ...variation.product.eCommerce,
           typeId: ProductTypeId.Simple,
         },
       });
@@ -231,7 +231,7 @@ const updateProductWithId = async (
         if (
           !reqData.body.eCommerce.variations.some(
             (newProductVariation) =>
-              newProductVariation.productId._id?.toString() ==
+              newProductVariation.product._id?.toString() ==
               variation.productId.toString()
           )
         ) {
@@ -248,7 +248,7 @@ const updateProductWithId = async (
 
       // Update variations or add new variations
       for (const newVariation of reqData.body.eCommerce.variations) {
-        let newVariationProductId = newVariation.productId._id ?? "";
+        let newVariationProductId = newVariation.product._id ?? "";
         if (
           serviceResultProduct.eCommerce.variations?.some(
             (productVariation) =>
@@ -257,25 +257,25 @@ const updateProductWithId = async (
           )
         ) {
           await PostService.update({
-            ...newVariation.productId,
+            ...newVariation.product,
             _id: newVariationProductId,
             parentId: serviceResultProduct._id.toString(),
             typeId: PostTypeId.ProductVariation,
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
             eCommerce: {
-              ...newVariation.productId.eCommerce,
+              ...newVariation.product.eCommerce,
               typeId: ProductTypeId.Simple,
             },
           });
         } else {
           const serviceResultVariation = await PostService.add({
-            ...newVariation.productId,
+            ...newVariation.product,
             parentId: serviceResultProduct._id.toString(),
             typeId: PostTypeId.ProductVariation,
             authorId: req.sessionAuth!.user!.userId.toString(),
             lastAuthorId: req.sessionAuth!.user!.userId.toString(),
             eCommerce: {
-              ...newVariation.productId.eCommerce,
+              ...newVariation.product.eCommerce,
               typeId: ProductTypeId.Simple,
             },
           });

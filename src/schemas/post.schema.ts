@@ -64,7 +64,8 @@ const schemaECommerceVariation = object({
   _id: string().optional(),
   rank: number().min(0),
   options: array(schemaECommerceVariationOption).default([]),
-  productId: schemaECommerceVariationProduct,
+  productId: string().optional(),
+  product: schemaECommerceVariationProduct,
 });
 
 const schemaECommerce = object({
@@ -146,7 +147,7 @@ const getManySchema = object({
   query: object({
     typeId: ZodUtil.convertToArray(
       array(ZodUtil.convertToNumber(z.nativeEnum(PostTypeId)))
-    ).optional(),
+    ),
     _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
     pageTypeId: ZodUtil.convertToArray(
       array(ZodUtil.convertToNumber(z.nativeEnum(PageTypeId)))

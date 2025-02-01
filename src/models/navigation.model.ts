@@ -15,7 +15,7 @@ const schemaContent = new mongoose.Schema<INavigationContentModel>({
   },
   title: { type: String, default: '' },
   url: { type: String, default: '' },
-});
+}, {timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true }});
 
 const schema = new mongoose.Schema<INavigationModel>(
   {
@@ -36,8 +36,43 @@ const schema = new mongoose.Schema<INavigationModel>(
     isSecondary: { type: Boolean, default: false },
     contents: { type: [schemaContent], default: [] },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 ).index({ statusId: 1, authorId: 1 });
+
+schema.virtual('parent', {
+  ref: 'navigations',
+  localField: 'parentId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  match: {
+    statusId: StatusId.Active
+  },
+  justOne: true,
+});
+
+schema.virtual('author', {
+  ref: 'users',
+  localField: 'authorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schema.virtual('lastAuthor', {
+  ref: 'users',
+  localField: 'lastAuthorId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
+
+schemaContent.virtual('lang', {
+  ref: 'languages',
+  localField: 'langId',
+  foreignField: '_id',
+  options: { omitUndefined: true },
+  justOne: true,
+});
 
 export const navigationModel = mongoose.model<
   INavigationModel,

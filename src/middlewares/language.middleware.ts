@@ -6,6 +6,7 @@ import { LogMiddleware } from '@middlewares/log.middleware';
 import { LanguageService } from '@services/language.service';
 import { ILanguagePutWithIdSchema } from '@schemas/language.schema';
 import { ILanguageModel } from 'types/models/language.model';
+import { StatusId } from '@constants/status';
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -44,7 +45,7 @@ const checkIsDefaultWithId = async (
 
     if (!serviceResult.isDefault && reqData.body.isDefault) {
       await LanguageService.updateIsDefaultMany({ isDefault: false });
-    } else if (serviceResult.isDefault && !reqData.body.isDefault) {
+    } else if (serviceResult.isDefault && (!reqData.body.isDefault || reqData.body.statusId != StatusId.Active)) {
       apiResult.status = false;
       apiResult.setErrorCode = ApiErrorCodes.emptyValue;
       apiResult.setStatusCode = ApiStatusCodes.badRequest;

@@ -11,6 +11,7 @@ import { PageTypeId } from '@constants/pageTypes';
 import { StatusId } from '@constants/status';
 import { IComponentModel } from 'types/models/component.model';
 import { PostSortTypeId } from '@constants/postSortTypes';
+import { ILanguageModel } from 'types/models/language.model';
 
 export interface IPostPopulateService {
   _id: string;
@@ -28,8 +29,8 @@ export interface IPostAlternateService {
 }
 
 export type IPostGetDetailedResultService = {
-  authorId: IUserPopulateService;
-  lastAuthorId: IUserPopulateService;
+  author?: IUserPopulateService;
+  lastAuthor?: IUserPopulateService;
   authors?: IUserPopulateService[];
   views?: number;
   categories?: IPostTermPopulateService[];
@@ -44,13 +45,13 @@ export type IPostGetDetailedResultService = {
       product?: Omit<IPostModel, "contents"> & {
         alternates?: IPostAlternateService[];
         contents?: IPostContentModel | IPostContentModel[];
+        author?: IUserPopulateService;
+        lastAuthor?: IUserPopulateService;
       }
     })[];
   };
 } & Omit<
-  IPostModel,
-  | 'authorId'
-  | 'lastAuthorId'
+  IPostModel, 
   | 'contents'
   | 'categories'
   | 'tags'
@@ -64,6 +65,8 @@ export type IPostGetManyDetailedResultService = {
       product?: Omit<IPostModel, "contents"> & {
         alternates?: IPostAlternateService[];
         contents?: IPostContentModel | IPostContentModel[];
+        author?: IUserPopulateService;
+        lastAuthor?: IUserPopulateService;
       }
     })[];
   };
@@ -109,7 +112,7 @@ export interface IPostGetDetailedParamService {
 export interface IPostGetManyDetailedParamService {
   _id?: string[];
   sortTypeId?: PostSortTypeId;
-  typeId?: PostTypeId[];
+  typeId: PostTypeId[];
   pageTypeId?: PageTypeId[];
   langId?: string;
   statusId?: StatusId;

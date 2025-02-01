@@ -58,7 +58,7 @@ class InitConfig {
     await this.mongodbConnect();
     await this.checkSuperAdminUser();
     await this.checkLanguages();
-    await this.checkSettings(); 
+    await this.checkSettings();
     await this.initTimers();
 
     return this.app;
@@ -115,7 +115,15 @@ class InitConfig {
   }
 
   private async checkSuperAdminUser() {
-    if (!(await UserService.get({ roleId: UserRoleId.SuperAdmin }))) {
+    console.log(chalk.green(`#Admin Account`));
+    const serviceResultUser = await UserService.get({
+      roleId: UserRoleId.SuperAdmin,
+    });
+    if (serviceResultUser) {
+      console.log(
+        chalk.blue(`- ${serviceResultUser.name} (${serviceResultUser.email})`)
+      );
+    } else {
       const password = generate({
         length: 10,
       });
@@ -127,37 +135,52 @@ class InitConfig {
         roleId: UserRoleId.SuperAdmin,
         permissions: [],
       });
-      console.log(chalk.green(`#Admin Account`));
       console.log(chalk.blue(`- Created`));
       console.log(chalk.blue(`- Password: ${password}`));
     }
   }
 
   private async checkLanguages() {
+    console.log(chalk.green(`#Language`));
     const serviceResultGet = await LanguageService.get({ isDefault: true });
     if (serviceResultGet) {
       Config.defaultLangId = serviceResultGet._id.toString();
+      console.log(
+        chalk.blue(
+          `- ${serviceResultGet.title} (${serviceResultGet.locale} - ${serviceResultGet.shortKey})`
+        )
+      );
     } else {
-      const serviceResultAdd = await LanguageService.add({
-        title: 'English',
-        image: 'gb.webp',
-        shortKey: 'en',
-        locale: 'gb',
-        statusId: StatusId.Active,
-        rank: -1,
-        isDefault: true,
+      const serviceResultUser = await UserService.get({
+        roleId: UserRoleId.SuperAdmin,
       });
-      Config.defaultLangId = serviceResultAdd._id.toString();
-      console.log(chalk.green(`#Language`));
-      console.log(chalk.blue(`- Created`));
+      if (serviceResultUser) {
+        const serviceResultAdd = await LanguageService.add({
+          title: 'English',
+          image: 'gb.webp',
+          shortKey: 'en',
+          locale: 'gb',
+          statusId: StatusId.Active,
+          rank: -1,
+          isDefault: true,
+          authorId: serviceResultUser._id.toString(),
+          lastAuthorId: serviceResultUser._id.toString(),
+        });
+        Config.defaultLangId = serviceResultAdd._id.toString();
+        console.log(chalk.blue(`- Created`));
+      } else {
+        console.log(chalk.red(`- Error: Couldn't find a Super Admin`));
+      }
     }
   }
 
   private async checkSettings() {
+    console.log(chalk.green(`#Setting`));
     const settings = await SettingService.get({});
-    if (!settings) {
+    if (settings) {
+      console.log(chalk.blue(`- Id: ${settings._id}`));
+    }else {
       await SettingService.add({});
-      console.log(chalk.green(`#Setting`));
       console.log(chalk.blue(`- Created`));
     }
   }

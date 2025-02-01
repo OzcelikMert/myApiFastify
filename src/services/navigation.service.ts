@@ -18,6 +18,24 @@ import {
 import { navigationModel } from '@models/navigation.model';
 import { StatusId } from '@constants/status';
 import { INavigationModel } from 'types/models/navigation.model';
+import { authorPopulationSelect } from './user.service';
+
+const transformContents = (doc: INavigationGetDetailedResultService, langId?: string) => {
+  const defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+  if (doc && Array.isArray(doc.contents)) {
+    doc.contents =
+      doc.contents.findSingle('langId', langId) ??
+      doc.contents.findSingle('langId', defaultLangId);
+  }
+  return doc;
+};
+
+const authorPopulation = {
+  path: ['author', 'lastAuthor'].join(' '),
+  select: authorPopulationSelect,
+  options: { omitUndefined: true },
+};
 
 const get = async (params: INavigationGetParamService) => {
   let filters: mongoose.FilterQuery<INavigationModel> = {};
@@ -105,27 +123,20 @@ const getDetailed = async (params: INavigationGetDetailedParamService) => {
 
   const query = navigationModel.findOne(filters);
 
+  query.populate(authorPopulation);
+
   query.populate({
-    path: 'parentId',
+    path: 'parent',
     select: '_id contents',
-    match: { statusId: StatusId.Active },
-    options: { omitUndefined: true },
-    transform: (doc: INavigationGetDetailedResultService) => {
-      if (doc) {
-        if (Array.isArray(doc.contents)) {
-          doc.contents =
-            doc.contents.findSingle('langId', params.langId) ??
-            doc.contents.findSingle('langId', defaultLangId);
-        }
-        return doc;
-      }
-    },
+    transform: doc => transformContents(doc, params.langId),
   });
 
   query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
+    path: "contents.lang",
+    match: {
+      _id: params.langId ?? defaultLangId,
+      statusId: StatusId.Active
+    }
   });
 
   query.sort({ rank: 'asc', _id: 'desc' });
@@ -180,27 +191,20 @@ const getManyDetailed = async (
 
   const query = navigationModel.find(filters);
 
+  query.populate(authorPopulation)
+
   query.populate({
-    path: 'parentId',
+    path: 'parent',
     select: '_id contents',
-    match: { statusId: StatusId.Active },
-    options: { omitUndefined: true },
-    transform: (doc: INavigationGetDetailedResultService) => {
-      if (doc) {
-        if (Array.isArray(doc.contents)) {
-          doc.contents =
-            doc.contents.findSingle('langId', params.langId) ??
-            doc.contents.findSingle('langId', defaultLangId);
-        }
-        return doc;
-      }
-    },
+    transform: doc => transformContents(doc, params.langId),
   });
 
   query.populate({
-    path: ['authorId', 'lastAuthorId'].join(' '),
-    select: '_id name url image',
-    options: { omitUndefined: true },
+    path: "contents.lang",
+    match: {
+      _id: params.langId ?? defaultLangId,
+      statusId: StatusId.Active
+    }
   });
 
   query.sort({ rank: 'asc', _id: 'desc' });

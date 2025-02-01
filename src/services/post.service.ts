@@ -28,6 +28,7 @@ import { PostTypeId } from '@constants/postTypes';
 import { IComponentGetDetailedResultService } from 'types/services/component.service';
 import { PostSortTypeId } from '@constants/postSortTypes';
 import { IPostTermGetDetailedResultService } from 'types/services/postTerm.service';
+import { authorPopulationSelect } from './user.service';
 
 const createURL = async (
   _id: string | null,
@@ -50,6 +51,27 @@ const createURL = async (
   }
 
   return url;
+};
+
+const transformContents = (doc: IPostTermGetDetailedResultService, langId?: string, removeContent?: boolean) => {
+  const defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+  if (doc && Array.isArray(doc.contents)) {
+    doc.contents =
+      doc.contents.findSingle('langId', langId) ??
+      doc.contents.findSingle('langId', defaultLangId);
+
+      if(removeContent){
+        delete doc.contents?.content;
+      }
+  }
+  return doc;
+};
+
+const authorPopulation = {
+  path: ['author', 'lastAuthor', 'authors'].join(' '),
+  select: authorPopulationSelect,
+  options: { omitUndefined: true },
 };
 
 const get = async (params: IPostGetParamService) => {
@@ -254,34 +276,27 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
       postTypeId: params.typeId,
     },
     options: { omitUndefined: true },
-    transform: (doc: IPostTermGetDetailedResultService) => {
-      if (doc) {
-        if (Array.isArray(doc.contents)) {
-          doc.contents =
-            doc.contents.findSingle('langId', params.langId) ??
-            doc.contents.findSingle('langId', defaultLangId);
-        }
-      }
-      return doc;
-    },
+    transform: doc => transformContents(doc, params.langId, true),
   });
 
+  query.populate(authorPopulation);
+
   query.populate({
-    path: ['authorId', 'lastAuthorId', 'authors'].join(' '),
-    select: '_id name url image facebook instagram twitter',
-    options: { omitUndefined: true },
+    path: "contents.lang",
+    match: {
+      _id: params.langId ?? defaultLangId,
+      statusId: StatusId.Active
+    }
   });
 
   switch (params.typeId) {
     case PostTypeId.Product:
       query.populate({
         path: [
-          'eCommerce.attributes.attributeId',
-          'eCommerce.attributes.variations',
-          'eCommerce.variations.selectedVariations.attributeId',
-          'eCommerce.variations.selectedVariations.variationId',
-          'eCommerce.variationDefaults.attributeId',
-          'eCommerce.variationDefaults.variationId',
+          'eCommerce.attributes.attributeTerm',
+          'eCommerce.attributes.variationTerms',
+          'eCommerce.variations.options.variationTerm',
+          'eCommerce.defaultVariationOptions.variationTerm',
         ].join(' '),
         select: '_id typeId postTypeId contents',
         match: {
@@ -292,39 +307,38 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
           postTypeId: PostTypeId.Product,
         },
         options: { omitUndefined: true },
-        transform: (doc: IPostTermGetDetailedResultService) => {
-          if (doc) {
-            if (Array.isArray(doc.contents)) {
-              doc.contents =
-                doc.contents.findSingle('langId', params.langId) ??
-                doc.contents.findSingle('langId', defaultLangId);
-            }
-          }
-          return doc;
-        },
+        transform: doc => transformContents(doc, params.langId, true),
       });
 
       query.populate({
-        path: ['eCommerce.variations.itemId'].join(' '),
-        match: {
-          typeId: PostTypeId.ProductVariation,
-          statusId: StatusId.Active,
-        },
+        path: 'eCommerce.variations.product',
         options: { omitUndefined: true },
         transform: (doc: IPostGetDetailedResultService) => {
           if (doc) {
             if (Array.isArray(doc.contents)) {
-              doc.contents.forEach((docContent) => {
-                views += docContent.views ?? 0;
+              let views = 0;
+
+              doc.alternates = doc.contents.map((content) => {
+                views += content.views ?? 0;
+
+                return {
+                  langId: content.langId.toString(),
+                  title: content.title,
+                  url: content.url,
+                };
               });
 
               doc.contents =
                 doc.contents.findSingle('langId', params.langId) ??
                 doc.contents.findSingle('langId', defaultLangId);
+              delete doc.contents?.content;
+
+              doc.views = views;
             }
           }
           return doc;
         },
+        populate: authorPopulation
       });
       break;
   }
@@ -475,46 +489,50 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
       postTypeId: { $in: params.typeId },
     },
     options: { omitUndefined: true },
-    transform: (doc: IPostTermGetDetailedResultService) => {
-      if (doc) {
-        if (Array.isArray(doc.contents)) {
-          doc.contents =
-            doc.contents.findSingle('langId', params.langId) ??
-            doc.contents.findSingle('langId', defaultLangId);
-        }
-      }
-      return doc;
-    },
+    transform: doc => transformContents(doc, params.langId, true),
   });
 
+  query.populate(authorPopulation);
+
   query.populate({
-    path: ['authorId', 'lastAuthorId', 'authors'].join(' '),
-    select: '_id name url image facebook instagram twitter',
-    options: { omitUndefined: true },
+    path: "contents.lang",
+    match: {
+      _id: params.langId ?? defaultLangId,
+      statusId: StatusId.Active
+    }
   });
 
   if (params.typeId) {
     if (params.typeId.includes(PostTypeId.Product)) {
-      query.populate({ path: 'eCommerce.variations.product' });
-      /*query.populate({
-        path: ['eCommerce.variations.itemId'].join(' '),
-        match: {
-          typeId: PostTypeId.ProductVariation,
-          statusId: StatusId.Active,
-        },
-        options: { omitUndefined: true },
+      query.populate({
+        path: 'eCommerce.variations.product',
         transform: (doc: IPostGetDetailedResultService) => {
           if (doc) {
             if (Array.isArray(doc.contents)) {
+              let views = 0;
+
+              doc.alternates = doc.contents.map((content) => {
+                views += content.views ?? 0;
+
+                return {
+                  langId: content.langId.toString(),
+                  title: content.title,
+                  url: content.url,
+                };
+              });
+
               doc.contents =
                 doc.contents.findSingle('langId', params.langId) ??
                 doc.contents.findSingle('langId', defaultLangId);
               delete doc.contents?.content;
+
+              doc.views = views;
             }
           }
           return doc;
         },
-      });*/
+        populate: authorPopulation
+      });
     }
   }
 
@@ -593,31 +611,6 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
             });
           }
         );
-
-        doc.eCommerce.variations = doc.eCommerce.variations.map((variation) => {
-          if (variation.product) {
-            if (Array.isArray(variation.product.contents)) {
-              variation.product.alternates = variation.product.contents?.map(
-                (content) => ({
-                  langId: content.langId.toString(),
-                  title: content.title,
-                  url: content.url,
-                })
-              );
-
-              variation.product.contents =
-                variation.product.contents.findSingle(
-                  'langId',
-                  params.langId
-                ) ??
-                variation.product.contents.findSingle('langId', defaultLangId);
-            }
-
-            delete variation.product.contents?.content;
-          }
-
-          return variation;
-        });
       }
     }
 
