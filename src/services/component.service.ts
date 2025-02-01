@@ -16,11 +16,11 @@ import { componentModel } from '@models/component.model';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
 import { StatusId } from '@constants/status';
-import { authorPopulationSelect } from './user.service';
+import { PopulationSelects } from '@constants/populationSelects';
 
 const authorPopulation = {
   path: ['author', 'lastAuthor'].join(' '),
-  select: authorPopulationSelect,
+  select: PopulationSelects.author,
   options: { omitUndefined: true },
 };
 

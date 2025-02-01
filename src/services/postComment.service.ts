@@ -16,11 +16,11 @@ import {
 import { IPostCommentModel } from 'types/models/postComment.model';
 import { postCommentObjectIdKeys } from '@constants/objectIdKeys/postComment.objectIdKeys';
 import { postCommentModel } from '@models/postComment.model';
-import { authorPopulationSelect } from './user.service';
+import { PopulationSelects } from '@constants/populationSelects';
 
 const authorPopulation = {
   path: ['author', 'lastAuthor'].join(' '),
-  select: authorPopulationSelect,
+  select: PopulationSelects.author,
   options: { omitUndefined: true },
 };
 

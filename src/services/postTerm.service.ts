@@ -17,12 +17,10 @@ import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
 import { Config } from '@configs/index';
 import { postTermObjectIdKeys } from '@constants/objectIdKeys/postTerm.objectIdKeys';
-import { postModel } from '@models/post.model';
 import { PostTermTypeId } from '@constants/postTermTypes';
-import { StatusId } from '@constants/status';
 import { IPostTermModel } from 'types/models/postTerm.model';
 import { PostTypeId } from '@constants/postTypes';
-import { authorPopulationSelect } from './user.service';
+import { PopulationSelects } from '@constants/populationSelects';
 
 const createURL = async (
   _id: string | null,
@@ -66,7 +64,7 @@ const transformContents = (doc: IPostTermGetDetailedResultService, langId?: stri
 
 const authorPopulation = {
   path: ['author', 'lastAuthor'].join(' '),
-  select: authorPopulationSelect,
+  select: PopulationSelects.author,
   options: { omitUndefined: true },
 };
 
@@ -242,7 +240,7 @@ const getDetailed = async (params: IPostTermGetDetailedParamService) => {
 
   query.populate({
     path: 'parent',
-    select: '_id typeId postTypeId contents',
+    select: PopulationSelects.term,
     transform: doc => transformContents(doc, params.langId, true),
   });
 
@@ -343,7 +341,7 @@ const getManyDetailed = async (
 
   query.populate({
     path: 'parent',
-    select: '_id typeId postTypeId contents',
+    select: PopulationSelects.term,
     transform: doc => transformContents(doc, params.langId, true),
   });
 

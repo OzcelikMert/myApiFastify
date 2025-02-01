@@ -54,18 +54,15 @@ export interface IPostContentButtonModel {
   url?: string;
 }
 
-export interface IPostECommerceModel<
-  T = string | ObjectId,
-  P = string[] | ObjectId[],
-> {
+export interface IPostECommerceModel {
   typeId: ProductTypeId;
   images: string[];
   pricing?: IPostECommercePricingModel;
   inventory?: IPostECommerceInventoryModel;
   shipping?: IPostECommerceShippingModel;
-  attributes?: IPostECommerceAttributeModel<T, P>[];
-  variations?: IPostECommerceVariationModel<T>[];
-  defaultVariationOptions?: IPostECommerceVariationOptionModel<T>[];
+  attributes?: IPostECommerceAttributeModel[];
+  variations?: IPostECommerceVariationModel[];
+  defaultVariationOptions?: IPostECommerceVariationOptionModel[];
 }
 
 export interface IPostECommercePricingModel {
@@ -89,25 +86,22 @@ export interface IPostECommerceShippingModel {
   weight: string;
 }
 
-export interface IPostECommerceAttributeModel<
-  T = string | ObjectId,
-  P = string[] | ObjectId[],
-> {
+export interface IPostECommerceAttributeModel {
   _id?: string | ObjectId;
-  attributeTermId: T;
-  variationTerms: P;
+  attributeTermId: string | ObjectId;
+  variationTerms: string[] | ObjectId[];
   typeId: AttributeTypeId;
 }
 
-export interface IPostECommerceVariationModel<T = string | ObjectId> {
+export interface IPostECommerceVariationModel {
   _id?: string | ObjectId;
   rank: number;
-  options: IPostECommerceVariationOptionModel<T>[];
+  options: IPostECommerceVariationOptionModel[];
   productId: string | ObjectId;
 }
 
-export interface IPostECommerceVariationOptionModel<T = string | ObjectId> {
+export interface IPostECommerceVariationOptionModel {
   _id?: string | ObjectId;
-  attributeId: T;
-  variationTermId: T;
+  attributeId: string | ObjectId;
+  variationTermId: string | ObjectId;
 }

@@ -10,13 +10,15 @@ export interface IComponentAlternateService {
   langId: string;
 }
 
+export type IComponentGetDetailedResultServiceElement = {
+  contents?: IComponentElementContentModel | IComponentElementContentModel[];
+  alternates?: IComponentAlternateService[];
+} & Omit<IComponentElementModel, 'contents'>
+
 export type IComponentGetDetailedResultService = {
   author?: IUserPopulateService;
   lastAuthor?: IUserPopulateService;
-  elements: (Omit<IComponentElementModel, 'contents'> & {
-    contents?: IComponentElementContentModel | IComponentElementContentModel[];
-    alternates?: IComponentAlternateService[];
-  })[];
+  elements: IComponentGetDetailedResultServiceElement[];
 } & Omit<IComponentModel, 'elements'>;
 
 export interface IComponentGetParamService {

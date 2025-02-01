@@ -18,7 +18,7 @@ import {
 import { navigationModel } from '@models/navigation.model';
 import { StatusId } from '@constants/status';
 import { INavigationModel } from 'types/models/navigation.model';
-import { authorPopulationSelect } from './user.service';
+import { PopulationSelects } from '@constants/populationSelects';
 
 const transformContents = (doc: INavigationGetDetailedResultService, langId?: string) => {
   const defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
@@ -33,7 +33,7 @@ const transformContents = (doc: INavigationGetDetailedResultService, langId?: st
 
 const authorPopulation = {
   path: ['author', 'lastAuthor'].join(' '),
-  select: authorPopulationSelect,
+  select: PopulationSelects.author,
   options: { omitUndefined: true },
 };
 
@@ -127,7 +127,7 @@ const getDetailed = async (params: INavigationGetDetailedParamService) => {
 
   query.populate({
     path: 'parent',
-    select: '_id contents',
+    select: PopulationSelects.navigation,
     transform: doc => transformContents(doc, params.langId),
   });
 
@@ -195,7 +195,7 @@ const getManyDetailed = async (
 
   query.populate({
     path: 'parent',
-    select: '_id contents',
+    select: PopulationSelects.navigation,
     transform: doc => transformContents(doc, params.langId),
   });
 

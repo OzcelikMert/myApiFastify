@@ -9,7 +9,7 @@ export type IGalleryImageProperties = {
 
 export type IGalleryGetDetailedResultService = {
   author?: IUserPopulateService;
-} & Omit<IGalleryModel>;
+} & IGalleryModel;
 
 export interface IGalleryGetParamService {
   _id?: string;

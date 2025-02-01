@@ -13,11 +13,11 @@ import {
   IGalleryGetDetailedResultService,
 } from 'types/services/gallery.service';
 import { galleryModel } from '@models/gallery.model';
-import { authorPopulationSelect } from './user.service';
+import { PopulationSelects } from '@constants/populationSelects';
 
 const authorPopulation = {
   path: ['author'].join(' '),
-  select: authorPopulationSelect,
+  select: PopulationSelects.author,
   options: { omitUndefined: true },
 };
 

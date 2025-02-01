@@ -20,6 +20,7 @@ import { userObjectIdKeys } from '@constants/objectIdKeys/user.objectIdKeys';
 import { IUserModel } from 'types/models/user.model';
 import { PermissionUtil } from '@utils/permission.util';
 import { UserRoleId } from '@constants/userRoles';
+import { PopulationSelects } from '@constants/populationSelects';
 
 const createURL = async (_id: string | null, name: string) => {
   let urlAlreadyCount = 2;
@@ -164,11 +165,9 @@ const getMany = async (params: IUserGetManyParamService) => {
   });
 };
 
-export const authorPopulationSelect = "_id name url image facebook instagram twitter";
-
 const authorPopulation = {
   path: ['author', 'lastAuthor'].join(' '),
-  select: authorPopulationSelect,
+  select: PopulationSelects.author,
   options: { omitUndefined: true },
 };
 

@@ -25,10 +25,9 @@ import { postObjectIdKeys } from '@constants/objectIdKeys/post.objectIdKeys';
 import { StatusId } from '@constants/status';
 import { PostTermTypeId } from '@constants/postTermTypes';
 import { PostTypeId } from '@constants/postTypes';
-import { IComponentGetDetailedResultService } from 'types/services/component.service';
 import { PostSortTypeId } from '@constants/postSortTypes';
 import { IPostTermGetDetailedResultService } from 'types/services/postTerm.service';
-import { authorPopulationSelect } from './user.service';
+import { PopulationSelects } from '@constants/populationSelects';
 
 const createURL = async (
   _id: string | null,
@@ -53,7 +52,11 @@ const createURL = async (
   return url;
 };
 
-const transformContents = (doc: IPostTermGetDetailedResultService, langId?: string, removeContent?: boolean) => {
+const transformContents = (
+  doc: IPostTermGetDetailedResultService,
+  langId?: string,
+  removeContent?: boolean
+) => {
   const defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
 
   if (doc && Array.isArray(doc.contents)) {
@@ -61,16 +64,51 @@ const transformContents = (doc: IPostTermGetDetailedResultService, langId?: stri
       doc.contents.findSingle('langId', langId) ??
       doc.contents.findSingle('langId', defaultLangId);
 
-      if(removeContent){
+    if (removeContent) {
+      delete doc.contents?.content;
+    }
+  }
+  return doc;
+};
+
+const transformProduct = (
+  doc: IPostGetDetailedResultService,
+  langId?: string,
+  removeContent?: boolean
+) => {
+  const defaultLangId = MongoDBHelpers.convertToObjectId(Config.defaultLangId);
+
+  if (doc) {
+    if (Array.isArray(doc.contents)) {
+      let views = 0;
+
+      doc.alternates = doc.contents.map((content) => {
+        views += content.views ?? 0;
+
+        return {
+          langId: content.langId.toString(),
+          title: content.title,
+          url: content.url,
+        };
+      });
+
+      doc.contents =
+        doc.contents.findSingle('langId', langId) ??
+        doc.contents.findSingle('langId', defaultLangId);
+
+      if (removeContent) {
         delete doc.contents?.content;
       }
+
+      doc.views = views;
+    }
   }
   return doc;
 };
 
 const authorPopulation = {
   path: ['author', 'lastAuthor', 'authors'].join(' '),
-  select: authorPopulationSelect,
+  select: PopulationSelects.author,
   options: { omitUndefined: true },
 };
 
@@ -269,24 +307,24 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
 
   query.populate({
     path: ['categories', 'tags'].join(' '),
-    select: '_id typeId postTypeId contents',
+    select: PopulationSelects.term,
     match: {
       typeId: { $in: [PostTermTypeId.Category, PostTermTypeId.Tag] },
       statusId: StatusId.Active,
       postTypeId: params.typeId,
     },
     options: { omitUndefined: true },
-    transform: doc => transformContents(doc, params.langId, true),
+    transform: (doc) => transformContents(doc, params.langId, true),
   });
 
   query.populate(authorPopulation);
 
   query.populate({
-    path: "contents.lang",
+    path: 'contents.lang',
     match: {
       _id: params.langId ?? defaultLangId,
-      statusId: StatusId.Active
-    }
+      statusId: StatusId.Active,
+    },
   });
 
   switch (params.typeId) {
@@ -298,7 +336,7 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
           'eCommerce.variations.options.variationTerm',
           'eCommerce.defaultVariationOptions.variationTerm',
         ].join(' '),
-        select: '_id typeId postTypeId contents',
+        select: PopulationSelects.term,
         match: {
           typeId: {
             $in: [PostTermTypeId.Attributes, PostTermTypeId.Variations],
@@ -307,38 +345,14 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
           postTypeId: PostTypeId.Product,
         },
         options: { omitUndefined: true },
-        transform: doc => transformContents(doc, params.langId, true),
+        transform: (doc) => transformContents(doc, params.langId, true),
       });
 
       query.populate({
         path: 'eCommerce.variations.product',
         options: { omitUndefined: true },
-        transform: (doc: IPostGetDetailedResultService) => {
-          if (doc) {
-            if (Array.isArray(doc.contents)) {
-              let views = 0;
-
-              doc.alternates = doc.contents.map((content) => {
-                views += content.views ?? 0;
-
-                return {
-                  langId: content.langId.toString(),
-                  title: content.title,
-                  url: content.url,
-                };
-              });
-
-              doc.contents =
-                doc.contents.findSingle('langId', params.langId) ??
-                doc.contents.findSingle('langId', defaultLangId);
-              delete doc.contents?.content;
-
-              doc.views = views;
-            }
-          }
-          return doc;
-        },
-        populate: authorPopulation
+        transform: (doc) => transformProduct(doc, params.langId),
+        populate: authorPopulation,
       });
       break;
   }
@@ -482,56 +496,32 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
 
   query.populate({
     path: ['categories', 'tags'].join(' '),
-    select: '_id typeId postTypeId contents',
+    select: PopulationSelects.term,
     match: {
       typeId: { $in: [PostTermTypeId.Category, PostTermTypeId.Tag] },
       statusId: StatusId.Active,
       postTypeId: { $in: params.typeId },
     },
     options: { omitUndefined: true },
-    transform: doc => transformContents(doc, params.langId, true),
+    transform: (doc) => transformContents(doc, params.langId, true),
   });
 
   query.populate(authorPopulation);
 
   query.populate({
-    path: "contents.lang",
+    path: 'contents.lang',
     match: {
       _id: params.langId ?? defaultLangId,
-      statusId: StatusId.Active
-    }
+      statusId: StatusId.Active,
+    },
   });
 
   if (params.typeId) {
     if (params.typeId.includes(PostTypeId.Product)) {
       query.populate({
         path: 'eCommerce.variations.product',
-        transform: (doc: IPostGetDetailedResultService) => {
-          if (doc) {
-            if (Array.isArray(doc.contents)) {
-              let views = 0;
-
-              doc.alternates = doc.contents.map((content) => {
-                views += content.views ?? 0;
-
-                return {
-                  langId: content.langId.toString(),
-                  title: content.title,
-                  url: content.url,
-                };
-              });
-
-              doc.contents =
-                doc.contents.findSingle('langId', params.langId) ??
-                doc.contents.findSingle('langId', defaultLangId);
-              delete doc.contents?.content;
-
-              doc.views = views;
-            }
-          }
-          return doc;
-        },
-        populate: authorPopulation
+        transform: (doc) => transformProduct(doc, params.langId, true),
+        populate: authorPopulation,
       });
     }
   }
