@@ -94,7 +94,6 @@ const schemaECommerceVariationOption =
 const schemaECommerceVariation =
   new mongoose.Schema<IPostECommerceVariationModel>(
     {
-      rank: { type: Number, default: 0 },
       options: {
         type: [schemaECommerceVariationOption],
         default: [],

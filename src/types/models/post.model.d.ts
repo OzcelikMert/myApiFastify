@@ -95,7 +95,6 @@ export interface IPostECommerceAttributeModel {
 
 export interface IPostECommerceVariationModel {
   _id?: string | ObjectId;
-  rank: number;
   options: IPostECommerceVariationOptionModel[];
   productId: string | ObjectId;
 }

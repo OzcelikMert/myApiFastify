@@ -62,7 +62,6 @@ const schemaECommerceVariationProduct = object({
 
 const schemaECommerceVariation = object({
   _id: string().optional(),
-  rank: number().min(0),
   options: array(schemaECommerceVariationOption).default([]),
   productId: string().optional(),
   product: schemaECommerceVariationProduct,

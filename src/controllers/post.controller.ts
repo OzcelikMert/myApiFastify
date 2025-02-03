@@ -175,7 +175,6 @@ const addProduct = async (req: FastifyRequest, reply: FastifyReply) => {
       });
       variations.push({
         options: variation.options,
-        rank: variation.rank,
         productId: serviceResultVariationItem._id,
       });
     }
@@ -283,7 +282,6 @@ const updateProductWithId = async (
         }
         variations.push({
           options: newVariation.options,
-          rank: newVariation.rank,
           productId: newVariationProductId,
         });
       }
