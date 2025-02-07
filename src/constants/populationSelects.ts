@@ -12,7 +12,7 @@ const author = getSelectString(
   'twitter'
 );
 
-const term = getSelectString('_id', 'typeId', 'postTypeId', 'contents');
+const term = getSelectString('_id', 'typeId', 'postTypeId', 'contents', 'rank');
 
 const navigation = getSelectString('_id', 'contents');
 

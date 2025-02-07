@@ -252,19 +252,6 @@ schemaECommerceAttribute.virtual('attributeTerm', {
   justOne: true,
 });
 
-schemaECommerceVariationOption.virtual('variationTerm', {
-  ref: 'postTerms',
-  localField: 'variationTermId',
-  foreignField: '_id',
-  match: {
-    typeId: PostTermTypeId.Variations,
-    statusId: StatusId.Active,
-    postTypeId: PostTypeId.Product,
-  },
-  options: { omitUndefined: true },
-  justOne: true,
-});
-
 export const postModel = mongoose.model<IPostModel, mongoose.Model<IPostModel>>(
   'posts',
   schema

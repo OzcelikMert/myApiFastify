@@ -16,8 +16,12 @@ import {
   IPostUpdateViewParamService,
   IPostGetDetailedParamService,
   IPostGetManyDetailedParamService,
+  IPostGetResultServiceECommerceAttribute,
 } from 'types/services/post.service';
-import { IPostModel } from 'types/models/post.model';
+import {
+  IPostECommerceVariationOptionModel,
+  IPostModel,
+} from 'types/models/post.model';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
 import { Config } from '@configs/index';
@@ -26,7 +30,10 @@ import { StatusId } from '@constants/status';
 import { PostTermTypeId } from '@constants/postTermTypes';
 import { PostTypeId } from '@constants/postTypes';
 import { PostSortTypeId } from '@constants/postSortTypes';
-import { IPostTermGetDetailedResultService } from 'types/services/postTerm.service';
+import {
+  IPostTermGetDetailedResultService,
+  IPostTermPopulateService,
+} from 'types/services/postTerm.service';
 import { PopulationSelects } from '@constants/populationSelects';
 
 const createURL = async (
@@ -50,6 +57,38 @@ const createURL = async (
   }
 
   return url;
+};
+
+const sortECommerceVariationOptions = (
+  options: IPostECommerceVariationOptionModel[],
+  attributes: IPostGetResultServiceECommerceAttribute<IPostTermPopulateService>[]
+) => {
+  const filteredOptions = options.filter((option) =>
+    attributes.some(
+      (attribute) =>
+        attribute._id?.toString() == option.attributeId?.toString() &&
+        attribute.variationTerms.some(
+          (variationTerm) => variationTerm._id?.toString() == option.variationTermId?.toString()
+        )
+    )
+  );
+
+  return filteredOptions.sort((optionA, optionB) => {
+    const optionAAttribute = attributes.findSingle('_id', optionA.attributeId);
+    const optionBAttribute = attributes.findSingle('_id', optionB.attributeId);
+    if (
+      optionAAttribute &&
+      optionBAttribute &&
+      optionAAttribute.attributeTerm &&
+      optionBAttribute.attributeTerm
+    ) {
+      return optionAAttribute.attributeTerm._id.toString() <
+        optionBAttribute.attributeTerm._id.toString()
+        ? -1
+        : 0;
+    }
+    return 1;
+  });
 };
 
 const transformContents = (
@@ -333,8 +372,6 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
         path: [
           'eCommerce.attributes.attributeTerm',
           'eCommerce.attributes.variationTerms',
-          'eCommerce.variations.options.variationTerm',
-          'eCommerce.defaultVariationOptions.variationTerm',
         ].join(' '),
         select: PopulationSelects.term,
         match: {
@@ -397,12 +434,22 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
     }
 
     if (doc.eCommerce) {
+      if (doc.eCommerce.attributes) {
+        doc.eCommerce.attributes = doc.eCommerce.attributes.filter(
+          (item) => item.attributeTermId
+        );
+      }
+
       if (doc.eCommerce.variations) {
-        for (const docECommerceVariationItem of doc.eCommerce.variations) {
-          docECommerceVariationItem.options =
-            docECommerceVariationItem.options.filter(
-              (item) => item.attributeId
-            );
+        for (const docECommerceVariation of doc.eCommerce.variations) {
+          docECommerceVariation.options = docECommerceVariation.options.filter(
+            (item) => item.attributeId
+          );
+
+          docECommerceVariation.options = sortECommerceVariationOptions(
+            docECommerceVariation.options,
+            doc.eCommerce?.attributes ?? []
+          );
         }
       }
 
@@ -411,11 +458,9 @@ const getDetailed = async (params: IPostGetDetailedParamService) => {
           doc.eCommerce.defaultVariationOptions.filter(
             (item) => item.attributeId
           );
-      }
-
-      if (doc.eCommerce.attributes) {
-        doc.eCommerce.attributes = doc.eCommerce.attributes.filter(
-          (item) => item.attributeTermId
+        doc.eCommerce.defaultVariationOptions = sortECommerceVariationOptions(
+          doc.eCommerce.defaultVariationOptions,
+          doc.eCommerce?.attributes ?? []
         );
       }
     }
@@ -519,8 +564,26 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
   if (params.typeId) {
     if (params.typeId.includes(PostTypeId.Product)) {
       query.populate({
+        path: [
+          'eCommerce.attributes.attributeTerm',
+          'eCommerce.attributes.variationTerms',
+        ].join(' '),
+        select: PopulationSelects.term,
+        match: {
+          typeId: {
+            $in: [PostTermTypeId.Attributes, PostTermTypeId.Variations],
+          },
+          statusId: StatusId.Active,
+          postTypeId: PostTypeId.Product,
+        },
+        options: { omitUndefined: true },
+        transform: (doc) => transformContents(doc, params.langId, true),
+      });
+
+      query.populate({
         path: 'eCommerce.variations.product',
-        transform: (doc) => transformProduct(doc, params.langId, true),
+        options: { omitUndefined: true },
+        transform: (doc) => transformProduct(doc, params.langId),
         populate: authorPopulation,
       });
     }
@@ -584,22 +647,34 @@ const getManyDetailed = async (params: IPostGetManyDetailedParamService) => {
     }
 
     if (doc.eCommerce) {
+      if (doc.eCommerce.attributes) {
+        doc.eCommerce.attributes = doc.eCommerce.attributes.filter(
+          (item) => item.attributeTerm
+        );
+
+        doc.eCommerce.attributes = doc.eCommerce.attributes.map(
+          (attribute) => ({
+            ...attribute,
+            variationTerms: attribute.variationTerms.filter(
+              (variationTerm) => variationTerm
+            ),
+          })
+        );
+      }
+
       if (doc.eCommerce.variations) {
-        doc.eCommerce.variations = doc.eCommerce.variations.filter(
-          (variation) => {
-            return variation.options.every((option) => {
-              return doc.eCommerce?.defaultVariationOptions?.some(
-                (defaultVariationOption) => {
-                  return (
-                    defaultVariationOption.attributeId.toString() ==
-                      option.attributeId.toString() &&
-                    defaultVariationOption.variationTermId.toString() ==
-                      option.variationTermId.toString()
-                  );
-                }
-              );
-            });
-          }
+        for (const docECommerceVariation of doc.eCommerce.variations) {
+          docECommerceVariation.options = sortECommerceVariationOptions(
+            docECommerceVariation.options,
+            doc.eCommerce?.attributes ?? []
+          );
+        }
+      }
+
+      if (doc.eCommerce.defaultVariationOptions) {
+        doc.eCommerce.defaultVariationOptions = sortECommerceVariationOptions(
+          doc.eCommerce.defaultVariationOptions,
+          doc.eCommerce?.attributes ?? []
         );
       }
     }

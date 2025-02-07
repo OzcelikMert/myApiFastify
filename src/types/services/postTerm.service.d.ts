@@ -11,6 +11,7 @@ export interface IPostTermPopulateService {
   _id: string;
   postTypeId: PostTypeId;
   typeId: PostTermTypeId;
+  rank: number
   contents?: IPostTermContentModel | IPostTermContentModel[];
 }
 

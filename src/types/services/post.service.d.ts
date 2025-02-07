@@ -30,10 +30,6 @@ export interface IPostAlternateService {
   url?: string;
 }
 
-export type IPostGetResultServiceECommerceVariationOption = {
-  variationTerm?: IPostTermPopulateService;
-} & IPostECommerceVariationOptionModel;
-
 export type IPostGetResultServiceECommerceVariation = {
   product?: Omit<IPostModel, 'contents'> & {
     alternates?: IPostAlternateService[];
@@ -41,8 +37,7 @@ export type IPostGetResultServiceECommerceVariation = {
     author?: IUserPopulateService;
     lastAuthor?: IUserPopulateService;
   };
-  options: IPostGetResultServiceECommerceVariationOption[];
-} & Omit<IPostECommerceVariationModel, 'options'>;
+} & IPostECommerceVariationModel;
 
 export type IPostGetResultServiceECommerceAttribute<T = string> = {
   variationTerms: T[];
@@ -69,9 +64,7 @@ export type IPostGetDetailedResultService = {
   'contents' | 'categories' | 'tags' | 'eCommerce' | 'authors'
 >;
 
-export type IPostGetManyDetailedResultService = {
-  eCommerce?: IPostGetResultServiceECommerce;
-} & Omit<IPostGetDetailedResultService, 'eCommerce'>;
+export type IPostGetManyDetailedResultService = {} & IPostGetDetailedResultService;
 
 export interface IPostGetParamService {
   typeId: PostTypeId;
