@@ -229,8 +229,8 @@ const updateProductWithId = async (
       for (const variation of serviceResultProduct.eCommerce.variations ?? []) {
         if (
           !reqData.body.eCommerce.variations.some(
-            (newProductVariation) =>
-              newProductVariation.product._id?.toString() ==
+            (newVariation) =>
+              newVariation.product._id?.toString() ==
               variation.productId.toString()
           )
         ) {
@@ -250,11 +250,12 @@ const updateProductWithId = async (
         let newVariationProductId = newVariation.product._id ?? "";
         if (
           serviceResultProduct.eCommerce.variations?.some(
-            (productVariation) =>
-              productVariation.productId.toString() ==
+            (variation) =>
+              variation.productId.toString() ==
               newVariationProductId.toString()
           )
         ) {
+          // Update
           await PostService.update({
             ...newVariation.product,
             _id: newVariationProductId,
@@ -267,6 +268,7 @@ const updateProductWithId = async (
             },
           });
         } else {
+          // Add new
           const serviceResultVariation = await PostService.add({
             ...newVariation.product,
             parentId: serviceResultProduct._id.toString(),
