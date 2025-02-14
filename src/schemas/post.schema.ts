@@ -32,7 +32,7 @@ const schemaECommerceAttribute = object({
   _id: string().optional(),
   typeId: z.nativeEnum(AttributeTypeId),
   attributeTermId: string().min(1),
-  variationTerms: array(string().min(1)),
+  variationTerms: array(string().min(1)).min(1),
 });
 
 const schemaECommerceVariationOption = object({

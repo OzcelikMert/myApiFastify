@@ -2,20 +2,22 @@ import string from './string';
 import { createHash } from 'crypto';
 
 export class VariableLibrary {
-  static clearAllScriptTags<T>(data: any, expectKeys?: string[]): T {
-    for (const key in data) {
+  static clearAllScriptTags<T>(data: T, expectKeys?: string[]): T {
+    const anyData = data as any;
+    const keys = Object.keys(anyData);
+    for (const key in keys) {
       if (expectKeys && expectKeys.includes(key)) continue;
 
-      let value = data[key];
-      if (typeof value === 'object') {
+      let value = anyData[key];
+      if (typeof value === 'object' || Array.isArray(value)) {
         value = this.clearAllScriptTags(value);
       } else if (typeof value === 'string') {
         value = value.removeScriptTags();
       }
 
-      data[key] = value;
+      anyData[key] = value;
     }
-    return data;
+    return anyData;
   }
   static isSet(...variable: any[]): boolean {
     let result;

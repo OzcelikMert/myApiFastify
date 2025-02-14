@@ -19,7 +19,8 @@ export class MongoDBHelpers {
   }
   static convertToObjectIdData<T>(data: T, keys: string[]): T {
     const anyData = data as any;
-    for (const dataKey in anyData) {
+    const dataKeys = Object.keys(anyData);
+    for (const dataKey in dataKeys) {
       if (keys.includes(dataKey)) {
         if (Array.isArray(anyData[dataKey])) {
           anyData[dataKey] = MongoDBHelpers.convertToObjectIdArray(
