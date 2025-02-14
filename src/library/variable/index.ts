@@ -5,7 +5,7 @@ export class VariableLibrary {
   static clearAllScriptTags<T>(data: T, expectKeys?: string[]): T {
     const anyData = data as any;
     const keys = Object.keys(anyData);
-    for (const key in keys) {
+    for (const key of keys) {
       if (expectKeys && expectKeys.includes(key)) continue;
 
       let value = anyData[key];
