@@ -250,100 +250,110 @@ const updateProductWithId = async (
     const reqData = req as IPostPutProductWithIdSchema;
     const serviceResultProduct = req.cachedServiceResult as IPostModel;
 
-    if (
-      reqData.body.eCommerce.typeId == ProductTypeId.Variable &&
-      serviceResultProduct.eCommerce
-    ) {
+    if (serviceResultProduct.eCommerce) {
       let variations: IPostECommerceVariationModel[] = [];
 
-      // Delete removed variations
-      const removedVariations: string[] = [];
-      for (const variation of serviceResultProduct.eCommerce.variations ?? []) {
-        if (
-          !reqData.body.eCommerce.variations.some(
-            (newVariation) =>
-              newVariation.product._id?.toString() ==
-              variation.productId.toString()
-          )
-        ) {
-          removedVariations.push(variation.productId.toString());
-        }
-      }
-
-      if (removedVariations.length > 0) {
-        await PostService.deleteMany({
-          _id: removedVariations,
-          typeId: PostTypeId.ProductVariation,
-        });
-      }
-
-      // Update variations or add new variations
-      for (const newVariation of reqData.body.eCommerce.variations) {
-        let newVariationProductId = newVariation.product._id ?? '';
-        if (
-          serviceResultProduct.eCommerce.variations?.some(
-            (variation) =>
-              variation.productId.toString() == newVariationProductId.toString()
-          )
-        ) {
-          // Update
-          await PostService.update({
-            ...newVariation.product,
-            _id: newVariationProductId,
-            parentId: serviceResultProduct._id.toString(),
-            typeId: PostTypeId.ProductVariation,
-            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
-            eCommerce: {
-              ...newVariation.product.eCommerce,
-              typeId: ProductTypeId.Simple,
-            },
-          });
-        } else {
-          // Add new
-          const serviceResultVariation = await PostService.add({
-            ...newVariation.product,
-            parentId: serviceResultProduct._id.toString(),
-            typeId: PostTypeId.ProductVariation,
-            authorId: req.sessionAuth!.user!.userId.toString(),
-            lastAuthorId: req.sessionAuth!.user!.userId.toString(),
-            eCommerce: {
-              ...newVariation.product.eCommerce,
-              typeId: ProductTypeId.Simple,
-            },
-          });
-          newVariationProductId = serviceResultVariation._id.toString();
+      if (reqData.body.eCommerce.typeId == ProductTypeId.Variable) {
+        // Delete removed variations
+        const removedVariations: string[] = [];
+        for (const variation of serviceResultProduct.eCommerce.variations ??
+          []) {
+          if (
+            !reqData.body.eCommerce.variations.some(
+              (newVariation) =>
+                newVariation.product._id?.toString() ==
+                variation.productId.toString()
+            )
+          ) {
+            removedVariations.push(variation.productId.toString());
+          }
         }
 
-        variations.push({
-          options: newVariation.options,
-          productId: newVariationProductId,
-        });
+        if (removedVariations.length > 0) {
+          await PostService.deleteMany({
+            _id: removedVariations,
+            typeId: PostTypeId.ProductVariation,
+          });
+        }
 
-        for (const attribute of reqData.body.eCommerce.attributes) {
-          if (MongoDBHelpers.convertToObjectId(attribute._id)) continue;
-          const attributeId = MongoDBHelpers.createObjectId().toString();
+        // Update variations or add new variations
+        for (const newVariation of reqData.body.eCommerce.variations) {
+          let newVariationProductId = newVariation.product._id ?? '';
+          if (
+            serviceResultProduct.eCommerce.variations?.some(
+              (variation) =>
+                variation.productId.toString() ==
+                newVariationProductId.toString()
+            )
+          ) {
+            // Update
+            await PostService.update({
+              ...newVariation.product,
+              _id: newVariationProductId,
+              parentId: serviceResultProduct._id.toString(),
+              typeId: PostTypeId.ProductVariation,
+              lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+              eCommerce: {
+                ...newVariation.product.eCommerce,
+                typeId: ProductTypeId.Simple,
+              },
+            });
+          } else {
+            // Add new
+            const serviceResultVariation = await PostService.add({
+              ...newVariation.product,
+              parentId: serviceResultProduct._id.toString(),
+              typeId: PostTypeId.ProductVariation,
+              authorId: req.sessionAuth!.user!.userId.toString(),
+              lastAuthorId: req.sessionAuth!.user!.userId.toString(),
+              eCommerce: {
+                ...newVariation.product.eCommerce,
+                typeId: ProductTypeId.Simple,
+              },
+            });
+            newVariationProductId = serviceResultVariation._id.toString();
+          }
 
-          reqData.body.eCommerce.defaultVariationOptions =
-            reqData.body.eCommerce.defaultVariationOptions.map((option) => ({
-              ...option,
-              attributeId:
-                option.attributeId == attribute._id
-                  ? attributeId
-                  : option.attributeId,
+          variations.push({
+            options: newVariation.options,
+            productId: newVariationProductId,
+          });
+
+          for (const attribute of reqData.body.eCommerce.attributes) {
+            if (MongoDBHelpers.convertToObjectId(attribute._id)) continue;
+            const attributeId = MongoDBHelpers.createObjectId().toString();
+
+            reqData.body.eCommerce.defaultVariationOptions =
+              reqData.body.eCommerce.defaultVariationOptions.map((option) => ({
+                ...option,
+                attributeId:
+                  option.attributeId == attribute._id
+                    ? attributeId
+                    : option.attributeId,
+              }));
+
+            variations = variations.map((variation) => ({
+              ...variation,
+              options: variation.options.map((option) => ({
+                ...option,
+                attributeId:
+                  option.attributeId == attribute._id
+                    ? attributeId
+                    : option.attributeId,
+              })),
             }));
 
-          variations = variations.map((variation) => ({
-            ...variation,
-            options: variation.options.map((option) => ({
-              ...option,
-              attributeId:
-                option.attributeId == attribute._id
-                  ? attributeId
-                  : option.attributeId,
-            })),
-          }));
-
-          attribute._id = attributeId;
+            attribute._id = attributeId;
+          }
+        }
+      }else if(reqData.body.eCommerce.typeId == ProductTypeId.Simple){
+        if(serviceResultProduct.eCommerce.typeId == ProductTypeId.Variable){
+          await PostService.deleteMany({
+            parentId: serviceResultProduct._id.toString(),
+            typeId: PostTypeId.ProductVariation,
+          });
+          variations = [];
+          reqData.body.eCommerce.defaultVariationOptions = [];
         }
       }
 
