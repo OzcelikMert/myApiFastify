@@ -17,7 +17,7 @@ const error = async (
       url: req.originalUrl,
       ip: req.ip,
       method: req.method,
-      message: JSON.stringify({ error: e }),
+      message: e ?? "",
       params: JSON.stringify(req.params),
       query: JSON.stringify(req.query),
       body: JSON.stringify(req.body),
