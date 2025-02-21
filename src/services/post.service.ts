@@ -738,7 +738,7 @@ const getPrevNext = async (params: IPostGetPrevNextParamService) => {
 
   const query = postModel.findOne(
     filters,
-    '_id contents._id contents.langId contents.title contents.url contents.image createdAt'
+    '_id contents._id contents.langId contents.title contents.url contents.image createdAt updatedAt'
   );
 
   switch (sortTypeId) {
