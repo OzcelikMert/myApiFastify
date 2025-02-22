@@ -10,6 +10,7 @@ export interface IUserModel {
   authorId?: string | ObjectId;
   lastAuthorId?: string | ObjectId;
   name: string;
+  username: string;
   email: string;
   image: string;
   url?: string;

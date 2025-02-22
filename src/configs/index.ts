@@ -23,6 +23,7 @@ const Config: IConfig = {
   passwordSalt: '_@QffsDh14Q',
   publicFolders: [['uploads']],
   onlineUsers: [],
+  viewers: [],
   paths: {
     root: '',
     uploads: {
@@ -121,7 +122,7 @@ class InitConfig {
     });
     if (serviceResultUser) {
       console.log(
-        chalk.blue(`- ${serviceResultUser.name} (${serviceResultUser.email})`)
+        chalk.blue(`- ${serviceResultUser.name} (${serviceResultUser.username})`)
       );
     } else {
       const password = generate({
@@ -129,6 +130,7 @@ class InitConfig {
       });
       await UserService.add({
         name: 'Super Admin',
+        username: 'super_admin_mimi',
         email: 'admin@admin.com',
         statusId: StatusId.Active,
         password: password,

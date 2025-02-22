@@ -21,6 +21,8 @@ import { IUserModel } from 'types/models/user.model';
 import { PermissionUtil } from '@utils/permission.util';
 import { UserRoleId } from '@constants/userRoles';
 import { PopulationSelects } from '@constants/populationSelects';
+import { ISessionAuth } from 'types/services/sessionAuth.service';
+import { PermissionId } from '@constants/permissions';
 
 const createURL = async (_id: string | null, name: string) => {
   let urlAlreadyCount = 2;
@@ -50,10 +52,10 @@ const get = async (params: IUserGetParamService) => {
     statusId: { $ne: StatusId.Deleted },
   };
 
-  if (params.email) {
+  if (params.username) {
     filters = {
       ...filters,
-      email: params.email,
+      username: params.username,
     };
   }
   if (params.password) {
@@ -116,11 +118,11 @@ const getMany = async (params: IUserGetManyParamService) => {
     statusId: { $ne: StatusId.Deleted },
     roleId: { $ne: UserRoleId.SuperAdmin },
   };
-
-  if (params.email) {
+  if (params.url) {
     filters = {
       ...filters,
-      email: { $regex: new RegExp(params.email, 'i') },
+      url: { $regex: new RegExp(params.url, 'i') },
+      roleId: { $ne: UserRoleId.SuperAdmin },
     };
   }
   if (params._id) {
@@ -173,7 +175,7 @@ const authorPopulation = {
 
 const getDetailed = async (
   params: IUserGetDetailedParamService,
-  isAuthenticated = false
+  sessionAuth?: ISessionAuth
 ) => {
   params = MongoDBHelpers.convertToObjectIdData(params, [
     ...userObjectIdKeys,
@@ -184,12 +186,6 @@ const getDetailed = async (
     statusId: { $ne: StatusId.Deleted },
   };
 
-  if (params.email) {
-    filters = {
-      ...filters,
-      email: params.email,
-    };
-  }
   if (params.password) {
     filters = {
       ...filters,
@@ -239,9 +235,28 @@ const getDetailed = async (
   if (doc) {
     delete doc.password;
 
-    if (!isAuthenticated) {
+    if (!sessionAuth) {
       delete doc.phone;
-      doc.email = "";
+      delete doc.username;
+    } else {
+      if (
+        sessionAuth.user.userId.toString() != doc._id.toString() &&
+        PermissionUtil.checkPermissionId(
+          sessionAuth.user.roleId,
+          sessionAuth.user.permissions,
+          [PermissionId.UserAdd, PermissionId.UserEdit]
+        )
+      ) {
+        if (
+          !PermissionUtil.checkPermissionRoleRank(
+            sessionAuth.user.roleId,
+            doc.roleId,
+            false
+          )
+        ) {
+          delete doc.username;
+        }
+      }
     }
 
     doc.isOnline =
@@ -253,7 +268,7 @@ const getDetailed = async (
 
 const getManyDetailed = async (
   params: IUserGetManyDetailedParamService,
-  isAuthenticated = false
+  sessionAuth?: ISessionAuth
 ) => {
   params = MongoDBHelpers.convertToObjectIdData(params, [
     ...userObjectIdKeys,
@@ -265,10 +280,11 @@ const getManyDetailed = async (
     roleId: { $ne: UserRoleId.SuperAdmin },
   };
 
-  if (params.email) {
+  if (params.url) {
     filters = {
       ...filters,
-      email: { $regex: new RegExp(params.email, 'i') },
+      url: { $regex: new RegExp(params.url, 'i') },
+      roleId: { $ne: UserRoleId.SuperAdmin },
     };
   }
   if (params._id) {
@@ -314,17 +330,36 @@ const getManyDetailed = async (
 
   const docs = await query.lean<IUserGetDetailedResultService[]>().exec();
 
-  return docs.map((user) => {
-    delete user.password;
+  return docs.map((doc) => {
+    delete doc.password;
 
-    if (!isAuthenticated) {
-      delete user.phone;
-      user.email = "";
+    if (!sessionAuth) {
+      delete doc.phone;
+      delete doc.username;
+    } else {
+      if (
+        sessionAuth.user.userId.toString() != doc._id.toString() &&
+        PermissionUtil.checkPermissionId(
+          sessionAuth.user.roleId,
+          sessionAuth.user.permissions,
+          [PermissionId.UserAdd, PermissionId.UserEdit]
+        )
+      ) {
+        if (
+          !PermissionUtil.checkPermissionRoleRank(
+            sessionAuth.user.roleId,
+            doc.roleId,
+            false
+          )
+        ) {
+          delete doc.username;
+        }
+      }
     }
 
-    user.isOnline =
-      Config.onlineUsers.indexOfKey('_id', user._id?.toString()) > -1;
-    return user;
+    doc.isOnline =
+      Config.onlineUsers.indexOfKey('_id', doc._id?.toString()) > -1;
+    return doc;
   });
 };
 

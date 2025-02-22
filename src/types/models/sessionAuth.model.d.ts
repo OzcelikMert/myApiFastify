@@ -4,6 +4,7 @@ import { ObjectId } from 'mongoose';
 export interface ISessionAuthUserModel {
   userId: string | ObjectId;
   roleId: UserRoleId;
+  username: string;
   email: string;
   name: string;
   url: string;

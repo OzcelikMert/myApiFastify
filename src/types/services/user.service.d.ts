@@ -16,13 +16,14 @@ export interface IUserPopulateService {
 export type IUserGetDetailedResultService = {
   isOnline?: boolean;
   password?: string;
+  username?: string;
   author?: IUserPopulateService;
   lastAuthor?: IUserPopulateService;
-} & Omit<IUserModel, 'password'>;
+} & Omit<IUserModel, 'password' | 'username'>;
 
 export interface IUserGetParamService {
   _id?: string;
-  email?: string;
+  username?: string;
   password?: string;
   statusId?: StatusId;
   url?: string;
@@ -33,7 +34,7 @@ export interface IUserGetParamService {
 export interface IUserGetManyParamService {
   _id?: string[];
   statusId?: StatusId;
-  email?: string;
+  url?: string;
   permissions?: PermissionId[];
   ignoreUserId?: string[];
   banDateEnd?: Date;
@@ -41,7 +42,6 @@ export interface IUserGetManyParamService {
 
 export interface IUserGetDetailedParamService {
   _id?: string;
-  email?: string;
   password?: string;
   statusId?: StatusId;
   url?: string;
@@ -52,7 +52,7 @@ export interface IUserGetDetailedParamService {
 export interface IUserGetManyDetailedParamService {
   _id?: string[];
   statusId?: StatusId;
-  email?: string;
+  url?: url;
   count?: number;
   page?: number;
   permissions?: PermissionId[];
@@ -66,16 +66,7 @@ export type IUserAddParamService = {
 
 export type IUserUpdateParamService = {
   _id: string;
-  roleId?: UserRoleId;
-  statusId?: StatusId;
-  name?: string;
-  email?: string;
-  permissions?: PermissionId[];
-  password?: string;
-} & Omit<
-  IUserAddParamService,
-  '_id' | 'roleId' | 'statusId' | 'name' | 'email' | 'permissions' | 'password'
->;
+} & Omit<Partial<IUserAddParamService>, '_id'>;
 
 export type IUserUpdateStatusManyParamService = {
   _id: string[];

@@ -30,7 +30,7 @@ const getNumber = async (req: FastifyRequest, reply: FastifyReply) => {
     const weeklyTotal = total;
 
     apiResult.data = {
-      liveTotal: Config.onlineUsers.length,
+      liveTotal: Config.viewers.length,
       averageTotal: averageTotal,
       weeklyTotal: weeklyTotal,
     };

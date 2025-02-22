@@ -2,7 +2,7 @@ import { VariableLibrary } from '@library/variable';
 
 const createToken = (
   userId: string,
-  email: string,
+  username: string,
   password: string,
   ip: string
 ): string => {
@@ -10,7 +10,7 @@ const createToken = (
     (
       userId +
       'HAaRsLbXC@3P_98' +
-      email +
+      username +
       'WwSvQrr86*HK' +
       password +
       'AgGeO26u7n_K&RQ' +

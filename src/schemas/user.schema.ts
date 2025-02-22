@@ -1,19 +1,23 @@
-import { object, string, array, z } from 'zod';
+import { object, string, array, z, ZodIssueCode } from 'zod';
 import { UserRoleId } from '@constants/userRoles';
 import { StatusId } from '@constants/status';
 import { PermissionId } from '@constants/permissions';
 import { ZodUtil } from '@utils/zod.util';
 
-const schema = {
+const schema = object({
   roleId: z.nativeEnum(UserRoleId),
   statusId: z.nativeEnum(StatusId),
   name: string().min(3),
+  username: string()
+    .min(2)
+    .toLowerCase()
+    .regex(/^[a-zA-Z0-9_-]+$/, ZodIssueCode.invalid_string),
   email: string().min(1).email(),
   password: string().min(1),
   permissions: array(z.nativeEnum(PermissionId)).default([]),
   banDateEnd: string().optional(),
   banComment: string().optional(),
-};
+});
 
 const getWithIdSchema = object({
   params: object({
@@ -37,7 +41,7 @@ const getManySchema = object({
   query: object({
     _id: ZodUtil.convertToArray(array(string().min(1))).optional(),
     statusId: ZodUtil.convertToNumber(z.nativeEnum(StatusId)).optional(),
-    email: string().optional(),
+    url: string().optional(),
     count: z.coerce.number().optional(),
     page: z.coerce.number().optional(),
     permissions: ZodUtil.convertToArray(
@@ -47,22 +51,24 @@ const getManySchema = object({
 });
 
 const postSchema = object({
-  body: object(schema),
+  body: schema,
 });
 
 const putWithIdSchema = object({
   params: object({
     _id: string().min(1),
   }),
-  body: object({
-    ...schema,
-    password: string().optional(),
-  }),
+  body: schema.merge(
+    object({
+      password: string().optional(),
+    })
+  ),
 });
 
 const putProfileSchema = object({
   body: object({
     name: string().min(1),
+    email: string().min(1).email(),
     comment: string().optional(),
     phone: string().optional(),
     facebook: string().optional(),

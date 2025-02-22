@@ -4,29 +4,45 @@ import { LogMiddleware } from '@middlewares/log.middleware';
 
 const set = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
-    if (!req.isFromAdminPanel) {
-      const ip = req.ip;
-      const date = new Date();
-      const _id =
-        req.sessionAuth && req.sessionAuth.user
-          ? req.sessionAuth.user.userId.toString()
-          : '';
+    const ip = req.ip;
+    const date = new Date();
 
-      Config.onlineUsers = Config.onlineUsers.filter(
-        (onlineUser) => date.diffMinutes(onlineUser.updatedAt) < 10
+    if (!req.isFromAdminPanel) {
+      // Clear offline viewers
+      Config.viewers = Config.viewers.filter(
+        (item) => date.diffMinutes(item.updatedAt) < 10
       );
 
-      const findIndex = Config.onlineUsers.indexOfKey('ip', ip);
+      // Update or add new viewer
+      const findIndex = Config.viewers.indexOfKey('ip', ip);
       if (findIndex > -1) {
-        Config.onlineUsers[findIndex].updatedAt = date;
-        Config.onlineUsers[findIndex]._id = _id;
+        Config.viewers[findIndex].updatedAt = date;
       } else {
-        Config.onlineUsers.push({
+        Config.viewers.push({
           ip: ip,
           createdAt: date,
           updatedAt: date,
-          _id: _id,
         });
+      }
+    } else {
+      if (req.sessionAuth && req.sessionAuth.user) {
+        // Clear offline online users
+        Config.onlineUsers = Config.onlineUsers.filter(
+          (item) => date.diffMinutes(item.updatedAt) < 10
+        );
+
+        // Update or add new online user
+        const findIndex = Config.onlineUsers.indexOfKey('ip', ip);
+        if (findIndex > -1) {
+          Config.onlineUsers[findIndex].updatedAt = date;
+        } else {
+          Config.onlineUsers.push({
+            ip: ip,
+            _id: req.sessionAuth.user.userId,
+            createdAt: date,
+            updatedAt: date,
+          });
+        }
       }
     }
   });

@@ -8,6 +8,7 @@ export interface IOnlineUser {
 export interface IConfig {
   passwordSalt: string;
   publicFolders: string[][];
+  viewers: Omit<IOnlineUser, '_id'>[];
   onlineUsers: IOnlineUser[];
   paths: {
     root: string;

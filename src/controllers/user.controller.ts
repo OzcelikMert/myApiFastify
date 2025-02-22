@@ -18,6 +18,7 @@ import { IUserModel } from 'types/models/user.model';
 import { SessionAuthUtil } from '@utils/sessinAuth.util';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
+import { ISessionAuth } from 'types/services/sessionAuth.service';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -30,7 +31,7 @@ const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
         ...reqData.params,
         ...reqData.query,
       },
-      Boolean(req.isFromAdminPanel && req.sessionAuth)
+      req.sessionAuth as (ISessionAuth | undefined)
     );
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
@@ -47,7 +48,7 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
       {
         ...reqData.query,
       },
-      Boolean(req.isFromAdminPanel && req.sessionAuth)
+      req.sessionAuth as (ISessionAuth | undefined)
     );
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
@@ -65,7 +66,7 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
         ...reqData.params,
         ...reqData.query,
       },
-      Boolean(req.isFromAdminPanel && req.sessionAuth)
+      req.sessionAuth as (ISessionAuth | undefined)
     );
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
@@ -173,7 +174,7 @@ const updatePassword = async (req: FastifyRequest, reply: FastifyReply) => {
     if (serviceResult) {
       const token = SessionAuthUtil.createToken(
         serviceResult._id.toString(),
-        serviceResult.email,
+        serviceResult.username,
         serviceResult.password,
         req.ip
       );

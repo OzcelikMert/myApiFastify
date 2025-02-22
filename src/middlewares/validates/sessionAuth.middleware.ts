@@ -23,7 +23,7 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
       if (user) {
         const token = SessionAuthUtil.createToken(
           user._id.toString(),
-          user.email,
+          user.username,
           user.password,
           req.ip
         );
@@ -76,6 +76,7 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
           const sessionAuthUser: ISessionAuthUser = {
             ...req.sessionAuth.user,
             userId: serviceResult._id.toString(),
+            username: serviceResult.username,
             email: serviceResult.email,
             name: serviceResult.name,
             url: serviceResult.url ?? '',
@@ -96,7 +97,7 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
           ) {
             const token = SessionAuthUtil.createToken(
               serviceResult._id.toString(),
-              serviceResult.email,
+              serviceResult.username,
               serviceResult.password,
               req.ip
             );

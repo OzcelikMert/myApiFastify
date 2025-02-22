@@ -1,8 +1,11 @@
-import { object, string, z } from 'zod';
+import { object, string, z, ZodIssueCode } from 'zod';
 
 const postSchema = object({
   body: object({
-    email: string().min(1).email(),
+    username: string()
+      .min(2)
+      .toLowerCase()
+      .regex(/^[a-zA-Z0-9_-]+$/, ZodIssueCode.invalid_string),
     password: string().min(1),
   }),
 });

@@ -61,12 +61,13 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
         if (
           PermissionUtil.checkPermissionRoleRank(
             userRoleId,
-            sessionUser!.roleId
+            sessionUser!.roleId,
+            false
           )
         ) {
           apiResult.status = false;
           apiResult.setErrorCode = ApiErrorCodes.noPerm;
-          apiResult.setStatusCode = ApiStatusCodes.notFound;
+          apiResult.setStatusCode = ApiStatusCodes.forbidden;
         }
       } else {
         apiResult.status = false;
@@ -85,15 +86,15 @@ const checkRoleRank = async (req: FastifyRequest, reply: FastifyReply) => {
   });
 };
 
-const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
+const checkRegisteredUsername = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
     const apiResult = new ApiResult();
 
     const reqData = req as IUserPutWithIdSchema;
 
-    if (reqData.body.email) {
+    if (reqData.body.username) {
       const serviceResult = await UserService.get({
-        email: reqData.body.email,
+        username: reqData.body.username,
         ignoreUserId: reqData.params._id ? [reqData.params._id] : undefined,
       });
 
@@ -110,7 +111,7 @@ const checkAlreadyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
   });
 };
 
-const checkPasswordWithSessionEmail = async (
+const checkPasswordWithSessionUsername = async (
   req: FastifyRequest,
   reply: FastifyReply
 ) => {
@@ -120,7 +121,7 @@ const checkPasswordWithSessionEmail = async (
     const reqData = req as IUserPutPasswordSchema;
 
     const serviceResult = await UserService.get({
-      email: req.sessionAuth!.user?.email,
+      username: req.sessionAuth!.user?.username,
       password: reqData.body.password,
     });
 
@@ -139,6 +140,6 @@ const checkPasswordWithSessionEmail = async (
 export const UserMiddleware = {
   checkWithId: checkWithId,
   checkRoleRank: checkRoleRank,
-  checkAlreadyEmail: checkAlreadyEmail,
-  checkPasswordWithSessionEmail: checkPasswordWithSessionEmail,
+  checkRegisteredUsername: checkRegisteredUsername,
+  checkPasswordWithSessionUsername: checkPasswordWithSessionUsername,
 };

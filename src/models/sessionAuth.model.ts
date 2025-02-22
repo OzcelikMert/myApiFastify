@@ -11,6 +11,7 @@ const schemaUser = new mongoose.Schema<ISessionAuthUserModel>(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: userModel },
     roleId: { type: Number, required: true, enum: UserRoleId },
     ip: { type: String, default: '', required: true },
+    username: { type: String, required: true },
     email: { type: String, required: true },
     name: { type: String, required: true },
     image: { type: String, required: true },

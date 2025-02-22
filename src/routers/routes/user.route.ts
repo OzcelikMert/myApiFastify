@@ -42,7 +42,7 @@ export const userRoute = function (
         SessionAuthMiddleware.check,
         PermissionMiddleware.check(UserEndPointPermission.ADD),
         UserMiddleware.checkRoleRank,
-        UserMiddleware.checkAlreadyEmail,
+        UserMiddleware.checkRegisteredUsername,
       ],
     },
     UserController.add
@@ -73,7 +73,7 @@ export const userRoute = function (
       preHandler: [
         RequestMiddleware.check(UserSchema.putPassword),
         SessionAuthMiddleware.check,
-        UserMiddleware.checkPasswordWithSessionEmail,
+        UserMiddleware.checkPasswordWithSessionUsername,
       ],
     },
     UserController.updatePassword
@@ -87,7 +87,7 @@ export const userRoute = function (
         PermissionMiddleware.check(UserEndPointPermission.UPDATE),
         UserMiddleware.checkWithId,
         UserMiddleware.checkRoleRank,
-        UserMiddleware.checkAlreadyEmail,
+        UserMiddleware.checkRegisteredUsername,
       ],
     },
     UserController.updateWithId

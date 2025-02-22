@@ -11,6 +11,7 @@ const schema = new mongoose.Schema<IUserModel>(
     authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     lastAuthorId: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     image: { type: String, default: '' },
+    username: { type: String, required: true },
     name: { type: String, default: '' },
     url: { type: String, default: '' },
     comment: { type: String, default: '' },
