@@ -1,4 +1,4 @@
-import { object, string, array, z, ZodIssueCode } from 'zod';
+import { object, string, array, z } from 'zod';
 import { UserRoleId } from '@constants/userRoles';
 import { StatusId } from '@constants/status';
 import { PermissionId } from '@constants/permissions';
@@ -11,7 +11,7 @@ const schema = object({
   username: string()
     .min(2)
     .toLowerCase()
-    .regex(/^[a-zA-Z0-9_-]+$/, ZodIssueCode.invalid_string),
+    .regex(/^[a-zA-Z0-9_-]+$/),
   email: string().min(1).email(),
   password: string().min(1),
   permissions: array(z.nativeEnum(PermissionId)).default([]),
