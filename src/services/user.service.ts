@@ -333,7 +333,7 @@ const getManyDetailed = async (
   return docs.map((doc) => {
     delete doc.password;
 
-    if (!sessionAuth) {
+    if (!sessionAuth || !sessionAuth.user) {
       delete doc.phone;
       delete doc.username;
     } else {
