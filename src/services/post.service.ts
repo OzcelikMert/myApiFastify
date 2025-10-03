@@ -881,10 +881,18 @@ const update = async (params: IPostUpdateParamService) => {
     await doc.save();
   }
 
+  if (!doc) {
+    return null;
+  }
+
+  if (!doc) {
+    return null;
+  }
+
   return {
-    _id: doc?._id,
-    pageTypeId: doc?.pageTypeId,
-    lastAuthorId: doc?.lastAuthorId,
+    _id: doc._id,
+    pageTypeId: doc.pageTypeId,
+    lastAuthorId: doc.lastAuthorId,
   };
 };
 
