@@ -67,7 +67,6 @@ export const options = {
   pluginTimeout: 10000,
   trustProxy: true,
   logger: true,
-  ignoreTrailingSlash: true,
   ...(SSLKey && SSLCert ? { 
     https: {
       key: SSLKey,
