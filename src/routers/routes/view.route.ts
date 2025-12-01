@@ -19,5 +19,15 @@ export const viewRoute = function (
     { preHandler: [SessionAuthMiddleware.check] },
     ViewController.getStatistics
   );
+  fastify.get(
+    endPoint.WEBSOCKET_VISITOR_COUNT,
+    { websocket: true },
+    ViewController.webSocketLiveVisitorCount
+  );
+  fastify.get(
+    endPoint.WEBSOCKET_ONLINE_USERS,
+    { websocket: true, preHandler: [SessionAuthMiddleware.check] },
+    ViewController.webSocketOnlineUsers
+  );
   done();
 };

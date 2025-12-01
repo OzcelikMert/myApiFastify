@@ -23,7 +23,7 @@ const Config: IConfig = {
   passwordSalt: '_@QffsDh14Q',
   publicFolders: [['uploads']],
   onlineUsers: [],
-  viewers: [],
+  visitorCount: 0,
   paths: {
     root: '',
     uploads: {

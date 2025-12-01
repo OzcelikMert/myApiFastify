@@ -11,6 +11,7 @@ declare module 'fastify' {
     sessionAuth?: Session<ISessionAuth>;
     isFromAdminPanel: boolean;
     cachedServiceResult?: any;
+    isAuthenticated: boolean;
   }
 
   export interface FastifyReply {

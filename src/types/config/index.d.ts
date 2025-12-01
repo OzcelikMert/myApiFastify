@@ -1,14 +1,16 @@
+import { WebSocket } from "@fastify/websocket";
+
 export interface IOnlineUser {
   ip: string;
   _id: string;
   createdAt: Date;
-  updatedAt: Date;
+  connection: WebSocket
 }
 
 export interface IConfig {
   passwordSalt: string;
   publicFolders: string[][];
-  viewers: Omit<IOnlineUser, '_id'>[];
+  visitorCount: number;
   onlineUsers: IOnlineUser[];
   paths: {
     root: string;

@@ -7,7 +7,7 @@ const set = async (req: FastifyRequest, reply: FastifyReply) => {
     const ip = req.ip;
     const date = new Date();
 
-    if (!req.isFromAdminPanel) {
+    /*if (!req.isFromAdminPanel) {
       // Clear offline viewers
       Config.viewers = Config.viewers.filter(
         (item) => date.diffMinutes(item.updatedAt) < 10
@@ -44,7 +44,7 @@ const set = async (req: FastifyRequest, reply: FastifyReply) => {
           });
         }
       }
-    }
+    }*/
   });
 };
 

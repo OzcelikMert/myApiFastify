@@ -14,6 +14,7 @@ import fastifyCors from '@fastify/cors';
 import fastifyFormBody from '@fastify/formbody';
 import fastifyCompress from '@fastify/compress';
 import fastifyMultipart from '@fastify/multipart';
+import websocketPlugin from '@fastify/websocket';
 import chalk from 'chalk';
 import { routers } from '@routers/index';
 import InitConfig from '@configs/index';
@@ -45,6 +46,7 @@ export default async function plugin (app: FastifyInstance, options: {}) {
 
   await app.register(fastifyCompress);
   await app.register(fastifyMultipart);
+  await app.register(websocketPlugin)
 
   await app.addHook('onResponse', async (request, reply) => {
     const responseTime = reply.elapsedTime;
