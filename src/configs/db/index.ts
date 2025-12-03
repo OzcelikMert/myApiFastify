@@ -1,16 +1,16 @@
 import mongoose, { ConnectOptions } from 'mongoose';
 import config from 'config';
 
-const dbProtocol = config.get<string>('dbProtocol');
-const dbName = config.get<string>('dbName');
-const dbHost = config.get<string>('dbHost');
-const dbHostParams = config.get<string>('dbHostParams');
-const dbPort = config.get<number>('dbPort');
-const dbUser = config.get<string>('dbUser');
-const dbPassword = config.get<string>('dbPassword');
+const protocol = config.get<string>('dbProtocol');
+const name = config.get<string>('dbName');
+const host = config.get<string>('dbHost');
+const hostParams = config.get<string>('dbHostParams');
+const port = config.get<number>('dbPort');
+const user = config.get<string>('dbUser');
+const password = config.get<string>('dbPassword');
 
 export function getDBUri() {
-  return `${dbProtocol}://${dbHost}${dbPort ? `:${dbPort}` : ''}${dbHostParams ? `${dbHostParams}` : ''}`;
+  return `${protocol}://${host}${port ? `:${port}` : ''}${hostParams ? `${hostParams}` : ''}`;
 }
 
 export async function dbConnect() {
@@ -20,9 +20,9 @@ export async function dbConnect() {
       noDelay: true,
       autoCreate: true,
       autoIndex: true,
-      dbName: dbName,
-      user: dbUser || undefined,
-      pass: dbPassword || undefined,
+      dbName: name,
+      user: user || undefined,
+      pass: password || undefined,
     } as ConnectOptions
   );
 }

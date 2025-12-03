@@ -12,14 +12,5 @@ export interface IConfig {
   publicFolders: string[][];
   visitorCount: number;
   onlineUsers: IOnlineUser[];
-  paths: {
-    root: string;
-    uploads: {
-      images: string;
-      flags: string;
-      video: string;
-      static: string;
-    };
-  };
   defaultLangId: string;
 }

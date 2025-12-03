@@ -11,7 +11,7 @@ import {
   IGalleryGetManyParamService,
   IGalleryGetParamService,
   IGalleryGetDetailedResultService,
-} from 'types/services/gallery.service';
+} from 'types/services/db/gallery.service';
 import { galleryModel } from '@models/gallery.model';
 import { PopulationSelects } from '@constants/populationSelects';
 

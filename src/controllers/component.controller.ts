@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { IComponentGetDetailedResultService } from 'types/services/component.service';
+import { IComponentGetDetailedResultService } from 'types/services/db/component.service';
 import {
   IComponentDeleteManySchema,
   IComponentGetManySchema,
@@ -10,8 +10,9 @@ import {
   IComponentPostSchema,
   IComponentPutWithIdSchema,
 } from '@schemas/component.schema';
-import { ComponentService } from '@services/component.service';
+import { ComponentService } from '@services/db/component.service';
 import { IComponentModel } from 'types/models/component.model';
+import { ComponentCacheService } from '@services/cache/component.cache.service';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -48,10 +49,25 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     const apiResult = new ApiResult<IComponentGetDetailedResultService[]>();
 
     const reqData = req as IComponentGetManySchema;
+    let isCachable = false;
 
-    apiResult.data = await ComponentService.getManyDetailed({
-      ...reqData.query,
-    });
+    if (!req.isFromAdminPanel && reqData.query._id) {
+      apiResult.data = await ComponentCacheService.getMany(reqData.query);
+      if(apiResult.data && apiResult.data.length != reqData.query._id.length) {
+        apiResult.data = null;
+      }
+      isCachable = true;
+    }
+
+    if (apiResult.data == null) {
+      apiResult.data = await ComponentService.getManyDetailed({
+        ...reqData.query,
+      });
+
+      if (isCachable && apiResult.data.length > 0) {
+        await ComponentCacheService.addMany(apiResult.data);
+      }
+    }
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
@@ -69,6 +85,8 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
 
+    await ComponentCacheService.deleteMany({});
+
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
 };
@@ -85,6 +103,8 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
 
+    await ComponentCacheService.deleteMany({ _id: [reqData.params._id] });
+
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
 };
@@ -98,6 +118,8 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await ComponentService.deleteMany({
       ...reqData.body,
     });
+
+    await ComponentCacheService.deleteMany(reqData.body);
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });

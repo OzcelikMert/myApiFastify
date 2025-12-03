@@ -3,7 +3,7 @@ import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { NavigationService } from '@services/navigation.service';
+import { NavigationService } from '@services/db/navigation.service';
 import {
   INavigationPutStatusManySchema,
   INavigationPutWithIdSchema,
@@ -24,7 +24,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -51,7 +51,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {

@@ -9,7 +9,7 @@ import {
   IComponentGetParamService,
   IComponentGetDetailedResultService,
   IComponentUpdateParamService,
-} from 'types/services/component.service';
+} from 'types/services/db/component.service';
 import { IComponentModel } from 'types/models/component.model';
 import { componentObjectIdKeys } from '@constants/objectIdKeys/component.objectIdKeys';
 import { componentModel } from '@models/component.model';

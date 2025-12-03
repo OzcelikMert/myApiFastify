@@ -7,7 +7,7 @@ import {
   ILanguageUpdateParamService,
   ILanguageUpdateRankParamService,
   ILanguageUpdateIsDefaultManyParamService,
-} from 'types/services/language.service';
+} from 'types/services/db/language.service';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
 import { languageObjectIdKeys } from '@constants/objectIdKeys/language.objectIdKeys';

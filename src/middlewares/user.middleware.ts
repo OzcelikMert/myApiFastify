@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { UserService } from '@services/user.service';
+import { UserService } from '@services/db/user.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import {
   IUserPutWithIdSchema,
@@ -25,7 +25,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {

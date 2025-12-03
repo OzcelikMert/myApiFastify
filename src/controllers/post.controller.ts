@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ApiResult } from '@library/api/result';
-import { PostService } from '@services/post.service';
+import { PostService } from '@services/db/post.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import {
   IPostDeleteManySchema,
@@ -24,7 +24,7 @@ import {
   IPostGetDetailedResultService,
   IPostGetPrevNextResultService,
   IPostGetManyDetailedResultService,
-} from 'types/services/post.service';
+} from 'types/services/db/post.service';
 import {
   IPostECommerceVariationModel,
   IPostModel,
@@ -34,6 +34,7 @@ import { PostTypeId } from '@constants/postTypes';
 import { StatusId } from '@constants/status';
 import { ProductTypeId } from '@constants/productTypes';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
+import { PostCacheService } from '@services/cache/post.cache.service';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -61,17 +62,34 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     const apiResult = new ApiResult<IPostGetManyDetailedResultService[]>();
 
     const reqData = req as IPostGetManySchema;
+    let isCachable = false;
 
-    apiResult.data = await PostService.getManyDetailed({
-      ...reqData.query,
-      ...(req.isFromAdminPanel &&
-      !PermissionUtil.checkPermissionRoleRank(
-        req.sessionAuth!.user!.roleId,
-        UserRoleId.Editor
-      )
-        ? { authorId: req.sessionAuth!.user!.userId.toString() }
-        : {}),
-    });
+    if (!req.isFromAdminPanel && reqData.query.typeId.length === 1) {
+      apiResult.data = await PostCacheService.get<
+        IPostGetManyDetailedResultService[]
+      >({ ...reqData.query, typeId: reqData.query.typeId[0] });
+      isCachable = true;
+    }
+
+    if (apiResult.data == null) {
+      apiResult.data = await PostService.getManyDetailed({
+        ...reqData.query,
+        ...(req.isFromAdminPanel &&
+        !PermissionUtil.checkPermissionRoleRank(
+          req.sessionAuth!.user!.roleId,
+          UserRoleId.Editor
+        )
+          ? { authorId: req.sessionAuth!.user!.userId.toString() }
+          : {}),
+      });
+
+      if (isCachable && apiResult.data.length > 0) {
+        await PostCacheService.add(
+          { ...reqData.query, typeId: reqData.query.typeId[0] },
+          apiResult.data
+        );
+      }
+    }
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
@@ -82,16 +100,35 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     const apiResult = new ApiResult<IPostGetDetailedResultService>();
 
     const reqData = req as IPostGetWithURLSchema;
+    let isCachable = false;
 
-    apiResult.data = await PostService.getDetailed({
-      ...reqData.params,
-      ...reqData.query,
-      url:
-        reqData.query.pageTypeId &&
-        reqData.query.pageTypeId != PageTypeId.Default
-          ? undefined
-          : reqData.params.url,
-    });
+    if (!req.isFromAdminPanel && reqData.query.typeId == PostTypeId.Page) {
+      apiResult.data =
+        await PostCacheService.get<IPostGetDetailedResultService>({
+          ...reqData.params,
+          ...reqData.query,
+        });
+      isCachable = true;
+    }
+
+    if (apiResult.data == null) {
+      apiResult.data = await PostService.getDetailed({
+        ...reqData.params,
+        ...reqData.query,
+        url:
+          reqData.query.pageTypeId &&
+          reqData.query.pageTypeId != PageTypeId.Default
+            ? undefined
+            : reqData.params.url,
+      });
+
+      if (isCachable && apiResult.data) {
+        await PostCacheService.add(
+          { ...reqData.params, ...reqData.query },
+          apiResult.data
+        );
+      }
+    }
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
@@ -146,6 +183,8 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
       authorId: req.sessionAuth!.user!.userId.toString(),
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
+
+    await PostCacheService.deleteMany({ typeId: reqData.body.typeId });
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
@@ -220,6 +259,9 @@ const addProduct = async (req: FastifyRequest, reply: FastifyReply) => {
       },
     });
 
+    await PostCacheService.deleteMany({ typeId: PostTypeId.Product });
+    await PostCacheService.deleteMany({ typeId: PostTypeId.ProductVariation });
+
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
 };
@@ -236,6 +278,8 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
 
+    await PostCacheService.deleteMany({ typeId: reqData.body.typeId });
+
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
 };
@@ -248,7 +292,7 @@ const updateProductWithId = async (
     const apiResult = new ApiResult();
 
     const reqData = req as IPostPutProductWithIdSchema;
-    const serviceResultProduct = req.cachedServiceResult as IPostModel;
+    const serviceResultProduct = req.cachedAnyServiceResult as IPostModel;
 
     if (serviceResultProduct.eCommerce) {
       let variations: IPostECommerceVariationModel[] = [];
@@ -346,8 +390,8 @@ const updateProductWithId = async (
             attribute._id = attributeId;
           }
         }
-      }else if(reqData.body.eCommerce.typeId == ProductTypeId.Simple){
-        if(serviceResultProduct.eCommerce.typeId == ProductTypeId.Variable){
+      } else if (reqData.body.eCommerce.typeId == ProductTypeId.Simple) {
+        if (serviceResultProduct.eCommerce.typeId == ProductTypeId.Variable) {
           await PostService.deleteMany({
             parentId: serviceResultProduct._id.toString(),
             typeId: PostTypeId.ProductVariation,
@@ -367,6 +411,11 @@ const updateProductWithId = async (
           variations: variations,
         },
       });
+
+      await PostCacheService.deleteMany({ typeId: PostTypeId.Product });
+      await PostCacheService.deleteMany({
+        typeId: PostTypeId.ProductVariation,
+      });
     }
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
@@ -384,6 +433,8 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       ...reqData.params,
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
+
+    await PostCacheService.deleteMany({ typeId: reqData.body.typeId });
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
@@ -415,6 +466,8 @@ const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
 
+    await PostCacheService.deleteMany({ typeId: reqData.body.typeId });
+
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
 };
@@ -428,6 +481,8 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await PostService.deleteMany({
       ...reqData.body,
     });
+
+    await PostCacheService.deleteMany({ typeId: reqData.body.typeId });
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
@@ -450,6 +505,9 @@ const deleteProductMany = async (req: FastifyRequest, reply: FastifyReply) => {
         typeId: PostTypeId.ProductVariation,
       });
     }
+
+    await PostCacheService.deleteMany({ typeId: PostTypeId.Product });
+    await PostCacheService.deleteMany({ typeId: PostTypeId.ProductVariation });
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });

@@ -7,7 +7,7 @@ import {
   ISubscriberGetManyParamService,
   ISubscriberGetParamService,
   ISubscriberDeleteParamService,
-} from 'types/services/subscriber.service';
+} from 'types/services/db/subscriber.service';
 import { subscriberModel } from '@models/subscriber.model';
 import { ISubscriberModel } from 'types/models/subscriber.model';
 import { subscriberObjectIdKeys } from '@constants/objectIdKeys/subscriber.objectIdKeys';

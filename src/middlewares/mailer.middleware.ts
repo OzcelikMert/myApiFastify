@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { SettingService } from '@services/setting.service';
+import { SettingService } from '@services/db/setting.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { IMailerPostSchema } from '@schemas/mailer.schema';
 import { SettingProjectionKeys } from '@constants/settingProjections';
@@ -34,7 +34,7 @@ const checkContactForm = async (req: FastifyRequest, reply: FastifyReply) => {
           : reqData.body.key;
         const contactForm = setting.contactForms?.findSingle(key, value);
         if (contactForm) {
-          req.cachedServiceResult = contactForm;
+          req.cachedAnyServiceResult = contactForm;
         } else {
           apiResult.status = false;
           apiResult.setErrorCode = ApiErrorCodes.notFound;

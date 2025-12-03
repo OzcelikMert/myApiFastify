@@ -1,5 +1,5 @@
 import { IGalleryModel } from 'types/models/gallery.model';
-import { IUserPopulateService } from 'types/services/user.service';
+import { IUserPopulateService } from 'types/services/db/user.service';
 import { GalleryTypeId } from '@constants/galleryTypeId';
 
 export type IGalleryImageProperties = {

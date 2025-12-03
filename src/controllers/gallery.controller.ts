@@ -12,16 +12,17 @@ import {
   IGalleryGetManySchema,
 } from '@schemas/gallery.schema';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { GalleryService } from '@services/gallery.service';
+import { GalleryService } from '@services/db/gallery.service';
 import { PermissionUtil } from '@utils/permission.util';
 import { UserRoleId } from '@constants/userRoles';
 import { GalleryTypeId } from '@constants/galleryTypeId';
 import {
   IGalleryGetDetailedResultService,
   IGalleryImageProperties,
-} from 'types/services/gallery.service';
+} from 'types/services/db/gallery.service';
 import { IGalleryModel } from 'types/models/gallery.model';
 import { DateMask } from '@library/variable/date';
+import { PathUtil } from '@utils/path.util';
 
 const upload: any = multer({
   storage: multer.memoryStorage(),
@@ -38,7 +39,7 @@ const upload: any = multer({
 
 async function getImageProperties(name: string) {
   return new Promise<IGalleryImageProperties>((resolve) => {
-    fs.stat(path.resolve(Config.paths.uploads.images, name), (err, stats) => {
+    fs.stat(path.resolve(PathUtil.getUploadPaths().Images, name), (err, stats) => {
       const sizeKB = Number((stats.size / 1024).toFixed(2));
       const sizeMB = Number((stats.size / (1024 * 1024)).toFixed(2));
       resolve({
@@ -101,7 +102,7 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
         try {
           let name = newName();
           while (
-            fs.existsSync(path.resolve(Config.paths.uploads.images, newName()))
+            fs.existsSync(path.resolve(PathUtil.getUploadPaths().Images, newName()))
           ) {
             name = newName();
           }
@@ -115,7 +116,7 @@ const addImage = async (req: FastifyRequest, reply: FastifyReply) => {
 
             await new Promise<number>((resolveCreate) => {
               fs.createWriteStream(
-                path.resolve(Config.paths.uploads.images, name)
+                path.resolve(PathUtil.getUploadPaths().Images, name)
               ).write(data, () => {
                 resolveCreate(0);
               });
@@ -169,11 +170,11 @@ const deleteManyImage = async (req: FastifyRequest, reply: FastifyReply) => {
       galleryItems.forEach((galleryItem) => {
         if (
           fs.existsSync(
-            path.resolve(Config.paths.uploads.images, galleryItem.name)
+            path.resolve(PathUtil.getUploadPaths().Images, galleryItem.name)
           )
         ) {
           fs.unlinkSync(
-            path.resolve(Config.paths.uploads.images, galleryItem.name)
+            path.resolve(PathUtil.getUploadPaths().Images, galleryItem.name)
           );
           fs.close(0);
           apiResult.data?.push(galleryItem.name);

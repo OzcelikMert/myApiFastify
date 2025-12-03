@@ -11,12 +11,13 @@ import {
   IPostTermPutStatusManySchema,
   IPostTermPutViewWithIdSchema,
 } from '@schemas/postTerm.schema';
-import { PostTermService } from '@services/postTerm.service';
+import { PostTermService } from '@services/db/postTerm.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { PermissionUtil } from '@utils/permission.util';
 import { UserRoleId } from '@constants/userRoles';
 import { IPostTermModel } from 'types/models/postTerm.model';
-import { IPostTermGetDetailedResultService } from 'types/services/postTerm.service';
+import { IPostTermGetDetailedResultService } from 'types/services/db/postTerm.service';
+import { PostTermCacheService } from '@services/cache/postTerm.cache.service';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -44,17 +45,34 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     const apiResult = new ApiResult<IPostTermGetDetailedResultService[]>();
 
     const reqData = req as IPostTermGetManySchema;
+    let isCachable = false;
 
-    apiResult.data = await PostTermService.getManyDetailed({
-      ...reqData.query,
-      ...(req.isFromAdminPanel &&
-      !PermissionUtil.checkPermissionRoleRank(
-        req.sessionAuth!.user!.roleId,
-        UserRoleId.Editor
-      )
-        ? { authorId: req.sessionAuth!.user!.userId.toString() }
-        : {}),
-    });
+    if (!req.isFromAdminPanel && reqData.query.typeId && reqData.query.typeId.length === 1) {
+      apiResult.data = await PostTermCacheService.get<
+        IPostTermGetDetailedResultService[]
+      >({ ...reqData.query, typeId: reqData.query.typeId[0] });
+      isCachable = true;
+    }
+
+    if (apiResult.data == null) {
+      apiResult.data = await PostTermService.getManyDetailed({
+        ...reqData.query,
+        ...(req.isFromAdminPanel &&
+        !PermissionUtil.checkPermissionRoleRank(
+          req.sessionAuth!.user!.roleId,
+          UserRoleId.Editor
+        )
+          ? { authorId: req.sessionAuth!.user!.userId.toString() }
+          : {}),
+      });
+
+      if (isCachable && apiResult.data.length > 0) {
+        await PostTermCacheService.add(
+          { ...reqData.query, typeId: reqData.query.typeId![0] },
+          apiResult.data
+        );
+      }
+    }
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
@@ -87,6 +105,8 @@ const add = async (req: FastifyRequest, reply: FastifyReply) => {
       authorId: req.sessionAuth!.user!.userId.toString(),
     });
 
+    await PostTermCacheService.deleteMany(reqData.body);
+
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
 };
@@ -103,6 +123,8 @@ const updateWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
 
+    await PostTermCacheService.deleteMany(reqData.body);
+
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
 };
@@ -118,6 +140,8 @@ const updateRankWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       ...reqData.params,
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
+
+    await PostTermCacheService.deleteMany(reqData.body);
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
@@ -149,6 +173,8 @@ const updateStatusMany = async (req: FastifyRequest, reply: FastifyReply) => {
       lastAuthorId: req.sessionAuth!.user!.userId.toString(),
     });
 
+    await PostTermCacheService.deleteMany(reqData.body);
+
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });
 };
@@ -162,6 +188,8 @@ const deleteMany = async (req: FastifyRequest, reply: FastifyReply) => {
     await PostTermService.deleteMany({
       ...reqData.body,
     });
+    
+    await PostTermCacheService.deleteMany(reqData.body);
 
     await reply.status(apiResult.getStatusCode).send(apiResult);
   });

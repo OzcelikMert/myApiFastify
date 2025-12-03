@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { ViewService } from '@services/view.service';
+import { ViewService } from '@services/db/view.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { IViewPostSchema } from '@schemas/view.schema';
 import { VariableLibrary } from '@library/variable';

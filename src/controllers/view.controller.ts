@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
-import { ViewService } from '@services/view.service';
+import { ViewService } from '@services/db/view.service';
 import { Config } from '@configs/index';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { IViewGetTotalResultService } from 'types/services/view.service';
+import { IViewGetTotalResultService } from 'types/services/db/view.service';
 import { WebSocket } from '@fastify/websocket';
 import chalk from 'chalk';
 

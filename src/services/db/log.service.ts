@@ -1,5 +1,5 @@
 import { VariableLibrary } from '@library/variable';
-import { ILogAddParamService } from 'types/services/log.service';
+import { ILogAddParamService } from 'types/services/db/log.service';
 import { logModel } from '@models/log.model';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { logObjectIdKeys } from '@constants/objectIdKeys/log.objectIdKeys';

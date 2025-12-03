@@ -17,7 +17,7 @@ import {
   IPostGetDetailedParamService,
   IPostGetManyDetailedParamService,
   IPostGetResultServiceECommerceAttribute,
-} from 'types/services/post.service';
+} from 'types/services/db/post.service';
 import {
   IPostECommerceVariationOptionModel,
   IPostModel,
@@ -33,7 +33,7 @@ import { PostSortTypeId } from '@constants/postSortTypes';
 import {
   IPostTermGetDetailedResultService,
   IPostTermPopulateService,
-} from 'types/services/postTerm.service';
+} from 'types/services/db/postTerm.service';
 import { PopulationSelects } from '@constants/populationSelects';
 
 const createURL = async (

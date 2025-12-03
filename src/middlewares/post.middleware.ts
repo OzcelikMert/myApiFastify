@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { PostService } from '@services/post.service';
+import { PostService } from '@services/db/post.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import {
   IPostDeleteManySchema,
@@ -31,7 +31,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -59,7 +59,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -83,7 +83,7 @@ const checkIsAuthorWithId = async (
         UserRoleId.Editor
       )
     ) {
-      const serviceResult = req.cachedServiceResult as IPostModel;
+      const serviceResult = req.cachedAnyServiceResult as IPostModel;
 
       if (
         req.sessionAuth!.user?.userId.toString() !=
@@ -117,7 +117,7 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         UserRoleId.Editor
       )
     ) {
-      const serviceResult = req.cachedServiceResult as IPostModel[];
+      const serviceResult = req.cachedAnyServiceResult as IPostModel[];
 
       for (const post of serviceResult) {
         if (
@@ -146,7 +146,7 @@ const checkPermissionWithId = async (
 
     const reqData = req as IPostPutWithIdSchema;
 
-    const serviceResult = req.cachedServiceResult as IPostModel;
+    const serviceResult = req.cachedAnyServiceResult as IPostModel;
 
     if (
       req.sessionAuth!.user?.userId.toString() !=
@@ -195,7 +195,7 @@ const checkPermissionForPageWithId = async (
         UserRoleId.SuperAdmin
       )
     ) {
-      const serviceResult = req.cachedServiceResult as IPostModel;
+      const serviceResult = req.cachedAnyServiceResult as IPostModel;
 
       const reqToCheck = {
         pageTypeId: reqData.body.pageTypeId,

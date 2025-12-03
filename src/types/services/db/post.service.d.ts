@@ -1,5 +1,5 @@
-import { IUserPopulateService } from 'types/services/user.service';
-import { IPostTermPopulateService } from 'types/services/postTerm.service';
+import { IUserPopulateService } from 'types/services/db/user.service';
+import { IPostTermPopulateService } from 'types/services/db/postTerm.service';
 import {
   IPostContentModel,
   IPostModel,

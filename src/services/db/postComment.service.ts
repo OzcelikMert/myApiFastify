@@ -12,7 +12,7 @@ import {
   IPostCommentUpdateLikeParamService,
   IPostCommentUpdateParamService,
   IPostCommentUpdateStatusManyParamService,
-} from 'types/services/postComponent.service';
+} from 'types/services/db/postComment.service';
 import { IPostCommentModel } from 'types/models/postComment.model';
 import { postCommentObjectIdKeys } from '@constants/objectIdKeys/postComment.objectIdKeys';
 import { postCommentModel } from '@models/postComment.model';

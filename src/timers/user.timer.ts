@@ -1,5 +1,5 @@
 import { StatusId } from '@constants/status';
-import { UserService } from '@services/user.service';
+import { UserService } from '@services/db/user.service';
 
 const checkBanDateEnd = async () => {
   try {

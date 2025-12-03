@@ -18,7 +18,6 @@ import websocketPlugin from '@fastify/websocket';
 import chalk from 'chalk';
 import { routers } from '@routers/index';
 import InitConfig from '@configs/index';
-import { ViewInitMiddleware } from '@middlewares/init/view.init.middleware';
 import { SessionAuthMiddleware } from '@middlewares/validates/sessionAuth.middleware';
 import { RequestInitMiddleware } from '@middlewares/init/request.init.middleware';
 
@@ -29,7 +28,7 @@ const SSLKey = config.get('SSLKey') as string;
 const SSLCert = config.get('SSLCert') as string;
 
 console.time(`app`);
-console.log(chalk.cyan(`\n=========  SERVER LOADING (${chalk.yellow(runType)}) =========`));
+console.log(chalk.cyan(`\n=========  SERVER LOADING (Run Type: ${chalk.yellow(runType)}) =========`));
 
 export default async function plugin (app: FastifyInstance, options: {}) {
   await new InitConfig(app).init();
@@ -56,7 +55,6 @@ export default async function plugin (app: FastifyInstance, options: {}) {
   });
 
   await app.addHook('preHandler', RequestInitMiddleware.set);
-  await app.addHook('preHandler', ViewInitMiddleware.set);
   await app.addHook('preHandler', SessionAuthMiddleware.reload);
 
   await app.register(routers);

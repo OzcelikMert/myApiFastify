@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { IPostCommentGetDetailedResultService } from 'types/services/postComponent.service';
+import { IPostCommentGetDetailedResultService } from 'types/services/db/postComment.service';
 import {
   IPostCommentDeleteManySchema,
   IPostCommentGetManySchema,
@@ -11,7 +11,7 @@ import {
   IPostCommentPutStatusManySchema,
   IPostCommentPutWithIdSchema,
 } from '@schemas/postComment.schema';
-import { PostCommentService } from '@services/postComment.service';
+import { PostCommentService } from '@services/db/postComment.service';
 import { IPostCommentModel } from 'types/models/postComment.model';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {

@@ -1,5 +1,5 @@
 import { IAuthPostSchema } from '@schemas/auth.schema';
-import { UserService } from '@services/user.service';
+import { UserService } from '@services/db/user.service';
 import { StatusId } from '@constants/status';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { FastifyReply, FastifyRequest } from 'fastify';
@@ -10,7 +10,7 @@ import { SessionAuthUtil } from '@utils/sessinAuth.util';
 import {
   ISessionAuth,
   ISessionAuthUser,
-} from 'types/services/sessionAuth.service';
+} from 'types/services/db/sessionAuth.service';
 import { IAuthLoginResultController } from 'types/controllers/auth.controller';
 
 const getSession = async (req: FastifyRequest, reply: FastifyReply) => {

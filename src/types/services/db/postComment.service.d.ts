@@ -1,4 +1,4 @@
-import { IUserPopulateService } from 'types/services/user.service';
+import { IUserPopulateService } from 'types/services/db/user.service';
 import { PostTypeId } from '@constants/postTypes';
 import { StatusId } from '@constants/status';
 import { IPostCommentModel } from 'types/models/postComment.model';

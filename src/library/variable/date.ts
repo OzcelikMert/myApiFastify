@@ -21,6 +21,7 @@ declare global {
 
   interface DateConstructor {
     convertHoursToMS(hours: number): number;
+    convertDaysToSeconds(days: number): number;
   }
 }
 
@@ -198,5 +199,8 @@ Date.prototype.diffSeconds = function (date) {
 };
 Date.convertHoursToMS = function (hours) {
   return 1000 * 60 * 60 * hours;
+};
+Date.convertDaysToSeconds = function (days) {
+  return days * 86400;
 };
 export default {};

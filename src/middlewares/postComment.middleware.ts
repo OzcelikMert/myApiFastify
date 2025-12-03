@@ -9,8 +9,8 @@ import {
   IPostCommentDeleteManySchema,
   IPostCommentPutWithIdSchema,
 } from '@schemas/postComment.schema';
-import { PostCommentService } from '@services/postComment.service';
-import { PostService } from '@services/post.service';
+import { PostCommentService } from '@services/db/postComment.service';
+import { PostService } from '@services/db/post.service';
 import { IPostCommentModel } from 'types/models/postComment.model';
 
 const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -30,7 +30,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -59,7 +59,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -83,7 +83,7 @@ const checkIsAuthorWithId = async (
         UserRoleId.Editor
       )
     ) {
-      const serviceResult = req.cachedServiceResult as IPostCommentModel;
+      const serviceResult = req.cachedAnyServiceResult as IPostCommentModel;
 
       if (serviceResult) {
         if (

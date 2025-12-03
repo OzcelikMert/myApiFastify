@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { SubscriberService } from '@services/subscriber.service';
+import { SubscriberService } from '@services/db/subscriber.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import {
   ISubscriberDeleteWithIdSchema,
@@ -22,7 +22,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 
     if (serviceResult) {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     } else {
       apiResult.status = false;
       apiResult.setErrorCode = ApiErrorCodes.notFound;
@@ -53,7 +53,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.registeredData;
       apiResult.setStatusCode = ApiStatusCodes.conflict;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -86,7 +86,7 @@ const checkWithEmail =
       }
 
       if (serviceResult) {
-        req.cachedServiceResult = serviceResult;
+        req.cachedAnyServiceResult = serviceResult;
       }
 
       if (!apiResult.status) {

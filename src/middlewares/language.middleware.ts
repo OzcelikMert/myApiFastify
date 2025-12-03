@@ -3,7 +3,7 @@ import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { LanguageService } from '@services/language.service';
+import { LanguageService } from '@services/db/language.service';
 import { ILanguagePutWithIdSchema } from '@schemas/language.schema';
 import { ILanguageModel } from 'types/models/language.model';
 import { StatusId } from '@constants/status';
@@ -23,7 +23,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -41,7 +41,7 @@ const checkIsDefaultWithId = async (
 
     const reqData = req as ILanguagePutWithIdSchema;
 
-    const serviceResult = req.cachedServiceResult as ILanguageModel;
+    const serviceResult = req.cachedAnyServiceResult as ILanguageModel;
 
     if (!serviceResult.isDefault && reqData.body.isDefault) {
       await LanguageService.updateIsDefaultMany({ isDefault: false });

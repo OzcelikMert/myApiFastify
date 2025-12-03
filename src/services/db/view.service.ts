@@ -5,7 +5,7 @@ import {
   IViewAddParamService,
   IViewGetParamService,
   IViewGetTotalResultService,
-} from 'types/services/view.service';
+} from 'types/services/db/view.service';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
 import { viewObjectIdKeys } from '@constants/objectIdKeys/view.objectIdKeys';

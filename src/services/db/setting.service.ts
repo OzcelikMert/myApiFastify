@@ -10,7 +10,7 @@ import {
   ISettingUpdatePathParamService,
   ISettingUpdateSEOParamService,
   ISettingUpdateSocialMediaParamService,
-} from 'types/services/setting.service';
+} from 'types/services/db/setting.service';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
 import { Config } from '@configs/index';

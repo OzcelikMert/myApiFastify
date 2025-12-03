@@ -10,7 +10,7 @@ import {
   IUserUpdateStatusManyParamService,
   IUserGetManyDetailedParamService,
   IUserGetDetailedParamService,
-} from 'types/services/user.service';
+} from 'types/services/db/user.service';
 import { StatusId } from '@constants/status';
 import { UserUtil } from '@utils/user.util';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
@@ -21,7 +21,7 @@ import { IUserModel } from 'types/models/user.model';
 import { PermissionUtil } from '@utils/permission.util';
 import { UserRoleId } from '@constants/userRoles';
 import { PopulationSelects } from '@constants/populationSelects';
-import { ISessionAuth } from 'types/services/sessionAuth.service';
+import { ISessionAuth } from 'types/services/db/sessionAuth.service';
 import { PermissionId } from '@constants/permissions';
 
 const createURL = async (_id: string | null, name: string) => {

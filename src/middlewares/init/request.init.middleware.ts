@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { UserService } from '@services/user.service';
+import { UserService } from '@services/db/user.service';
 import { StatusId } from '@constants/status';
 
 const set = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -8,6 +8,8 @@ const set = async (req: FastifyRequest, reply: FastifyReply) => {
     const requestURL = req.headers.origin || '';
 
     req.isAuthenticated = false;
+    req.cachedUserServiceResult = null;
+    req.cachedAnyServiceResult = null;
     req.isFromAdminPanel =
       requestURL.includes('admin.') || requestURL.includes('localhost:3001');
 
@@ -18,6 +20,7 @@ const set = async (req: FastifyRequest, reply: FastifyReply) => {
           statusId: StatusId.Active,
         });
         if (serviceResult) {
+          req.cachedUserServiceResult = serviceResult;
           req.isAuthenticated = true;
         }
       }

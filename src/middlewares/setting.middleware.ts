@@ -10,7 +10,7 @@ import {
   ISettingPutGeneralSchema,
   ISettingPutSocialMediaSchema,
 } from '@schemas/setting.schema';
-import { SettingService } from '@services/setting.service';
+import { SettingService } from '@services/db/setting.service';
 import { SettingProjectionKeys } from '@constants/settingProjections';
 
 const check = async (req: FastifyRequest, reply: FastifyReply) => {

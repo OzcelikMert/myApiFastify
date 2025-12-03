@@ -7,7 +7,7 @@ import {
   IComponentDeleteManySchema,
   IComponentPutWithIdSchema,
 } from '@schemas/component.schema';
-import { ComponentService } from '@services/component.service';
+import { ComponentService } from '@services/db/component.service';
 import { PermissionUtil } from '@utils/permission.util';
 import { UserRoleId } from '@constants/userRoles';
 import { IComponentModel } from 'types/models/component.model';
@@ -27,7 +27,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -54,7 +54,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -78,7 +78,7 @@ const checkPermissionWithId = async (
         UserRoleId.SuperAdmin
       )
     ) {
-      const serviceResult = req.cachedServiceResult as IComponentModel;
+      const serviceResult = req.cachedAnyServiceResult as IComponentModel;
 
       const reqToCheck = {
         key: reqData.body.key,

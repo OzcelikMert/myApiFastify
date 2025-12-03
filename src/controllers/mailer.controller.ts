@@ -16,8 +16,8 @@ const send = async (req: FastifyRequest, reply: FastifyReply) => {
 
     const reqData = req as IMailerPostSchema;
 
-    if (req.cachedServiceResult) {
-      const contactForm = req.cachedServiceResult;
+    if (req.cachedAnyServiceResult) {
+      const contactForm = req.cachedAnyServiceResult;
 
       try {
         const transporter = NodeMailer.createTransport({

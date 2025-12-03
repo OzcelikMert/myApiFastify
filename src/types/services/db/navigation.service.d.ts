@@ -1,4 +1,4 @@
-import { IUserPopulateService } from 'types/services/user.service';
+import { IUserPopulateService } from 'types/services/db/user.service';
 import {
   INavigationContentModel,
   INavigationModel,

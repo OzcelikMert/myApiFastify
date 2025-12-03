@@ -11,14 +11,14 @@ import {
   IUserGetWithURLSchema,
   IUserPutProfileImageSchema,
 } from '@schemas/user.schema';
-import { UserService } from '@services/user.service';
+import { UserService } from '@services/db/user.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { IUserGetDetailedResultService } from 'types/services/user.service';
+import { IUserGetDetailedResultService } from 'types/services/db/user.service';
 import { IUserModel } from 'types/models/user.model';
 import { SessionAuthUtil } from '@utils/sessinAuth.util';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { ISessionAuth } from 'types/services/sessionAuth.service';
+import { ISessionAuth } from 'types/services/db/sessionAuth.service';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {

@@ -4,7 +4,7 @@ import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { UserRoleId } from '@constants/userRoles';
-import { GalleryService } from '@services/gallery.service';
+import { GalleryService } from '@services/db/gallery.service';
 import { IGalleryDeleteManySchema } from '@schemas/gallery.schema';
 import { PermissionUtil } from '@utils/permission.util';
 import { IGalleryModel } from 'types/models/gallery.model';
@@ -27,7 +27,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -48,7 +48,7 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         UserRoleId.Editor
       )
     ) {
-      const serviceResult = req.cachedServiceResult as IGalleryModel[];
+      const serviceResult = req.cachedAnyServiceResult as IGalleryModel[];
 
       if (serviceResult) {
         for (const item of serviceResult) {

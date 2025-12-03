@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { PostTermService } from '@services/postTerm.service';
+import { PostTermService } from '@services/db/postTerm.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import {
   IPostTermDeleteManySchema,
@@ -29,7 +29,7 @@ const checkWithId = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -58,7 +58,7 @@ const checkMany = async (req: FastifyRequest, reply: FastifyReply) => {
       apiResult.setErrorCode = ApiErrorCodes.notFound;
       apiResult.setStatusCode = ApiStatusCodes.notFound;
     } else {
-      req.cachedServiceResult = serviceResult;
+      req.cachedAnyServiceResult = serviceResult;
     }
 
     if (!apiResult.status) {
@@ -82,7 +82,7 @@ const checkIsAuthorWithId = async (
         UserRoleId.Editor
       )
     ) {
-      const postTerm = req.cachedServiceResult as IPostTermModel;
+      const postTerm = req.cachedAnyServiceResult as IPostTermModel;
 
       if (postTerm) {
         if (
@@ -114,7 +114,7 @@ const checkIsAuthorMany = async (req: FastifyRequest, reply: FastifyReply) => {
         UserRoleId.Editor
       )
     ) {
-      const postTerms = req.cachedServiceResult as IPostTermModel[];
+      const postTerms = req.cachedAnyServiceResult as IPostTermModel[];
 
       if (postTerms) {
         for (const postTerm of postTerms) {

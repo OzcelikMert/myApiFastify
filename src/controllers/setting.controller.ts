@@ -9,9 +9,9 @@ import {
   ISettingPutSEOSchema,
   ISettingPutSocialMediaSchema,
 } from '@schemas/setting.schema';
-import { SettingService } from '@services/setting.service';
+import { SettingService } from '@services/db/setting.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { ISettingGetResultService } from 'types/services/setting.service';
+import { ISettingGetResultService } from 'types/services/db/setting.service';
 
 const get = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {

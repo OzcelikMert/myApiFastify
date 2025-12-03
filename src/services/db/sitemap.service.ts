@@ -15,7 +15,7 @@ import {
   ISitemapGetPostTermCountResultService,
   ISitemapGetPostTermParamService,
   ISitemapGetPostTermResultService,
-} from 'types/services/sitemap.service';
+} from 'types/services/db/sitemap.service';
 
 export const sitemapLimit = 500;
 

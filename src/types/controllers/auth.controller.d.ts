@@ -1,4 +1,4 @@
-import { ISessionAuthUser } from "types/services/sessionAuth.service";
+import { ISessionAuthUser } from "types/services/db/sessionAuth.service";
 
 export type IAuthLoginResultController = {
     tokenId?: string;

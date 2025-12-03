@@ -1,6 +1,6 @@
 import { jest, describe, expect, it, beforeEach } from '@jest/globals';
 import * as mongoose from 'mongoose';
-import { UserService } from '@services/user.service';
+import { UserService } from '@services/db/user.service';
 import { userModel } from '@models/user.model';
 import { UserUtil } from '@utils/user.util';
 import { PermissionUtil } from '@utils/permission.util';
@@ -8,8 +8,8 @@ import { StatusId } from '@constants/status';
 import { UserRoleId } from '@constants/userRoles';
 import { IUserModel } from 'types/models/user.model';
 import { createMockUser } from '../helpers/user.helper';
-import { IUserAddParamService, IUserUpdateParamService } from 'types/services/user.service';
-import { ISessionAuth } from 'types/services/sessionAuth.service';
+import { IUserAddParamService, IUserUpdateParamService } from 'types/services/db/user.service';
+import { ISessionAuth } from 'types/services/db/sessionAuth.service';
 import { VariableLibrary } from '@library/variable';
 import { Config } from '@configs/index';
 import { PermissionId } from '@constants/permissions';

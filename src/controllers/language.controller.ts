@@ -8,12 +8,13 @@ import {
   ILanguagePutRankWithIdSchema,
   ILanguageGetDefaultSchema,
 } from '@schemas/language.schema';
-import { LanguageService } from '@services/language.service';
+import { LanguageService } from '@services/db/language.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import fs from 'fs';
 import { Config } from '@configs/index';
 import path from 'path';
 import { ILanguageModel } from 'types/models/language.model';
+import { PathUtil } from '@utils/path.util';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -63,10 +64,10 @@ const getFlags = async (req: FastifyRequest, reply: FastifyReply) => {
     const fileType = ['.jpg', '.png', '.webp', '.gif', '.jpeg'];
 
     await new Promise((resolve) => {
-      fs.readdir(Config.paths.uploads.flags, (err, images) => {
+      fs.readdir(PathUtil.getUploadPaths().Flags, (err, images) => {
         for (let i = 0; i < images.length; i++) {
           const image = images[i];
-          if (fs.existsSync(path.resolve(Config.paths.uploads.flags, image))) {
+          if (fs.existsSync(path.resolve(PathUtil.getUploadPaths().Flags, image))) {
             if (fileType.includes(path.extname(image))) {
               apiResult.data?.push(image);
             }

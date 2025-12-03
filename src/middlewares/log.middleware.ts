@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { LogService } from '@services/log.service';
+import { LogService } from '@services/db/log.service';
 
 const error = async (
   req: FastifyRequest,

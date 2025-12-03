@@ -9,38 +9,22 @@ import { generate } from 'generate-password';
 import chalk from 'chalk';
 import fs from 'fs';
 import { IConfig } from 'types/config';
-import { UserService } from '@services/user.service';
+import { UserService } from '@services/db/user.service';
 import { UserRoleId } from '@constants/userRoles';
 import { StatusId } from '@constants/status';
-import { LanguageService } from '@services/language.service';
-import { SettingService } from '@services/setting.service';
+import { LanguageService } from '@services/db/language.service';
+import { SettingService } from '@services/db/setting.service';
 import { PathUtil } from '@utils/path.util';
 import { sessionAuthConfig } from '@configs/session/session.auth.config';
 import { dbConnect, getDBUri } from '@configs/db';
 import { Timers } from '@timers/index';
+import { getRedisUri, redis, redisConnect } from './redis';
 
 const Config: IConfig = {
   passwordSalt: '_@QffsDh14Q',
   publicFolders: [['uploads']],
   onlineUsers: [],
   visitorCount: 0,
-  paths: {
-    root: '',
-    uploads: {
-      get images() {
-        return path.resolve(Config.paths.root, 'uploads', 'images');
-      },
-      get flags() {
-        return path.resolve(Config.paths.root, 'uploads', 'flags');
-      },
-      get video() {
-        return path.resolve(Config.paths.root, 'uploads', 'video');
-      },
-      get static() {
-        return path.resolve(Config.paths.root, 'uploads', 'static');
-      },
-    },
-  },
   defaultLangId: '',
 };
 
@@ -49,13 +33,13 @@ class InitConfig {
 
   constructor(app: FastifyInstance) {
     this.app = app;
-    Config.paths.root = path.resolve('./', 'src');
   }
 
   async init() {
     await this.setPublicFolders();
     await this.setSession();
     await this.security();
+    await this.redisConnect();
     await this.mongodbConnect();
     await this.checkSuperAdminUser();
     await this.checkLanguages();
@@ -81,18 +65,18 @@ class InitConfig {
       });
       folderPath = folderPath.slice(1);
 
-      if (!fs.existsSync(path.resolve(Config.paths.root, folderPath))) {
-        fs.mkdirSync(path.resolve(Config.paths.root, folderPath));
+      if (!fs.existsSync(path.resolve(PathUtil.getRootPath(), folderPath))) {
+        fs.mkdirSync(path.resolve(PathUtil.getRootPath(), folderPath));
       }
 
       await this.app.register(fastifyStatic, {
-        root: path.resolve(Config.paths.root, folderPath),
+        root: path.resolve(PathUtil.getRootPath(), folderPath),
         prefix: `/${folderPath}`,
       });
 
       console.log(
         chalk.blue(` - /${folderPath}`) +
-          ` : ${path.resolve(Config.paths.root, folderPath)}`
+          ` : ${path.resolve(PathUtil.getRootPath(), folderPath)}`
       );
     }
   }
@@ -115,6 +99,17 @@ class InitConfig {
     }
   }
 
+  private async redisConnect() {
+    try {
+      console.log(chalk.green(`#Redis (${chalk.yellow(getRedisUri())})`));
+      await redisConnect();
+      console.log(chalk.blue(`- Connected`));
+    } catch (e) {
+      console.error('Redis Connection Error');
+      console.error(e);
+    }
+  }
+
   private async checkSuperAdminUser() {
     console.log(chalk.green(`#Admin Account`));
     const serviceResultUser = await UserService.get({
@@ -122,7 +117,9 @@ class InitConfig {
     });
     if (serviceResultUser) {
       console.log(
-        chalk.blue(`- ${serviceResultUser.name} (${serviceResultUser.username})`)
+        chalk.blue(
+          `- ${serviceResultUser.name} (${serviceResultUser.username})`
+        )
       );
     } else {
       const password = generate({
@@ -181,7 +178,7 @@ class InitConfig {
     const settings = await SettingService.get({});
     if (settings) {
       console.log(chalk.blue(`- Id: ${settings._id}`));
-    }else {
+    } else {
       await SettingService.add({});
       console.log(chalk.blue(`- Created`));
     }

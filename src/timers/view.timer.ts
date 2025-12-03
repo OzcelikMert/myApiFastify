@@ -1,4 +1,4 @@
-import { ViewService } from '@services/view.service';
+import { ViewService } from '@services/db/view.service';
 
 const checkOld = async () => {
   try {

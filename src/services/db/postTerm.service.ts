@@ -12,7 +12,7 @@ import {
   IPostTermGetDetailedParamService,
   IPostTermGetManyDetailedParamService,
   IPostTermUpdateViewParamService,
-} from 'types/services/postTerm.service';
+} from 'types/services/db/postTerm.service';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { VariableLibrary } from '@library/variable';
 import { Config } from '@configs/index';

@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { LogMiddleware } from '@middlewares/log.middleware';
-import { SitemapService } from '@services/sitemap.service';
+import { SitemapService } from '@services/db/sitemap.service';
 import { PostTypeId } from '@constants/postTypes';
 import { PostTermTypeId } from '@constants/postTermTypes';
 import {
@@ -12,7 +12,7 @@ import {
   ISitemapGetMapsResultService,
   ISitemapGetPostResultService,
   ISitemapGetPostTermResultService,
-} from 'types/services/sitemap.service';
+} from 'types/services/db/sitemap.service';
 
 const getMaps = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {

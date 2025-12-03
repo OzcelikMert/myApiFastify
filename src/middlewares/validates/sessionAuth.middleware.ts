@@ -2,8 +2,6 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { ApiResult } from '@library/api/result';
 import { ApiErrorCodes } from '@library/api/errorCodes';
 import { ApiStatusCodes } from '@library/api/statusCodes';
-import { UserService } from '@services/user.service';
-import { StatusId } from '@constants/status';
 import {
   sessionAuthRefreshMinutes,
   sessionAuthTTLMinutes,
@@ -11,15 +9,15 @@ import {
 import { SessionAuthUtil } from '@utils/sessinAuth.util';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { IUserModel } from 'types/models/user.model';
-import { ISessionAuthUser } from 'types/services/sessionAuth.service';
+import { ISessionAuthUser } from 'types/services/db/sessionAuth.service';
 
 const check = async (req: FastifyRequest, res: FastifyReply) => {
   await LogMiddleware.error(req, res, async () => {
     const apiResult = new ApiResult();
-    if (req.sessionAuth && req.sessionAuth.user) {
+    if (req.isAuthenticated && req.sessionAuth && req.sessionAuth.user) {
       let status = true;
 
-      const user = req.cachedServiceResult as IUserModel;
+      const user = req.cachedUserServiceResult as IUserModel;
       if (user) {
         const token = SessionAuthUtil.createToken(
           user._id.toString(),
@@ -58,7 +56,7 @@ const check = async (req: FastifyRequest, res: FastifyReply) => {
 
 const reload = async (req: FastifyRequest, res: FastifyReply) => {
   await LogMiddleware.error(req, res, async () => {
-    if (req.sessionAuth && req.sessionAuth.user) {
+    if (req.isAuthenticated && req.sessionAuth && req.sessionAuth.user) {
       const date = new Date();
       if (
         Number(
@@ -67,12 +65,8 @@ const reload = async (req: FastifyRequest, res: FastifyReply) => {
       ) {
         req.sessionAuth.delete();
       } else {
-        const serviceResult = await UserService.get({
-          _id: req.sessionAuth.user.userId.toString(),
-          statusId: StatusId.Active,
-        });
+        const serviceResult = req.cachedUserServiceResult as IUserModel;
         if (serviceResult) {
-          req.cachedServiceResult = serviceResult;
           const sessionAuthUser: ISessionAuthUser = {
             ...req.sessionAuth.user,
             userId: serviceResult._id.toString(),

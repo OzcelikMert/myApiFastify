@@ -1,4 +1,4 @@
-import { PostService } from '@services/post.service';
+import { PostService } from '@services/db/post.service';
 import { StatusId } from '@constants/status';
 
 const checkIsPending = async () => {

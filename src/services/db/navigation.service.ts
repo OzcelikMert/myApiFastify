@@ -14,7 +14,7 @@ import {
   INavigationGetManyParamService,
   INavigationGetDetailedParamService,
   INavigationGetManyDetailedParamService,
-} from 'types/services/navigation.service';
+} from 'types/services/db/navigation.service';
 import { navigationModel } from '@models/navigation.model';
 import { StatusId } from '@constants/status';
 import { INavigationModel } from 'types/models/navigation.model';

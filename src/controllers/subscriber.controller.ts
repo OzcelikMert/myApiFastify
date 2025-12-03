@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiResult } from '@library/api/result';
-import { SubscriberService } from '@services/subscriber.service';
+import { SubscriberService } from '@services/db/subscriber.service';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import {
   ISubscriberDeleteWithIdSchema,

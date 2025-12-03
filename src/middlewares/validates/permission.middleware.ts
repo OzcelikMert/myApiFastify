@@ -20,9 +20,9 @@ const check =
       const permissionData =
         typeof permission == 'function' ? permission(req) : permission;
 
-      const user = req.cachedServiceResult as IUserModel;
+      const user = req.cachedUserServiceResult as IUserModel;
 
-      if (user) {
+      if (req.isAuthenticated && user) {
         if (
           !PermissionUtil.checkPermissionRoleRank(
             user.roleId,
@@ -55,10 +55,11 @@ const checkUserRole =
     await LogMiddleware.error(req, res, async () => {
       const apiResult = new ApiResult();
 
-      if (req.sessionAuth && req.sessionAuth.user) {
+      if (req.isAuthenticated && req.sessionAuth && req.sessionAuth.user) {
+        const user = req.cachedUserServiceResult as IUserModel;
         if (
           !PermissionUtil.checkPermissionRoleRank(
-            req.sessionAuth.user.roleId,
+            user.roleId,
             roleId
           )
         ) {

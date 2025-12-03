@@ -1,11 +1,11 @@
 import { jest, describe, expect, it, beforeEach } from '@jest/globals';
 import * as mongoose from 'mongoose';
-import { PostService } from '@services/post.service';
+import { PostService } from '@services/db/post.service';
 import { postModel } from '@models/post.model';
 import { PostTypeId } from '@constants/postTypes';
 import { IPostModel } from 'types/models/post.model';
 import { IUserModel } from 'types/models/user.model';
-import { IPostAddParamService, IPostUpdateParamService } from 'types/services/post.service';
+import { IPostAddParamService, IPostUpdateParamService } from 'types/services/db/post.service';
 import { createMockPost } from '../helpers/post.helper';
 import { VariableLibrary } from '@library/variable';
 import { Config } from '@configs/index';

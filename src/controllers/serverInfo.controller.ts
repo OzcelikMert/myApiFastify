@@ -5,6 +5,7 @@ import os from 'os';
 import { Config } from '@configs/index';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { PathUtil } from '@utils/path.util';
 
 const get = async (req: FastifyRequest, reply: FastifyReply) => {
   return await LogMiddleware.error(req, reply, async () => {
@@ -14,7 +15,7 @@ const get = async (req: FastifyRequest, reply: FastifyReply) => {
       storage: string;
     }>();
     const cpu = await osu.cpu.usage();
-    const diskSpace = await checkDiskSpace(Config.paths.root);
+    const diskSpace = await checkDiskSpace(PathUtil.getRootPath());
 
     apiResult.data = {
       cpu: cpu.toFixed(2),
