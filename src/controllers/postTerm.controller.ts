@@ -18,6 +18,7 @@ import { UserRoleId } from '@constants/userRoles';
 import { IPostTermModel } from 'types/models/postTerm.model';
 import { IPostTermGetDetailedResultService } from 'types/services/db/postTerm.service';
 import { PostTermCacheService } from '@services/cache/postTerm.cache.service';
+import { PostTermCachePolicy } from 'policies/cache/postTerm.cache.policy';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -45,13 +46,12 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     const apiResult = new ApiResult<IPostTermGetDetailedResultService[]>();
 
     const reqData = req as IPostTermGetManySchema;
-    let isCachable = false;
+    const isCachable = PostTermCachePolicy.getMany(req);
 
-    if (!req.isFromAdminPanel && reqData.query.typeId && reqData.query.typeId.length === 1) {
+    if (isCachable) {
       apiResult.data = await PostTermCacheService.get<
         IPostTermGetDetailedResultService[]
-      >({ ...reqData.query, typeId: reqData.query.typeId[0] });
-      isCachable = true;
+      >({ ...reqData.query, typeId: reqData.query.typeId![0] });
     }
 
     if (apiResult.data == null) {
@@ -65,7 +65,6 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
           ? { authorId: req.sessionAuth!.user!.userId.toString() }
           : {}),
       });
-
       if (isCachable && apiResult.data.length > 0) {
         await PostTermCacheService.add(
           { ...reqData.query, typeId: reqData.query.typeId![0] },

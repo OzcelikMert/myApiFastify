@@ -1,54 +1,27 @@
-import { Config } from '@configs/index';
 import { redis } from '@configs/redis';
-import { RedisKey } from 'ioredis';
-import {
-  IPostManyParamCacheService,
-  IPostParamCacheService,
-} from 'types/services/cache/post.cache.service';
+import { RedisHelper } from '@library/redis/helpers';
+import { IPostParamCacheService } from 'types/services/cache/post.cache.service';
 import {
   IPostGetDetailedResultService,
   IPostGetManyDetailedResultService,
 } from 'types/services/db/post.service';
 
 const KEY = 'post';
-const getKey = (params: IPostParamCacheService) => {
+const getKey = (params: IPostParamCacheService, relate: boolean = false) => {
   let key = `${KEY}:typeId:${params.typeId}`;
-  params.langId = params.langId || Config.defaultLangId;
 
   if (params.langId) key += `:langId:${params.langId}`;
+  if (params.sortTypeId) key += `:sortTypeId:${params.sortTypeId}`;
   if (params.url) key += `:url:${params.url}`;
-  if (params.title) key += `:title:${params.title}`;
-  if (params.categoryId) key += `:categoryId:${params.categoryId}`;
-  if (params.authorId) key += `:authorId:${params.authorId}`;
-  if (params.page) key += `:page:${params.page}`;
   if (params.count) key += `:count:${params.count}`;
+  if (params.page) key += `:page:${params.page}`;
 
-  return key;
-};
-const getKeyMany = (params: IPostManyParamCacheService) => {
-  let keys: RedisKey[] = [`${getKey({})}*`];
-
-  if (params.typeId && params.typeId.length > 0) {
-    keys = params.typeId.map((typeId) => {
-      return getKey({ ...params, typeId });
-    });
-  }
-
-  return keys;
+  return !relate ? key : `${key}*`;
 };
 
 const get = async <T>(params: IPostParamCacheService) => {
   const data = await redis.get(getKey(params));
   return data ? (JSON.parse(data) as T) : null;
-};
-
-const getMany = async <T>(params: IPostManyParamCacheService) => {
-  const dataArray = (await redis.mget(getKeyMany(params))).filter(
-    (data) => data != null
-  );
-  return dataArray.length > 0
-    ? dataArray.map((data) => JSON.parse(data) as T)
-    : null;
 };
 
 const add = async (
@@ -64,13 +37,24 @@ const add = async (
 };
 
 const deleteMany = async (params: IPostParamCacheService) => {
-  const keys = await redis.keys(`${getKey(params)}*`);
-  return await redis.del(keys);
+  const keys = await RedisHelper.scanByPattern(redis, getKey(params, true));
+  if (keys.length > 0) {
+    return await redis.del(keys);
+  }
+  return 0;
+};
+
+const deleteAll = async () => {
+  const keys = await RedisHelper.scanByPattern(redis, `${KEY}:*`);
+  if (keys.length > 0) {
+    return await redis.del(keys);
+  }
+  return 0;
 };
 
 export const PostCacheService = {
   get,
-  getMany,
   add,
   deleteMany,
+  deleteAll,
 };

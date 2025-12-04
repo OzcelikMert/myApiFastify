@@ -1,17 +1,12 @@
 import { PageTypeId } from "@constants/pageTypes";
+import { PostSortTypeId } from "@constants/postSortTypes";
 import { PostTypeId } from "@constants/postTypes";
 
 export type IPostParamCacheService = {
     langId?: string;
-    typeId?: PostTypeId;
+    typeId: PostTypeId;
     page?: number;
     count?: number;
     url?: string;
-    title?: string;
-    categoryId?: string;
-    authorId?: string;
+    sortTypeId?: PostSortTypeId;
 }
-
-export type IPostManyParamCacheService = {
-    typeId?: PostTypeId[];
-} & Omit<IPostParamCacheService, 'typeId'>;

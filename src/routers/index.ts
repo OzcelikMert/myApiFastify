@@ -15,6 +15,7 @@ import { sitemapRoute } from '@routers/routes/sitemap.route';
 import { navigationRoute } from '@routers/routes/navigation.route';
 import { componentRoute } from '@routers/routes/component.route';
 import { postCommentRoute } from '@routers/routes/postComment.route';
+import { cacheRoute } from './routes/cache.route';
 
 export const routers = function (
   fastify: FastifyInstance,
@@ -36,5 +37,6 @@ export const routers = function (
   fastify.register(sitemapRoute, { prefix: EndPoints.SITEMAP });
   fastify.register(navigationRoute, { prefix: EndPoints.NAVIGATION });
   fastify.register(componentRoute, { prefix: EndPoints.COMPONENT });
+  fastify.register(cacheRoute, { prefix: EndPoints.CACHE });
   done();
 };

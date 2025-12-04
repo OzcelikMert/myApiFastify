@@ -1,20 +1,20 @@
-import { Config } from '@configs/index';
 import { redis } from '@configs/redis';
-import {
-  IPostTermParamCacheService,
-} from 'types/services/cache/postTerm.cache.service';
+import { RedisHelper } from '@library/redis/helpers';
+import { IPostTermParamCacheService } from 'types/services/cache/postTerm.cache.service';
 import { IPostTermGetDetailedResultService } from 'types/services/db/postTerm.service';
 
 const KEY = 'postTerm';
-const getKey = (params: IPostTermParamCacheService) => {
+const getKey = (
+  params: IPostTermParamCacheService,
+  relate: boolean = false
+) => {
   let key = `${KEY}:typeId:${params.typeId}:postTypeId:${params.postTypeId}`;
-  params.langId = params.langId || Config.defaultLangId;
 
   if (params.langId) key += `:langId:${params.langId}`;
   if (params.page) key += `:page:${params.page}`;
   if (params.count) key += `:count:${params.count}`;
 
-  return key;
+  return !relate ? key : `${key}*`;
 };
 const get = async <T>(params: IPostTermParamCacheService) => {
   const data = await redis.get(getKey(params));
@@ -34,12 +34,24 @@ const add = async (
 };
 
 const deleteMany = async (params: IPostTermParamCacheService) => {
-  const keys = await redis.keys(`${getKey(params)}*`);
-  return await redis.del(keys);
+  const keys = await RedisHelper.scanByPattern(redis, getKey(params, true));
+  if (keys.length > 0) {
+    return await redis.del(keys);
+  }
+  return 0;
+};
+
+const deleteAll = async () => {
+  const keys = await RedisHelper.scanByPattern(redis, `${KEY}:*`);
+  if (keys.length > 0) {
+    return await redis.del(keys);
+  }
+  return 0;
 };
 
 export const PostTermCacheService = {
   get,
   add,
   deleteMany,
+  deleteAll,
 };

@@ -13,6 +13,7 @@ import {
 import { ComponentService } from '@services/db/component.service';
 import { IComponentModel } from 'types/models/component.model';
 import { ComponentCacheService } from '@services/cache/component.cache.service';
+import { ComponentCachePolicy } from 'policies/cache/component.cache.policy';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -49,23 +50,21 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     const apiResult = new ApiResult<IComponentGetDetailedResultService[]>();
 
     const reqData = req as IComponentGetManySchema;
-    let isCachable = false;
+    const isCachable = ComponentCachePolicy.getMany(req);
 
-    if (!req.isFromAdminPanel && reqData.query._id) {
-      apiResult.data = await ComponentCacheService.getMany(reqData.query);
-      if(apiResult.data && apiResult.data.length != reqData.query._id.length) {
+    if (isCachable) {
+      apiResult.data = await ComponentCacheService.get(reqData.query);
+      if(apiResult.data && (apiResult.data.length == 0 || (reqData.query._id && apiResult.data.length != reqData.query._id.length))) {
         apiResult.data = null;
       }
-      isCachable = true;
     }
 
     if (apiResult.data == null) {
       apiResult.data = await ComponentService.getManyDetailed({
         ...reqData.query,
       });
-
       if (isCachable && apiResult.data.length > 0) {
-        await ComponentCacheService.addMany(apiResult.data);
+        await ComponentCacheService.add(reqData.query, apiResult.data);
       }
     }
 

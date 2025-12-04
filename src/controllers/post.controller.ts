@@ -35,6 +35,7 @@ import { StatusId } from '@constants/status';
 import { ProductTypeId } from '@constants/productTypes';
 import { MongoDBHelpers } from '@library/mongodb/helpers';
 import { PostCacheService } from '@services/cache/post.cache.service';
+import { PostCachePolicy } from 'policies/cache/post.cache.policy';
 
 const getWithId = async (req: FastifyRequest, reply: FastifyReply) => {
   await LogMiddleware.error(req, reply, async () => {
@@ -62,13 +63,12 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
     const apiResult = new ApiResult<IPostGetManyDetailedResultService[]>();
 
     const reqData = req as IPostGetManySchema;
-    let isCachable = false;
+    const isCachable = PostCachePolicy.getMany(req);
 
-    if (!req.isFromAdminPanel && reqData.query.typeId.length === 1) {
+    if (isCachable) {
       apiResult.data = await PostCacheService.get<
         IPostGetManyDetailedResultService[]
       >({ ...reqData.query, typeId: reqData.query.typeId[0] });
-      isCachable = true;
     }
 
     if (apiResult.data == null) {
@@ -82,7 +82,6 @@ const getMany = async (req: FastifyRequest, reply: FastifyReply) => {
           ? { authorId: req.sessionAuth!.user!.userId.toString() }
           : {}),
       });
-
       if (isCachable && apiResult.data.length > 0) {
         await PostCacheService.add(
           { ...reqData.query, typeId: reqData.query.typeId[0] },
@@ -100,15 +99,14 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
     const apiResult = new ApiResult<IPostGetDetailedResultService>();
 
     const reqData = req as IPostGetWithURLSchema;
-    let isCachable = false;
+    const isCachable = PostCachePolicy.getWithURL(req);
 
-    if (!req.isFromAdminPanel && reqData.query.typeId == PostTypeId.Page) {
+    if (isCachable) {
       apiResult.data =
         await PostCacheService.get<IPostGetDetailedResultService>({
           ...reqData.params,
           ...reqData.query,
         });
-      isCachable = true;
     }
 
     if (apiResult.data == null) {
@@ -121,7 +119,6 @@ const getWithURL = async (req: FastifyRequest, reply: FastifyReply) => {
             ? undefined
             : reqData.params.url,
       });
-
       if (isCachable && apiResult.data) {
         await PostCacheService.add(
           { ...reqData.params, ...reqData.query },

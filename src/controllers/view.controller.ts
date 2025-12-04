@@ -5,7 +5,6 @@ import { Config } from '@configs/index';
 import { LogMiddleware } from '@middlewares/log.middleware';
 import { IViewGetTotalResultService } from 'types/services/db/view.service';
 import { WebSocket } from '@fastify/websocket';
-import chalk from 'chalk';
 
 const sendVisitorCount = (connection?: WebSocket) => {
   const apiResult = new ApiResult<number>();
@@ -77,14 +76,8 @@ const webSocketLiveVisitorCount = async (
   Config.visitorCount += 1;
   sendVisitorCount();
 
-  console.log(chalk.green('Connected to Visitor Count: '), Config.visitorCount);
-
   connection.on('close', () => {
     Config.visitorCount = Config.visitorCount > 0 ? Config.visitorCount - 1 : 0;
-    console.log(
-      chalk.red('Disconnected to Visitor Count: '),
-      Config.onlineUsers
-    );
     sendVisitorCount();
   });
 };
@@ -103,16 +96,11 @@ const webSocketOnlineUsers = async (
     connection,
   });
 
-  console.log(chalk.green('Connected to Online Users: '), Config.onlineUsers);
   sendVisitorCount(connection);
 
   connection.on('close', () => {
     Config.onlineUsers = Config.onlineUsers.filter(
       (item) => item.connection !== connection
-    );
-    console.log(
-      chalk.red('Disconnected to Online Users: '),
-      Config.onlineUsers
     );
   });
 };

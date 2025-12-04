@@ -44,4 +44,7 @@ export class EndPoints {
   static get COMPONENT() {
     return '/component';
   }
+  static get CACHE() {
+    return '/cache';
+  }
 }
